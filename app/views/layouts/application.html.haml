@@ -3,12 +3,15 @@
 %html
   %head
     %meta{:content => "text/html; charset=UTF-8", "http-equiv" => "Content-Type"}/
-    %title LitersTracker
+    %title Liters Tracker [20 Liters]
     = csrf_meta_tags
     = csp_meta_tag
     = stylesheet_link_tag    'application', media: 'all', 'data-turbolinks-track': 'reload'
     = javascript_include_tag 'application', 'data-turbolinks-track': 'reload'
   %body
-    .container-fluid
-      = flash_messages
-      = yield
+    %header
+    %main
+      .container
+        = flash_messages
+        = yield
+    %footer

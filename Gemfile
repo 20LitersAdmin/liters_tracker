@@ -12,6 +12,7 @@ gem 'bootsnap', '>= 1.1.0', require: false
 gem 'bootstrap', '~> 4.2.1'
 gem 'coffee-rails', '~> 4.2'
 gem 'devise'
+gem 'jquery-rails'
 gem 'haml'
 gem 'haml-rails', '~> 1.0'
 gem 'jbuilder', '~> 2.5'
