@@ -10,8 +10,8 @@ class CreateSectors < ActiveRecord::Migration[5.2]
       t.float :longitude
       t.integer :population
       t.integer :households
-
       t.timestamps
+      t.index :gis_id, unique: true
     end
   end
 end
