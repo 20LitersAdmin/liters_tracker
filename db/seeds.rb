@@ -110,11 +110,11 @@ Cell.create(
     { id: 33, name: 'Kimaranzara', gis_id: 571203, sector_id: 8 },
     { id: 34, name: 'Ntarama', gis_id: 571204, sector_id: 8 },
     { id: 35, name: 'Nyabagendwa', gis_id: 571205, sector_id: 8 },
-    { id: 35, name: 'Rubago', gis_id: 561103, sector_id: 9 },
-    { id: 36, name: 'Gituza', gis_id: 561101, sector_id: 9 },
-    { id: 37, name: 'Ntovi', gis_id: 561102, sector_id: 9 },
-    { id: 38, name: 'Rubona', gis_id: 561104, sector_id: 9 },
-    { id: 39, name: 'Rwintashya', gis_id: 561105, sector_id: 9 },
+    { id: 36, name: 'Rubago', gis_id: 561103, sector_id: 9 },
+    { id: 37, name: 'Gituza', gis_id: 561101, sector_id: 9 },
+    { id: 38, name: 'Ntovi', gis_id: 561102, sector_id: 9 },
+    { id: 39, name: 'Rubona', gis_id: 561104, sector_id: 9 },
+    { id: 40, name: 'Rwintashya', gis_id: 561105, sector_id: 9 }
   ]
 )
 

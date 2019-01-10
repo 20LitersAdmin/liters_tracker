@@ -10,6 +10,8 @@ module Constants
       alert: 'warning',
       notice: 'secondary'
     }.freeze
+
+    MODEL_LIST = %w[Cell Contract District Facility Permission Plan Sector Target Technology Update User Village].freeze
   end
 
   class Technology

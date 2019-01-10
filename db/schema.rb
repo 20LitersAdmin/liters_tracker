@@ -65,6 +65,16 @@ ActiveRecord::Schema.define(version: 2019_01_09_191043) do
     t.index ["village_id"], name: "index_facilities_on_village_id"
   end
 
+  create_table "permissions", force: :cascade do |t|
+    t.bigint "user_id"
+    t.string "model_class", null: false
+    t.boolean "can_create", default: false, null: false
+    t.boolean "can_read", default: false, null: false
+    t.boolean "can_update", default: false, null: false
+    t.boolean "can_delete", default: false, null: false
+    t.index ["user_id"], name: "index_permissions_on_user_id"
+  end
+
   create_table "plans", force: :cascade do |t|
     t.bigint "contract_id"
     t.bigint "technology_id"
@@ -114,16 +124,6 @@ ActiveRecord::Schema.define(version: 2019_01_09_191043) do
     t.money "local_cost", scale: 2
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-  end
-
-  create_table "user_permissions", force: :cascade do |t|
-    t.bigint "user_id"
-    t.string "model_gid"
-    t.boolean "create", default: false, null: false
-    t.boolean "read", default: false, null: false
-    t.boolean "update", default: false, null: false
-    t.boolean "delete", default: false, null: false
-    t.index ["user_id"], name: "index_user_permissions_on_user_id"
   end
 
   create_table "users", force: :cascade do |t|
