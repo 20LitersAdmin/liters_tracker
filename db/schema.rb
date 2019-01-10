@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_01_09_191043) do
+ActiveRecord::Schema.define(version: 2019_01_10_210841) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -66,7 +66,7 @@ ActiveRecord::Schema.define(version: 2019_01_09_191043) do
   end
 
   create_table "permissions", force: :cascade do |t|
-    t.bigint "user_id"
+    t.bigint "user_id", null: false
     t.string "model_class", null: false
     t.boolean "can_create", default: false, null: false
     t.boolean "can_read", default: false, null: false
@@ -76,8 +76,8 @@ ActiveRecord::Schema.define(version: 2019_01_09_191043) do
   end
 
   create_table "plans", force: :cascade do |t|
-    t.bigint "contract_id"
-    t.bigint "technology_id"
+    t.bigint "contract_id", null: false
+    t.bigint "technology_id", null: false
     t.string "model_gid", null: false
     t.integer "goal", null: false
     t.integer "people_goal"
@@ -102,8 +102,8 @@ ActiveRecord::Schema.define(version: 2019_01_09_191043) do
   end
 
   create_table "targets", force: :cascade do |t|
-    t.bigint "contract_id"
-    t.bigint "technology_id"
+    t.bigint "contract_id", null: false
+    t.bigint "technology_id", null: false
     t.integer "goal", null: false
     t.integer "people_goal"
     t.datetime "created_at", null: false
@@ -118,12 +118,29 @@ ActiveRecord::Schema.define(version: 2019_01_09_191043) do
     t.integer "default_impact", null: false
     t.boolean "agreement_required", default: false, null: false
     t.string "scale", null: false
-    t.money "direct_cost", scale: 2
-    t.money "indirect_cost", scale: 2
-    t.money "us_cost", scale: 2
-    t.money "local_cost", scale: 2
+    t.integer "direct_cost_cents", default: 0, null: false
+    t.string "direct_cost_currency", default: "USD", null: false
+    t.integer "indirect_cost_cents", default: 0, null: false
+    t.string "indirect_cost_currency", default: "USD", null: false
+    t.integer "us_cost_cents", default: 0, null: false
+    t.string "us_cost_currency", default: "USD", null: false
+    t.integer "local_cost_cents", default: 0, null: false
+    t.string "local_cost_currency", default: "USD", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+  end
+
+  create_table "updates", force: :cascade do |t|
+    t.date "date"
+    t.bigint "technology_id", null: false
+    t.bigint "user_id", null: false
+    t.string "model_gid", null: false
+    t.integer "distributed"
+    t.integer "checked"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["technology_id"], name: "index_updates_on_technology_id"
+    t.index ["user_id"], name: "index_updates_on_user_id"
   end
 
   create_table "users", force: :cascade do |t|
@@ -172,4 +189,6 @@ ActiveRecord::Schema.define(version: 2019_01_09_191043) do
   add_foreign_key "plans", "technologies"
   add_foreign_key "targets", "contracts"
   add_foreign_key "targets", "technologies"
+  add_foreign_key "updates", "technologies"
+  add_foreign_key "updates", "users"
 end

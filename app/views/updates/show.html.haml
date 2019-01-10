@@ -1,0 +1,31 @@
+-# frozen_string_literal: true
+%p#notice= notice
+
+%p
+  %b Date:
+  = @update.date
+%p
+  %b Technology:
+  = @update.technology
+%p
+  %b Distributed:
+  = @update.distributed
+%p
+  %b Checked:
+  = @update.checked
+%p
+  %b User:
+  = @update.user
+%p
+  %b Model gid:
+  = @update.model_gid
+%p
+  %b Distribute:
+  = @update.distribute
+%p
+  %b Check:
+  = @update.check
+
+= link_to 'Edit', edit_update_path(@update)
+\|
+= link_to 'Back', updates_path

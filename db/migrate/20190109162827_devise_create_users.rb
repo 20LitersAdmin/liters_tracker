@@ -44,7 +44,7 @@ class DeviseCreateUsers < ActiveRecord::Migration[5.2]
     add_index :users, :unlock_token,         unique: true
 
     create_table :permissions do |t|
-      t.references :user
+      t.references :user,    null: false
       t.string :model_class, null: false
       t.boolean :can_create, null: false, default: false
       t.boolean :can_read,   null: false, default: false
