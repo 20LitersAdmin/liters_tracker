@@ -54,7 +54,8 @@ District.create(
   [
     { id: 1, name: 'Nyarugenge', gis_id: 11 },
     { id: 2, name: 'Kicukiro', gis_id: 13 },
-    { id: 3, name: 'Bugesera', gis_id: 57 }
+    { id: 3, name: 'Bugesera', gis_id: 57 },
+    { id: 4, name: 'Ngoma', gis_id: 56 }
   ]
 )
 
@@ -67,7 +68,8 @@ Sector.create(
     { id: 5, name: 'Juru', gis_id: 5702, district_id: 3 },
     { id: 6, name: 'Mwogo', gis_id: 5707, district_id: 3 },
     { id: 7, name: 'Ntarama', gis_id: 5709, district_id: 3 },
-    { id: 8, name: 'Rilima', gis_id: 5712, district_id: 3 }
+    { id: 8, name: 'Rilima', gis_id: 5712, district_id: 3 },
+    { id: 9, name: 'Rukumberi', gis_id: 5611, district_id: 4 }
   ]
 )
 
@@ -107,7 +109,12 @@ Cell.create(
     { id: 32, name: 'Karera', gis_id: 571202, sector_id: 8 },
     { id: 33, name: 'Kimaranzara', gis_id: 571203, sector_id: 8 },
     { id: 34, name: 'Ntarama', gis_id: 571204, sector_id: 8 },
-    { id: 35, name: 'Nyabagendwa', gis_id: 571205, sector_id: 8 }
+    { id: 35, name: 'Nyabagendwa', gis_id: 571205, sector_id: 8 },
+    { id: 35, name: 'Rubago', gis_id: 561103, sector_id: 9 },
+    { id: 36, name: 'Gituza', gis_id: 561101, sector_id: 9 },
+    { id: 37, name: 'Ntovi', gis_id: 561102, sector_id: 9 },
+    { id: 38, name: 'Rubona', gis_id: 561104, sector_id: 9 },
+    { id: 39, name: 'Rwintashya', gis_id: 561105, sector_id: 9 },
   ]
 )
 
@@ -361,7 +368,33 @@ Village.create(
     { id: 246, name: 'Murambi', gis_id: 57120508, cell_id: 35, population: 900, households: 180 },
     { id: 247, name: 'Nyabagendwa', gis_id: 57120509, cell_id: 35, population: 970, households: 186 },
     { id: 248, name: 'Nyamizi', gis_id: 57120510, cell_id: 35, population: 430, households: 110 },
-    { id: 249, name: 'Rwibikara', gis_id: 57120511, cell_id: 35, population: 370, households: 74 }
+    { id: 249, name: 'Rwibikara', gis_id: 57120511, cell_id: 35, population: 370, households: 74 },
+    { id: 250, name: 'Akabungo', gis_id: 56110301, cell_id: 35 },
+    { id: 251, name: 'Gitesanyi', gis_id: 56110101, cell_id: 36, population: 341, households: 81 },
+    { id: 252, name: 'Gituza', gis_id: 56110102, cell_id: 36, population: 627, households: 158 },
+    { id: 253, name: 'Mfune', gis_id: 56110103, cell_id: 36, population: 720, households: 144 },
+    { id: 254, name: 'Ruyenzi', gis_id: 56110104, cell_id: 36 },
+    { id: 255, name: 'Iyantende', gis_id: 56110201, cell_id: 37 },
+    { id: 256, name: 'Kigese', gis_id: 56110202, cell_id: 37 },
+    { id: 257, name: 'Mugwato', gis_id: 56110203, cell_id: 37 },
+    { id: 258, name: 'Ntovi', gis_id: 56110204, cell_id: 37 },
+    { id: 259, name: 'Rukumberi', gis_id: 56110205, cell_id: 37 },
+    { id: 260, name: 'Rwamibabi', gis_id: 56110206, cell_id: 37 },
+    { id: 261, name: 'Kavumve', gis_id: 56110302, cell_id: 35 },
+    { id: 262, name: 'Nyagakizi', gis_id: 56110303, cell_id: 35 },
+    { id: 263, name: 'Nyagitabire', gis_id: 56110304, cell_id: 35 },
+    { id: 264, name: 'Rubago', gis_id: 56110305, cell_id: 35 },
+    { id: 265, name: 'Kagarama', gis_id: 56110401, cell_id: 38 },
+    { id: 266, name: 'Maswa I', gis_id: 56110402, cell_id: 38 },
+    { id: 267, name: 'Maswa Ii', gis_id: 56110403, cell_id: 38 },
+    { id: 268, name: 'Rugenda I', gis_id: 56110404, cell_id: 38 },
+    { id: 269, name: 'Rugenda Ii', gis_id: 56110405, cell_id: 38, population: 948, households: 197 },
+    { id: 270, name: 'Ruyenzi I', gis_id: 56110406, cell_id: 38 },
+    { id: 271, name: 'Bare', gis_id: 56110501, cell_id: 39, population: 460, households: 92 },
+    { id: 272, name: 'Karokora', gis_id: 56110502, cell_id: 39, population: 608, households: 122 },
+    { id: 273, name: 'Rwimpongo I', gis_id: 56110503, cell_id: 39 },
+    { id: 274, name: 'Rwimpongo Ii', gis_id: 56110504, cell_id: 39 },
+    { id: 275, name: 'Shyembe', gis_id: 56110505, cell_id: 39 },
   ]
 )
 
