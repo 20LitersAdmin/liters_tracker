@@ -11,6 +11,7 @@ class CreateDistricts < ActiveRecord::Migration[5.2]
       t.integer :households
 
       t.timestamps
+      t.index :gis_id, unique: true
     end
   end
 end

@@ -4,7 +4,7 @@ class CreateFacilities < ActiveRecord::Migration[5.2]
   def change
     create_table :facilities do |t|
       t.string :name,        null: false
-      t.integer :gis_id
+      t.string :description
       t.float :latitude
       t.float :longitude
       t.integer :population

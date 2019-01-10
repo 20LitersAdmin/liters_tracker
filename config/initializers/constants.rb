@@ -15,4 +15,8 @@ module Constants
   class Technology
     SCALE = %w[Family Community].freeze
   end
+
+  class Facility
+    CATEGORY = %w[Church Clinic School Other].freeze
+  end
 end
