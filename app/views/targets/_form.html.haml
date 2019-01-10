@@ -1,0 +1,23 @@
+-# frozen_string_literal: true
+= form_for @target do |f|
+  - if @target.errors.any?
+    #error_explanation
+      %h2= "#{pluralize(@target.errors.count, "error")} prohibited this target from being saved:"
+      %ul
+        - @target.errors.full_messages.each do |message|
+          %li= message
+
+  .field
+    = f.label :contract
+    = f.text_field :contract
+  .field
+    = f.label :technology
+    = f.text_field :technology
+  .field
+    = f.label :goal
+    = f.number_field :goal
+  .field
+    = f.label :people_goal
+    = f.number_field :people_goal
+  .actions
+    = f.submit 'Save'

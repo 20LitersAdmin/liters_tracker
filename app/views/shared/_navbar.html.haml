@@ -1,0 +1,11 @@
+%nav.navbar.navbar-expand-lg.navbar-dark.bg-dark
+  .container
+    = link_to 'Liters Tracker', root_path, class: 'navbar-brand'
+    %button{ class: 'navbar-toggler', type: 'button', data: { toggle: 'collapse', target: '#navbarNav' }, aria: { controls: 'navbarNav', expanded: 'false', label: 'Toggle navigation' }}
+      %span.navbar-toggler-icon
+    #navbarNav.collapse.navbar-collapse.navbar-nav
+      .col-sm.float-right.text-right
+        -if current_user
+          =link_to('Sign out', destroy_user_session_path, method: :delete, class: 'text-light')
+        -else
+          =link_to 'Sign in', new_user_session_path

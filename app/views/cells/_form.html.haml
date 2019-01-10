@@ -1,0 +1,29 @@
+-# frozen_string_literal: true
+= simple_form_for @cell do |f|
+  - if @cell.errors.any?
+    #error_explanation
+      %h2= "#{pluralize(@cell.errors.count, "error")} prohibited this cell from being saved:"
+      %ul
+        - @cell.errors.full_messages.each do |message|
+          %li= message
+
+  .field
+    = f.label :name
+    = f.text_field :name
+  .field
+    = f.label :gis_id
+    = f.number_field :gis_id
+  .field
+    = f.label :latitude
+    = f.text_field :latitude
+  .field
+    = f.label :longitude
+    = f.text_field :longitude
+  .field
+    = f.label :population
+    = f.number_field :population
+  .field
+    = f.label :households
+    = f.number_field :households
+  .actions
+    = f.submit 'Save'

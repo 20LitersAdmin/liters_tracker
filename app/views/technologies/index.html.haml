@@ -1,0 +1,36 @@
+-# frozen_string_literal: true
+%h1 Listing technologies
+
+%table
+  %thead
+    %tr
+      %th Name
+      %th Default impact
+      %th Agreement required
+      %th Scale
+      %th Direct cost
+      %th Indirect cost
+      %th Us cost
+      %th Local cost
+      %th
+      %th
+      %th
+
+  %tbody
+    - @technologies.each do |technology|
+      %tr
+        %td= technology.name
+        %td= technology.default_impact
+        %td= technology.agreement_required
+        %td= technology.scale
+        %td= technology.direct_cost
+        %td= technology.indirect_cost
+        %td= technology.us_cost
+        %td= technology.local_cost
+        %td= link_to 'Show', technology
+        %td= link_to 'Edit', edit_technology_path(technology)
+        %td= link_to 'Destroy', technology, method: :delete, data: { confirm: 'Are you sure?' }
+
+%br
+
+= link_to 'New Technology', new_technology_path

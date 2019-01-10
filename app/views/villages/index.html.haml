@@ -1,0 +1,32 @@
+-# frozen_string_literal: true
+%h1 Listing villages
+
+%table
+  %thead
+    %tr
+      %th Name
+      %th Gis
+      %th Latitude
+      %th Longitude
+      %th Population
+      %th Households
+      %th
+      %th
+      %th
+
+  %tbody
+    - @villages.each do |village|
+      %tr
+        %td= village.name
+        %td= village.gis_id
+        %td= village.latitude
+        %td= village.longitude
+        %td= village.population
+        %td= village.households
+        %td= link_to 'Show', village
+        %td= link_to 'Edit', edit_village_path(village)
+        %td= link_to 'Destroy', village, method: :delete, data: { confirm: 'Are you sure?' }
+
+%br
+
+= link_to 'New Village', new_village_path

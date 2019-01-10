@@ -1,3 +1,56 @@
+-# frozen_string_literal: true
 .row
-  .col-sm
+  .col
     %h2= 'Hey ' + @user.fname
+.row.justify-content-center
+  .col-sm-12
+    %h3.text-center Things you can do:
+.row.justify-content-center
+  .col-sm-12.col-md-6.col-lg-3
+    .card.my-2
+      .card-body
+        %h5.card-title Submit a report
+        %p.card-text The next monthly report is #February
+        = link_to 'Go do it', '#', class: 'btn btn-primary'
+
+  .col-sm-12.col-md-6.col-lg-3
+    .card.my-2
+      .card-body
+        %h5.card-title Manage reports
+        %p.card-text Adjust, fix, change, remove
+        = link_to 'Go do it', '#', class: 'btn btn-primary'
+
+  .col-sm-12.col-md-6.col-lg-3
+    .card.my-2
+      .card-body
+        %h5.card-title Run the #s
+        %p.card-text Standard and custom reports
+        = link_to 'Go do it', '#', class: 'btn btn-primary'
+
+  .col-sm-12.col-md-6.col-lg-3
+    .card.my-2
+      .card-body
+        %h5.card-title Manage facilities
+        %p.card-text Churches, schools, health clinics
+        = link_to 'Go do it', '#', class: 'btn btn-primary'
+
+  .col-sm-12.col-md-6.col-lg-3
+    .card.my-2
+      .card-body
+        %h5.card-title Manage geography
+        %p.card-text Districts, sectors, cells, villages
+        = link_to 'Go do it', '#', class: 'btn btn-primary'
+
+  .col-sm-12.col-md-6.col-lg-3
+    .card.my-2
+      .card-body
+        %h5.card-title Manage MOUs
+        %p.card-text Contracts, targets, plans
+        = link_to 'Go do it', '#', class: 'btn btn-primary'
+  
+  .col-sm-12.col-md-6.col-lg-3
+    .card.my-2
+      .card-body
+        %h5.card-title Manage users
+        %p.card-text There are X users in the system
+        = link_to 'Go do it', '#', class: 'btn btn-primary'

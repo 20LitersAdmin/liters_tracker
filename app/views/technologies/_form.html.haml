@@ -1,0 +1,35 @@
+-# frozen_string_literal: true
+= form_for @technology do |f|
+  - if @technology.errors.any?
+    #error_explanation
+      %h2= "#{pluralize(@technology.errors.count, "error")} prohibited this technology from being saved:"
+      %ul
+        - @technology.errors.full_messages.each do |message|
+          %li= message
+
+  .field
+    = f.label :name
+    = f.text_field :name
+  .field
+    = f.label :default_impact
+    = f.number_field :default_impact
+  .field
+    = f.label :agreement_required
+    = f.check_box :agreement_required
+  .field
+    = f.label :scale
+    = f.text_field :scale
+  .field
+    = f.label :direct_cost
+    = f.text_field :direct_cost
+  .field
+    = f.label :indirect_cost
+    = f.text_field :indirect_cost
+  .field
+    = f.label :us_cost
+    = f.text_field :us_cost
+  .field
+    = f.label :local_cost
+    = f.text_field :local_cost
+  .actions
+    = f.submit 'Save'

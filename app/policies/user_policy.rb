@@ -11,4 +11,8 @@ class UserPolicy
   def homepage?
     true
   end
+
+  def show?
+    true
+  end
 end

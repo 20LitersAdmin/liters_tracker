@@ -1,0 +1,31 @@
+-# frozen_string_literal: true
+%p#notice= notice
+
+%p
+  %b Name:
+  = @technology.name
+%p
+  %b Default impact:
+  = @technology.default_impact
+%p
+  %b Agreement required:
+  = @technology.agreement_required
+%p
+  %b Scale:
+  = @technology.scale
+%p
+  %b Direct cost:
+  = @technology.direct_cost
+%p
+  %b Indirect cost:
+  = @technology.indirect_cost
+%p
+  %b Us cost:
+  = @technology.us_cost
+%p
+  %b Local cost:
+  = @technology.local_cost
+
+= link_to 'Edit', edit_technology_path(@technology)
+\|
+= link_to 'Back', technologies_path

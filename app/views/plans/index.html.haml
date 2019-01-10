@@ -1,0 +1,30 @@
+-# frozen_string_literal: true
+%h1 Listing plans
+
+%table
+  %thead
+    %tr
+      %th Contract
+      %th Technology
+      %th Model gid
+      %th Goal
+      %th People goal
+      %th
+      %th
+      %th
+
+  %tbody
+    - @plans.each do |plan|
+      %tr
+        %td= plan.contract
+        %td= plan.technology
+        %td= plan.model_gid
+        %td= plan.goal
+        %td= plan.people_goal
+        %td= link_to 'Show', plan
+        %td= link_to 'Edit', edit_plan_path(plan)
+        %td= link_to 'Destroy', plan, method: :delete, data: { confirm: 'Are you sure?' }
+
+%br
+
+= link_to 'New Plan', new_plan_path

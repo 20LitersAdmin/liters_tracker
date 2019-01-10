@@ -1,0 +1,28 @@
+-# frozen_string_literal: true
+%p#notice= notice
+
+%p
+  %b Name:
+  = @facility.name
+%p
+  %b Gis:
+  = @facility.gis_id
+%p
+  %b Latitude:
+  = @facility.latitude
+%p
+  %b Longitude:
+  = @facility.longitude
+%p
+  %b Population:
+  = @facility.population
+%p
+  %b Households:
+  = @facility.households
+%p
+  %b Category:
+  = @facility.category
+
+= link_to 'Edit', edit_facility_path(@facility)
+\|
+= link_to 'Back', facilities_path

@@ -3,9 +3,9 @@
 class DeviseCreateUsers < ActiveRecord::Migration[5.2]
   def change
     create_table :users do |t|
-      t.string :fname
-      t.string :lname
-      t.boolean :admin
+      t.string :fname,              null: false
+      t.string :lname,              null: false
+      t.boolean :admin,             null: false, default: false
       ## Database authenticatable
       t.string :email,              null: false, default: ''
       t.string :encrypted_password, null: false, default: ''
@@ -46,10 +46,10 @@ class DeviseCreateUsers < ActiveRecord::Migration[5.2]
     create_table :user_permissions do |t|
       t.references :user
       t.string :model_gid
-      t.boolean :create
-      t.boolean :read
-      t.boolean :update
-      t.boolean :delete
+      t.boolean :create, null: false, default: false
+      t.boolean :read,   null: false, default: false
+      t.boolean :update, null: false, default: false
+      t.boolean :delete, null: false, default: false
     end
   end
 end

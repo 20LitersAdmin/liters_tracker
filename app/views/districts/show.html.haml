@@ -1,0 +1,25 @@
+-# frozen_string_literal: true
+%p#notice= notice
+
+%p
+  %b Name:
+  = @district.name
+%p
+  %b Gis:
+  = @district.gis_id
+%p
+  %b Latitude:
+  = @district.latitude
+%p
+  %b Longitude:
+  = @district.longitude
+%p
+  %b Population:
+  = @district.population
+%p
+  %b Households:
+  = @district.households
+
+= link_to 'Edit', edit_district_path(@district)
+\|
+= link_to 'Back', districts_path

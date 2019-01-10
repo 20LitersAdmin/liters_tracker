@@ -1,0 +1,25 @@
+-# frozen_string_literal: true
+%p#notice= notice
+
+%p
+  %b Name:
+  = @sector.name
+%p
+  %b Gis:
+  = @sector.gis_id
+%p
+  %b Latitude:
+  = @sector.latitude
+%p
+  %b Longitude:
+  = @sector.longitude
+%p
+  %b Population:
+  = @sector.population
+%p
+  %b Households:
+  = @sector.households
+
+= link_to 'Edit', edit_sector_path(@sector)
+\|
+= link_to 'Back', sectors_path

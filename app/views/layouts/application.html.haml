@@ -8,10 +8,11 @@
     = csp_meta_tag
     = stylesheet_link_tag    'application', media: 'all', 'data-turbolinks-track': 'reload'
     = javascript_include_tag 'application', 'data-turbolinks-track': 'reload'
-  %body
+  %body.bg-light
     %header
-    %main
-      .container
-        = flash_messages
-        = yield
-    %footer
+      = render 'shared/navbar'
+    %main.container
+      = flash_messages
+      = yield
+    %footer.footer
+      = render 'shared/footer'

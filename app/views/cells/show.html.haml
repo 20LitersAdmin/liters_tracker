@@ -1,0 +1,25 @@
+-# frozen_string_literal: true
+%p#notice= notice
+
+%p
+  %b Name:
+  = @cell.name
+%p
+  %b Gis:
+  = @cell.gis_id
+%p
+  %b Latitude:
+  = @cell.latitude
+%p
+  %b Longitude:
+  = @cell.longitude
+%p
+  %b Population:
+  = @cell.population
+%p
+  %b Households:
+  = @cell.households
+
+= link_to 'Edit', edit_cell_path(@cell)
+\|
+= link_to 'Back', cells_path

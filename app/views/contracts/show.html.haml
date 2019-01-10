@@ -1,0 +1,22 @@
+-# frozen_string_literal: true
+%p#notice= notice
+
+%p
+  %b Start date:
+  = @contract.start_date
+%p
+  %b End date:
+  = @contract.end_date
+%p
+  %b Budget:
+  = @contract.budget
+%p
+  %b Household goal:
+  = @contract.household_goal
+%p
+  %b People goal:
+  = @contract.people_goal
+
+= link_to 'Edit', edit_contract_path(@contract)
+\|
+= link_to 'Back', contracts_path

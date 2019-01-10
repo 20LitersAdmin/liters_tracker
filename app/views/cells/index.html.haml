@@ -1,0 +1,32 @@
+-# frozen_string_literal: true
+%h1 Listing cells
+
+%table
+  %thead
+    %tr
+      %th Name
+      %th Gis
+      %th Latitude
+      %th Longitude
+      %th Population
+      %th Households
+      %th
+      %th
+      %th
+
+  %tbody
+    - @cells.each do |cell|
+      %tr
+        %td= cell.name
+        %td= cell.gis_id
+        %td= cell.latitude
+        %td= cell.longitude
+        %td= cell.population
+        %td= cell.households
+        %td= link_to 'Show', cell
+        %td= link_to 'Edit', edit_cell_path(cell)
+        %td= link_to 'Destroy', cell, method: :delete, data: { confirm: 'Are you sure?' }
+
+%br
+
+= link_to 'New Cell', new_cell_path

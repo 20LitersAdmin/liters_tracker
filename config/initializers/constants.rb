@@ -7,8 +7,12 @@ module Constants
       danger: 'danger',
       error: 'danger',
       warning: 'warning',
-      alert: 'alert',
-      notice: 'notice'
+      alert: 'warning',
+      notice: 'secondary'
     }.freeze
+  end
+
+  class Technology
+    SCALE = %w[Family Community].freeze
   end
 end

@@ -1,0 +1,32 @@
+-# frozen_string_literal: true
+%h1 Listing sectors
+
+%table
+  %thead
+    %tr
+      %th Name
+      %th Gis
+      %th Latitude
+      %th Longitude
+      %th Population
+      %th Households
+      %th
+      %th
+      %th
+
+  %tbody
+    - @sectors.each do |sector|
+      %tr
+        %td= sector.name
+        %td= sector.gis_id
+        %td= sector.latitude
+        %td= sector.longitude
+        %td= sector.population
+        %td= sector.households
+        %td= link_to 'Show', sector
+        %td= link_to 'Edit', edit_sector_path(sector)
+        %td= link_to 'Destroy', sector, method: :delete, data: { confirm: 'Are you sure?' }
+
+%br
+
+= link_to 'New Sector', new_sector_path

@@ -1,0 +1,34 @@
+-# frozen_string_literal: true
+%h1 Listing facilities
+
+%table
+  %thead
+    %tr
+      %th Name
+      %th Gis
+      %th Latitude
+      %th Longitude
+      %th Population
+      %th Households
+      %th Category
+      %th
+      %th
+      %th
+
+  %tbody
+    - @facilities.each do |facility|
+      %tr
+        %td= facility.name
+        %td= facility.gis_id
+        %td= facility.latitude
+        %td= facility.longitude
+        %td= facility.population
+        %td= facility.households
+        %td= facility.category
+        %td= link_to 'Show', facility
+        %td= link_to 'Edit', edit_facility_path(facility)
+        %td= link_to 'Destroy', facility, method: :delete, data: { confirm: 'Are you sure?' }
+
+%br
+
+= link_to 'New Facility', new_facility_path

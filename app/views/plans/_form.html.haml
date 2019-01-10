@@ -1,0 +1,26 @@
+-# frozen_string_literal: true
+= form_for @plan do |f|
+  - if @plan.errors.any?
+    #error_explanation
+      %h2= "#{pluralize(@plan.errors.count, "error")} prohibited this plan from being saved:"
+      %ul
+        - @plan.errors.full_messages.each do |message|
+          %li= message
+
+  .field
+    = f.label :contract
+    = f.text_field :contract
+  .field
+    = f.label :technology
+    = f.text_field :technology
+  .field
+    = f.label :model_gid
+    = f.text_field :model_gid
+  .field
+    = f.label :goal
+    = f.number_field :goal
+  .field
+    = f.label :people_goal
+    = f.number_field :people_goal
+  .actions
+    = f.submit 'Save'

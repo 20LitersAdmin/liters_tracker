@@ -1,5 +1,5 @@
 # frozen_string_literal: true
 
-class User < ApplicationRecord
+class UserPermission < ApplicationRecord
   serialize :model_gid
 end

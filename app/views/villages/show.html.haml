@@ -1,0 +1,25 @@
+-# frozen_string_literal: true
+%p#notice= notice
+
+%p
+  %b Name:
+  = @village.name
+%p
+  %b Gis:
+  = @village.gis_id
+%p
+  %b Latitude:
+  = @village.latitude
+%p
+  %b Longitude:
+  = @village.longitude
+%p
+  %b Population:
+  = @village.population
+%p
+  %b Households:
+  = @village.households
+
+= link_to 'Edit', edit_village_path(@village)
+\|
+= link_to 'Back', villages_path
