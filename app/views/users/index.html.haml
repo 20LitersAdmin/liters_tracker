@@ -1,0 +1,25 @@
+-# frozen_string_literal: true
+%h1 Listing users
+
+%table.table.table-striped
+  %thead
+    %tr
+      %th Name
+      %th Email
+      %th Admin?
+      %th
+      %th
+      %th
+  %tbody
+    - @users.each do |user|
+      %tr
+        %td= user.name
+        %td= user.email
+        %td= human_boolean user.admin?
+        %td= link_to 'Show', user
+        %td= link_to 'Edit', edit_user_path(user)
+        %td= link_to 'Destroy', user, method: :delete, data: { confirm: 'Are you sure?' }
+
+%br
+
+= link_to 'New User', new_user_path

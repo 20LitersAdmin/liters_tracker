@@ -1,2 +1,43 @@
 -# frozen_string_literal: true
-%p show?
+%p#notice= notice
+
+%p
+  %b First Name:
+  = @user.fname
+%p
+  %b Last Name:
+  = @user.lname
+%p
+  %b Email:
+  = @user.email
+%p
+  %b Admin:
+  = @user.admin?
+%p
+  %b Sign-in count:
+  = @user.sign_in_count
+%p
+  %b Last sign-in at:
+  = human_datetime @user.last_sign_in_at
+%p
+  %b Confirmed at:
+  = human_datetime @user.confirmed_at
+%p
+  %b Confirmation sent at:
+  = human_datetime @user.confirmation_sent_at
+%p
+  %b Failed attempts:
+  = @user.failed_attempts
+%p
+  %b Locked at:
+  = human_datetime @user.locked_at
+%p
+  %b Created at:
+  = human_datetime @user.created_at
+%p
+  %b Updated at:
+  = human_datetime @user.updated_at
+
+= link_to 'Edit', edit_user_path(@user)
+\|
+= link_to 'Back', users_path

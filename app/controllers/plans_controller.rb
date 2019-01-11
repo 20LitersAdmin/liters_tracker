@@ -6,7 +6,7 @@ class PlansController < ApplicationController
   # GET /plans
   # GET /plans.json
   def index
-    @plans = Plan.all
+    authorize @plans = Plan.all
   end
 
   # GET /plans/1
@@ -16,7 +16,7 @@ class PlansController < ApplicationController
 
   # GET /plans/new
   def new
-    @plan = Plan.new
+    authorize @plan = Plan.new
   end
 
   # GET /plans/1/edit
@@ -26,7 +26,7 @@ class PlansController < ApplicationController
   # POST /plans
   # POST /plans.json
   def create
-    @plan = Plan.new(plan_params)
+    authorize @plan = Plan.new(plan_params)
 
     respond_to do |format|
       if @plan.save
@@ -56,7 +56,7 @@ class PlansController < ApplicationController
   # DELETE /plans/1
   # DELETE /plans/1.json
   def destroy
-    @plan.destroy
+    authorize @plan.destroy
     respond_to do |format|
       format.html { redirect_to plans_url, notice: 'Plan was successfully destroyed.' }
       format.json { head :no_content }
@@ -64,13 +64,12 @@ class PlansController < ApplicationController
   end
 
   private
-    # Use callbacks to share common setup or constraints between actions.
-    def set_plan
-      @plan = Plan.find(params[:id])
-    end
 
-    # Never trust parameters from the scary internet, only allow the white list through.
-    def plan_params
-      params.require(:plan).permit(:contract_id, :technology_id, :model_gid, :goal, :people_goal)
-    end
+  def set_plan
+    authorize @plan = Plan.find(params[:id])
+  end
+
+  def plan_params
+    params.require(:plan).permit(:contract_id, :technology_id, :model_gid, :goal, :people_goal)
+  end
 end

@@ -2,6 +2,12 @@
 // They will automatically be included in application.css.
 // You can use Sass here: http://sass-lang.com/
 
-.card {
-  min-height: 180px;
+.deck .card {
+  .card-title { 
+    height: 24px;
+    overflow: hidden;
+  }
+  .card-text {
+    height: 48px;
+  }
 }

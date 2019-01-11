@@ -6,7 +6,7 @@ class CellsController < ApplicationController
   # GET /cells
   # GET /cells.json
   def index
-    @cells = Cell.all
+    authorize @cells = Cell.all
   end
 
   # GET /cells/1
@@ -16,7 +16,7 @@ class CellsController < ApplicationController
 
   # GET /cells/new
   def new
-    @cell = Cell.new
+    authorize @cell = Cell.new
   end
 
   # GET /cells/1/edit
@@ -26,7 +26,7 @@ class CellsController < ApplicationController
   # POST /cells
   # POST /cells.json
   def create
-    @cell = Cell.new(cell_params)
+    authorize @cell = Cell.new(cell_params)
 
     respond_to do |format|
       if @cell.save
@@ -64,13 +64,12 @@ class CellsController < ApplicationController
   end
 
   private
-    # Use callbacks to share common setup or constraints between actions.
-    def set_cell
-      @cell = Cell.find(params[:id])
-    end
+  
+  def set_cell
+    authorize @cell = Cell.find(params[:id])
+  end
 
-    # Never trust parameters from the scary internet, only allow the white list through.
-    def cell_params
-      params.require(:cell).permit(:name, :gis_id, :latitude, :longitude, :population, :households)
-    end
+  def cell_params
+    params.require(:cell).permit(:name, :gis_id, :latitude, :longitude, :population, :households)
+  end
 end

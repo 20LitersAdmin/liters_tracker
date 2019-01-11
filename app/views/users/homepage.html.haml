@@ -5,52 +5,76 @@
 .row.justify-content-center
   .col-sm-12
     %h3.text-center Things you can do:
-.row.justify-content-center
-  .col-sm-12.col-md-6.col-lg-3
-    .card.my-2
-      .card-body
-        %h5.card-title Submit a report
-        %p.card-text The next monthly report is #February
-        = link_to 'Go do it', '#', class: 'btn btn-primary'
 
-  .col-sm-12.col-md-6.col-lg-3
-    .card.my-2
-      .card-body
-        %h5.card-title Manage reports
-        %p.card-text Adjust, fix, change, remove
-        = link_to 'Go do it', '#', class: 'btn btn-primary'
+.row.justify-content-center.deck
+  - if @nothing
+    .col.text-center
+      %h5 Hmmm...
+      %p You don't have permission to do anything here.
+      = render 'shared/admins'
 
-  .col-sm-12.col-md-6.col-lg-3
-    .card.my-2
-      .card-body
-        %h5.card-title Run the #s
-        %p.card-text Standard and custom reports
-        = link_to 'Go do it', '#', class: 'btn btn-primary'
 
-  .col-sm-12.col-md-6.col-lg-3
-    .card.my-2
-      .card-body
-        %h5.card-title Manage facilities
-        %p.card-text Churches, schools, health clinics
-        = link_to 'Go do it', '#', class: 'btn btn-primary'
+  - if @can_create_updates
+    .col-sm-12.col-md-6.col-lg-3
+      .card.my-2
+        .card-body
+          %h5.card-title Submit an update
+          %p.card-text Monthly report from the field
+          = link_to 'Submit Update', new_update_path, class: 'btn btn-primary'
 
-  .col-sm-12.col-md-6.col-lg-3
-    .card.my-2
-      .card-body
-        %h5.card-title Manage geography
-        %p.card-text Districts, sectors, cells, villages
-        = link_to 'Go do it', '#', class: 'btn btn-primary'
+  - if @can_update_updates
+    .col-sm-12.col-md-6.col-lg-3
+      .card.my-2
+        .card-body
+          %h5.card-title Manage updates
+          %p.card-text Change or remove monthly reports
+          = link_to 'Manage Updates', updates_path, class: 'btn btn-primary'
 
-  .col-sm-12.col-md-6.col-lg-3
-    .card.my-2
-      .card-body
-        %h5.card-title Manage MOUs
-        %p.card-text Contracts, targets, plans
-        = link_to 'Go do it', '#', class: 'btn btn-primary'
-  
-  .col-sm-12.col-md-6.col-lg-3
-    .card.my-2
-      .card-body
-        %h5.card-title Manage users
-        %p.card-text There are X users in the system
-        = link_to 'Go do it', '#', class: 'btn btn-primary'
+  - if @can_read_reports
+    .col-sm-12.col-md-6.col-lg-3
+      .card.my-2
+        .card-body
+          %h5.card-title Run a report
+          %p.card-text Get information on progress
+          = link_to 'Reports', reports_path, class: 'btn btn-primary'
+
+  - if @can_update_facilities
+    .col-sm-12.col-md-6.col-lg-3
+      .card.my-2
+        .card-body
+          %h5.card-title Manage facilities
+          %p.card-text Churches, schools, health clinics
+          = link_to 'Manage Facilites', facilities_path, class: 'btn btn-primary'
+
+  - if @can_update_geography
+    .col-sm-12.col-md-6.col-lg-3
+      .card.my-2
+        .card-body
+          %h5.card-title Manage geography
+          %p.card-text Districts, sectors, cells, villages
+          = link_to 'Manage Geography', districts_path, class: 'btn btn-primary'
+
+  - if @can_update_plans
+    .col-sm-12.col-md-6.col-lg-3
+      .card.my-2
+        .card-body
+          %h5.card-title Manage MOUs
+          %p.card-text Contracts, targets, plans
+          = link_to 'Manage MOUs', contracts_path, class: 'btn btn-primary'
+    
+  - if @can_update_users
+    .col-sm-12.col-md-6.col-lg-3
+      .card.my-2
+        .card-body
+          %h5.card-title Manage users
+          %p.card-text passwords, permissions, etc.
+          = link_to 'Manage Users', users_path, class: 'btn btn-primary'
+
+  - if !@nothing && !@user.admin?
+    .col-sm-12.col-md-6.col-lg-3
+      .card.my-2
+        .card-body
+          %h5.card-title Need access?
+          %p.card-text Talk to an admin
+          - @admins.each do |admin|
+            = link_to 'Email ' + admin.fname, 'mailto:' + admin.email, class: 'btn btn-primary', target: '_blank'

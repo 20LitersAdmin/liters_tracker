@@ -1,12 +1,12 @@
 # frozen_string_literal: true
 
 class UpdatesController < ApplicationController
-  before_action :set_update, only: [:show, :edit, :update, :destroy]
+  before_action :set_update, only: %i[show edit update destroy]
 
   # GET /updates
   # GET /updates.json
   def index
-    @updates = Update.all
+    authorize @updates = Update.all
   end
 
   # GET /updates/1
@@ -16,7 +16,7 @@ class UpdatesController < ApplicationController
 
   # GET /updates/new
   def new
-    @update = Update.new
+    authorize @update = Update.new
   end
 
   # GET /updates/1/edit
@@ -26,7 +26,7 @@ class UpdatesController < ApplicationController
   # POST /updates
   # POST /updates.json
   def create
-    @update = Update.new(update_params)
+    authorize @update = Update.new(update_params)
 
     respond_to do |format|
       if @update.save
@@ -44,7 +44,7 @@ class UpdatesController < ApplicationController
   def update
     respond_to do |format|
       if @update.update(update_params)
-        format.html { redirect_to @update, notice: 'Update was successfully updated.' }
+        format.html { redirect_to @update, notice: 'Update was successfully edited.' }
         format.json { render :show, status: :ok, location: @update }
       else
         format.html { render :edit }
@@ -64,13 +64,12 @@ class UpdatesController < ApplicationController
   end
 
   private
-    # Use callbacks to share common setup or constraints between actions.
-    def set_update
-      @update = Update.find(params[:id])
-    end
 
-    # Never trust parameters from the scary internet, only allow the white list through.
-    def update_params
-      params.require(:update).permit(:date, :technology_id, :distributed, :checked, :user_id, :model_gid, :distribute, :check)
-    end
+  def set_update
+    authorize @update = Update.find(params[:id])
+  end
+
+  def update_params
+    params.require(:update).permit(:date, :technology_id, :distributed, :checked, :user_id, :model_gid, :distribute, :check)
+  end
 end

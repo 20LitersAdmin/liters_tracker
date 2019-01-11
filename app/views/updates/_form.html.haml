@@ -9,7 +9,7 @@
 
   .field
     = f.label :date
-    = f.date_select :date
+    = f.date_select :date, discard_day: true
   .field
     = f.label :technology
     = f.text_field :technology
@@ -25,11 +25,5 @@
   .field
     = f.label :model_gid
     = f.text_field :model_gid
-  .field
-    = f.label :distribute
-    = f.number_field :distribute
-  .field
-    = f.label :check
-    = f.number_field :check
   .actions
     = f.submit 'Save'

@@ -6,7 +6,7 @@ class TargetsController < ApplicationController
   # GET /targets
   # GET /targets.json
   def index
-    @targets = Target.all
+    authorize @targets = Target.all
   end
 
   # GET /targets/1
@@ -16,7 +16,7 @@ class TargetsController < ApplicationController
 
   # GET /targets/new
   def new
-    @target = Target.new
+    authorize @target = Target.new
   end
 
   # GET /targets/1/edit
@@ -26,7 +26,7 @@ class TargetsController < ApplicationController
   # POST /targets
   # POST /targets.json
   def create
-    @target = Target.new(target_params)
+    authorize @target = Target.new(target_params)
 
     respond_to do |format|
       if @target.save
@@ -56,7 +56,7 @@ class TargetsController < ApplicationController
   # DELETE /targets/1
   # DELETE /targets/1.json
   def destroy
-    @target.destroy
+    authorize @target.destroy
     respond_to do |format|
       format.html { redirect_to targets_url, notice: 'Target was successfully destroyed.' }
       format.json { head :no_content }
@@ -64,13 +64,12 @@ class TargetsController < ApplicationController
   end
 
   private
-    # Use callbacks to share common setup or constraints between actions.
-    def set_target
-      @target = Target.find(params[:id])
-    end
 
-    # Never trust parameters from the scary internet, only allow the white list through.
-    def target_params
-      params.require(:target).permit(:contract_id, :technology_id, :goal, :people_goal)
-    end
+  def set_target
+    authorize @target = Target.find(params[:id])
+  end
+
+  def target_params
+    params.require(:target).permit(:contract_id, :technology_id, :goal, :people_goal)
+  end
 end

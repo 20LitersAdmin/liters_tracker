@@ -6,7 +6,7 @@ class VillagesController < ApplicationController
   # GET /villages
   # GET /villages.json
   def index
-    @villages = Village.all
+    authorize @villages = Village.all
   end
 
   # GET /villages/1
@@ -16,7 +16,7 @@ class VillagesController < ApplicationController
 
   # GET /villages/new
   def new
-    @village = Village.new
+    authorize @village = Village.new
   end
 
   # GET /villages/1/edit
@@ -26,7 +26,7 @@ class VillagesController < ApplicationController
   # POST /villages
   # POST /villages.json
   def create
-    @village = Village.new(village_params)
+    authorize @village = Village.new(village_params)
 
     respond_to do |format|
       if @village.save
@@ -64,13 +64,12 @@ class VillagesController < ApplicationController
   end
 
   private
-    # Use callbacks to share common setup or constraints between actions.
-    def set_village
-      @village = Village.find(params[:id])
-    end
 
-    # Never trust parameters from the scary internet, only allow the white list through.
-    def village_params
-      params.require(:village).permit(:name, :gis_id, :latitude, :longitude, :population, :households)
-    end
+  def set_village
+    authorize @village = Village.find(params[:id])
+  end
+
+  def village_params
+    params.require(:village).permit(:name, :gis_id, :latitude, :longitude, :population, :households)
+  end
 end

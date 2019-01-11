@@ -66,6 +66,8 @@ GEM
       autoprefixer-rails (>= 9.1.0)
       popper_js (>= 1.14.3, < 2)
       sassc-rails (>= 2.0.0)
+    bootstrap3-datetimepicker-rails (4.17.47)
+      momentjs-rails (>= 2.8.1)
     builder (3.2.3)
     byebug (10.0.2)
     capybara (3.12.0)
@@ -152,11 +154,13 @@ GEM
     mini_mime (1.0.1)
     mini_portile2 (2.4.0)
     minitest (5.11.3)
+    momentjs-rails (2.20.1)
+      railties (>= 3.1)
     monetize (1.9.0)
       money (~> 6.12)
-    money (6.13.1)
+    money (6.13.2)
       i18n (>= 0.6.4, <= 2)
-    money-rails (1.13.0)
+    money-rails (1.13.1)
       activesupport (>= 3.0)
       monetize (~> 1.9.0)
       money (~> 6.13.0)
@@ -170,7 +174,7 @@ GEM
     parallel (1.12.1)
     parser (2.5.3.0)
       ast (~> 2.4.0)
-    pg (1.1.3)
+    pg (1.1.4)
     popper_js (1.14.5)
     powerpack (0.1.2)
     public_suffix (3.0.3)
@@ -309,6 +313,7 @@ PLATFORMS
 DEPENDENCIES
   bootsnap (>= 1.1.0)
   bootstrap (~> 4.2.1)
+  bootstrap3-datetimepicker-rails (>= 4.17)
   byebug
   capybara (>= 2.15)
   capybara-slow_finder_errors
@@ -322,6 +327,7 @@ DEPENDENCIES
   jbuilder (~> 2.5)
   jquery-rails
   listen (>= 3.0.5, < 3.2)
+  momentjs-rails (>= 2.9.0)
   money-rails
   pg (>= 0.18, < 2.0)
   puma (~> 3.11)

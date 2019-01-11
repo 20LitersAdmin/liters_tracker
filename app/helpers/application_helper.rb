@@ -5,6 +5,26 @@ module ApplicationHelper
     Constants::Application::BOOTSTRAP_CLASSES[flash_type.to_sym] || flash_type.to_s
   end
 
+  def human_boolean(boolean)
+    boolean ? 'Yes' : 'No'
+  end
+
+  def human_date(date)
+    date&.strftime('%b %-d, %Y')
+  end
+
+  def human_datetime(datetime)
+    datetime&.strftime('%-m/%-d @ %l:%M:%S %p %Z')
+  end
+
+  def human_number(integer)
+    number_with_delimiter(integer, delimiter: ',')
+  end
+
+  def form_datetime(datetime)
+    datetime&.strftime('%Y-%m-%dT%H:%M')
+  end
+
   def flash_messages(_opts = {})
     flash.each do |msg_type, message|
       concat(

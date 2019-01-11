@@ -1,6 +1,9 @@
 # frozen_string_literal: true
 
 Rails.application.routes.draw do
+  root to: 'users#homepage'
+  get 'reports', to: 'users#reports'
+
   resources :updates
   resources :plans
   resources :targets
@@ -11,7 +14,6 @@ Rails.application.routes.draw do
   resources :cells
   resources :villages
   resources :facilities
-  root to: 'users#homepage'
 
   devise_for :users
 
