@@ -1,12 +1,22 @@
 # frozen_string_literal: true
 
 class SectorsController < ApplicationController
-  before_action :set_sector, only: [:show, :edit, :update, :destroy]
+  before_action :set_sector, only: %w[show edit update destroy report]
 
   # GET /sectors
   # GET /sectors.json
   def index
     authorize @sectors = Sector.all
+  end
+
+  def select
+    authorize @sectors = Sector.all.order(:name)
+  end
+
+  def report
+    @cells = @sector.cells
+    @facilities_sam2 = @sector.facilities.not_churches.order(:name)
+    @facilities_rwhs = @sector.facilities.churches.order(:name)
   end
 
   # GET /sectors/1
@@ -71,5 +81,9 @@ class SectorsController < ApplicationController
 
   def sector_params
     params.require(:sector).permit(:name, :gis_id, :latitude, :longitude, :population, :households)
+  end
+
+  def report_params
+    params.require(:reports).permit(:all)
   end
 end

@@ -63,6 +63,15 @@ class UpdatesController < ApplicationController
     end
   end
 
+  def process
+    # handle the creation of multiple updates from sectors/#id/report
+
+    # params[:updates].each do |single_update_params|
+    #   Don't forget to set the globalID
+    #   Update.create(single_update_params)
+    # end
+  end
+
   private
 
   def set_update

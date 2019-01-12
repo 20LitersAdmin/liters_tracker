@@ -20,7 +20,7 @@
         .card-body
           %h5.card-title Submit an update
           %p.card-text Monthly report from the field
-          = link_to 'Submit Update', new_update_path, class: 'btn btn-primary'
+          = link_to 'Submit Update', select_sectors_path, class: 'btn btn-primary'
 
   - if @can_update_updates
     .col-sm-12.col-md-6.col-lg-3
@@ -61,7 +61,7 @@
           %h5.card-title Manage MOUs
           %p.card-text Contracts, targets, plans
           = link_to 'Manage MOUs', contracts_path, class: 'btn btn-primary'
-    
+
   - if @can_update_users
     .col-sm-12.col-md-6.col-lg-3
       .card.my-2

@@ -1,2 +1,24 @@
-// @import 'bootstrap-sprockets';
 @import "bootstrap";
+
+.footer {
+  position: fixed;
+  bottom: 0;
+  width: 100%;
+  height: 60px;
+  line-height: 60px;
+  background-color: #fce000;
+}
+
+
+main.container {
+  padding-top: 70px; // reserve space for the alerts
+  margin-bottom: 60px; // reserve space for the footer
+
+  .alert {
+    margin-top: -66px;
+  }
+}
+
+table.tight td {
+  padding: 0.05rem;
+}

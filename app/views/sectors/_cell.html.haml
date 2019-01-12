@@ -1,0 +1,5 @@
+-# frozen_string_literal: true
+%tr
+  %td{'rowspan': "#{cell.villages.count + 1}"}
+    = cell.name
+  = render partial: 'village', collection: cell.villages

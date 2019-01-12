@@ -14,11 +14,20 @@ module Constants
     MODEL_LIST = %w[Cell Contract District Facility Permission Plan Report Sector Target Technology Update User Village].freeze
   end
 
+  class Geography
+    STACK_HSH = { 'District' => 0, 'Sector' => 1, 'Cell' => 2, 'Village' => 3, 'Facility' => 4 }.freeze
+    STACK_ARY = %w[District Sector Cell Village Facility].freeze
+  end
+
   class Technology
     SCALE = %w[Family Community].freeze
   end
 
   class Facility
     CATEGORY = %w[Church Clinic School Other].freeze
+  end
+
+  class Contract
+    CURRENT = 4
   end
 end

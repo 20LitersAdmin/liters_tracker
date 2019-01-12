@@ -37,4 +37,8 @@ class UpdatePolicy
   def destroy?
     @user&.can_delete?(@record.class.name)
   end
+
+  def process?
+    @user&.can_create?('Update')
+  end
 end

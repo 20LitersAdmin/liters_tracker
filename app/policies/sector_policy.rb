@@ -14,6 +14,14 @@ class SectorPolicy
     @user&.can_read?(@record.first.class.name)
   end
 
+  def select?
+    @user&.can_create?('Report')
+  end
+
+  def report?
+    @user&.can_create?('Report')
+  end
+
   def show?
     @user&.can_read?(@record.class.name)
   end

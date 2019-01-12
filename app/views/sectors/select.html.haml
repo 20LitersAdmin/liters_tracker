@@ -1,0 +1,20 @@
+-# frozen_string_literal: true
+%h1 Submit an update: select a sector
+
+%table.table.table-striped
+  %thead
+    %tr
+      %th Name
+      %th District
+      %th
+
+  %tbody
+    - @sectors.each do |sector|
+      %tr
+        %td= sector.name
+        %td= sector.district.name
+        %td= link_to 'Submit Update', report_sector_path(sector), class: 'btn btn-primary'
+
+%br
+
+= link_to 'Back', root_path
