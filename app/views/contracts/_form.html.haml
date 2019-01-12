@@ -1,11 +1,7 @@
 -# frozen_string_literal: true
 = form_for @contract do |f|
   - if @contract.errors.any?
-    #error_explanation
-      %h2= "#{pluralize(@contract.errors.count, "error")} prohibited this contract from being saved:"
-      %ul
-        - @contract.errors.full_messages.each do |message|
-          %li= message
+    = render partial: 'shared/form_errors', locals: { object: @contract }
 
   .field
     = f.label :start_date

@@ -1,11 +1,12 @@
 # frozen_string_literal: true
 
-class CreateUpdates < ActiveRecord::Migration[5.2]
+class CreateReports < ActiveRecord::Migration[5.2]
   def change
-    create_table :updates do |t|
+    create_table :reports do |t|
       t.date :date
       t.references :technology, foreign_key: true, null: false
       t.references :user,       foreign_key: true, null: false
+      t.references :contract,   foreign_key: true, null: false
       t.string :model_gid,                         null: false
       t.integer :distributed
       t.integer :checked

@@ -1,10 +1,10 @@
 -# frozen_string_literal: true
-- @update = village.related_updates.last #should limit by date
-- @distributed = @update&.distributed
-- @checked = @update&.checked
-= hidden_field_tag 'updates[][technology_id]', 1, id: "updates_#{village.id}_technology_id"
+- @report = village.related_reports.last #should limit by date
+- @distributed = @report&.distributed
+- @checked = @report&.checked
+= hidden_field_tag 'reports[][technology_id]', 1, id: "reports_#{village.id}_technology_id"
 %tr
   %td= village.name
   %td= village.current_plan&.goal || 'not set'
-  %td.text-center= number_field_tag 'updates[][distributed]', @distributed, min: 0, step: 1, id: "updates_#{village.id}_distributed"
-  %td.text-center= number_field_tag 'updates[][checked]', @checked, min: 0, step: 1, id: "updates_#{village.id}_checked"
+  %td.text-center= number_field_tag 'reports[][distributed]', @distributed, min: 0, step: 1, id: "reports_#{village.id}_distributed"
+  %td.text-center= number_field_tag 'reports[][checked]', @checked, min: 0, step: 1, id: "reports_#{village.id}_checked"

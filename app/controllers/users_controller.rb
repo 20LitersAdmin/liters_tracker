@@ -8,9 +8,9 @@ class UsersController < ApplicationController
 
     @user = current_user
 
-    @can_create_updates = current_user.can_create?('Update')
-    @can_update_updates = current_user.can_update?('Update')
-    @can_read_reports = current_user.can_read?('Report')
+    @can_create_reports = current_user.can_create?('Report')
+    @can_update_reports = current_user.can_update?('Report')
+    @can_read_data = current_user.can_read?('Data')
     @can_update_facilities = current_user.can_update?('Facility')
     @can_update_geography = current_user.can_update?('Village')
     @can_update_plans = current_user.can_update?('Plan')

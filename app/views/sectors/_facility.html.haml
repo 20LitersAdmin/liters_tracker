@@ -1,4 +1,4 @@
-= hidden_field_tag 'updates[][technology_id]', tech, id: "updates_#{facility.id}_technology_id"
+= hidden_field_tag 'reports[][technology_id]', tech, id: "reports_#{facility.id}_technology_id"
 %tr
   %td= facility.name
   %td= facility.population
@@ -6,5 +6,5 @@
   %td= facility.category
   %td= facility.cell.name
   %td= facility.village.name
-  %td.text-center= number_field_tag 'updates[][distributed]', nil, min: 0, step: 1, id: "updates_#{facility.id + offset}_distributed"
-  %td.text-center= number_field_tag 'updates[][checked]', @checked, min: 0, step: 1, id: "updates_#{facility.id + offset}_checked"
+  %td.text-center= number_field_tag 'reports[][distributed]', nil, min: 0, step: 1, id: "reports_#{facility.id + offset}_distributed"
+  %td.text-center= number_field_tag 'reports[][checked]', @checked, min: 0, step: 1, id: "reports_#{facility.id + offset}_checked"

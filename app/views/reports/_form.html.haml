@@ -1,11 +1,7 @@
 -# frozen_string_literal: true
-= form_for @update do |f|
-  - if @update.errors.any?
-    #error_explanation
-      %h2= "#{pluralize(@update.errors.count, "error")} prohibited this update from being saved:"
-      %ul
-        - @update.errors.full_messages.each do |message|
-          %li= message
+= form_for @report do |f|
+  - if @report.errors.any?
+    = render partial: 'shared/form_errors', locals: { object: @report }
 
   .field
     = f.label :date

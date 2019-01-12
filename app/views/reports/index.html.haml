@@ -1,0 +1,36 @@
+-# frozen_string_literal: true
+%h1 Listing reports
+
+%table
+  %thead
+    %tr
+      %th Date
+      %th Technology
+      %th Distributed
+      %th Checked
+      %th User
+      %th Model gid
+      %th Distribute
+      %th Check
+      %th
+      %th
+      %th
+
+  %tbody
+    - @reports.each do |report|
+      %tr
+        %td= report.date
+        %td= report.technology
+        %td= report.distributed
+        %td= report.checked
+        %td= report.user
+        %td= report.model_gid
+        %td= report.distribute
+        %td= report.check
+        %td= link_to 'Show', report
+        %td= link_to 'Edit', edit_report_path(report)
+        %td= link_to 'Destroy', report, method: :delete, data: { confirm: 'Are you sure?' }
+
+%br
+
+= link_to 'New Report', new_report_path

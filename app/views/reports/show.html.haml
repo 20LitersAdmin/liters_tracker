@@ -1,0 +1,29 @@
+-# frozen_string_literal: true
+%p
+  %b Date:
+  = @report.date
+%p
+  %b Technology:
+  = @report.technology
+%p
+  %b Distributed:
+  = @report.distributed
+%p
+  %b Checked:
+  = @report.checked
+%p
+  %b User:
+  = @report.user
+%p
+  %b Model gid:
+  = @report.model_gid
+%p
+  %b Distribute:
+  = @report.distribute
+%p
+  %b Check:
+  = @report.check
+
+= link_to 'Edit', edit_report_path(@report)
+\|
+= link_to 'Back', reports_path

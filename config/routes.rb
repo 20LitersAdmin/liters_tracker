@@ -4,8 +4,8 @@ Rails.application.routes.draw do
   root to: 'users#homepage'
   get 'reports', to: 'users#reports'
 
-  resources :updates do
-    get 'process', on: :collection
+  resources :reports do
+    get 'batch_process', on: :collection
   end
   resources :plans
   resources :targets

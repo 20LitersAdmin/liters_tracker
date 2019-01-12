@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-class UpdatePolicy
+class ReportPolicy
   attr_reader :user, :record
 
   def initialize(user, record)
@@ -39,6 +39,6 @@ class UpdatePolicy
   end
 
   def process?
-    @user&.can_create?('Update')
+    @user&.can_create?('Report')
   end
 end

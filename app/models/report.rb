@@ -1,8 +1,9 @@
 # frozen_string_literal: true
 
-class Update < ApplicationRecord
-  belongs_to :technology, inverse_of: :updates
-  belongs_to :user,       inverse_of: :updates
+class Report < ApplicationRecord
+  belongs_to :technology, inverse_of: :reports
+  belongs_to :user,       inverse_of: :reports
+  belongs_to :contract,   inverse_of: :reports
   serialize :model_gid
 
   scope :only_districts,  -> { where('model_gid ILIKE ?', '%/District/%') }
@@ -16,18 +17,7 @@ class Update < ApplicationRecord
   end
 
   def self.related_to(record)
-    case record.class.to_s
-    when 'District'
-      only_districts.where('model_gid ILIKE ?', "%/#{record.id}%")
-    when 'Sector'
-      only_sectors.where('model_gid ILIKE ?', "%/#{record.id}%")
-    when 'Cell'
-      only_cells.where('model_gid ILIKE ?', "%/#{record.id}%")
-    when 'Village'
-      only_villages.where('model_gid ILIKE ?', "%/#{record.id}%")
-    when 'Facility'
-      only_facilities.where('model_gid ILIKE ?', "%/#{record.id}%")
-    end
+    where('model_gid = ?', "gid://liters-tracker/#{record.class.to_s}/#{record.id}")
   end
 
   def district

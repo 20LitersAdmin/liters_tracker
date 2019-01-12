@@ -1,5 +1,8 @@
 -# frozen_string_literal: true
 = simple_form_for @user do |f|
+  - if @user.errors.any?
+    = render partial: 'shared/form_errors', locals: { object: @user }
+
   .field
     = f.input :fname, label: 'First Name'
   .field

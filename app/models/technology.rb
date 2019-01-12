@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 class Technology < ApplicationRecord
-  has_many :updates, inverse_of: :technology
+  has_many :reports, inverse_of: :technology
   has_many :targets, inverse_of: :technology
   has_many :plans,   inverse_of: :technology
 

@@ -11,7 +11,7 @@ class User < ApplicationRecord
          :validatable
 
   has_many :permissions, inverse_of: :user, dependent: :destroy
-  has_many :updates,     inverse_of: :user
+  has_many :reports,     inverse_of: :user
 
   validates_presence_of :fname, :lname
   validates :email, presence: true, uniqueness: true

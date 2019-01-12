@@ -1,5 +1,5 @@
 -# frozen_string_literal: true
-%h1 Submit an update: select a sector
+%h1 Submit a report: select a sector
 
 %table.table.table-striped
   %thead
@@ -13,7 +13,7 @@
       %tr
         %td= sector.name
         %td= sector.district.name
-        %td= link_to 'Submit Update', report_sector_path(sector), class: 'btn btn-primary'
+        %td= link_to 'Submit Report', report_sector_path(sector), class: 'btn btn-primary'
 
 %br
 
