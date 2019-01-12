@@ -1,0 +1,29 @@
+-# frozen_string_literal: true
+= form_for @update do |f|
+  - if @update.errors.any?
+    #error_explanation
+      %h2= "#{pluralize(@update.errors.count, "error")} prohibited this update from being saved:"
+      %ul
+        - @update.errors.full_messages.each do |message|
+          %li= message
+
+  .field
+    = f.label :date
+    = f.date_select :date, discard_day: true
+  .field
+    = f.label :technology
+    = f.text_field :technology
+  .field
+    = f.label :distributed
+    = f.number_field :distributed
+  .field
+    = f.label :checked
+    = f.number_field :checked
+  .field
+    = f.label :user
+    = f.text_field :user
+  .field
+    = f.label :model_gid
+    = f.text_field :model_gid
+  .actions
+    = f.submit 'Save'

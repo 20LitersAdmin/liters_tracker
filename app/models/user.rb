@@ -11,36 +11,67 @@ class User < ApplicationRecord
          :validatable
 
   has_many :permissions, inverse_of: :user, dependent: :destroy
+  has_many :updates,     inverse_of: :user
+
+  validates_presence_of :fname, :lname
+  validates :email, presence: true, uniqueness: true
+  validates_inclusion_of :admin, in: [true, false]
+
+  scope :admins, -> { where(admin: true) }
 
   def name
     fname + ' ' + lname
   end
 
-  def grant_global_permissions!(create: false, read: false, update: false, delete: false, all: false)
+  def can_create?(model_name)
+    return true if admin?
+
+    return false unless permissions.where(model_class: model_name).any?
+
+    permissions.where(model_class: model_name).first.can_create?
+  end
+
+  def can_delete?(model_name)
+    return true if admin?
+
+    return false unless permissions.where(model_class: model_name).any?
+
+    permissions.where(model_class: model_name).first.can_delete?
+  end
+
+  def can_read?(model_name)
+    return true if admin?
+
+    return false unless permissions.where(model_class: model_name).any?
+
+    permissions.where(model_class: model_name).first.can_read?
+  end
+
+  def can_update?(model_name)
+    return true if admin?
+
+    return false unless permissions.where(model_class: model_name).any?
+
+    permissions.where(model_class: model_name).first.can_update?
+  end
+
+  def write_global_permissions!(args)
+    return true if admin?
+
     Constants::Application::MODEL_LIST.each do |model|
-      grant_permission_to!(model, create: create, read: read, update: update, delete: delete, all: all)
+      write_permission!(model, args)
     end
   end
 
-  def grant_permission_to!(model_name, create: false, read: false, update: false, delete: false, all: false)
+  def write_permission!(model_name, args)
+    return true if admin?
+
     return false unless Constants::Application::MODEL_LIST.include? model_name
 
-    record = permissions.where(model_class: model_name).first_or_initialize
-    if all
-      record.tap do |up|
-        up.can_create = true
-        up.can_read = true
-        up.can_update = true
-        up.can_delete = true
-      end
-    else
-      record.tap do |up|
-        up.can_create = create
-        up.can_read = read
-        up.can_update = update
-        up.can_delete = delete
-      end
-    end
-    record.save
+    permission = permissions.where(model_class: model_name).first_or_initialize
+
+    return permission.write_all(args[:all]) if args[:all].present?
+
+    permission.write_individual(args)
   end
 end

@@ -6,7 +6,7 @@ class DistrictsController < ApplicationController
   # GET /districts
   # GET /districts.json
   def index
-    @districts = District.all
+    authorize @districts = District.all
   end
 
   # GET /districts/1
@@ -16,7 +16,7 @@ class DistrictsController < ApplicationController
 
   # GET /districts/new
   def new
-    @district = District.new
+    authorize @district = District.new
   end
 
   # GET /districts/1/edit
@@ -26,7 +26,7 @@ class DistrictsController < ApplicationController
   # POST /districts
   # POST /districts.json
   def create
-    @district = District.new(district_params)
+    authorize @district = District.new(district_params)
 
     respond_to do |format|
       if @district.save
@@ -64,13 +64,12 @@ class DistrictsController < ApplicationController
   end
 
   private
-    # Use callbacks to share common setup or constraints between actions.
-    def set_district
-      @district = District.find(params[:id])
-    end
 
-    # Never trust parameters from the scary internet, only allow the white list through.
-    def district_params
-      params.require(:district).permit(:name, :gis_id, :latitude, :longitude, :population, :households)
-    end
+  def set_district
+    authorize @district = District.find(params[:id])
+  end
+
+  def district_params
+    params.require(:district).permit(:name, :gis_id, :latitude, :longitude, :population, :households)
+  end
 end

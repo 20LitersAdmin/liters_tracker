@@ -1,7 +1,7 @@
 -# frozen_string_literal: true
 %h1 Listing contracts
 
-%table
+%table.table.table-striped
   %thead
     %tr
       %th Start date
@@ -16,11 +16,11 @@
   %tbody
     - @contracts.each do |contract|
       %tr
-        %td= contract.start_date
-        %td= contract.end_date
-        %td= contract.budget
-        %td= contract.household_goal
-        %td= contract.people_goal
+        %td= human_date contract.start_date
+        %td= human_date contract.end_date
+        %td= humanized_money_with_symbol contract.budget
+        %td= human_number contract.household_goal
+        %td= human_number contract.people_goal
         %td= link_to 'Show', contract
         %td= link_to 'Edit', edit_contract_path(contract)
         %td= link_to 'Destroy', contract, method: :delete, data: { confirm: 'Are you sure?' }

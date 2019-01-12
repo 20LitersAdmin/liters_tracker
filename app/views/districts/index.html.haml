@@ -1,11 +1,10 @@
 -# frozen_string_literal: true
 %h1 Listing districts
 
-%table
+%table.table.table-striped
   %thead
     %tr
       %th Name
-      %th Gis
       %th Latitude
       %th Longitude
       %th Population
@@ -18,7 +17,6 @@
     - @districts.each do |district|
       %tr
         %td= district.name
-        %td= district.gis_id
         %td= district.latitude
         %td= district.longitude
         %td= district.population

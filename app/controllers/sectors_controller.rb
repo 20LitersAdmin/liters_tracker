@@ -1,12 +1,22 @@
 # frozen_string_literal: true
 
 class SectorsController < ApplicationController
-  before_action :set_sector, only: [:show, :edit, :update, :destroy]
+  before_action :set_sector, only: %w[show edit update destroy report]
 
   # GET /sectors
   # GET /sectors.json
   def index
-    @sectors = Sector.all
+    authorize @sectors = Sector.all
+  end
+
+  def select
+    authorize @sectors = Sector.all.order(:name)
+  end
+
+  def report
+    @cells = @sector.cells
+    @facilities_sam2 = @sector.facilities.not_churches.order(:name)
+    @facilities_rwhs = @sector.facilities.churches.order(:name)
   end
 
   # GET /sectors/1
@@ -16,7 +26,7 @@ class SectorsController < ApplicationController
 
   # GET /sectors/new
   def new
-    @sector = Sector.new
+    authorize @sector = Sector.new
   end
 
   # GET /sectors/1/edit
@@ -26,7 +36,7 @@ class SectorsController < ApplicationController
   # POST /sectors
   # POST /sectors.json
   def create
-    @sector = Sector.new(sector_params)
+    authorize @sector = Sector.new(sector_params)
 
     respond_to do |format|
       if @sector.save
@@ -56,7 +66,7 @@ class SectorsController < ApplicationController
   # DELETE /sectors/1
   # DELETE /sectors/1.json
   def destroy
-    @sector.destroy
+    authorize @sector.destroy
     respond_to do |format|
       format.html { redirect_to sectors_url, notice: 'Sector was successfully destroyed.' }
       format.json { head :no_content }
@@ -64,13 +74,16 @@ class SectorsController < ApplicationController
   end
 
   private
-    # Use callbacks to share common setup or constraints between actions.
-    def set_sector
-      @sector = Sector.find(params[:id])
-    end
 
-    # Never trust parameters from the scary internet, only allow the white list through.
-    def sector_params
-      params.require(:sector).permit(:name, :gis_id, :latitude, :longitude, :population, :households)
-    end
+  def set_sector
+    authorize @sector = Sector.find(params[:id])
+  end
+
+  def sector_params
+    params.require(:sector).permit(:name, :gis_id, :latitude, :longitude, :population, :households)
+  end
+
+  def report_params
+    params.require(:reports).permit(:all)
+  end
 end

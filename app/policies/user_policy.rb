@@ -9,10 +9,40 @@ class UserPolicy
   end
 
   def homepage?
-    true
+    @user
+  end
+
+  def reports?
+    @user&.can_read?('Report')
+  end
+
+  def index?
+    raise ActiveRecord::RecordNotFound if @record.empty?
+
+    @user&.can_read?(@record.first.class.name)
   end
 
   def show?
-    true
+    @user.can_read?(@record.class.name) || @user == @record
+  end
+
+  def new?
+    @user&.can_create?(@record.class.name)
+  end
+
+  def create?
+    @user&.can_create?(@record.class.name)
+  end
+
+  def edit?
+    @user&.can_update?(@record.class.name)
+  end
+
+  def update?
+    @user&.can_update?(@record.class.name)
+  end
+  
+  def destroy?
+    @user&.can_delete?(@record.class.name)
   end
 end

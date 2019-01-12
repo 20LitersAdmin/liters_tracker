@@ -1,0 +1,16 @@
+-# frozen_string_literal: true
+= simple_form_for @user do |f|
+  .field
+    = f.input :fname, label: 'First Name'
+  .field
+    = f.input :lname, label: 'Last Name'
+  .field
+    = f.input :email
+  .field
+    = f.input :admin
+  .field
+    = f.input :confirmed_at
+  .field
+    = f.input :locked_at
+  .actions
+    = f.button :submit, class: 'btn btn-primary'

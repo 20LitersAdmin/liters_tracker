@@ -1,0 +1,36 @@
+-# frozen_string_literal: true
+%h1 Listing updates
+
+%table
+  %thead
+    %tr
+      %th Date
+      %th Technology
+      %th Distributed
+      %th Checked
+      %th User
+      %th Model gid
+      %th Distribute
+      %th Check
+      %th
+      %th
+      %th
+
+  %tbody
+    - @updates.each do |update|
+      %tr
+        %td= update.date
+        %td= update.technology
+        %td= update.distributed
+        %td= update.checked
+        %td= update.user
+        %td= update.model_gid
+        %td= update.distribute
+        %td= update.check
+        %td= link_to 'Show', update
+        %td= link_to 'Edit', edit_update_path(update)
+        %td= link_to 'Destroy', update, method: :delete, data: { confirm: 'Are you sure?' }
+
+%br
+
+= link_to 'New Update', new_update_path

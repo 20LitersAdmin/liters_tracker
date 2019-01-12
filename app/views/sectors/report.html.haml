@@ -1,0 +1,56 @@
+-# frozen_string_literal: true
+.row
+  .col-10
+    %h2= "Sector report: #{@sector.name}"
+  .col-2
+    =link_to 'Back', select_sectors_path, class: 'btn btn-primary'
+
+.row#sector_report
+  .col-12
+    .row
+      .col-12
+        = form_tag(process_updates_path) do
+          %h4= "SAM3: #{@sector.name}"
+          %table.table.tight
+            %thead
+              %tr
+                %th Cells
+                %th Villages
+                %th Planned
+                %th.text-center Distributed
+                %th.text-center Checked
+            %tbody
+              = render partial: 'cell', collection: @cells
+
+          %h4= "SAM2: #{@sector.name}"
+          %table.table
+            %thead
+              %tr
+                %th Facilities
+                %th Population
+                %th Households
+                %th Category
+                %th Cell
+                %th Village
+                %th Installed
+                %th Checked
+              %tbody
+                = render partial: 'facility', collection: @facilities_sam2, locals: { tech: 3, offset: 10_000 }
+
+          %h4= "RWHS: #{@sector.name}"
+          %table.table
+            %thead
+              %tr
+                %th Facilities
+                %th Population
+                %th Households
+                %th Category
+                %th Cell
+                %th Village
+                %th Installed
+                %th Checked
+              %tbody
+                = render partial: 'facility', collection: @facilities_rwhs, locals: { tech: 5, offset: 20_000 }
+
+
+

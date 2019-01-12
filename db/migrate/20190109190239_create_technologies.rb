@@ -8,10 +8,10 @@ class CreateTechnologies < ActiveRecord::Migration[5.2]
       t.integer :default_impact,     null: false
       t.boolean :agreement_required, null: false, default: false
       t.string :scale,               null: false
-      t.money :direct_cost
-      t.money :indirect_cost
-      t.money :us_cost
-      t.money :local_cost
+      t.monetize :direct_cost
+      t.monetize :indirect_cost
+      t.monetize :us_cost
+      t.monetize :local_cost
 
       t.timestamps
     end

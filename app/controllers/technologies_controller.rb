@@ -6,7 +6,7 @@ class TechnologiesController < ApplicationController
   # GET /technologies
   # GET /technologies.json
   def index
-    @technologies = Technology.all
+    authorize @technologies = Technology.all
   end
 
   # GET /technologies/1
@@ -16,7 +16,7 @@ class TechnologiesController < ApplicationController
 
   # GET /technologies/new
   def new
-    @technology = Technology.new
+    authorize @technology = Technology.new
   end
 
   # GET /technologies/1/edit
@@ -26,7 +26,7 @@ class TechnologiesController < ApplicationController
   # POST /technologies
   # POST /technologies.json
   def create
-    @technology = Technology.new(technology_params)
+    authorize @technology = Technology.new(technology_params)
 
     respond_to do |format|
       if @technology.save
@@ -64,13 +64,12 @@ class TechnologiesController < ApplicationController
   end
 
   private
-    # Use callbacks to share common setup or constraints between actions.
-    def set_technology
-      @technology = Technology.find(params[:id])
-    end
 
-    # Never trust parameters from the scary internet, only allow the white list through.
-    def technology_params
-      params.require(:technology).permit(:name, :default_impact, :agreement_required, :scale, :direct_cost, :indirect_cost, :us_cost, :local_cost)
-    end
+  def set_technology
+    authorize @technology = Technology.find(params[:id])
+  end
+
+  def technology_params
+    params.require(:technology).permit(:name, :default_impact, :agreement_required, :scale, :direct_cost, :indirect_cost, :us_cost, :local_cost)
+  end
 end

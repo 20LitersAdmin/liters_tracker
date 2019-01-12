@@ -6,7 +6,7 @@ class FacilitiesController < ApplicationController
   # GET /facilities
   # GET /facilities.json
   def index
-    @facilities = Facility.all
+    authorize @facilities = Facility.all
   end
 
   # GET /facilities/1
@@ -16,7 +16,7 @@ class FacilitiesController < ApplicationController
 
   # GET /facilities/new
   def new
-    @facility = Facility.new
+    authorize @facility = Facility.new
   end
 
   # GET /facilities/1/edit
@@ -26,7 +26,7 @@ class FacilitiesController < ApplicationController
   # POST /facilities
   # POST /facilities.json
   def create
-    @facility = Facility.new(facility_params)
+    authorize @facility = Facility.new(facility_params)
 
     respond_to do |format|
       if @facility.save
@@ -56,7 +56,7 @@ class FacilitiesController < ApplicationController
   # DELETE /facilities/1
   # DELETE /facilities/1.json
   def destroy
-    @facility.destroy
+    authorize @facility.destroy
     respond_to do |format|
       format.html { redirect_to facilities_url, notice: 'Facility was successfully destroyed.' }
       format.json { head :no_content }
@@ -64,13 +64,12 @@ class FacilitiesController < ApplicationController
   end
 
   private
-    # Use callbacks to share common setup or constraints between actions.
-    def set_facility
-      @facility = Facility.find(params[:id])
-    end
 
-    # Never trust parameters from the scary internet, only allow the white list through.
-    def facility_params
-      params.require(:facility).permit(:name, :gis_id, :latitude, :longitude, :population, :households, :category)
-    end
+  def set_facility
+    authorize @facility = Facility.find(params[:id])
+  end
+
+  def facility_params
+    params.require(:facility).permit(:name, :gis_id, :latitude, :longitude, :population, :households, :category)
+  end
 end
