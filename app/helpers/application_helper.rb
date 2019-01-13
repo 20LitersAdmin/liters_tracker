@@ -18,7 +18,13 @@ module ApplicationHelper
   end
 
   def human_number(integer)
+    return '-' if integer.zero?
+
     number_with_delimiter(integer, delimiter: ',')
+  end
+
+  def form_date(date)
+    date&.strftime('%Y-%m-%d')
   end
 
   def form_datetime(datetime)

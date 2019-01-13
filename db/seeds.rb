@@ -968,7 +968,7 @@ Report.create(
     { date: '2014-04-16', user_id: 1, contract_id: 1, technology_id: 3, model_gid: 'gid://liters-tracker/Facility/4', distributed: 1 },
     { date: '2014-04-16', user_id: 1, contract_id: 1, technology_id: 3, model_gid: 'gid://liters-tracker/Facility/5', distributed: 1 },
     { date: '2014-04-20', user_id: 1, contract_id: 1, technology_id: 3, model_gid: 'gid://liters-tracker/Facility/6', distributed: 1 },
-    { date: '1905-07-06', user_id: 1, contract_id: 1, technology_id: 3, model_gid: 'gid://liters-tracker/Facility/7', distributed: 1 },
+    { date: '2014-01-01', user_id: 1, contract_id: 1, technology_id: 3, model_gid: 'gid://liters-tracker/Facility/7', distributed: 1 },
     # Masaka RWHS
     { date: '2008-01-01', user_id: 1, contract_id: 1, technology_id: 5, model_gid: 'gid://liters-tracker/Facility/8', distributed: 1 },
     { date: '2008-01-01', user_id: 1, contract_id: 1, technology_id: 5, model_gid: 'gid://liters-tracker/Facility/9', distributed: 1 },
@@ -1879,8 +1879,8 @@ Report.create(
     { date: '2018-02-22', user_id: 1, contract_id: 3, technology_id: 5, model_gid: 'gid://liters-tracker/Facility/136', distributed: 1 },
     # Start Monthlies
     # M Sept Gashora SS
-    { date: '2018-09-01', user_id: 2, contract_id: 4, technology_id: 2, model_gid: 'gid://liters-tracker/Village/87', distributed: 18 },
-    { date: '2018-09-01', user_id: 2, contract_id: 4, technology_id: 2, model_gid: 'gid://liters-tracker/Village/81', distributed: 58 },
+    { date: '2018-09-01', user_id: 2, contract_id: 4, technology_id: 6, model_gid: 'gid://liters-tracker/Village/87', distributed: 18 },
+    { date: '2018-09-01', user_id: 2, contract_id: 4, technology_id: 6, model_gid: 'gid://liters-tracker/Village/81', distributed: 58 },
     # M Sept Gahanga SAM3
     { date: '2018-09-01', user_id: 2, contract_id: 4, technology_id: 1, model_gid: 'gid://liters-tracker/Village/7', checked: 12 },
     { date: '2018-09-01', user_id: 2, contract_id: 4, technology_id: 1, model_gid: 'gid://liters-tracker/Village/9', checked: 8 },
@@ -1978,10 +1978,10 @@ Report.create(
     { date: '2018-10-01', user_id: 2, contract_id: 4, technology_id: 1, model_gid: 'gid://liters-tracker/Village/134', checked: 5 },
     { date: '2018-10-01', user_id: 2, contract_id: 4, technology_id: 1, model_gid: 'gid://liters-tracker/Village/131', checked: 4 },
     # M Oct Gashora SS
-    { date: '2018-10-01', user_id: 2, contract_id: 4, technology_id: 2, model_gid: 'gid://liters-tracker/Village/81', distributed: 67 },
-    { date: '2018-10-01', user_id: 2, contract_id: 4, technology_id: 2, model_gid: 'gid://liters-tracker/Village/84', checked: 17 },
-    { date: '2018-10-01', user_id: 2, contract_id: 4, technology_id: 2, model_gid: 'gid://liters-tracker/Village/83', checked: 22 },
-    { date: '2018-10-01', user_id: 2, contract_id: 4, technology_id: 2, model_gid: 'gid://liters-tracker/Village/87', checked: 14 },
+    { date: '2018-10-01', user_id: 2, contract_id: 4, technology_id: 6, model_gid: 'gid://liters-tracker/Village/81', distributed: 67 },
+    { date: '2018-10-01', user_id: 2, contract_id: 4, technology_id: 6, model_gid: 'gid://liters-tracker/Village/84', checked: 17 },
+    { date: '2018-10-01', user_id: 2, contract_id: 4, technology_id: 6, model_gid: 'gid://liters-tracker/Village/83', checked: 22 },
+    { date: '2018-10-01', user_id: 2, contract_id: 4, technology_id: 6, model_gid: 'gid://liters-tracker/Village/87', checked: 14 },
     # M Nov Mwogo SAM3
     { date: '2018-11-01', user_id: 2, contract_id: 4, technology_id: 1, model_gid: 'gid://liters-tracker/Village/151', checked: 21 },
     { date: '2018-11-01', user_id: 2, contract_id: 4, technology_id: 1, model_gid: 'gid://liters-tracker/Village/148', checked: 23 },

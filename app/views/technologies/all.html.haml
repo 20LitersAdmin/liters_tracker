@@ -1,0 +1,21 @@
+-# frozen_string_literal: true
+.row
+  .col
+    %h4 Data: All Technologies
+
+= render partial: 'shared/search', locals: { from: @from, to: @to, earliest: @earliest, latest: @latest }
+
+%table.table
+  %thead
+    %tr
+      %th Tech
+      %th.text-right Distributed
+      %th.text-right Checked
+      %th.text-right People served
+  %tbody
+    = render @technologies
+    %tr
+      %th Grand Total
+      %th
+      %th
+      %th.text-right= human_number @reports.where(date: @from..@to).map(&:people_served).sum

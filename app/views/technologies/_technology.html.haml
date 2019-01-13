@@ -1,0 +1,6 @@
+%tr
+  - @subset = @reports.where(technology_id: technology.id).where(date: @from...@to)
+  %td= technology.name
+  %td.text-right= human_number @subset.sum(:distributed)
+  %td.text-right= human_number @subset.sum(:checked)
+  %td.text-right= human_number @subset.map(&:people_served).sum

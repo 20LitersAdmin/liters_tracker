@@ -12,7 +12,7 @@ class UserPolicy
     @user
   end
 
-  def reports?
+  def data?
     @user&.can_read?('Report')
   end
 
@@ -41,7 +41,7 @@ class UserPolicy
   def update?
     @user&.can_update?(@record.class.name)
   end
-  
+
   def destroy?
     @user&.can_delete?(@record.class.name)
   end

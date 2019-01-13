@@ -1,16 +1,26 @@
 # frozen_string_literal: true
 
 class TechnologiesController < ApplicationController
-  before_action :set_technology, only: [:show, :edit, :update, :destroy]
+  before_action :set_technology, only: %i[show edit update destroy]
+
+  def all
+    authorize @technologies = Technology.all
+
+    @reports = Report.order(date: :asc)
+
+    @earliest = form_date @reports.first.date
+    @latest = form_date @reports.last.date
+
+    @from = params[:from].present? ? Date.parse(params[:from]) : @earliest
+    @to = params[:to].present? ? Date.parse(params[:to]) : @latest
+  end
 
   # GET /technologies
-  # GET /technologies.json
   def index
     authorize @technologies = Technology.all
   end
 
   # GET /technologies/1
-  # GET /technologies/1.json
   def show
   end
 
@@ -24,7 +34,6 @@ class TechnologiesController < ApplicationController
   end
 
   # POST /technologies
-  # POST /technologies.json
   def create
     authorize @technology = Technology.new(technology_params)
 

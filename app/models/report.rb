@@ -17,20 +17,10 @@ class Report < ApplicationRecord
   end
 
   def self.related_to(record)
-    where('model_gid = ?', "gid://liters-tracker/#{record.class.to_s}/#{record.id}")
+    where('model_gid = ?', "gid://liters-tracker/#{record.class}/#{record.id}")
   end
 
-  def district
-    model.district
-  end
-
-  def sector
-    return model if model.class == 'sector'
-
-    model.sector
-  end
-
-  def cell
-    model.cell
+  def people_served
+    model_gid.include?('Facility') && model.impact.positive? ? model.impact : (technology.default_impact * distributed.to_i )
   end
 end

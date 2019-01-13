@@ -31,4 +31,8 @@ class Facility < ApplicationRecord
   def related_reports
     Report.where(model_gid: "gid://liters-tracker/Facility/#{id}")
   end
+
+  def impact
+    population.to_i + (households.to_i * 5)
+  end
 end

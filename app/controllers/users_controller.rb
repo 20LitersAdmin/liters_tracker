@@ -27,7 +27,7 @@ class UsersController < ApplicationController
     @admins = User.admins
   end
 
-  def reports
+  def data
     authorize current_user
   end
 

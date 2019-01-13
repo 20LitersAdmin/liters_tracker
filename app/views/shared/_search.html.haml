@@ -1,0 +1,18 @@
+.row.align-items-center
+  .col-2
+    %p.text-right Limit by date:
+    %span.hidden#earliest= @earliest
+    %span.hidden#latest= @latest
+  .col-10
+    = form_tag(all_technologies_path, method: :get, autocomplete: "new-password") do
+      .row.form-group.align-items-center
+        .col-sm-5.input-group
+          .input-group-prepend
+            %span.input-group-text From:
+          = text_field_tag :from, from, class: 'form-control datetimepicker-input', id: 'datepicker_from', data: { toggle: 'datetimepicker', target: '#datepicker_from' }, autocomplete: 'off', type: 'search'
+        .col-sm-5.input-group
+          .input-group-prepend
+            %span.input-group-text To:
+          = text_field_tag :to, to, class: 'form-control datetimepicker-input', id: 'datepicker_to', data: { toggle: 'datetimepicker', target: '#datepicker_to' }, autocomplete: 'off', type: 'search'
+        .col-sm-2
+          = submit_tag 'Filter', class: 'btn btn-primary'

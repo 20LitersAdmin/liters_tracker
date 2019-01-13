@@ -3,7 +3,7 @@
   .col
     %h2= 'Hey ' + @user.fname
 .row.justify-content-center
-  .col-sm-12
+  .col
     %h3.text-center Things you can do:
 
 .row.justify-content-center.deck
@@ -36,7 +36,7 @@
         .card-body
           %h5.card-title View the data
           %p.card-text Get information on progress
-          = link_to 'Data', '#', class: 'btn btn-primary'
+          = link_to 'View Data', data_path, class: 'btn btn-primary'
 
   - if @can_update_facilities
     .col-sm-12.col-md-6.col-lg-3
