@@ -4,15 +4,19 @@ class TechnologiesController < ApplicationController
   before_action :set_technology, only: %i[show edit update destroy]
 
   def all
-    authorize @technologies = Technology.all
+    authorize @technologies = Technology.report_worthy
 
-    @reports = Report.order(date: :asc)
+    @tech_ids = @technologies.pluck(:id)
 
-    @earliest = form_date @reports.first.date
-    @latest = form_date @reports.last.date
+    @earliest = form_date Report.where(technology_id: @tech_ids).order(date: :asc).first.date
+    @latest =   form_date Report.where(technology_id: @tech_ids).order(date: :asc).last.date
 
     @from = params[:from].present? ? Date.parse(params[:from]) : @earliest
-    @to = params[:to].present? ? Date.parse(params[:to]) : @latest
+    @to =   params[:to].present? ? Date.parse(params[:to]) : @latest
+
+    @targets = Target.where(technology_id: @tech_ids).between(@from, @to).order(contract_id: :asc)
+    @reports = Report.where(technology_id: @tech_ids).where(date: @from..@to).order(date: :asc)
+    @target_date = @targets.last.date
   end
 
   # GET /technologies
@@ -22,6 +26,24 @@ class TechnologiesController < ApplicationController
 
   # GET /technologies/1
   def show
+    @earliest = form_date Report.where(technology: @technology).order(date: :asc).first.date
+    @latest =   form_date Report.where(technology: @technology).order(date: :asc).last.date
+
+    @from = params[:from].present? ? Date.parse(params[:from]) : @earliest
+    @to =   params[:to].present? ? Date.parse(params[:to]) : @latest
+
+    @reports = Report.where(technology: @technology).where(date: @from..@to)
+
+    @by_contract = params[:by_contract] == 'true'
+
+    if @by_contract
+      @mous = Contract.all
+      # use targets, which tie to contracts
+    else
+      @sectors = Sector.all
+      @plans = Plan.where(technology: @technology).between(@from, @to)
+      @plan_date = human_date @plans.last.contract.end_date
+    end
   end
 
   # GET /technologies/new

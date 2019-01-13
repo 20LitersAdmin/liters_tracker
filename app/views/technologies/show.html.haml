@@ -1,31 +1,30 @@
 -# frozen_string_literal: true
-%p#notice= notice
+.row.mb-3
+  .col-sm-6
+    %h4= "Data: #{@technology.name}"
+  .col-sm-3.text-center
+    - if @by_contract
+      = link_to 'View by sector', technology_path(@technology), class: 'btn btn-secondary'
+    - else
+      = link_to 'View by MOU', technology_path(@technology, by_contract: true), class: 'btn btn-secondary'
+  .col-sm-3.text-right
+    = link_to 'Edit', edit_technology_path(@technology), class: 'btn btn-primary'
 
-%p
-  %b Name:
-  = @technology.name
-%p
-  %b Default impact:
-  = @technology.default_impact
-%p
-  %b Agreement required:
-  = @technology.agreement_required
-%p
-  %b Scale:
-  = @technology.scale
-%p
-  %b Direct cost:
-  = @technology.direct_cost
-%p
-  %b Indirect cost:
-  = @technology.indirect_cost
-%p
-  %b Us cost:
-  = @technology.us_cost
-%p
-  %b Local cost:
-  = @technology.local_cost
+= render partial: 'shared/search', locals: { from: @from, to: @to, earliest: @earliest, latest: @latest }
 
-= link_to 'Edit', edit_technology_path(@technology)
-\|
-= link_to 'Back', technologies_path
+.row.mt-3
+  .col.text-center
+    %table.table.table-striped
+      %thead
+        %tr
+          - if @by_contract
+            = render partial: 'mou_thead'
+          - else
+            = render partial: 'sector_thead'
+      %tbody
+        - if @by_contract
+          = render partial: 'mou', collection: @mous
+        - else
+          = render partial: 'sector', collection: @sectors
+
+

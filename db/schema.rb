@@ -131,6 +131,7 @@ ActiveRecord::Schema.define(version: 2019_01_10_210841) do
     t.string "name", null: false
     t.string "short_name", null: false
     t.integer "default_impact", null: false
+    t.boolean "report_worthy", default: true, null: false
     t.boolean "agreement_required", default: false, null: false
     t.string "scale", null: false
     t.integer "direct_cost_cents", default: 0, null: false

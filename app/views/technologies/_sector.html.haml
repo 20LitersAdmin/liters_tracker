@@ -1,0 +1,9 @@
+- @plan_sub = @plans.related_to_sector(sector)
+- @subset = @reports.related_to_sector(sector)
+- return unless @plan_sub.any? || @subset.any?
+%tr
+  %td= link_to sector.name, sector_path(sector)
+  %td.text-right= human_number @plan_sub.sum(:goal)
+  %td.text-right= human_number @subset.sum(:distributed)
+  %td.text-right= human_number @plan_sub.sum(:people_goal)
+  %td.text-right= human_number @subset.map(&:people_served).sum

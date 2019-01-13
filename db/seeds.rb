@@ -18,9 +18,9 @@ User.first.confirm
 Technology.create(
   [
     { id: 1, name: 'Household Filter', short_name: 'SAM3', default_impact: 5, scale: 'Family', direct_cost: 35_28, indirect_cost: 100_00 },
-    { id: 2, name: 'Modified Household Filter', short_name: 'SAM3-M', default_impact: 5, scale: 'Family', direct_cost: 32_22, indirect_cost: 100_00 },
+    { id: 2, name: 'Modified Household Filter', short_name: 'SAM3-M', default_impact: 5, scale: 'Family', direct_cost: 32_22, indirect_cost: 100_00, report_worthy: false },
     { id: 3, name: 'Community Filter', short_name: 'SAM2', default_impact: 400, scale: 'Community', agreement_required: true, direct_cost: 1_382_44, indirect_cost: 2_000_00 },
-    { id: 4, name: 'Modified Community Filter', short_name: 'SAM2-M', default_impact: 400, scale: 'Community', agreement_required: true, direct_cost: 1_839_82, indirect_cost: 2_600_00 },
+    { id: 4, name: 'Modified Community Filter', short_name: 'SAM2-M', default_impact: 400, scale: 'Community', agreement_required: true, direct_cost: 1_839_82, indirect_cost: 2_600_00, report_worthy: false },
     { id: 5, name: 'Rainwater Harvesting System', short_name: 'RWHS', default_impact: 500, scale: 'Community', agreement_required: true, direct_cost: 1_565_38, indirect_cost: 3_200_00 },
     { id: 6, name: 'Slowsand Filter', short_name: 'SS', default_impact: 5, scale: 'Family' }
   ]
@@ -28,7 +28,7 @@ Technology.create(
 
 Contract.create(
   [
-    { id: 1, start_date: '2013-08-01', end_date: '2015-08-30', budget: 680_794_78, household_goal: 11_905, people_goal: 73_622 },
+    { id: 1, start_date: '2008-01-01', end_date: '2015-08-30', budget: 680_794_78, household_goal: 11_905, people_goal: 73_622 },
     { id: 2, start_date: '2015-09-01', end_date: '2016-12-31', budget: 390_251_00, household_goal: 3_700, people_goal: 38_200 },
     { id: 3, start_date: '2017-01-01', end_date: '2018-09-30', budget: 585_722_00, household_goal: 4_870, people_goal: 58_499 },
     { id: 4, start_date: '2018-10-01', end_date: '2021-09-30', budget: 336_000_00, household_goal: 10_090, people_goal: 58_687 }
@@ -40,7 +40,7 @@ Target.create(
     { contract_id: 1, technology_id: 1, goal: 7_194, people_goal: 35_970 },
     { contract_id: 1, technology_id: 3, goal: 31, people_goal: 12_400 },
     { contract_id: 1, technology_id: 5, goal: 40, people_goal: 20_000 },
-    { contract_id: 1, technology_id: 6, goal: 680, people_goal: 3_400 },
+    { contract_id: 1, technology_id: 6, goal: 680, people_goal: 6_800 },
     { contract_id: 2, technology_id: 1, goal: 3_700, people_goal: 18_500 },
     { contract_id: 2, technology_id: 3, goal: 24, people_goal: 9_600 },
     { contract_id: 2, technology_id: 5, goal: 28, people_goal: 14_000 },

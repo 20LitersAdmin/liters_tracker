@@ -10,4 +10,6 @@ class Technology < ApplicationRecord
   validates :scale, inclusion: { in: Constants::Technology::SCALE, message: "Must be one of these: #{Constants::Technology::SCALE.to_sentence}" }
 
   monetize :direct_cost_cents, :indirect_cost_cents, :us_cost_cents, :local_cost_cents, allow_nil: true, allow_blank: true
+
+  scope :report_worthy, -> { where(report_worthy: true) }
 end

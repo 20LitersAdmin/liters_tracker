@@ -1,21 +1,26 @@
 -# frozen_string_literal: true
-.row
+.row.mb-3
   .col
     %h4 Data: All Technologies
 
 = render partial: 'shared/search', locals: { from: @from, to: @to, earliest: @earliest, latest: @latest }
 
-%table.table
+%table.table.table-striped
   %thead
     %tr
       %th Tech
       %th.text-right Distributed
       %th.text-right Checked
       %th.text-right People served
-  %tbody
-    = render @technologies
+      %th.text-right= "Target goal (#{human_date @target_date})"
+      %th.text-right Target people goal
+  %tfoot
     %tr
       %th Grand Total
       %th
       %th
       %th.text-right= human_number @reports.where(date: @from..@to).map(&:people_served).sum
+      %th
+      %th.text-right= human_number @targets.between(@from,@to).sum(:people_goal)
+  %tbody
+    = render @technologies

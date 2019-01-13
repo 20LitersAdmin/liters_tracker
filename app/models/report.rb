@@ -17,7 +17,19 @@ class Report < ApplicationRecord
   end
 
   def self.related_to(record)
-    where('model_gid = ?', "gid://liters-tracker/#{record.class}/#{record.id}")
+    where(model_gid: record.to_global_id.to_s)
+  end
+
+  def self.related_to_sector(sector)
+    report_ids = []
+    # sector reports
+    report_ids << related_to(sector).pluck(:id).join(',')
+    # village reports
+    sector.villages.each { |village| report_ids << related_to(village).pluck(:id).join(',') }
+    # facility reports
+    sector.facilities.each { |facility| report_ids << related_to(facility).pluck(:id).join(',') }
+
+    where(id: report_ids)
   end
 
   def people_served
