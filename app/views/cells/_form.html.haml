@@ -1,11 +1,7 @@
 -# frozen_string_literal: true
 = simple_form_for @cell do |f|
   - if @cell.errors.any?
-    #error_explanation
-      %h2= "#{pluralize(@cell.errors.count, "error")} prohibited this cell from being saved:"
-      %ul
-        - @cell.errors.full_messages.each do |message|
-          %li= message
+    = render partial: 'shared/form_errors', locals: { object: @cell }
 
   .field
     = f.label :name

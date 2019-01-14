@@ -1,0 +1,9 @@
+%tr
+  - @sub_targets = @targets.where(technology: technology)
+  - @subset = @reports.where(technology: technology)
+  %td= link_to technology.name, technology_path(technology)
+  %td.text-right= human_number @subset.sum(:distributed)
+  %td.text-right= human_number @subset.sum(:checked)
+  %td.text-right= human_number @subset.map(&:people_served).sum
+  %td.text-right= human_number @sub_targets.sum(:goal)
+  %td.text-right= human_number @sub_targets.sum(:people_goal)

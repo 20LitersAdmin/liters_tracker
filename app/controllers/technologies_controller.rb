@@ -1,17 +1,59 @@
 # frozen_string_literal: true
 
 class TechnologiesController < ApplicationController
-  before_action :set_technology, only: [:show, :edit, :update, :destroy]
+  before_action :set_technology, only: %i[show edit update destroy]
+
+  def all
+    authorize @technologies = Technology.report_worthy
+
+    @tech_ids = @technologies.pluck(:id)
+
+    @earliest = form_date Report.where(technology_id: @tech_ids).order(date: :asc).first.date
+    @latest =   form_date Report.where(technology_id: @tech_ids).order(date: :asc).last.date
+
+    @from = params[:from].present? ? Date.parse(params[:from]) : @earliest
+    @to =   params[:to].present? ? Date.parse(params[:to]) : @latest
+
+    @targets = Target.where(technology_id: @tech_ids).between(@from, @to).order(contract_id: :asc)
+    @reports = Report.where(technology_id: @tech_ids).where(date: @from..@to).order(date: :asc)
+    @target_date = @targets.last.date
+  end
 
   # GET /technologies
-  # GET /technologies.json
   def index
     authorize @technologies = Technology.all
   end
 
   # GET /technologies/1
-  # GET /technologies/1.json
   def show
+    @earliest = form_date Contract.order(start_date: :asc).first.start_date
+    @latest =   form_date Contract.order(start_date: :asc).last.end_date
+
+    @from = params[:from].present? ? Date.parse(params[:from]) : @earliest
+    @to =   params[:to].present? ? Date.parse(params[:to]) : @latest
+
+    @reports = Report.where(technology: @technology).where(date: @from..@to)
+
+    @skip_blanks = params[:skip_blanks].present?
+    @skip_blanks_rfp = request.fullpath.include?('?') ? request.fullpath + '&skip_blanks=true' : request.fullpath + '?skip_blanks=true'
+
+    @by_mou = params[:by_mou].present?
+    @by_mou_rfp = request.fullpath.include?('?') ? request.fullpath + '&by_mou=true' : request.fullpath + '?by_mou=true'
+
+    @view_btn_text = @by_mou ? 'View by Sector' : 'View by MOU'
+    @searchbar_hidden_fields = @by_mou ? [{ name: 'by_mou', value: 'true' }] : []
+    @searchbar_hidden_fields << { name: 'skip_blanks', value: 'true' } if @skip_blanks
+    @contract_search_param_add = @by_mou ? '&by_mou=true' : ''
+    @contract_search_param_add += @skip_blanks ? '&skip_blanks=true' : ''
+
+    if @by_mou
+      @mous = Contract.between(@from, @to).order(start_date: :asc)
+      @targets = Target.where(contract: @mous).where(technology: @technology)
+    else
+      @sectors = Sector.all
+      @plans = Plan.where(technology: @technology).between(@from, @to)
+      @plan_date = human_date @plans.last&.contract&.end_date
+    end
   end
 
   # GET /technologies/new
@@ -24,7 +66,6 @@ class TechnologiesController < ApplicationController
   end
 
   # POST /technologies
-  # POST /technologies.json
   def create
     authorize @technology = Technology.new(technology_params)
 

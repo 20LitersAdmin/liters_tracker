@@ -21,7 +21,7 @@ class Village < ApplicationRecord
     Plan.where(contract_id: Constants::Contract::CURRENT).where(model_gid: "gid://liters-tracker/Village/#{id}").last
   end
 
-  def related_updates
-    Update.where(model_gid: "gid://liters-tracker/Village/#{id}")
+  def related_reports
+    Report.where(model_gid: "gid://liters-tracker/Village/#{id}")
   end
 end

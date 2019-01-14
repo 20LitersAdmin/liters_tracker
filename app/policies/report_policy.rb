@@ -1,19 +1,11 @@
 # frozen_string_literal: true
 
-class UserPolicy
+class ReportPolicy
   attr_reader :user, :record
 
   def initialize(user, record)
     @user = user
     @record = record
-  end
-
-  def homepage?
-    @user
-  end
-
-  def data?
-    @user&.can_read?('Report')
   end
 
   def index?
@@ -23,7 +15,7 @@ class UserPolicy
   end
 
   def show?
-    @user.can_read?(@record.class.name) || @user == @record
+    @user&.can_read?(@record.class.name)
   end
 
   def new?
@@ -44,5 +36,9 @@ class UserPolicy
 
   def destroy?
     @user&.can_delete?(@record.class.name)
+  end
+
+  def process?
+    @user&.can_create?('Report')
   end
 end

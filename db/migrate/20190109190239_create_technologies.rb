@@ -6,6 +6,7 @@ class CreateTechnologies < ActiveRecord::Migration[5.2]
       t.string :name,                null: false
       t.string :short_name,          null: false
       t.integer :default_impact,     null: false
+      t.boolean :report_worthy,      null: false, default: true
       t.boolean :agreement_required, null: false, default: false
       t.string :scale,               null: false
       t.monetize :direct_cost

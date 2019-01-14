@@ -8,6 +8,10 @@ class TechnologyPolicy
     @record = record
   end
 
+  def all?
+    @user&.can_read?('Data')
+  end
+
   def index?
     raise ActiveRecord::RecordNotFound if @record.empty?
 

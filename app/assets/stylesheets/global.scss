@@ -1,4 +1,5 @@
 @import "bootstrap";
+@import "tempusdominus-bootstrap-4.css";
 
 .footer {
   position: fixed;
@@ -21,4 +22,8 @@ main.container {
 
 table.tight td {
   padding: 0.05rem;
+}
+
+.hidden {
+  display: none;
 }

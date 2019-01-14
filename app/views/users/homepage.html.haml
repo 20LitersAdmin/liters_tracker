@@ -3,7 +3,7 @@
   .col
     %h2= 'Hey ' + @user.fname
 .row.justify-content-center
-  .col-sm-12
+  .col
     %h3.text-center Things you can do:
 
 .row.justify-content-center.deck
@@ -14,29 +14,29 @@
       = render 'shared/admins'
 
 
-  - if @can_create_updates
+  - if @can_create_reports
     .col-sm-12.col-md-6.col-lg-3
       .card.my-2
         .card-body
-          %h5.card-title Submit an update
+          %h5.card-title Submit a report
           %p.card-text Monthly report from the field
-          = link_to 'Submit Update', select_sectors_path, class: 'btn btn-primary'
+          = link_to 'Submit Report', select_sectors_path, class: 'btn btn-primary'
 
-  - if @can_update_updates
+  - if @can_update_reports
     .col-sm-12.col-md-6.col-lg-3
       .card.my-2
         .card-body
-          %h5.card-title Manage updates
+          %h5.card-title Manage reports
           %p.card-text Change or remove monthly reports
-          = link_to 'Manage Updates', updates_path, class: 'btn btn-primary'
+          = link_to 'Manage Reports', reports_path, class: 'btn btn-primary'
 
-  - if @can_read_reports
+  - if @can_read_data
     .col-sm-12.col-md-6.col-lg-3
       .card.my-2
         .card-body
-          %h5.card-title Run a report
+          %h5.card-title View the data
           %p.card-text Get information on progress
-          = link_to 'Reports', reports_path, class: 'btn btn-primary'
+          = link_to 'View Data', data_path, class: 'btn btn-primary'
 
   - if @can_update_facilities
     .col-sm-12.col-md-6.col-lg-3

@@ -1,5 +1,3 @@
-# frozen_string_literal: true
-
 # This file is auto-generated from the current state of the database. Instead
 # of editing this file, please use the migrations feature of Active Record to
 # incrementally modify your database, and then regenerate this schema definition.
@@ -89,6 +87,21 @@ ActiveRecord::Schema.define(version: 2019_01_10_210841) do
     t.index ["technology_id"], name: "index_plans_on_technology_id"
   end
 
+  create_table "reports", force: :cascade do |t|
+    t.date "date"
+    t.bigint "technology_id", null: false
+    t.bigint "user_id", null: false
+    t.bigint "contract_id", null: false
+    t.string "model_gid", null: false
+    t.integer "distributed"
+    t.integer "checked"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["contract_id"], name: "index_reports_on_contract_id"
+    t.index ["technology_id"], name: "index_reports_on_technology_id"
+    t.index ["user_id"], name: "index_reports_on_user_id"
+  end
+
   create_table "sectors", force: :cascade do |t|
     t.string "name", null: false
     t.bigint "district_id", null: false
@@ -118,6 +131,7 @@ ActiveRecord::Schema.define(version: 2019_01_10_210841) do
     t.string "name", null: false
     t.string "short_name", null: false
     t.integer "default_impact", null: false
+    t.boolean "report_worthy", default: true, null: false
     t.boolean "agreement_required", default: false, null: false
     t.string "scale", null: false
     t.integer "direct_cost_cents", default: 0, null: false
@@ -130,19 +144,6 @@ ActiveRecord::Schema.define(version: 2019_01_10_210841) do
     t.string "local_cost_currency", default: "USD", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-  end
-
-  create_table "updates", force: :cascade do |t|
-    t.date "date"
-    t.bigint "technology_id", null: false
-    t.bigint "user_id", null: false
-    t.string "model_gid", null: false
-    t.integer "distributed"
-    t.integer "checked"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-    t.index ["technology_id"], name: "index_updates_on_technology_id"
-    t.index ["user_id"], name: "index_updates_on_user_id"
   end
 
   create_table "users", force: :cascade do |t|
@@ -189,8 +190,9 @@ ActiveRecord::Schema.define(version: 2019_01_10_210841) do
 
   add_foreign_key "plans", "contracts"
   add_foreign_key "plans", "technologies"
+  add_foreign_key "reports", "contracts"
+  add_foreign_key "reports", "technologies"
+  add_foreign_key "reports", "users"
   add_foreign_key "targets", "contracts"
   add_foreign_key "targets", "technologies"
-  add_foreign_key "updates", "technologies"
-  add_foreign_key "updates", "users"
 end

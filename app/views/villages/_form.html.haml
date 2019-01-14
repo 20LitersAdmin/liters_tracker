@@ -1,11 +1,7 @@
 -# frozen_string_literal: true
 = form_for @village do |f|
   - if @village.errors.any?
-    #error_explanation
-      %h2= "#{pluralize(@village.errors.count, "error")} prohibited this village from being saved:"
-      %ul
-        - @village.errors.full_messages.each do |message|
-          %li= message
+    = render partial: 'shared/form_errors', locals: { object: @village }
 
   .field
     = f.label :name
