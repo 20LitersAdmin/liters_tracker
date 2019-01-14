@@ -31,6 +31,14 @@ class Plan < ApplicationRecord
     where(id: plan_ids.flatten!)
   end
 
+  def self.related_to_district(district)
+    plan_ids = []
+    plan_ids << related_to(district).pluck(:id)
+    district.sectors.each { |sector| plan_ids << related_to_sector(sector) }
+
+    where(id: plan_ids.flatten!)
+  end
+
   def model
     GlobalID::Locator.locate model_gid
   end

@@ -1,17 +1,50 @@
 # frozen_string_literal: true
 
 class DistrictsController < ApplicationController
-  before_action :set_district, only: [:show, :edit, :update, :destroy]
+  before_action :set_district, only: %i[show edit update destroy]
 
   # GET /districts
-  # GET /districts.json
   def index
     authorize @districts = District.all
+
+    @dist_ids = @districts.pluck(:id)
+
+    @earliest = form_date Report.earliest_date
+    @latest =   form_date Report.latest_date
+
+    @from = params[:from].present? ? Date.parse(params[:from]) : @earliest
+    @to =   params[:to].present? ? Date.parse(params[:to]) : @latest
+
+    @reports = Report.where(date: @from..@to).order(date: :asc)
+    @plans = Plan.between(@from, @to)
+
+    @plan_date = human_date @plans.last&.contract&.end_date
   end
 
   # GET /districts/1
-  # GET /districts/1.json
   def show
+    @reports = Report.related_to(@district)
+
+    @skip_blanks = params[:skip_blanks].present?
+    @skip_blanks_rfp = request.fullpath.include?('?') ? request.fullpath + '&skip_blanks=true' : request.fullpath + '?skip_blanks=true'
+
+    @by_mou = params[:by_mou].present?
+    @by_mou_rfp = request.fullpath.include?('?') ? request.fullpath + '&by_mou=true' : request.fullpath + '?by_mou=true'
+
+    @view_btn_text = @by_mou ? 'View by Sector' : 'View by MOU'
+    @searchbar_hidden_fields = @by_mou ? [{ name: 'by_mou', value: 'true' }] : []
+    @searchbar_hidden_fields << { name: 'skip_blanks', value: 'true' } if @skip_blanks
+    @contract_search_param_add = @by_mou ? '&by_mou=true' : ''
+    @contract_search_param_add += @skip_blanks ? '&skip_blanks=true' : ''
+
+    if @by_mou
+      @mous = Contract.between(@from, @to).order(start_date: :asc)
+      @targets = Target.where(contract: @mous).where(technology: @technology)
+    else
+      @sectors = @district.sectors
+      @plans = Plan.related_to(@district)
+      @plan_date = human_date @plans.last&.contract&.end_date
+    end
   end
 
   # GET /districts/new
@@ -24,7 +57,6 @@ class DistrictsController < ApplicationController
   end
 
   # POST /districts
-  # POST /districts.json
   def create
     authorize @district = District.new(district_params)
 
@@ -40,7 +72,6 @@ class DistrictsController < ApplicationController
   end
 
   # PATCH/PUT /districts/1
-  # PATCH/PUT /districts/1.json
   def update
     respond_to do |format|
       if @district.update(district_params)
@@ -54,7 +85,6 @@ class DistrictsController < ApplicationController
   end
 
   # DELETE /districts/1
-  # DELETE /districts/1.json
   def destroy
     @district.destroy
     respond_to do |format|

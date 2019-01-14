@@ -6,11 +6,10 @@ class TechnologiesController < ApplicationController
   # GET /technologies
   def index
     authorize @technologies = Technology.report_worthy
-
     @tech_ids = @technologies.pluck(:id)
 
-    @earliest = form_date Report.where(technology_id: @tech_ids).order(date: :asc).first.date
-    @latest =   form_date Report.where(technology_id: @tech_ids).order(date: :asc).last.date
+    @earliest = form_date Report.earliest_date
+    @latest =   form_date Report.earliest_date
 
     @from = params[:from].present? ? Date.parse(params[:from]) : @earliest
     @to =   params[:to].present? ? Date.parse(params[:to]) : @latest
@@ -22,8 +21,8 @@ class TechnologiesController < ApplicationController
 
   # GET /technologies/1
   def show
-    @earliest = form_date Contract.order(start_date: :asc).first.start_date
-    @latest =   form_date Contract.order(start_date: :asc).last.end_date
+    @earliest = form_date Report.earliest_date
+    @latest =   form_date Report.latest_date
 
     @from = params[:from].present? ? Date.parse(params[:from]) : @earliest
     @to =   params[:to].present? ? Date.parse(params[:to]) : @latest

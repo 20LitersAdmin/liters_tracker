@@ -1,7 +1,10 @@
 -# frozen_string_literal: true
 .row.mb-3
-  .col
+  .col-sm-10
     %h4 Data: All Technologies
+  .col-sm-2.text-right
+    = link_to 'New', new_technology_path, class: 'btn btn-primary'
+    = link_to 'Back', data_path, class: 'btn btn-dark'
 
 = render partial: 'shared/search', locals: { from: @from, to: @to, earliest: @earliest, latest: @latest }
 
@@ -19,8 +22,8 @@
       %th Grand Total
       %th
       %th
-      %th.text-right= human_number @reports.where(date: @from..@to).map(&:people_served).sum
+      %th.text-right= human_number @reports.map(&:people_served).sum
       %th
-      %th.text-right= human_number @targets.between(@from,@to).sum(:people_goal)
+      %th.text-right= human_number @targets.sum(:people_goal)
   %tbody
     = render @technologies

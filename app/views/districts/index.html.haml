@@ -1,30 +1,23 @@
 -# frozen_string_literal: true
-%h1 Listing districts
+.row.mb-3
+  .col
+    %h4 Data: All Districts
+  .col-sm-2.text-right
+    = link_to 'New', new_district_path, class: 'btn btn-primary'
+    = link_to 'Back', data_path, class: 'btn btn-dark'
+
+= render partial: 'shared/search', locals: { from: @from, to: @to, earliest: @earliest, latest: @latest }
 
 %table.table.table-striped
   %thead
     %tr
-      %th Name
-      %th Latitude
-      %th Longitude
-      %th Population
-      %th Households
-      %th
-      %th
-      %th
-
+      %th District
+      %th.text-right People served
+      %th.text-right= "People goal (by #{@plan_date})"
+  %tfoot
+    %tr
+      %th Grand Total
+      %th.text-right= human_number @reports.map(&:people_served).sum
+      %th.text-right= human_number @plans.sum(:people_goal)
   %tbody
-    - @districts.each do |district|
-      %tr
-        %td= district.name
-        %td= district.latitude
-        %td= district.longitude
-        %td= district.population
-        %td= district.households
-        %td= link_to 'Show', district
-        %td= link_to 'Edit', edit_district_path(district)
-        %td= link_to 'Destroy', district, method: :delete, data: { confirm: 'Are you sure?' }
-
-%br
-
-= link_to 'New District', new_district_path
+    = render @districts

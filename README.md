@@ -12,9 +12,8 @@ DONE: just use #index for reports instead of #all? E.g. technologies
 
 # More reports:
 * By Geography:
-- districts#index (or index) using Plans (not Targets)
---> By MOU (or just rely on searchbar dates?)
---> By Technology
+- districts#index using Plans (not Targets)
+-- By district: [ Report.people_served | Plan.people_goal ]
 
 - districts#show (using Plans)
 --> By technology
