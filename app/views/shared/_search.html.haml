@@ -4,7 +4,7 @@
     %span.hidden#earliest= @earliest
     %span.hidden#latest= @latest
   .col-10
-    = form_tag(request.fullpath, method: :get, autocomplete: "new-password") do
+    = form_tag(request.fullpath, method: :get, autocomplete: "new-password", id: 'searchbar') do
       .row.form-group.align-items-center
         .col-sm-5.input-group
           .input-group-prepend
@@ -15,4 +15,13 @@
             %span.input-group-text To:
           = text_field_tag :to, to, class: 'form-control datetimepicker-input', id: 'datepicker_to', data: { toggle: 'datetimepicker', target: '#datepicker_to' }, autocomplete: 'off', type: 'search'
         .col-sm-2
+          - @searchbar_hidden_fields&.each do |field|
+            = hidden_field_tag field[:name], field[:value]
           = submit_tag 'Filter', class: 'btn btn-primary', name: nil
+
+.row.align-items-center.mt-3.mb-5
+  .col-2
+    %p.text-right MOU Dates:
+  - Contract.all.order(start_date: :asc).each do |contract|
+    .col
+      = link_to contract.name, request.path + contract.url_params + @contract_search_param_add.to_s, class: 'btn btn-outline-secondary'

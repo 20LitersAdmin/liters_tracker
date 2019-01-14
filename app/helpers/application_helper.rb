@@ -10,6 +10,8 @@ module ApplicationHelper
   end
 
   def human_date(date)
+    return '-' if date.nil?
+
     date&.strftime('%b %-d, %Y')
   end
 

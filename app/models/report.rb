@@ -22,17 +22,15 @@ class Report < ApplicationRecord
 
   def self.related_to_sector(sector)
     report_ids = []
-    # sector reports
-    report_ids << related_to(sector).pluck(:id).join(',')
-    # village reports
-    sector.villages.each { |village| report_ids << related_to(village).pluck(:id).join(',') }
-    # facility reports
-    sector.facilities.each { |facility| report_ids << related_to(facility).pluck(:id).join(',') }
+    report_ids << related_to(sector).pluck(:id)
+    sector.cells.each { |cell| report_ids << related_to(cell).pluck(:id) }
+    sector.villages.each { |village| report_ids << related_to(village).pluck(:id) }
+    sector.facilities.each { |facility| report_ids << related_to(facility).pluck(:id) }
 
-    where(id: report_ids)
+    where(id: report_ids.flatten!)
   end
 
   def people_served
-    model_gid.include?('Facility') && model.impact.positive? ? model.impact : (technology.default_impact * distributed.to_i )
+    model_gid.include?('Facility') && model.impact.positive? ? model.impact : (technology.default_impact * distributed.to_i)
   end
 end

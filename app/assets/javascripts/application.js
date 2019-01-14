@@ -18,3 +18,23 @@
 //= require moment
 //= require tempusdominus-bootstrap-4.js
 //= require_tree .
+
+function getParameterByName(name, url) {
+    if (!url) url = window.location.href;
+    name = name.replace(/[\[\]]/g, "\\$&");
+    var regex = new RegExp("[?&]" + name + "(=([^&#]*)|&|#|$)"),
+        results = regex.exec(url);
+    if (!results) return null;
+    if (!results[2]) return '';
+    return decodeURIComponent(results[2].replace(/\+/g, " "));
+}
+
+function controllerMatches(controllers_ary) {
+  var controller = $('body').data('controller');
+  return controllers_ary.indexOf(controller) !== -1;
+}
+
+function actionMatches(actions_ary) {
+  var action = $('body').data('action');
+  return actions_ary.indexOf(action) !== -1;
+}

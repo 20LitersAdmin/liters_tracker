@@ -14,7 +14,8 @@ class Plan < ApplicationRecord
   scope :only_villages,   -> { where('model_gid ILIKE ?', '%/Village/%') }
   scope :only_facilities, -> { where('model_gid ILIKE ?', '%/Facility/%') }
 
-  scope :between, ->(sdate, edate) { joins(:contract).where('contracts.start_date BETWEEN ? AND ?', sdate, edate).order('contracts.end_date') }
+  # scope :between, ->(sdate, edate) { joins(:contract).where('contracts.start_date BETWEEN ? AND ?', sdate, edate).order('contracts.end_date') }
+  scope :between, ->(from, to) { joins(:contract).where('contracts.end_date >= ? AND contracts.start_date <= ?', from, to) }
 
   def self.related_to(record)
     where(model_gid: record.to_global_id.to_s)
@@ -22,14 +23,12 @@ class Plan < ApplicationRecord
 
   def self.related_to_sector(sector)
     plan_ids = []
-    # sector plans
-    plan_ids << related_to(sector).pluck(:id).join(',')
-    # village plans
-    sector.villages.each { |village| plan_ids << related_to(village).pluck(:id).join(',') }
-    # facility plans
-    sector.facilities.each { |facility| plan_ids << related_to(facility).pluck(:id).join(',') }
+    plan_ids << related_to(sector).pluck(:id)
+    sector.cells.each { |cell| plan_ids << related_to(cell).pluck(:id) }
+    sector.villages.each { |village| plan_ids << related_to(village).pluck(:id) }
+    sector.facilities.each { |facility| plan_ids << related_to(facility).pluck(:id) }
 
-    where(id: plan_ids)
+    where(id: plan_ids.flatten!)
   end
 
   def model

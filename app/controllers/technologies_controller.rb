@@ -34,12 +34,26 @@ class TechnologiesController < ApplicationController
 
     @reports = Report.where(technology: @technology).where(date: @from..@to)
 
-    @mous = Contract.between(@from, @to).order(start_date: :asc)
-    @targets = Target.where(contract: @mous).where(technology: @technology)
+    @skip_blanks = params[:skip_blanks].present?
+    @skip_blanks_rfp = request.fullpath.include?('?') ? request.fullpath + '&skip_blanks=true' : request.fullpath + '?skip_blanks=true'
 
-    @sectors = Sector.all
-    @plans = Plan.where(technology: @technology).between(@from, @to)
-    @plan_date = human_date @plans.last.contract.end_date
+    @by_mou = params[:by_mou].present?
+    @by_mou_rfp = request.fullpath.include?('?') ? request.fullpath + '&by_mou=true' : request.fullpath + '?by_mou=true'
+
+    @view_btn_text = @by_mou ? 'View by Sector' : 'View by MOU'
+    @searchbar_hidden_fields = @by_mou ? [{ name: 'by_mou', value: 'true' }] : []
+    @searchbar_hidden_fields << { name: 'skip_blanks', value: 'true' } if @skip_blanks
+    @contract_search_param_add = @by_mou ? '&by_mou=true' : ''
+    @contract_search_param_add += @skip_blanks ? '&skip_blanks=true' : ''
+
+    if @by_mou
+      @mous = Contract.between(@from, @to).order(start_date: :asc)
+      @targets = Target.where(contract: @mous).where(technology: @technology)
+    else
+      @sectors = Sector.all
+      @plans = Plan.where(technology: @technology).between(@from, @to)
+      @plan_date = human_date @plans.last&.contract&.end_date
+    end
   end
 
   # GET /technologies/new
