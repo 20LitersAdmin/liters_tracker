@@ -1,12 +1,15 @@
 -# frozen_string_literal: true
 %nav.navbar.navbar-expand-lg.navbar-dark.bg-dark
-  .container
-    = link_to 'Liters Tracker', root_path, class: 'navbar-brand'
-    %button{ class: 'navbar-toggler', type: 'button', data: { toggle: 'collapse', target: '#navbarNav' }, aria: { controls: 'navbarNav', expanded: 'false', label: 'Toggle navigation' }}
-      %span.navbar-toggler-icon
-    #navbarNav.collapse.navbar-collapse.navbar-nav
-      .col-sm.float-right.text-right
+  = link_to '20 Liters Data Tracker', root_path, class: 'navbar-brand'
+  %button{ class: 'navbar-toggler', type: 'button', data: { toggle: 'collapse', target: '#navbarNav' }, aria: { controls: 'navbarNav', expanded: 'false', label: 'Toggle navigation' }}
+    %span.navbar-toggler-icon
+  #navbarNav.collapse.navbar-collapse
+    %ul.navbar-nav.ml-auto
+      - if current_user
+        %li.nav-item.mr-3
+          = link_to 'Your profile', edit_user_path(current_user), class: 'btn btn-outline-primary'
+      %li.nav-item.mr-3
         -if current_user
-          =link_to('Sign out', destroy_user_session_path, method: :delete, class: 'text-light')
+          =link_to 'Sign out', destroy_user_session_path, method: :delete, class: 'btn btn-outline-secondary'
         -else
           =link_to 'Sign in', new_user_session_path

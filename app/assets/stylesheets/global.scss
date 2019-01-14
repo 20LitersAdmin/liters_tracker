@@ -1,5 +1,7 @@
+$enable-gradients: true;
 @import "bootstrap";
 @import "tempusdominus-bootstrap-4.css";
+
 
 .footer {
   position: fixed;
@@ -26,4 +28,15 @@ table.tight td {
 
 .hidden {
   display: none;
+}
+
+#error_explanation {
+  border-radius: 3px;
+  color: #721c24;
+  background: #f8d7da linear-gradient(180deg, #f9dde0, #f8d7da) repeat-x;
+  border-color: #f5c6cb;
+
+  li {
+    list-style: none;
+  }
 }

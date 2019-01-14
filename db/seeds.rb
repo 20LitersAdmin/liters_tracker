@@ -9,11 +9,12 @@
 #   Character.create(name: 'Luke', movie: movies.first)
 User.create(
   [
-    { id: 1, fname: 'Chip', lname: 'Kragt', email: 'chip@20liters.org', password: 'password', password_confirmation: 'password', admin: true },
-    { id: 2, fname: 'Robero', lname: "Jean d'Amour", email: "Rd'Amour@wr.org", password: 'password', password_confirmation: 'password' }
+    { id: 1, fname: 'Chip', lname: 'Kragt', email: 'chip@20liters.org', password: 'password', password_confirmation: 'password', admin: true, confirmed_at: Time.now },
+    { id: 2, fname: 'Robero', lname: "Jean d'Amour", email: "Rd'Amour@wr.org", password: 'password', password_confirmation: 'password', confirmed_at: Time.now }
   ]
 )
-User.first.confirm
+
+ActiveRecord::Base.connection.reset_pk_sequence!('users')
 
 Technology.create(
   [
@@ -26,6 +27,8 @@ Technology.create(
   ]
 )
 
+ActiveRecord::Base.connection.reset_pk_sequence!('technologies')
+
 Contract.create(
   [
     { id: 1, start_date: '2008-01-01', end_date: '2015-08-30', budget: 680_794_78, household_goal: 11_905, people_goal: 73_622 },
@@ -34,6 +37,8 @@ Contract.create(
     { id: 4, start_date: '2018-10-01', end_date: '2021-09-30', budget: 336_000_00, household_goal: 10_090, people_goal: 58_687 }
   ]
 )
+
+ActiveRecord::Base.connection.reset_pk_sequence!('contracts')
 
 Target.create(
   [
@@ -55,6 +60,8 @@ Target.create(
   ]
 )
 
+ActiveRecord::Base.connection.reset_pk_sequence!('targets')
+
 District.create(
   [
     { id: 1, name: 'Nyarugenge', gis_id: 11 },
@@ -63,6 +70,8 @@ District.create(
     { id: 4, name: 'Ngoma', gis_id: 56 }
   ]
 )
+
+ActiveRecord::Base.connection.reset_pk_sequence!('districts')
 
 Sector.create(
   [
@@ -77,6 +86,8 @@ Sector.create(
     { id: 9, name: 'Rukumberi', gis_id: 5611, district_id: 4 }
   ]
 )
+
+ActiveRecord::Base.connection.reset_pk_sequence!('sectors')
 
 Cell.create(
   [
@@ -122,6 +133,8 @@ Cell.create(
     { id: 40, name: 'Rwintashya', gis_id: 561105, sector_id: 9 }
   ]
 )
+
+ActiveRecord::Base.connection.reset_pk_sequence!('cells')
 
 Village.create(
   [
@@ -403,6 +416,8 @@ Village.create(
   ]
 )
 
+ActiveRecord::Base.connection.reset_pk_sequence!('villages')
+
 Facility.create(
   [
     # Masaka SAM2
@@ -558,6 +573,8 @@ Facility.create(
     { id: 138, name: 'Catholic Church of Kalirisi', category: 'Church', village_id: 205 }
   ]
 )
+
+ActiveRecord::Base.connection.reset_pk_sequence!('facilities')
 
 Plan.create(
   [
@@ -906,6 +923,8 @@ Plan.create(
     { contract_id: 3, technology_id: 5, model_gid: 'gid://liters-tracker/Facility/138', goal: 1, people_goal: 500 }
   ]
 )
+
+ActiveRecord::Base.connection.reset_pk_sequence!('plans')
 
 Report.create(
   [
@@ -2040,3 +2059,5 @@ Report.create(
     { date: '2018-11-01', user_id: 2, contract_id: 4, technology_id: 1, model_gid: 'gid://liters-tracker/Village/29', checked: 5 }
   ]
 )
+
+ActiveRecord::Base.connection.reset_pk_sequence!('reports')

@@ -7,19 +7,13 @@ Rails.application.routes.draw do
   resources :reports do
     get 'batch_process', on: :collection
   end
-  resources :contracts do
-    get 'all', on: :collection
-  end
+  resources :contracts
   resources :plans
   resources :targets
 
-  resources :technologies do
-    get 'all', on: :collection
-  end
+  resources :technologies
 
-  resources :districts do
-    get 'all', on: :collection
-  end
+  resources :districts
   resources :sectors do
     get 'select', on: :collection
     get 'report', on: :member

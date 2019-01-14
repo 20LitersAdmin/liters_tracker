@@ -3,7 +3,8 @@
 class TechnologiesController < ApplicationController
   before_action :set_technology, only: %i[show edit update destroy]
 
-  def all
+  # GET /technologies
+  def index
     authorize @technologies = Technology.report_worthy
 
     @tech_ids = @technologies.pluck(:id)
@@ -17,11 +18,6 @@ class TechnologiesController < ApplicationController
     @targets = Target.where(technology_id: @tech_ids).between(@from, @to).order(contract_id: :asc)
     @reports = Report.where(technology_id: @tech_ids).where(date: @from..@to).order(date: :asc)
     @target_date = @targets.last.date
-  end
-
-  # GET /technologies
-  def index
-    authorize @technologies = Technology.all
   end
 
   # GET /technologies/1

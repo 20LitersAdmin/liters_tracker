@@ -1,18 +1,18 @@
 # LITERS TRACKER
 A custom reporting app for 20 Liters
 
-* just use #index for reports instead of #all? E.g. technologies
+DONE: just use #index for reports instead of #all? E.g. technologies
 
 * 'Add plan' && 'Add report' buttons on technologies#show?by_sector don't do anything, but should
 - POLICED by current_user.can_create('Report') && current_user.can_create('Plan')
 
 * technologies#show?by_mou could have 'Add Target' button if it's missing, but these should be buit with each new MOU
 
-* technologies#all should also have buttons? [Add Plan, Add Report, Add Target]
+* technologies#index should also have buttons? [Add Plan, Add Report, Add Target]
 
 # More reports:
 * By Geography:
-- districts#all (or index) using Plans (not Targets)
+- districts#index (or index) using Plans (not Targets)
 --> By MOU (or just rely on searchbar dates?)
 --> By Technology
 
@@ -26,7 +26,7 @@ A custom reporting app for 20 Liters
 - sectors#show --> all villages per sector, using Plan
 
 * By MOU
-- contracts#all && contracts#show
+- contracts#index && contracts#show
 -- By technology: [Report.distributed | Target.goal | Report.people_served | Target.people_goal ]
 -- By sector: [ Report.people_served | Target.people_goal ]
 
