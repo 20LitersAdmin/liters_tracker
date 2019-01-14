@@ -6,7 +6,18 @@ class SectorsController < ApplicationController
   # GET /sectors
   # GET /sectors.json
   def index
-    authorize @sectors = Sector.all
+    authorize @sectors = Sector.all.order(:name)
+
+    @earliest = form_date Report.earliest_date
+    @latest =   form_date Report.latest_date
+
+    @from = params[:from].present? ? Date.parse(params[:from]) : @earliest
+    @to =   params[:to].present? ? Date.parse(params[:to]) : @latest
+
+    @reports = Report.where(date: @from..@to).order(date: :asc)
+    @plans = Plan.between(@from, @to)
+
+    @plan_date = human_date @plans.last&.contract&.end_date
   end
 
   def select

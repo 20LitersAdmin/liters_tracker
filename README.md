@@ -10,12 +10,16 @@ DONE: just use #index for reports instead of #all? E.g. technologies
 
 * technologies#index should also have buttons? [Add Plan, Add Report, Add Target]
 
+* Submitting a report needs to be intuitive for the user
+-- Each technology independently
+--- Tech.scale == "Family", show villages, Tech.scale == "Community", show facilities
+--- Add facilities on the fly
+
 # More reports:
 * By Geography:
-- sectors#index
---> By MOU (or just rely on searchbar dates?)
-
-- sectors#show --> all villages per sector, using Plan
+- sectors#show
+--> by villages per sector, using Plan
+--> by technologies
 
 * By MOU
 - contracts#index && contracts#show

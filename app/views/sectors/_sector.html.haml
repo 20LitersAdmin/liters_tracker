@@ -1,0 +1,6 @@
+- @report_sub = @reports.related_to_sector(sector)
+- @plan_sub = @plans.related_to_sector(sector)
+%tr
+  %td= link_to sector.name, sector_path(sector)
+  %td.text-right= human_number @report_sub.map(&:people_served).sum
+  %td.text-right= human_number @plan_sub.sum(:people_goal)
