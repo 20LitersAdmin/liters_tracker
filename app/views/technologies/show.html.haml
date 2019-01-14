@@ -3,28 +3,26 @@
   .col-sm-6
     %h4= "Data: #{@technology.name}"
   .col-sm-3.text-center
-    - if @by_contract
-      = link_to 'View by sector', technology_path(@technology), class: 'btn btn-secondary'
-    - else
-      = link_to 'View by MOU', technology_path(@technology, by_contract: true), class: 'btn btn-secondary'
+    = link_to 'View by MOU', '#', class: 'btn btn-secondary prevent-default', id: 'tech_viewby'
   .col-sm-3.text-right
     = link_to 'Edit', edit_technology_path(@technology), class: 'btn btn-primary'
 
 = render partial: 'shared/search', locals: { from: @from, to: @to, earliest: @earliest, latest: @latest }
 
-.row.mt-3
+.row.mt-3#sector_section
   .col.text-center
     %table.table.table-striped
       %thead
         %tr
-          - if @by_contract
-            = render partial: 'mou_thead'
-          - else
-            = render partial: 'sector_thead'
+          = render partial: 'sector_thead'
       %tbody
-        - if @by_contract
-          = render partial: 'mou', collection: @mous
-        - else
-          = render partial: 'sector', collection: @sectors
+        = render partial: 'sector', collection: @sectors
 
-
+%div{ class: 'row mt-3', id: 'mou_section', style: 'display: none;'}
+  .col.text-center
+    %table.table.table-striped
+      %thead
+        %tr
+          = render partial: 'mou_thead'
+      %tbody
+        = render partial: 'mou', collection: @mous

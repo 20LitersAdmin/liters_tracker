@@ -8,4 +8,10 @@ class Contract < ApplicationRecord
   validates_presence_of :start_date, :end_date
 
   scope :current, -> { where('end_date > ?', Date.today).order(start_date: :desc).first }
+
+  scope :between, ->(from, to) { where('end_date >= ? AND start_date <= ?', from, to) }
+
+  def name
+    id.to_s + ': ' + start_date.strftime('%m/%Y') + ' - ' + end_date.strftime('%m/%Y')
+  end
 end

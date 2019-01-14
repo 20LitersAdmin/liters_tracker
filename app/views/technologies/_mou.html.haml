@@ -1,1 +1,8 @@
-%h4 MOU
+- @target_sub = @targets.where(contract: mou)
+- @report_sub = @reports.where(contract: mou)
+%tr
+  %td= link_to mou.name, contract_path(mou)
+  %td.text-right= human_number @target_sub.sum(:goal)
+  %td.text-right= human_number @report_sub.sum(:distributed)
+  %td.text-right= human_number @target_sub.sum(:people_goal)
+  %td.text-right= human_number @report_sub.map(&:people_served).sum

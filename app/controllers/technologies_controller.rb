@@ -26,24 +26,20 @@ class TechnologiesController < ApplicationController
 
   # GET /technologies/1
   def show
-    @earliest = form_date Report.where(technology: @technology).order(date: :asc).first.date
-    @latest =   form_date Report.where(technology: @technology).order(date: :asc).last.date
+    @earliest = form_date Contract.order(start_date: :asc).first.start_date
+    @latest =   form_date Contract.order(start_date: :asc).last.end_date
 
     @from = params[:from].present? ? Date.parse(params[:from]) : @earliest
     @to =   params[:to].present? ? Date.parse(params[:to]) : @latest
 
     @reports = Report.where(technology: @technology).where(date: @from..@to)
 
-    @by_contract = params[:by_contract] == 'true'
+    @mous = Contract.between(@from, @to).order(start_date: :asc)
+    @targets = Target.where(contract: @mous).where(technology: @technology)
 
-    if @by_contract
-      @mous = Contract.all
-      # use targets, which tie to contracts
-    else
-      @sectors = Sector.all
-      @plans = Plan.where(technology: @technology).between(@from, @to)
-      @plan_date = human_date @plans.last.contract.end_date
-    end
+    @sectors = Sector.all
+    @plans = Plan.where(technology: @technology).between(@from, @to)
+    @plan_date = human_date @plans.last.contract.end_date
   end
 
   # GET /technologies/new
