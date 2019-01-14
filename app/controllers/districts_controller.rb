@@ -7,8 +7,6 @@ class DistrictsController < ApplicationController
   def index
     authorize @districts = District.all
 
-    @dist_ids = @districts.pluck(:id)
-
     @earliest = form_date Report.earliest_date
     @latest =   form_date Report.latest_date
 
@@ -23,28 +21,37 @@ class DistrictsController < ApplicationController
 
   # GET /districts/1
   def show
-    @reports = Report.related_to(@district)
+    @earliest = form_date Report.earliest_date
+    @latest =   form_date Report.latest_date
+
+    @from = params[:from].present? ? Date.parse(params[:from]) : @earliest
+    @to =   params[:to].present? ? Date.parse(params[:to]) : @latest
+
+    @reports = Report.related_to_district(@district).where(date: @from..@to).order(date: :asc)
 
     @skip_blanks = params[:skip_blanks].present?
     @skip_blanks_rfp = request.fullpath.include?('?') ? request.fullpath + '&skip_blanks=true' : request.fullpath + '?skip_blanks=true'
 
-    @by_mou = params[:by_mou].present?
-    @by_mou_rfp = request.fullpath.include?('?') ? request.fullpath + '&by_mou=true' : request.fullpath + '?by_mou=true'
+    @by_tech = params[:by_tech].present?
+    @by_tech_rfp = request.fullpath.include?('?') ? request.fullpath + '&by_tech=true' : request.fullpath + '?by_tech=true'
 
     @view_btn_text = @by_mou ? 'View by Sector' : 'View by MOU'
-    @searchbar_hidden_fields = @by_mou ? [{ name: 'by_mou', value: 'true' }] : []
+    @searchbar_hidden_fields = @by_tech ? [{ name: 'by_tech', value: 'true' }] : []
     @searchbar_hidden_fields << { name: 'skip_blanks', value: 'true' } if @skip_blanks
-    @contract_search_param_add = @by_mou ? '&by_mou=true' : ''
+    @contract_search_param_add = @by_tech ? '&by_tech=true' : ''
     @contract_search_param_add += @skip_blanks ? '&skip_blanks=true' : ''
 
-    if @by_mou
-      @mous = Contract.between(@from, @to).order(start_date: :asc)
-      @targets = Target.where(contract: @mous).where(technology: @technology)
+    if @by_tech
+      @technologies = Technology.report_worthy
+      @targets = Target.between(@from, @to)
+      @target_date = human_date @targets.last&.date
     else
-      @sectors = @district.sectors
-      @plans = Plan.related_to(@district)
-      @plan_date = human_date @plans.last&.contract&.end_date
+      @sectors = @district.sectors.order(name: :asc)
+      @plans = Plan.related_to_district(@district)
+      @plan_date = human_date @plans.last&.date
     end
+
+    # badbad
   end
 
   # GET /districts/new

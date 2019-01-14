@@ -16,7 +16,7 @@ class TechnologiesController < ApplicationController
 
     @targets = Target.where(technology_id: @tech_ids).between(@from, @to).order(contract_id: :asc)
     @reports = Report.where(technology_id: @tech_ids).where(date: @from..@to).order(date: :asc)
-    @target_date = @targets.last.date
+    @target_date = @targets.last&.date
   end
 
   # GET /technologies/1
@@ -44,10 +44,11 @@ class TechnologiesController < ApplicationController
     if @by_mou
       @mous = Contract.between(@from, @to).order(start_date: :asc)
       @targets = Target.where(contract: @mous).where(technology: @technology)
+      @target_date = @targets.last&.dates
     else
       @sectors = Sector.all
       @plans = Plan.where(technology: @technology).between(@from, @to)
-      @plan_date = human_date @plans.last&.contract&.end_date
+      @plan_date = human_date @plans.last&.date
     end
   end
 
