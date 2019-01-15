@@ -1,5 +1,5 @@
-#error_explanation
-  %h2= "#{pluralize(object.errors.count, "error")} prohibited this report from being saved:"
+#error_explanation.text-center
+  %h5= "#{pluralize(object.errors.count, "error")} found:"
   %ul
     - object.errors.full_messages.each do |message|
       %li= message

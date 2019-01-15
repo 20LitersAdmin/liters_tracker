@@ -1,17 +1,57 @@
 # frozen_string_literal: true
 
 class DistrictsController < ApplicationController
-  before_action :set_district, only: [:show, :edit, :update, :destroy]
+  before_action :set_district, only: %i[show edit update destroy]
 
   # GET /districts
-  # GET /districts.json
   def index
     authorize @districts = District.all
+
+    @earliest = form_date Report.earliest_date
+    @latest =   form_date Report.latest_date
+
+    @from = params[:from].present? ? Date.parse(params[:from]) : @earliest
+    @to =   params[:to].present? ? Date.parse(params[:to]) : @latest
+
+    @reports = Report.where(date: @from..@to).order(date: :asc)
+    @plans = Plan.between(@from, @to)
+
+    @plan_date = human_date @plans.last&.contract&.end_date
   end
 
   # GET /districts/1
-  # GET /districts/1.json
   def show
+    @earliest = form_date Report.earliest_date
+    @latest =   form_date Report.latest_date
+
+    @from = params[:from].present? ? Date.parse(params[:from]) : @earliest
+    @to =   params[:to].present? ? Date.parse(params[:to]) : @latest
+
+    @reports = Report.related_to_district(@district).where(date: @from..@to).order(date: :asc)
+
+    @skip_blanks = params[:skip_blanks].present?
+    @skip_blanks_rfp = request.fullpath.include?('?') ? request.fullpath + '&skip_blanks=true' : request.fullpath + '?skip_blanks=true'
+
+    @by_tech = params[:by_tech].present?
+    @by_tech_rfp = request.fullpath.include?('?') ? request.fullpath + '&by_tech=true' : request.fullpath + '?by_tech=true'
+
+    @view_btn_text = @by_mou ? 'View by Sector' : 'View by MOU'
+    @searchbar_hidden_fields = @by_tech ? [{ name: 'by_tech', value: 'true' }] : []
+    @searchbar_hidden_fields << { name: 'skip_blanks', value: 'true' } if @skip_blanks
+    @contract_search_param_add = @by_tech ? '&by_tech=true' : ''
+    @contract_search_param_add += @skip_blanks ? '&skip_blanks=true' : ''
+
+    if @by_tech
+      @technologies = Technology.report_worthy
+      @targets = Target.between(@from, @to)
+      @target_date = human_date @targets.last&.date
+    else
+      @sectors = @district.sectors.order(name: :asc)
+      @plans = Plan.related_to_district(@district)
+      @plan_date = human_date @plans.last&.date
+    end
+
+    # badbad
   end
 
   # GET /districts/new
@@ -24,7 +64,6 @@ class DistrictsController < ApplicationController
   end
 
   # POST /districts
-  # POST /districts.json
   def create
     authorize @district = District.new(district_params)
 
@@ -40,7 +79,6 @@ class DistrictsController < ApplicationController
   end
 
   # PATCH/PUT /districts/1
-  # PATCH/PUT /districts/1.json
   def update
     respond_to do |format|
       if @district.update(district_params)
@@ -54,7 +92,6 @@ class DistrictsController < ApplicationController
   end
 
   # DELETE /districts/1
-  # DELETE /districts/1.json
   def destroy
     @district.destroy
     respond_to do |format|

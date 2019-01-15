@@ -9,12 +9,13 @@
       = link_to 'View by MOU', @by_mou_rfp , class: 'btn btn-outline-dark', id: 'tech_viewby'
   .col-sm-3.text-center
     - if @skip_blanks
-      = link_to 'Show empty rows', request.fullpath.gsub('&skip_blanks=true', '').gsub('?skip_blanks=true', '') , class: 'btn btn-outline-dark', id: 'tech_viewby'
+      = link_to 'Show empty rows', request.fullpath.gsub('&skip_blanks=true', '').gsub('?skip_blanks=true', '') , class: 'btn btn-outline-dark', id: 'tech_skipblank'
     - else
-      = link_to 'Hide empty rows',  @skip_blanks_rfp, class: 'btn btn-outline-dark', id: 'tech_viewby'
+      = link_to 'Hide empty rows',  @skip_blanks_rfp, class: 'btn btn-outline-dark', id: 'tech_skipblank'
   .col-sm-2.text-right
-    = link_to 'Edit', edit_technology_path(@technology), class: 'btn btn-primary'
-    = link_to 'Back', all_technologies_path, class: 'btn btn-dark'
+    - if current_user.can_update?('Technology')
+      = link_to 'Edit', edit_technology_path(@technology), class: 'btn btn-primary'
+    = link_to 'Back', technologies_path, class: 'btn btn-dark'
 
 = render partial: 'shared/search', locals: { from: @from, to: @to, earliest: @earliest, latest: @latest }
 

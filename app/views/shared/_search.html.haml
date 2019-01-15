@@ -20,8 +20,8 @@
           = submit_tag 'Filter', class: 'btn btn-primary', name: nil
 
 .row.align-items-center.mt-3.mb-5
-  .col-2
-    %p.text-right MOU Dates:
+  .col-2.align-items-center
+    %span.float-right MOU Dates:
   - Contract.all.order(start_date: :asc).each do |contract|
     .col
       = link_to contract.name, request.path + contract.url_params + @contract_search_param_add.to_s, class: 'btn btn-outline-secondary'

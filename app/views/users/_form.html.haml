@@ -3,17 +3,28 @@
   - if @user.errors.any?
     = render partial: 'shared/form_errors', locals: { object: @user }
 
-  .field
-    = f.input :fname, label: 'First Name'
-  .field
-    = f.input :lname, label: 'Last Name'
-  .field
-    = f.input :email
-  .field
-    = f.input :admin
-  .field
-    = f.input :confirmed_at
-  .field
-    = f.input :locked_at
-  .actions
-    = f.button :submit, class: 'btn btn-primary'
+  .row
+    .col.field
+      = f.input :fname, label: 'First Name'
+    .col.field
+      = f.input :lname, label: 'Last Name'
+  .row.align-items-center
+    .col-9.field
+      = f.input :email
+    .col-3.field
+      = f.input :admin, disabled: !current_user.admin?, hint: 'Only admins can make admins'
+  .row
+    .col.field
+      = f.input :confirmed_at, as: :search, input_html: { class: 'datetimepicker-input dtp-datetime', data: { target: '#user_confirmed_at', toggle: 'datetimepicker'} }
+    .col.field
+      = f.input :locked_at, as: :search, input_html: { class: 'datetimepicker-input dtp-datetime', data: { target: '#user_locked_at', toggle: 'datetimepicker'} }
+  .row
+    .col.field
+      = f.input :password, hint: @skip_password_message
+    .col.field
+      = f.input :password_confirmation, hint: @skip_password_message
+  .row.mt-3.actions
+    .col.text-right
+      = f.button :submit, class: 'btn btn-primary'
+    .col.text-left
+      = link_to 'Back', users_path, class: 'btn btn-outline-primary'

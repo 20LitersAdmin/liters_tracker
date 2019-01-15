@@ -1,32 +1,24 @@
 -# frozen_string_literal: true
-%h1 Listing sectors
+.row.mb-3
+  .col
+    %h4 Data: All Sectors
+  .col-sm-2.text-right
+    - if current_user.can_create?('Sector')
+      = link_to 'New', new_sector_path, class: 'btn btn-primary'
+    = link_to 'Back', data_path, class: 'btn btn-dark'
 
-%table
+= render partial: 'shared/search', locals: { from: @from, to: @to, earliest: @earliest, latest: @latest }
+
+%table.table.table-striped
   %thead
     %tr
-      %th Name
-      %th Gis
-      %th Latitude
-      %th Longitude
-      %th Population
-      %th Households
-      %th
-      %th
-      %th
-
+      %th Sector
+      %th.text-right People served
+      %th.text-right= "People goal (by #{@plan_date})"
+  %tfoot
+    %tr
+      %th Grand Total
+      %th.text-right= human_number @reports.map(&:people_served).sum
+      %th.text-right= human_number @plans.sum(:people_goal)
   %tbody
-    - @sectors.each do |sector|
-      %tr
-        %td= sector.name
-        %td= sector.gis_id
-        %td= sector.latitude
-        %td= sector.longitude
-        %td= sector.population
-        %td= sector.households
-        %td= link_to 'Show', sector
-        %td= link_to 'Edit', edit_sector_path(sector)
-        %td= link_to 'Destroy', sector, method: :delete, data: { confirm: 'Are you sure?' }
-
-%br
-
-= link_to 'New Sector', new_sector_path
+    = render @sectors

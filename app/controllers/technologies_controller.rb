@@ -3,31 +3,26 @@
 class TechnologiesController < ApplicationController
   before_action :set_technology, only: %i[show edit update destroy]
 
-  def all
+  # GET /technologies
+  def index
     authorize @technologies = Technology.report_worthy
-
     @tech_ids = @technologies.pluck(:id)
 
-    @earliest = form_date Report.where(technology_id: @tech_ids).order(date: :asc).first.date
-    @latest =   form_date Report.where(technology_id: @tech_ids).order(date: :asc).last.date
+    @earliest = form_date Report.earliest_date
+    @latest =   form_date Report.earliest_date
 
     @from = params[:from].present? ? Date.parse(params[:from]) : @earliest
     @to =   params[:to].present? ? Date.parse(params[:to]) : @latest
 
     @targets = Target.where(technology_id: @tech_ids).between(@from, @to).order(contract_id: :asc)
     @reports = Report.where(technology_id: @tech_ids).where(date: @from..@to).order(date: :asc)
-    @target_date = @targets.last.date
-  end
-
-  # GET /technologies
-  def index
-    authorize @technologies = Technology.all
+    @target_date = @targets.last&.date
   end
 
   # GET /technologies/1
   def show
-    @earliest = form_date Contract.order(start_date: :asc).first.start_date
-    @latest =   form_date Contract.order(start_date: :asc).last.end_date
+    @earliest = form_date Report.earliest_date
+    @latest =   form_date Report.latest_date
 
     @from = params[:from].present? ? Date.parse(params[:from]) : @earliest
     @to =   params[:to].present? ? Date.parse(params[:to]) : @latest
@@ -49,10 +44,11 @@ class TechnologiesController < ApplicationController
     if @by_mou
       @mous = Contract.between(@from, @to).order(start_date: :asc)
       @targets = Target.where(contract: @mous).where(technology: @technology)
+      @target_date = @targets.last&.dates
     else
       @sectors = Sector.all
       @plans = Plan.where(technology: @technology).between(@from, @to)
-      @plan_date = human_date @plans.last&.contract&.end_date
+      @plan_date = human_date @plans.last&.date
     end
   end
 

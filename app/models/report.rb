@@ -16,16 +16,34 @@ class Report < ApplicationRecord
     GlobalID::Locator.locate model_gid
   end
 
+  def self.earliest_date
+    self.all.order(date: :asc).first.date
+  end
+
+  def self.latest_date
+    self.all.order(date: :asc).last.date
+  end
+
   def self.related_to(record)
     where(model_gid: record.to_global_id.to_s)
   end
 
-  def self.related_to_sector(sector)
+  def self.related_to_sector(sector, only_ary: false)
     report_ids = []
     report_ids << related_to(sector).pluck(:id)
     sector.cells.each { |cell| report_ids << related_to(cell).pluck(:id) }
     sector.villages.each { |village| report_ids << related_to(village).pluck(:id) }
     sector.facilities.each { |facility| report_ids << related_to(facility).pluck(:id) }
+
+    return report_ids.flatten! if only_ary
+
+    where(id: report_ids.flatten!)
+  end
+
+  def self.related_to_district(district)
+    report_ids = []
+    report_ids << related_to(district).pluck(:id)
+    district.sectors.each { |sector| report_ids << Report.related_to_sector(sector, only_ary: true) }
 
     where(id: report_ids.flatten!)
   end

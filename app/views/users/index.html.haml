@@ -1,13 +1,13 @@
 -# frozen_string_literal: true
-%h1 Listing users
+%h1 All users
 
 %table.table.table-striped
   %thead
     %tr
       %th Name
       %th Email
-      %th Admin?
-      %th
+      %th.text-center Admin?
+      %th.text-center Confirmed?
       %th
       %th
   %tbody
@@ -15,8 +15,8 @@
       %tr
         %td= user.name
         %td= user.email
-        %td= human_boolean user.admin?
-        %td= link_to 'Show', user
+        %td.text-center= human_boolean user.admin?
+        %td.text-center= human_boolean user.confirmed_at.present?
         %td= link_to 'Edit', edit_user_path(user)
         %td= link_to 'Destroy', user, method: :delete, data: { confirm: 'Are you sure?' }
 
