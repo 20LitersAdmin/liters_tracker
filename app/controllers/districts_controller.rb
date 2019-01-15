@@ -27,7 +27,7 @@ class DistrictsController < ApplicationController
     @from = params[:from].present? ? Date.parse(params[:from]) : @earliest
     @to =   params[:to].present? ? Date.parse(params[:to]) : @latest
 
-    @reports = Report.related_to_district(@district).where(date: @from..@to).order(date: :asc)
+    @reports = Report.where(date: @from..@to).related_to_district(@district).order(date: :asc)
 
     @skip_blanks = params[:skip_blanks].present?
     @skip_blanks_rfp = request.fullpath.include?('?') ? request.fullpath + '&skip_blanks=true' : request.fullpath + '?skip_blanks=true'
@@ -50,8 +50,6 @@ class DistrictsController < ApplicationController
       @plans = Plan.related_to_district(@district)
       @plan_date = human_date @plans.last&.date
     end
-
-    # badbad
   end
 
   # GET /districts/new

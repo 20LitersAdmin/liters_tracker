@@ -33,6 +33,36 @@ class SectorsController < ApplicationController
   # GET /sectors/1
   # GET /sectors/1.json
   def show
+    @earliest = form_date Report.earliest_date
+    @latest =   form_date Report.latest_date
+
+    @from = params[:from].present? ? Date.parse(params[:from]) : @earliest
+    @to =   params[:to].present? ? Date.parse(params[:to]) : @latest
+
+    @reports = Report.where(date: @from..@to).related_to_sector(@sector).order(date: :asc)
+
+    @skip_blanks = params[:skip_blanks].present?
+    @skip_blanks_rfp = request.fullpath.include?('?') ? request.fullpath + '&skip_blanks=true' : request.fullpath + '?skip_blanks=true'
+
+    @by_tech = params[:by_tech].present?
+    @by_tech_rfp = request.fullpath.include?('?') ? request.fullpath + '&by_tech=true' : request.fullpath + '?by_tech=true'
+
+    @view_btn_text = @by_mou ? 'View by Village' : 'View by MOU'
+    @searchbar_hidden_fields = @by_tech ? [{ name: 'by_tech', value: 'true' }] : []
+    @searchbar_hidden_fields << { name: 'skip_blanks', value: 'true' } if @skip_blanks
+    @contract_search_param_add = @by_tech ? '&by_tech=true' : ''
+    @contract_search_param_add += @skip_blanks ? '&skip_blanks=true' : ''
+
+    if @by_tech
+      @technologies = Technology.report_worthy
+      @targets = Target.between(@from, @to)
+      @target_date = human_date @targets.last&.date
+    else
+      @villages
+      @sectors = @district.sectors.order(name: :asc)
+      @plans = Plan.related_to_district(@district)
+      @plan_date = human_date @plans.last&.date
+    end
   end
 
   # GET /sectors/new
