@@ -15,6 +15,9 @@ DONE: just use #index for reports instead of #all? E.g. technologies
 --- Tech.scale == "Family", show villages, Tech.scale == "Community", show facilities
 --- Add facilities on the fly
 
+# Beta bugs:
+* Technnology#index math doesn't match Technology#show
+
 # More reports:
 * By Geography:
 - sectors#show

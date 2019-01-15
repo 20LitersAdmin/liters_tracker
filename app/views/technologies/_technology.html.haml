@@ -1,5 +1,7 @@
 - @target_sub = @targets.where(technology: technology)
 - @report_sub = @reports.where(technology: technology)
+- if technology.id == 3
+  / = badbad
 %tr
   %td= link_to technology.name, technology_path(technology)
   %td.text-right= human_number @report_sub.sum(:distributed)
