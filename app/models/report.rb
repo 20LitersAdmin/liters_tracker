@@ -50,5 +50,6 @@ class Report < ApplicationRecord
 
   def people_served
     model_gid.include?('Facility') && model.impact.positive? ? model.impact : (technology.default_impact * distributed.to_i)
+    # model_gid.include?('Village') -- could work the same as above
   end
 end
