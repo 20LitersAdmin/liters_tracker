@@ -2064,7 +2064,12 @@ Report.create(
     { date: '2018-11-01', user_id: 2, contract_id: 4, technology_id: 1, model_gid: 'gid://liters-tracker/Village/7', distributed: 14 },
     { date: '2018-11-01', user_id: 2, contract_id: 4, technology_id: 1, model_gid: 'gid://liters-tracker/Village/37', checked: 23 },
     { date: '2018-11-01', user_id: 2, contract_id: 4, technology_id: 1, model_gid: 'gid://liters-tracker/Village/36', checked: 6 },
-    { date: '2018-11-01', user_id: 2, contract_id: 4, technology_id: 1, model_gid: 'gid://liters-tracker/Village/29', checked: 5 }
+    { date: '2018-11-01', user_id: 2, contract_id: 4, technology_id: 1, model_gid: 'gid://liters-tracker/Village/29', checked: 5 },
+    # MISSING: June-August Gashora
+    { date: '2018-06-01', user_id: 1, contract_id: 3, technology_id: 1, model_gid: 'gid://liters-tracker/Village/84', distributed: 8 },
+    { date: '2018-08-01', user_id: 1, contract_id: 3, technology_id: 1, model_gid: 'gid://liters-tracker/Village/84', distributed: 40 },
+    { date: '2018-08-01', user_id: 1, contract_id: 3, technology_id: 1, model_gid: 'gid://liters-tracker/Village/87', distributed: 42 },
+    { date: '2018-07-01', user_id: 1, contract_id: 3, technology_id: 1, model_gid: 'gid://liters-tracker/Village/79', distributed: 30 }
   ]
 )
 ActiveRecord::Base.connection.reset_pk_sequence!('reports')
