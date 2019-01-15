@@ -13,7 +13,7 @@ class UserPolicy
   end
 
   def data?
-    @user&.can_read?('Report')
+    @user&.can_read?('Data') || @user&.can_read?('Report')
   end
 
   def index?
