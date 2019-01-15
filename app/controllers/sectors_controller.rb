@@ -59,8 +59,7 @@ class SectorsController < ApplicationController
       @target_date = human_date @targets.last&.date
     else
       @villages
-      @sectors = @district.sectors.order(name: :asc)
-      @plans = Plan.related_to_district(@district)
+      @plans = Plan.related_to_sector(@sector)
       @plan_date = human_date @plans.last&.date
     end
   end

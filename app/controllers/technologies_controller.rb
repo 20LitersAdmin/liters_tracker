@@ -44,7 +44,7 @@ class TechnologiesController < ApplicationController
     if @by_mou
       @mous = Contract.between(@from, @to).order(start_date: :asc)
       @targets = Target.where(contract: @mous).where(technology: @technology)
-      @target_date = @targets.last&.dates
+      @target_date = @targets.last&.date
     else
       @sectors = Sector.all
       @plans = Plan.where(technology: @technology).between(@from, @to)
