@@ -10,7 +10,8 @@
 User.create(
   [
     { id: 1, fname: 'Chip', lname: 'Kragt', email: 'chip@20liters.org', password: 'password', password_confirmation: 'password', admin: true, confirmed_at: Time.now },
-    { id: 2, fname: 'Robero', lname: "Jean d'Amour", email: "Rd'Amour@wr.org", password: 'password', password_confirmation: 'password', confirmed_at: Time.now }
+    { id: 2, fname: 'Robero', lname: "Jean d'Amour", email: "Rd'Amour@wr.org", password: 'password', password_confirmation: 'password', confirmed_at: Time.now },
+    { id: 3, fname: 'Amanda', lname: 'Mulder', email: 'amanda@20liters.org', password: 'password', password_confirmation: 'password', admin: true, confirmed_at: Time.now }
   ]
 )
 
@@ -23,7 +24,7 @@ Technology.create(
     { id: 3, name: 'Community Filter', short_name: 'SAM2', default_impact: 400, scale: 'Community', agreement_required: true, direct_cost: 1_382_44, indirect_cost: 2_000_00 },
     { id: 4, name: 'Modified Community Filter', short_name: 'SAM2-M', default_impact: 400, scale: 'Community', agreement_required: true, direct_cost: 1_839_82, indirect_cost: 2_600_00, report_worthy: false },
     { id: 5, name: 'Rainwater Harvesting System', short_name: 'RWHS', default_impact: 500, scale: 'Community', agreement_required: true, direct_cost: 1_565_38, indirect_cost: 3_200_00 },
-    { id: 6, name: 'Slowsand Filter', short_name: 'SS', default_impact: 5, scale: 'Family' }
+    { id: 6, name: 'Slowsand Filter', short_name: 'SS', default_impact: 10, scale: 'Family' }
   ]
 )
 
@@ -50,7 +51,7 @@ Target.create(
     { contract_id: 2, technology_id: 3, goal: 24, people_goal: 9_600 },
     { contract_id: 2, technology_id: 5, goal: 28, people_goal: 14_000 },
     { contract_id: 3, technology_id: 1, goal: 4_220, people_goal: 21_100 },
-    { contract_id: 3, technology_id: 3, goal: 13, people_goal: 52_000 },
+    { contract_id: 3, technology_id: 3, goal: 13, people_goal: 5_200 },
     { contract_id: 3, technology_id: 5, goal: 22, people_goal: 11_000 },
     { contract_id: 3, technology_id: 6, goal: 600, people_goal: 6_000 },
     { contract_id: 4, technology_id: 1, goal: 4475, people_goal: 22_375 },
@@ -545,6 +546,7 @@ Facility.create(
     { id: 112, name: 'Gashora Secondary school', category: 'School', village_id: 83, population: 358 },
     { id: 113, name: 'Gashora Primary', category: 'School', village_id: 86 },
     { id: 114, name: 'Mwendo Primary', category: 'School', village_id: 103, population: 400 },
+    { id: 115, name: 'Kagasa Primary School', category: 'School', village_id: 107, population: 1049 },
     # Rilima SAM2
     { id: 116, name: 'GS Rilima', category: 'School', village_id: 218 },
     { id: 117, name: 'Rilima Health Center', category: 'Clinic', village_id: 218, population: 280 },
@@ -675,7 +677,7 @@ Plan.create(
     { contract_id: 1, technology_id: 1, model_gid: 'gid://liters-tracker/Village/191', goal: 65, people_goal: 325 },
     { contract_id: 1, technology_id: 1, model_gid: 'gid://liters-tracker/Village/190', goal: 120, people_goal: 600 },
     { contract_id: 1, technology_id: 1, model_gid: 'gid://liters-tracker/Village/193', goal: 77, people_goal: 385 },
-    # Mwogo
+    # Mwogo SAM3
     { contract_id: 2, technology_id: 1, model_gid: 'gid://liters-tracker/Village/166', goal: 40, people_goal: 200 },
     { contract_id: 2, technology_id: 1, model_gid: 'gid://liters-tracker/Village/167', goal: 80, people_goal: 400 },
     { contract_id: 2, technology_id: 1, model_gid: 'gid://liters-tracker/Village/168', goal: 100, people_goal: 500 },
@@ -770,6 +772,8 @@ Plan.create(
     { contract_id: 3, technology_id: 1, model_gid: 'gid://liters-tracker/Village/100', goal: 93, people_goal: 465 },
     { contract_id: 3, technology_id: 1, model_gid: 'gid://liters-tracker/Village/99', goal: 91, people_goal: 455 },
     { contract_id: 3, technology_id: 1, model_gid: 'gid://liters-tracker/Village/104', goal: 165, people_goal: 825 },
+    # Rilima SAM3
+    { contract_id: 3, technology_id: 1, model_gid: 'gid://liters-tracker/Village/216', goal: 604, people_goal: 3020 },
     # Masaka SAM2
     { contract_id: 1, technology_id: 3, model_gid: 'gid://liters-tracker/Facility/1', goal: 1, people_goal: 400 },
     { contract_id: 1, technology_id: 3, model_gid: 'gid://liters-tracker/Facility/2', goal: 1, people_goal: 400 },
@@ -895,6 +899,7 @@ Plan.create(
     { contract_id: 3, technology_id: 3, model_gid: 'gid://liters-tracker/Facility/112', goal: 1, people_goal: 400 },
     { contract_id: 3, technology_id: 3, model_gid: 'gid://liters-tracker/Facility/113', goal: 1, people_goal: 400 },
     { contract_id: 3, technology_id: 3, model_gid: 'gid://liters-tracker/Facility/114', goal: 1, people_goal: 400 },
+    { contract_id: 3, technology_id: 3, model_gid: 'gid://liters-tracker/Facility/115', goal: 1, people_goal: 400 },
     # Rilima SAM2
     { contract_id: 3, technology_id: 3, model_gid: 'gid://liters-tracker/Facility/116', goal: 1, people_goal: 400 },
     { contract_id: 3, technology_id: 3, model_gid: 'gid://liters-tracker/Facility/117', goal: 1, people_goal: 400 },
@@ -1388,6 +1393,7 @@ Report.create(
     { date: '2015-01-01', user_id: 1, contract_id: 1, technology_id: 1, model_gid: 'gid://liters-tracker/Village/190', distributed: 114 },
     { date: '2015-02-01', user_id: 1, contract_id: 1, technology_id: 1, model_gid: 'gid://liters-tracker/Village/179', distributed: 32 },
     { date: '2015-02-01', user_id: 1, contract_id: 1, technology_id: 1, model_gid: 'gid://liters-tracker/Village/173', distributed: 6 },
+    { date: '2015-02-01', user_id: 1, contract_id: 1, technology_id: 1, model_gid: 'gid://liters-tracker/Village/188', distributed: 50 },
     { date: '2015-04-01', user_id: 1, contract_id: 1, technology_id: 1, model_gid: 'gid://liters-tracker/Village/186', distributed: 21 },
     { date: '2015-04-01', user_id: 1, contract_id: 1, technology_id: 1, model_gid: 'gid://liters-tracker/Village/181', distributed: 50 },
     { date: '2015-05-01', user_id: 1, contract_id: 1, technology_id: 1, model_gid: 'gid://liters-tracker/Village/182', distributed: 69 },
@@ -1545,6 +1551,7 @@ Report.create(
     { date: '2015-12-01', user_id: 1, contract_id: 2, technology_id: 1, model_gid: 'gid://liters-tracker/Village/147', distributed: 25 },
     { date: '2015-12-01', user_id: 1, contract_id: 2, technology_id: 1, model_gid: 'gid://liters-tracker/Village/152', distributed: 1 },
     { date: '2015-12-01', user_id: 1, contract_id: 2, technology_id: 1, model_gid: 'gid://liters-tracker/Village/150', distributed: 19 },
+    { date: '2015-12-01', user_id: 1, contract_id: 2, technology_id: 1, model_gid: 'gid://liters-tracker/Village/162', distributed: 1 },
     { date: '2016-01-01', user_id: 1, contract_id: 2, technology_id: 1, model_gid: 'gid://liters-tracker/Village/147', distributed: 7 },
     { date: '2016-01-01', user_id: 1, contract_id: 2, technology_id: 1, model_gid: 'gid://liters-tracker/Village/152', distributed: 42 },
     { date: '2016-01-01', user_id: 1, contract_id: 2, technology_id: 1, model_gid: 'gid://liters-tracker/Village/148', distributed: 14 },
@@ -1874,9 +1881,10 @@ Report.create(
     { date: '2017-08-17', user_id: 1, contract_id: 3, technology_id: 3, model_gid: 'gid://liters-tracker/Facility/112', distributed: 1 },
     { date: '2017-05-30', user_id: 1, contract_id: 3, technology_id: 3, model_gid: 'gid://liters-tracker/Facility/113', distributed: 1 },
     { date: '2017-04-28', user_id: 1, contract_id: 3, technology_id: 3, model_gid: 'gid://liters-tracker/Facility/114', distributed: 1 },
+    { date: '2018-01-14', user_id: 1, contract_id: 3, technology_id: 3, model_gid: 'gid://liters-tracker/Facility/115', distributed: 1 },
     # Rilima SAM2
-    { date: '2018-02-27', user_id: 1, contract_id: 3, technology_id: 5, model_gid: 'gid://liters-tracker/Facility/116', distributed: 1 },
-    { date: '2017-10-19', user_id: 1, contract_id: 3, technology_id: 5, model_gid: 'gid://liters-tracker/Facility/117', distributed: 1 },
+    { date: '2018-02-27', user_id: 1, contract_id: 3, technology_id: 3, model_gid: 'gid://liters-tracker/Facility/116', distributed: 1 },
+    { date: '2017-10-19', user_id: 1, contract_id: 3, technology_id: 3, model_gid: 'gid://liters-tracker/Facility/117', distributed: 1 },
     # Gashora RWHS
     { date: '2017-02-23', user_id: 1, contract_id: 3, technology_id: 5, model_gid: 'gid://liters-tracker/Facility/118', distributed: 1 },
     { date: '2018-01-25', user_id: 1, contract_id: 3, technology_id: 5, model_gid: 'gid://liters-tracker/Facility/119', distributed: 1 },
@@ -2059,5 +2067,4 @@ Report.create(
     { date: '2018-11-01', user_id: 2, contract_id: 4, technology_id: 1, model_gid: 'gid://liters-tracker/Village/29', checked: 5 }
   ]
 )
-
 ActiveRecord::Base.connection.reset_pk_sequence!('reports')
