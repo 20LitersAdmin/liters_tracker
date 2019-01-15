@@ -9,7 +9,7 @@ class TechnologiesController < ApplicationController
     @tech_ids = @technologies.pluck(:id)
 
     @earliest = form_date Report.earliest_date
-    @latest =   form_date Report.earliest_date
+    @latest =   form_date Report.latest_date
 
     @from = params[:from].present? ? Date.parse(params[:from]) : @earliest
     @to =   params[:to].present? ? Date.parse(params[:to]) : @latest
