@@ -1,9 +1,7 @@
 -# frozen_string_literal: true
-- @report = village.related_reports.last #should limit by date
-- @distributed = @report&.distributed
-- @checked = @report&.checked
-= hidden_field_tag 'reports[][technology_id]', 1, id: "reports_#{village.id}_technology_id"
+- @report_sub = @reports.related_to_sector(sector)
+- @plan_sub = @plans.related_to_sector(sector)
 %tr
-  %td= village.name
-  %td.text-right= People served
-  %td.text-right= People goal
+  %td= link_to sector.name, sector_path(sector)
+  %td.text-right= human_number @report_sub.map(&:people_served).sum
+  %td.text-right= human_number @plan_sub.sum(:people_goal)
