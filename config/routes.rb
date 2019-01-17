@@ -26,5 +26,6 @@ Rails.application.routes.draw do
 
   resources :users do
     get 'homepage', on: :member
+    # resources :permissions
   end
 end

@@ -19,13 +19,43 @@ DONE: just use #index for reports instead of #all? E.g. technologies
 # More reports:
 * By Geography:
 - sectors#show
+--> by cells per sector, using Plan, loop over technologies to include distributed.
+--> by technologies, using Target
+
+- cells#index
+--> comparable to sectors#index
+
+- cells#show
 --> by villages per sector, using Plan
---> by technologies
+--> by technologies, using Target
+
+- villages#index is too complex to bother with?
+- villages#show
+--> by facilities per village, using Plan
+--> by technologies, using Target
+
+- facilities#index - make searchable?
+- facilities#show is pointless?
 
 * By MOU
 - contracts#index && contracts#show
 -- By technology: [Report.distributed | Target.goal | Report.people_served | Target.people_goal ]
 -- By sector: [ Report.people_served | Target.people_goal ]
+
+# Creating Targets
+
+# Creating Plans
+
+# Creating Reports
+
+# Managing User Permissions
+- Nest permissions in user routes since it depends on a user
+- Or handel all within custom user routes and kill the permissions_controller <-- probably this
+
+# Improvements
+- Districts#index doesn't have [Add Plan, Add Report, Add Target] functionality
+- Technologies#index doesn't have [Add Plan, Add Report, Add Target] functionality
+
 
 # Remind myself:
 * magic_frozen_string_literal . #get those frozen string benefits

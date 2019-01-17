@@ -56,8 +56,8 @@ class SectorsController < ApplicationController
     if @by_tech
       @targets = Target.between(@from, @to)
       @target_date = human_date @targets.last&.date
-    else # By village, with Tech columns?
-      @villages = @sector.villages.order(name: :asc)
+    else # By Cell, with Tech columns?
+      @cells = @sector.cells.order(name: :asc)
       @plans = Plan.related_to_sector(@sector)
       @plan_date = human_date @plans.last&.date
     end
