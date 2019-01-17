@@ -22,7 +22,8 @@ class UsersController < ApplicationController
                !@can_update_facilities &&
                !@can_update_geography &&
                !@can_update_plans &&
-               !@can_update_users
+               !@can_update_users &&
+               !@can_read_data
 
     @admins = User.admins
   end

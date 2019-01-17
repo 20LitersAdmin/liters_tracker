@@ -5,7 +5,5 @@
 = hidden_field_tag 'reports[][technology_id]', 1, id: "reports_#{village.id}_technology_id"
 %tr
   %td= village.name
-  %td= village.id
-  %td= village.current_plan&.goal || 'not set'
-  %td.text-center= number_field_tag 'reports[][distributed]', @distributed, min: 0, step: 1, id: "reports_#{village.id}_distributed"
-  %td.text-center= number_field_tag 'reports[][checked]', @checked, min: 0, step: 1, id: "reports_#{village.id}_checked"
+  %td.text-right= People served
+  %td.text-right= People goal

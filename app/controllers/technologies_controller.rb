@@ -35,7 +35,6 @@ class TechnologiesController < ApplicationController
     @by_mou = params[:by_mou].present?
     @by_mou_rfp = request.fullpath.include?('?') ? request.fullpath + '&by_mou=true' : request.fullpath + '?by_mou=true'
 
-    @view_btn_text = @by_mou ? 'View by Sector' : 'View by MOU'
     @searchbar_hidden_fields = @by_mou ? [{ name: 'by_mou', value: 'true' }] : []
     @searchbar_hidden_fields << { name: 'skip_blanks', value: 'true' } if @skip_blanks
     @contract_search_param_add = @by_mou ? '&by_mou=true' : ''

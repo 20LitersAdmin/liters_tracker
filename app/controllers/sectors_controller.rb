@@ -47,18 +47,17 @@ class SectorsController < ApplicationController
     @by_tech = params[:by_tech].present?
     @by_tech_rfp = request.fullpath.include?('?') ? request.fullpath + '&by_tech=true' : request.fullpath + '?by_tech=true'
 
-    @view_btn_text = @by_mou ? 'View by Village' : 'View by MOU'
     @searchbar_hidden_fields = @by_tech ? [{ name: 'by_tech', value: 'true' }] : []
     @searchbar_hidden_fields << { name: 'skip_blanks', value: 'true' } if @skip_blanks
     @contract_search_param_add = @by_tech ? '&by_tech=true' : ''
     @contract_search_param_add += @skip_blanks ? '&skip_blanks=true' : ''
+    @technologies = Technology.report_worthy
 
     if @by_tech
-      @technologies = Technology.report_worthy
       @targets = Target.between(@from, @to)
       @target_date = human_date @targets.last&.date
-    else
-      @villages
+    else # By village, with Tech columns?
+      @villages = @sector.villages.order(name: :asc)
       @plans = Plan.related_to_sector(@sector)
       @plan_date = human_date @plans.last&.date
     end
