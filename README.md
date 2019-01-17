@@ -16,9 +16,6 @@ DONE: just use #index for reports instead of #all? E.g. technologies
 --- Add facilities on the fly
 --- SAM3 should have # of people served (for greater accuracy), default to 5 on Report.people_served
 
-# Beta bugs:
-* Technnology#index math doesn't match Technology#show
-
 # More reports:
 * By Geography:
 - sectors#show
