@@ -1,25 +1,25 @@
 -# frozen_string_literal: true
-- @target_sub = @targets.where(technology: technology)
 - @report_sub = @reports.where(technology: technology)
-- return if @target_sub.blank? && @report_sub.blank? && @skip_blanks
+- @plan_sub = @plans.where(technology: technology)
+- return if @plan_sub.blank? && @report_sub.blank? && @skip_blanks
 %tr
   %td.text-left
-    - if @target_sub.empty? && (current_user.can_manage_contracts? || current_user.admin?)
+    - if @plan_sub.empty? && (current_user.can_manage_contracts? || current_user.admin?)
       %span.float-left= link_to technology.name, technology_path(technology)
-      %span.float-right= link_to 'Add target', new_plan_path(model_gid: @sector.to_global_id.to_s, technology: technology), class: 'btn btn-outline-primary'
+      %span.float-right= link_to 'Add plan', new_plan_path(model_gid: @sector.to_global_id.to_s, technology: technology), class: 'btn btn-outline-primary'
     - elsif @report_sub.empty? && (current_user.can_manage_reports? || current_user.admin?)
       %span.float-left= link_to technology.name, technology_path(technology)
       %span.float-right= link_to 'Add report', new_report_path(model_gid: @sector.to_global_id.to_s, technology: technology), class: 'btn btn-outline-primary'
     - else
       = link_to technology.name, technology_path(technology)
-  - if @target_sub.any? || @report_sub.any?
+  - if @plan_sub.any? || @report_sub.any?
     %td.text-right= human_number @report_sub.sum(:distributed)
+    %td.text-right= human_number @plan_sub.sum(:goal)
     %td.text-right= human_number @report_sub.sum(:checked)
     %td.text-right= human_number @report_sub.map(&:people_served).sum
-    %td.text-right= human_number @target_sub.sum(:goal)
-    %td.text-right= human_number @target_sub.sum(:people_goal)
+    %td.text-right= human_number @plan_sub.sum(:people_goal)
   - else
-    %td= "No targets or reports related to #{@sector.name} for this time period"
+    %td{colspan: 4}= "No plans or reports related to #{@sector.name} for this time period"
     - if current_user.can_manage_reports? || current_user.admin?
       %td= link_to 'Add report', new_report_path(model_gid: @sector.to_global_id.to_s, technology: technology), class: 'btn btn-outline-primary'
     - else

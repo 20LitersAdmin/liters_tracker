@@ -1,6 +1,7 @@
 $enable-gradients: true;
 @import "bootstrap";
 @import "tempusdominus-bootstrap-4";
+@import "font-awesome";
 
 
 .footer {
@@ -11,6 +12,26 @@ $enable-gradients: true;
   line-height: 60px;
   background-color: #fce000;
 }
+
+#loading_screen {
+  background-color: rgba(255,255,255,0.8);
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 99;
+
+  #loading_spinner {
+    color: rgb(252,224,0);
+    position: fixed;
+    top: 50%;
+    margin-top: -50px;
+    left: 50%;
+    margin-left: -50px;
+  }
+}
+
 
 
 main.container {

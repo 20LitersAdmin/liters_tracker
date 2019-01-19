@@ -1,6 +1,6 @@
 -# frozen_string_literal: true
-- @plan_sub = @plans.related_to_sector(sector)
 - @report_sub = @reports.related_to_sector(sector)
+- @plan_sub = @plans.related_to_sector(sector)
 - return if @plan_sub.blank? && @report_sub.blank? && @skip_blanks
 %tr
   %td.text-left
@@ -13,6 +13,10 @@
     -else
       = link_to sector.name, sector_path(sector)
   - if @plan_sub.any? || @report_sub.any?
+    - @technologies.each do |technology|
+      - next if @reports.where(technology: technology).size.zero? && @plans.where(technology: technology).size.zero?
+      %td.text-right= human_number @report_sub.where(technology: technology).sum(:distributed)
+      %td.text-right= human_number @plan_sub.where(technology: technology).sum(:goal)
     %td.text-right= human_number @report_sub.map(&:people_served).sum
     %td.text-right= human_number @plan_sub.sum(:people_goal)
   - else

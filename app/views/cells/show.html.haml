@@ -1,25 +1,68 @@
 -# frozen_string_literal: true
-%p#notice= notice
+.row.mb-3
+  .col-sm-4
+    %h4= "Data: #{@cell.name} Cell"
+  .col-sm-3.text-center
+    - if @by_tech
+      = link_to 'View by Cell', request.fullpath.gsub('&by_tech=true', '').gsub('?by_tech=true', '') , class: 'btn btn-outline-dark', id: 'dist_viewby'
+    - else
+      = link_to 'View by Technology', @by_tech_rfp , class: 'btn btn-outline-dark', id: 'dist_viewby'
+  .col-sm-3.text-center
+    - if @skip_blanks
+      = link_to 'Show empty rows', request.fullpath.gsub('&skip_blanks=true', '').gsub('?skip_blanks=true', '') , class: 'btn btn-outline-dark', id: 'dist_skipblank'
+    - else
+      = link_to 'Hide empty rows',  @skip_blanks_rfp, class: 'btn btn-outline-dark', id: 'dist_skipblank'
+  .col-sm-2.text-right
+    - if current_user.can_manage_geography? || current_user.admin?
+      = link_to 'Edit', edit_cell_path(@cell), class: 'btn btn-primary'
+    = link_to 'Back', sector_path(@cell.sector), class: 'btn btn-dark'
 
-%p
-  %b Name:
-  = @cell.name
-%p
-  %b Gis:
-  = @cell.gis_id
-%p
-  %b Latitude:
-  = @cell.latitude
-%p
-  %b Longitude:
-  = @cell.longitude
-%p
-  %b Population:
-  = @cell.population
-%p
-  %b Households:
-  = @cell.households
+= render partial: 'shared/search', locals: { from: @from, to: @to, earliest: @earliest, latest: @latest }
 
-= link_to 'Edit', edit_cell_path(@cell)
-\|
-= link_to 'Back', cells_path
+- if @by_tech
+  .row.mt-3#tech_section
+    .col
+      %table.table.table-striped
+        %thead
+          %tr
+            %th Technology
+            %th.text-right Distributed
+            %th.text-right Checked
+            %th.text-right People served
+            %th.text-right= "Dist. Goal (by #{@target_date})"
+            %th.text-right People goal
+        %tfoot
+          %tr
+            %th Grand Total
+            %th.text-right= human_number @reports.sum(:distributed)
+            %th.text-right= human_number @reports.sum(:checked)
+            %th.text-right= human_number @reports.map(&:people_served).sum
+            %th.text-right= human_number @targets.sum(:goal)
+            %th.text-right= human_number @targets.sum(:people_goal)
+        %tbody
+          = render partial: 'technology', collection: @technologies
+- else
+  .row.mt-3#sector_section
+    .col
+      %table.table.table-striped
+        %thead
+          %tr
+            %th Village
+            - @technologies.each do |technology|
+              - next if @reports.where(technology: technology).count.zero? && @plans.where(technology: technology).count.zero?
+              %th.text-right= "#{technology.short_name} Dist"
+              %th.text-right= "#{technology.short_name} Planned"
+            %th.text-right People served
+            %th.text-right= "People goal (by #{@plan_date})"
+
+        %tfoot
+          %tr
+            %th Grand Total
+            - @technologies.each do |technology|
+              - next if @reports.where(technology: technology).count.zero?
+              %th.text-right= human_number @reports.where(technology: technology).sum(:distributed)
+              %th.text-right= human_number @plans.where(technology: technology).sum(:goal)
+            %th.text-right= human_number @reports.map(&:people_served).sum
+            %th.text-right= human_number @plans.sum(:people_goal)
+        %tbody
+          = render partial: 'village', collection: @villages

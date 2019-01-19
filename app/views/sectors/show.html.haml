@@ -27,17 +27,17 @@
           %tr
             %th Technology
             %th.text-right Distributed
+            %th.text-right= "Dist. Goal (by #{@plan_date})"
             %th.text-right Checked
             %th.text-right People served
-            %th.text-right= "Dist. Goal (by #{@target_date})"
             %th.text-right People goal
         %tfoot
           %tr
             %th Grand Total
             %th.text-right= human_number @reports.sum(:distributed)
+            %th.text-right= human_number @targets.sum(:goal)
             %th.text-right= human_number @reports.sum(:checked)
             %th.text-right= human_number @reports.map(&:people_served).sum
-            %th.text-right= human_number @targets.sum(:goal)
             %th.text-right= human_number @targets.sum(:people_goal)
         %tbody
           = render partial: 'technology', collection: @technologies
@@ -49,8 +49,9 @@
           %tr
             %th Cell
             - @technologies.each do |technology|
-              - next if @reports.where(technology: technology).count.zero?
-              %th= "#{technology.short_name} Dist"
+              - next if @reports.where(technology: technology).size.zero? && @plans.where(technology: technology).size.zero?
+              %th.text-right= "#{technology.short_name} Dist"
+              %th.text-right= "#{technology.short_name} Planned"
             %th.text-right People served
             %th.text-right= "People goal (by #{@plan_date})"
 
@@ -58,8 +59,9 @@
           %tr
             %th Grand Total
             - @technologies.each do |technology|
-              - next if @reports.where(technology: technology).count.zero?
+              - next if @reports.where(technology: technology).size.zero? && @plans.where(technology: technology).size.zero?
               %th.text-right= human_number @reports.where(technology: technology).sum(:distributed)
+              %th.text-right= human_number @plans.where(technology: technology).sum(:goal)
             %th.text-right= human_number @reports.map(&:people_served).sum
             %th.text-right= human_number @plans.sum(:people_goal)
         %tbody
