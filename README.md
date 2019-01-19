@@ -18,13 +18,6 @@ DONE: just use #index for reports instead of #all? E.g. technologies
 
 # More reports:
 * By Geography:
-- sectors#show
---> by cells per sector, using Plan, loop over technologies to include distributed.
---> by technologies, using Target
-
-- cells#index
---> comparable to sectors#index
-
 - cells#show
 --> by villages per sector, using Plan
 --> by technologies, using Target
@@ -48,9 +41,26 @@ DONE: just use #index for reports instead of #all? E.g. technologies
 
 # Creating Reports
 
+# Forms
+- Tech form
+- Contract form
+- Target form
+- Plan form
+- Dist form
+- Sector form
+- Cell form
+- Village form
+- Facility form
+
 # Managing User Permissions
-- Nest permissions in user routes since it depends on a user
-- Or handel all within custom user routes and kill the permissions_controller <-- probably this
+- Or handle all within custom user routes and kill the permissions_controller
+-- NO NO NO! Just use some booleans on User and KILL Permisisons, controller, policy, specs, views, etc.
+-- Still need to scrape current_user.can_* out of views, replace with .can_manage_*
+
+# Bugs?
+- JS call to /favicons?
+- Devise mail doesn't send? Mailgun shows nothing going out.
+- No reports on cell#index or village#index because of length, must get to them by sector
 
 # Improvements
 - Districts#index doesn't have [Add Plan, Add Report, Add Target] functionality

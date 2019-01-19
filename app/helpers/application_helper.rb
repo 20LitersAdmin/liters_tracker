@@ -20,7 +20,7 @@ module ApplicationHelper
   end
 
   def human_number(integer)
-    return '-' if integer.zero?
+    return '-' if integer.nil? || integer.zero?
 
     number_with_delimiter(integer, delimiter: ',')
   end

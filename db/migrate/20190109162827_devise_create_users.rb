@@ -3,9 +3,14 @@
 class DeviseCreateUsers < ActiveRecord::Migration[5.2]
   def change
     create_table :users do |t|
-      t.string :fname,              null: false
-      t.string :lname,              null: false
-      t.boolean :admin,             null: false, default: false
+      t.string :fname,                  null: false
+      t.string :lname,                  null: false
+      # Permissions
+      t.boolean :admin,                 null: false, default: false
+      t.boolean :can_manage_reports,    null: false, default: false
+      t.boolean :can_manage_geography,  null: false, default: false
+      t.boolean :can_manage_contracts,  null: false, default: false # contracts, plans, targets
+      t.boolean :can_manage_technologies, null: false, default: false
       ## Database authenticatable
       t.string :email,              null: false, default: ''
       t.string :encrypted_password, null: false, default: ''
@@ -42,14 +47,5 @@ class DeviseCreateUsers < ActiveRecord::Migration[5.2]
     add_index :users, :reset_password_token, unique: true
     add_index :users, :confirmation_token,   unique: true
     add_index :users, :unlock_token,         unique: true
-
-    create_table :permissions do |t|
-      t.references :user,    null: false
-      t.string :model_class, null: false
-      t.boolean :can_create, null: false, default: false
-      t.boolean :can_read,   null: false, default: false
-      t.boolean :can_update, null: false, default: false
-      t.boolean :can_delete, null: false, default: false
-    end
   end
 end

@@ -1,7 +1,7 @@
 -# frozen_string_literal: true
 - @target_sub = @targets.where(contract: mou)
 - @report_sub = @reports.where(contract: mou)
-- return if @target_sub.empty? && @report_sub.empty? && skip_blanks
+- return if @target_sub.empty? && @report_sub.empty? && @skip_blanks
 %tr
   %td= link_to mou.name, contract_path(mou)
   %td.text-right= human_number @target_sub.sum(:goal)

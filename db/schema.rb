@@ -1,5 +1,3 @@
-# frozen_string_literal: true
-
 # This file is auto-generated from the current state of the database. Instead
 # of editing this file, please use the migrations feature of Active Record to
 # incrementally modify your database, and then regenerate this schema definition.
@@ -65,16 +63,6 @@ ActiveRecord::Schema.define(version: 2019_01_10_210841) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["village_id"], name: "index_facilities_on_village_id"
-  end
-
-  create_table "permissions", force: :cascade do |t|
-    t.bigint "user_id", null: false
-    t.string "model_class", null: false
-    t.boolean "can_create", default: false, null: false
-    t.boolean "can_read", default: false, null: false
-    t.boolean "can_update", default: false, null: false
-    t.boolean "can_delete", default: false, null: false
-    t.index ["user_id"], name: "index_permissions_on_user_id"
   end
 
   create_table "plans", force: :cascade do |t|
@@ -152,6 +140,10 @@ ActiveRecord::Schema.define(version: 2019_01_10_210841) do
     t.string "fname", null: false
     t.string "lname", null: false
     t.boolean "admin", default: false, null: false
+    t.boolean "can_manage_reports", default: false, null: false
+    t.boolean "can_manage_geography", default: false, null: false
+    t.boolean "can_manage_contracts", default: false, null: false
+    t.boolean "can_manage_technologies", default: false, null: false
     t.string "email", default: "", null: false
     t.string "encrypted_password", default: "", null: false
     t.string "reset_password_token"

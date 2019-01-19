@@ -6,7 +6,7 @@ class CellsController < ApplicationController
   # GET /cells
   # GET /cells.json
   def index
-    authorize @cells = Cell.all
+    authorize @cells = Cell.all.order(:name)
   end
 
   # GET /cells/1
@@ -64,7 +64,7 @@ class CellsController < ApplicationController
   end
 
   private
-  
+
   def set_cell
     authorize @cell = Cell.find(params[:id])
   end

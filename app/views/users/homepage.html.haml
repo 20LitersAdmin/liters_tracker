@@ -2,79 +2,69 @@
 .row
   .col
     %h2= 'Hey ' + @user.fname
-.row.justify-content-center
+.row.justify-content-center.mb-3
   .col
     %h3.text-center Things you can do:
 
-.row.justify-content-center.deck
-  - if @nothing
-    .col.text-center
-      %h5 Hmmm...
-      %p You don't have permission to do anything here.
-      = render 'shared/admins'
+.row.deck.justify-content-center
+  .col-sm-12.col-md-6.col-lg-3
+    .card.my-2
+      .card-body
+        %h5.card-title View the data
+        %p.card-text Get information on progress
+        = link_to 'View', data_path, class: 'btn btn-primary'
 
-
-  - if @can_create_reports
+  - if @user.can_manage_reports? || @user.admin?
     .col-sm-12.col-md-6.col-lg-3
       .card.my-2
         .card-body
           %h5.card-title Submit a report
           %p.card-text Monthly report from the field
-          = link_to 'Submit Report', select_sectors_path, class: 'btn btn-primary'
+          = link_to 'Submit', select_sectors_path, class: 'btn btn-primary'
 
-  - if @can_update_reports
     .col-sm-12.col-md-6.col-lg-3
       .card.my-2
         .card-body
           %h5.card-title Manage reports
           %p.card-text Change or remove monthly reports
-          = link_to 'Manage Reports', reports_path, class: 'btn btn-primary'
+          = link_to 'Go', reports_path, class: 'btn btn-primary'
 
-  - if @can_read_data
-    .col-sm-12.col-md-6.col-lg-3
-      .card.my-2
-        .card-body
-          %h5.card-title View the data
-          %p.card-text Get information on progress
-          = link_to 'View Data', data_path, class: 'btn btn-primary'
-
-  - if @can_update_facilities
+  - if @user.can_manage_geography? || @user.admin?
     .col-sm-12.col-md-6.col-lg-3
       .card.my-2
         .card-body
           %h5.card-title Manage facilities
           %p.card-text Churches, schools, health clinics
-          = link_to 'Manage Facilites', facilities_path, class: 'btn btn-primary'
+          = link_to 'Go', facilities_path, class: 'btn btn-primary'
 
-  - if @can_update_geography
     .col-sm-12.col-md-6.col-lg-3
       .card.my-2
         .card-body
           %h5.card-title Manage geography
           %p.card-text Districts, sectors, cells, villages
-          = link_to 'Manage Geography', districts_path, class: 'btn btn-primary'
+          = link_to 'Go', districts_path, class: 'btn btn-primary'
 
-  - if @can_update_plans
+  - if @user.can_manage_contracts? || @user.admin?
     .col-sm-12.col-md-6.col-lg-3
       .card.my-2
         .card-body
           %h5.card-title Manage MOUs
           %p.card-text Contracts, targets, plans
-          = link_to 'Manage MOUs', contracts_path, class: 'btn btn-primary'
+          = link_to 'Go', contracts_path, class: 'btn btn-primary'
 
-  - if @can_update_users
+  - if @user.admin?
     .col-sm-12.col-md-6.col-lg-3
       .card.my-2
         .card-body
           %h5.card-title Manage users
           %p.card-text passwords, permissions, etc.
-          = link_to 'Manage Users', users_path, class: 'btn btn-primary'
+          = link_to 'Go', users_path, class: 'btn btn-primary'
 
-  - if !@nothing && !@user.admin?
+  - if !@user.admin?
     .col-sm-12.col-md-6.col-lg-3
       .card.my-2
         .card-body
-          %h5.card-title Need access?
-          %p.card-text Talk to an admin
+          %h5.card-title Need access to more?
+          %p.card-text Talk to an administrator
           - @admins.each do |admin|
             = link_to 'Email ' + admin.fname, 'mailto:' + admin.email, class: 'btn btn-primary', target: '_blank'
