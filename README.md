@@ -42,6 +42,7 @@ DONE: just use #index for reports instead of #all? E.g. technologies
 # Creating Reports
 
 # Forms
+-- redirect_back on model#create and #update isn't UX
 - Tech form
 - Contract form
 - Target form
