@@ -12,18 +12,6 @@ class Facility < ApplicationRecord
   scope :churches, -> { where(category: 'Church') }
   scope :not_churches, -> { where.not(category: 'Church') }
 
-  def cell
-    village.cell
-  end
-
-  def sector
-    cell.sector
-  end
-
-  def district
-    sector.district
-  end
-
   def current_plan
     Plan.where(contract_id: Constants::Contract::CURRENT).where(model_gid: "gid://liters-tracker/Facility/#{id}").last
   end

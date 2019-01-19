@@ -21,16 +21,42 @@ class Plan < ApplicationRecord
     where(model_gid: record.to_global_id.to_s)
   end
 
+  def self.related_to_facility(facility, only_ary: false)
+    plans = related_to(facility)
+
+    return plans.pluck(:id) if only_ary
+
+    plans
+  end
+
+  def self.related_to_village(village, only_ary: false)
+    plan_ids = []
+    plan_ids << related_to(village)
+    village.facilities.each { |facility| plan_ids << related_to_facility(facility, only_ary: true) }
+
+    return plan_ids.flatten.uniq if only_ary
+
+    where(id: plan_ids.flatten.uniq)
+  end
+
+  def self.related_to_cell(cell, only_ary: false)
+    plan_ids = []
+    plan_ids << related_to(cell)
+    cell.villages.each { |village| plan_ids << related_to_village(village, only_ary: true) }
+
+    return plan_ids.flatten.uniq if only_ary
+
+    where(id: plan_ids.flatten.uniq)
+  end
+
   def self.related_to_sector(sector, only_ary: false)
     plan_ids = []
     plan_ids << related_to(sector).pluck(:id)
-    sector.cells.each { |cell| plan_ids << related_to(cell).pluck(:id) }
-    sector.villages.each { |village| plan_ids << related_to(village).pluck(:id) }
-    sector.facilities.each { |facility| plan_ids << related_to(facility).pluck(:id) }
+    sector.cells.each { |cell| plan_ids << related_to_cell(cell, only_ary: true) }
 
-    return plan_ids.flatten! if only_ary
+    return plan_ids.flatten.uniq if only_ary
 
-    where(id: plan_ids.flatten!)
+    where(id: plan_ids.flatten.uniq)
   end
 
   def self.related_to_district(district)
@@ -38,7 +64,7 @@ class Plan < ApplicationRecord
     plan_ids << related_to(district).pluck(:id)
     district.sectors.each { |sector| plan_ids << related_to_sector(sector, only_ary: true) }
 
-    where(id: plan_ids.flatten!)
+    where(id: plan_ids.flatten.uniq)
   end
 
   def date

@@ -11,11 +11,11 @@ class ContractPolicy
   def index?
     raise ActiveRecord::RecordNotFound if @record.empty?
 
-    @user&.can_read?(@record.first.class.name)
+    @user&.can_read?(@record.first.class.name) || @user&.can_read?('Data')
   end
 
   def show?
-    @user&.can_read?(@record.class.name)
+    @user&.can_read?(@record.class.name) || @user&.can_read?('Data')
   end
 
   def new?

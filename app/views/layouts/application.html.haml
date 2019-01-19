@@ -8,7 +8,7 @@
     = csp_meta_tag
     = stylesheet_link_tag    'application', media: 'all', 'data-turbolinks-track': 'reload'
     = javascript_include_tag 'application', 'data-turbolinks-track': 'reload'
-  %body
+  %body{'data-controller': controller.controller_name, 'data-action': controller.action_name }
     %header
       = render 'shared/navbar'
     %main.container

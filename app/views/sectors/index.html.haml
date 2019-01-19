@@ -1,7 +1,9 @@
 -# frozen_string_literal: true
 .row.mb-3
-  .col
+  .col-sm-8
     %h4 Data: All Sectors
+  .col-sm-2.text-right
+    = link_to 'All Districts', districts_path, class: 'btn btn-primary'
   .col-sm-2.text-right
     - if current_user.can_create?('Sector')
       = link_to 'New', new_sector_path, class: 'btn btn-primary'
