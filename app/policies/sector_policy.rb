@@ -11,38 +11,30 @@ class SectorPolicy
   def index?
     raise ActiveRecord::RecordNotFound if @record.empty?
 
-    @user&.can_read?(@record.first.class.name) || @user&.can_read?('Data')
-  end
-
-  def select?
-    @user&.can_create?('Report')
-  end
-
-  def report?
-    @user&.can_create?('Report')
+    @user
   end
 
   def show?
-    @user&.can_read?(@record.class.name) || @user&.can_read?('Data')
+    @user
   end
 
   def new?
-    @user&.can_create?(@record.class.name)
+    @user&.admin? || @user&.can_manage_geography?
   end
 
   def create?
-    @user&.can_create?(@record.class.name)
+    new?
   end
 
   def edit?
-    @user&.can_update?(@record.class.name)
+    new?
   end
 
   def update?
-    @user&.can_update?(@record.class.name)
+    new?
   end
 
   def destroy?
-    @user&.can_delete?(@record.class.name)
+    @user&.admin?
   end
 end

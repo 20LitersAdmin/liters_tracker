@@ -13,44 +13,36 @@ class UserPolicy
   end
 
   def data?
-    @user&.can_read?('Data') || @user&.can_read?('Report')
+    @user
   end
 
   def index?
     raise ActiveRecord::RecordNotFound if @record.empty?
 
-    @user&.can_read?(@record.first.class.name)
+    @user
   end
 
   def show?
-    @user.can_read?(@record.class.name) || @user == @record
+    @user
   end
 
   def new?
-    @user&.can_create?(@record.class.name)
+    @user&.admin?
   end
 
   def create?
-    @user&.can_create?(@record.class.name)
+    new?
   end
 
   def edit?
-    @user&.can_update?(@record.class.name)
+    new?
   end
 
   def update?
-    @user&.can_update?(@record.class.name)
+    new?
   end
 
   def destroy?
-    @user&.can_delete?(@record.class.name)
-  end
-
-  def permissions?
-    @user&.can_read?('Permission') || @user&.can_update?('Permission')
-  end
-
-  def set_permissions?
-    @user&.can_update?('Permission')
+    new?
   end
 end

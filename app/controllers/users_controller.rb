@@ -3,7 +3,7 @@
 class UsersController < ApplicationController
   include UserHelper
 
-  before_action :set_user, only: %i[show edit update destroy permissions set_permissions]
+  before_action :set_user, only: %i[show edit update destroy]
 
   def homepage
     authorize User
@@ -80,35 +80,6 @@ class UsersController < ApplicationController
   def destroy
   end
 
-  def permissions
-    # set the checkboxes somehow
-  end
-
-  def set_permissions
-
-    permissions_hash = translate_to_booleans user_permissions_params
-
-    if all_global_permissions? user_permissions_params
-      @user.update(admin: true) # auto-deletes existing permissions
-      redirect_to users_path and return
-    end
-
-    if any_global_permissions? user_permissions_params
-      # @user.write_global_permissions!(user_permissions_params[:global_permissions].to_h.symbolize_keys)
-
-    # when all == "0" it actually writes everything to true
-    # permissions.write_* expects booleans
-      byebug
-    end
-
-    if any_geo_permissions? user_permissions_params
-    end
-
-    if any_info_permissions? user_permissions_params
-    end
-
-  end
-
   private
 
   def set_user
@@ -125,50 +96,4 @@ class UsersController < ApplicationController
     params.require(:user).permit(:fname, :lname, :admin, :email,
                                  :confirmed_at, :locked_at)
   end
-
-  def user_permissions_params
-    params.require(:user).permit(global_permissions: {}, geo_permissions: {}, info_permissions: {}, permissions: {})
-  end
-
-  def user_individual_permissions
-    params.require(:user).permit(permissions: {})
-  end
-
-  # {"utf8"=>"✓", "_method"=>"put", "authenticity_token"=>"eUX4w3RBodvj2MiMszZGVHfRjAhbzOb+9OVJF/2mdQCACbP7UOYNo/KF4bqYGLypSeOABitvJoVpOPL7FjmueA==", "commit"=>"Set Permissions",
-  # "user"=>
-  #   {"global_permissions"=>
-  #     {"create"=>"0", "read"=>"0", "update"=>"0", "delete"=>"0"},
-  #   "geo_permissions"=>
-  #     {"create"=>"0", "read"=>"1", "update"=>"0", "delete"=>"0"},
-  #   "info_permissions"=>
-  #     {"create"=>"0", "read"=>"1", "update"=>"0", "delete"=>"0"}
-  #   "permissions"=>
-  #     {"Cell"=>
-  #       {"create"=>"0", "read"=>"0", "update"=>"0", "delete"=>"0"},
-  #     "Contract"=>
-  #       {"create"=>"0", "read"=>"0", "update"=>"0", "delete"=>"0"},
-  #     "Data"=>
-  #       {"create"=>"0", "read"=>"0", "update"=>"0", "delete"=>"0"},
-  #     "District"=>
-  #       {"create"=>"0", "read"=>"0", "update"=>"0", "delete"=>"0"},
-  #     "Facility"=>
-  #       {"create"=>"0", "read"=>"0", "update"=>"0", "delete"=>"0"},
-  #     "Permission"=>
-  #       {"create"=>"0", "read"=>"0", "update"=>"0", "delete"=>"0"},
-  #     "Plan"=>
-  #       {"create"=>"0", "read"=>"0", "update"=>"0", "delete"=>"0"},
-  #     "Report"=>
-  #       {"create"=>"0", "read"=>"0", "update"=>"0", "delete"=>"0"},
-  #     "Sector"=>
-  #       {"create"=>"0", "read"=>"0", "update"=>"0", "delete"=>"0"},
-  #     "Target"=>
-  #       {"create"=>"0", "read"=>"0", "update"=>"0", "delete"=>"0"},
-  #     "Technology"=>
-  #       {"create"=>"0", "read"=>"0", "update"=>"0", "delete"=>"0"},
-  #     "User"=>
-  #       {"create"=>"0", "read"=>"0", "update"=>"0", "delete"=>"0"},
-  #     "Village"=>
-  #       {"create"=>"0", "read"=>"0", "update"=>"0", "delete"=>"0"}
-  #     }
-  #   }, "controller"=>"users", "action"=>"set_permissions", "id"=>"2"}
 end

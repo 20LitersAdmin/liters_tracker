@@ -49,8 +49,13 @@ DONE: just use #index for reports instead of #all? E.g. technologies
 # Creating Reports
 
 # Managing User Permissions
-- Nest permissions in user routes since it depends on a user
-- Or handel all within custom user routes and kill the permissions_controller <-- probably this
+- Or handle all within custom user routes and kill the permissions_controller
+-- NO NO NO! Just use some booleans on User and KILL Permisisons, controller, policy, specs, views, etc.
+-- Still need to scrape current_user.can_* out of views, replace with .can_manage_*
+
+# Bugs?
+JS call to /favicons?
+Devise mail doesn't send? Mailgun shows nothing going out.
 
 # Improvements
 - Districts#index doesn't have [Add Plan, Add Report, Add Target] functionality

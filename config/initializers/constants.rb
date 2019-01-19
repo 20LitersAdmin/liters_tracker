@@ -11,13 +11,13 @@ module Constants
       notice: 'secondary'
     }.freeze
 
-    MODEL_LIST = %w[Cell Contract Data District Facility Permission Plan Report Sector Target Technology User Village].freeze
-    INFO_MODELS_LIST = %w[Data Plan Report Target Technology].freeze
+    # MODEL_LIST = %w[Cell Contract Data District Facility Permission Plan Report Sector Target Technology User Village].freeze
+    # INFO_MODELS_LIST = %w[Data Plan Report Target Technology].freeze
   end
 
   class Geography
-    STACK_HSH = { 'District' => 0, 'Sector' => 1, 'Cell' => 2, 'Village' => 3, 'Facility' => 4 }.freeze
-    STACK_ARY = %w[District Sector Cell Village Facility].freeze
+    # STACK_HSH = { 'District' => 0, 'Sector' => 1, 'Cell' => 2, 'Village' => 3, 'Facility' => 4 }.freeze
+    # STACK_ARY = %w[District Sector Cell Village Facility].freeze
   end
 
   class Technology
