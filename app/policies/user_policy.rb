@@ -23,7 +23,7 @@ class UserPolicy
   end
 
   def show?
-    @user
+    @user&.admin? || @user == current_user
   end
 
   def new?
@@ -35,7 +35,7 @@ class UserPolicy
   end
 
   def edit?
-    new?
+    @user&.admin? || @user == current_user
   end
 
   def update?

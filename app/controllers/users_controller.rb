@@ -10,23 +10,6 @@ class UsersController < ApplicationController
 
     @user = current_user
 
-    @can_create_reports = current_user.can_create?('Report')
-    @can_update_reports = current_user.can_update?('Report')
-    @can_read_data = current_user.can_read?('Data')
-    @can_update_facilities = current_user.can_update?('Facility')
-    @can_update_geography = current_user.can_update?('Village')
-    @can_update_plans = current_user.can_update?('Plan')
-    @can_update_users = current_user.can_update?('User')
-
-    @nothing = !@can_create_updates &&
-               !@can_update_updates &&
-               !@can_read_reports &&
-               !@can_update_facilities &&
-               !@can_update_geography &&
-               !@can_update_plans &&
-               !@can_update_users &&
-               !@can_read_data
-
     @admins = User.admins
   end
 
@@ -35,13 +18,7 @@ class UsersController < ApplicationController
   end
 
   def index
-    authorize @users = User.all
-
-    @permissions_link = current_user.can_read?('Permission')
-    @edit_link = current_user.can_update?('User')
-    @delete_link = current_user.can_delete?('User')
-
-    @link_count = [@permissions_link, @edit_link, @delete_link].count(true)
+    authorize @users = User.all.order(:lname)
   end
 
   def show
@@ -56,7 +33,7 @@ class UsersController < ApplicationController
 
     if @user.save
       flash[:success] = 'User was successfully created'
-      redirect_back(fallback_location: root_path)
+      redirect_to users_path
     else
       render 'new'
     end
@@ -71,7 +48,7 @@ class UsersController < ApplicationController
 
     if @user.update(params_to_use)
       flash[:success] = current_user == @user ? 'Your profile was successfully updated' : 'User was successfully updated'
-      redirect_back(fallback_location: root_path)
+      redirect_to users_path
     else
       render 'edit'
     end

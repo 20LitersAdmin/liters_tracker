@@ -13,7 +13,7 @@
     - else
       = link_to 'Hide empty rows',  @skip_blanks_rfp, class: 'btn btn-outline-dark', id: 'dist_skipblank'
   .col-sm-2.text-right
-    - if current_user.can_update?('sector')
+    - if current_user.can_manage_geography? || current_user.admin?
       = link_to 'Edit', edit_sector_path(@sector), class: 'btn btn-primary'
     = link_to 'Back', sectors_path, class: 'btn btn-dark'
 

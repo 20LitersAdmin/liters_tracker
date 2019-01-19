@@ -14,7 +14,8 @@
         %th Email
         %th.text-center Admin?
         %th.text-center Confirmed?
-        - @link_count.times do
+        - if current_user.admin?
+          %th
           %th
 
     %tbody
@@ -24,16 +25,7 @@
           %td= user.email
           %td.text-center= human_boolean user.admin?
           %td.text-center= human_boolean user.confirmed_at.present?
-          - if @permissions_link && !user.admin?
-            %td= link_to 'Permissions', permissions_user_path(user), class: 'btn btn-outline-secondary'
-          - else
-            %td
-          - if @edit_link
+          - if current_user.admin?
             %td= link_to 'Edit', edit_user_path(user), class: 'btn btn-outline-primary'
-          - else
-            %td
-          - if @delete_link
             %td= link_to 'Destroy', user, method: :delete, data: { confirm: 'Are you sure?' }, class: 'btn btn-outline-danger'
-          - else
-            %td
 

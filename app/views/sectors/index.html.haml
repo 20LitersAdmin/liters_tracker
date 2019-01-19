@@ -5,7 +5,7 @@
   .col-sm-2.text-right
     = link_to 'All Districts', districts_path, class: 'btn btn-primary'
   .col-sm-2.text-right
-    - if current_user.can_create?('Sector')
+    - if current_user.can_manage_geography? || current_user.admin?
       = link_to 'New', new_sector_path, class: 'btn btn-primary'
     = link_to 'Back', data_path, class: 'btn btn-dark'
 

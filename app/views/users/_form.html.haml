@@ -13,6 +13,21 @@
       = f.input :email
     .col-3.field
       = f.input :admin, disabled: !current_user.admin?, hint: 'Only admins can make admins'
+  - if current_user.admin?
+    .row.text-center
+      .col
+        %h3 User permissions:
+        %p
+          %i (Admins need no extra permissions)
+    .row.align-items-center
+      .col
+        = f.input :can_manage_reports, hint: 'Submit, edit and delete monthly reports'
+      .col
+        = f.input :can_manage_geography, hint: 'Create, edit and delete locations from Districts to Villages'
+      .col
+        = f.input :can_manage_contracts, hint: 'Submit, edit and delete MOUs, Plans and Targets'
+      .col
+        = f.input :can_manage_technologies, hint: 'Create, edit and delete technology solutions'
   .row
     .col.field
       = f.input :confirmed_at, as: :search, input_html: { class: 'datetimepicker-input dtp-datetime', data: { target: '#user_confirmed_at', toggle: 'datetimepicker'} }
@@ -23,7 +38,7 @@
       = f.input :password, hint: @skip_password_message
     .col.field
       = f.input :password_confirmation, hint: @skip_password_message
-  .row.mt-3.actions
+  .row.my-3.actions
     .col.text-right
       = f.button :submit, class: 'btn btn-primary'
     .col.text-left

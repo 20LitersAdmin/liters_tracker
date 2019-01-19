@@ -4,10 +4,10 @@
 - return if @plan_sub.blank? && @report_sub.blank? && @skip_blanks
 %tr
   %td.text-left
-    - if @plan_sub.empty? && current_user.can_create?('Plan')
+    - if @plan_sub.empty? && (current_user.can_manage_contracts? || current_user.admin?)
       %span.float-left= link_to cell.name, cell_path(cell)
       %span.float-right= link_to 'Add plan', new_plan_path(model_gid: cell.to_global_id.to_s), class: 'btn btn-outline-primary'
-    - elsif @report_sub.empty? && current_user.can_create?('Report')
+    - elsif @report_sub.empty? && (current_user.can_manage_reports? || current_user.admin?)
       %span.float-left= link_to cell.name, cell_path(cell)
       %span.float-right= link_to 'Add report', new_report_path(model_gid: cell.to_global_id.to_s), class: 'btn btn-outline-primary'
     -else
@@ -20,7 +20,7 @@
     %td.text-right= human_number @plan_sub.sum(:people_goal)
   - else
     %td= "No plans or reports related to #{@sector.name} for this cell and time period"
-    - if current_user.can_create?('Report')
+    - if current_user.can_manage_reports? || current_user.admin?
       %td= link_to 'Add report', new_report_path(model_gid: cell.to_global_id.to_s), class: 'btn btn-outline-primary'
     - else
       %td

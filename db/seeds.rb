@@ -10,8 +10,8 @@
 User.create(
   [
     { id: 1, fname: 'Chip', lname: 'Kragt', email: 'chip@20liters.org', password: 'password', password_confirmation: 'password', admin: true, confirmed_at: Time.now },
-    { id: 2, fname: 'Robero', lname: "Jean d'Amour", email: "Rd'Amour@wr.org", password: 'password', password_confirmation: 'password', confirmed_at: Time.now },
-    { id: 3, fname: 'Amanda', lname: 'Mulder', email: 'amanda@20liters.org', password: 'password', password_confirmation: 'password', admin: true, confirmed_at: Time.now }
+    { id: 2, fname: 'Rebero', lname: "Jean d'Amour", email: "Rd'Amour@wr.org", password: 'password', password_confirmation: 'password', can_manage_reports: true, can_manage_geography: true, confirmed_at: Time.now },
+    { id: 3, fname: 'Amanda', lname: 'Mulder', email: 'amanda@20liters.org', password: 'password', password_confirmation: 'password', confirmed_at: Time.now }
   ]
 )
 
