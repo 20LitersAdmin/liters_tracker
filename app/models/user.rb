@@ -19,6 +19,10 @@ class User < ApplicationRecord
 
   scope :admins, -> { where(admin: true) }
 
+  before_save :admins_dont_need_permission, if: -> { admin? }
+
+  # attr_accessor :global_permissions, :geo_permissions, :info_permissions, :permissions
+
   def name
     fname + ' ' + lname
   end
@@ -58,7 +62,16 @@ class User < ApplicationRecord
   def write_global_permissions!(args)
     return true if admin?
 
-    Constants::Application::MODEL_LIST.each do |model|
+    case args[:scope]
+    when 'geo'
+      scope = Constants::Geography::STACK_ARY
+    when 'info'
+      scope = Constants::Application::INFO_MODELS_LIST
+    else
+      scope = Constants::Application::MODEL_LIST
+    end
+
+    scope.each do |model|
       write_permission!(model, args)
     end
   end
@@ -73,5 +86,13 @@ class User < ApplicationRecord
     return permission.write_all(args[:all]) if args[:all].present?
 
     permission.write_individual(args)
+  end
+
+  private
+
+  def admins_dont_need_permission
+    return true if permissions.empty?
+
+    permissions.destroy_all
   end
 end

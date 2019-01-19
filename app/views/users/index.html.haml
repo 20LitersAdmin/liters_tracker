@@ -1,25 +1,39 @@
 -# frozen_string_literal: true
-%h1 All users
+.row
+  .col-8
+    %h1 All users
+  .col-4.text-right
+    = link_to 'New User', new_user_path, class: 'btn btn-primary'
 
-%table.table.table-striped
-  %thead
-    %tr
-      %th Name
-      %th Email
-      %th.text-center Admin?
-      %th.text-center Confirmed?
-      %th
-      %th
-  %tbody
-    - @users.each do |user|
+.row
+  .col
+  %table.table.table-striped
+    %thead
       %tr
-        %td= user.name
-        %td= user.email
-        %td.text-center= human_boolean user.admin?
-        %td.text-center= human_boolean user.confirmed_at.present?
-        %td= link_to 'Edit', edit_user_path(user)
-        %td= link_to 'Destroy', user, method: :delete, data: { confirm: 'Are you sure?' }
+        %th Name
+        %th Email
+        %th.text-center Admin?
+        %th.text-center Confirmed?
+        - @link_count.times do
+          %th
 
-%br
+    %tbody
+      - @users.each do |user|
+        %tr
+          %td= user.name
+          %td= user.email
+          %td.text-center= human_boolean user.admin?
+          %td.text-center= human_boolean user.confirmed_at.present?
+          - if @permissions_link && !user.admin?
+            %td= link_to 'Permissions', permissions_user_path(user), class: 'btn btn-outline-secondary'
+          - else
+            %td
+          - if @edit_link
+            %td= link_to 'Edit', edit_user_path(user), class: 'btn btn-outline-primary'
+          - else
+            %td
+          - if @delete_link
+            %td= link_to 'Destroy', user, method: :delete, data: { confirm: 'Are you sure?' }, class: 'btn btn-outline-danger'
+          - else
+            %td
 
-= link_to 'New User', new_user_path

@@ -12,6 +12,7 @@ module Constants
     }.freeze
 
     MODEL_LIST = %w[Cell Contract Data District Facility Permission Plan Report Sector Target Technology User Village].freeze
+    INFO_MODELS_LIST = %w[Data Plan Report Target Technology].freeze
   end
 
   class Geography

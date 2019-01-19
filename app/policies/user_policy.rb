@@ -45,4 +45,12 @@ class UserPolicy
   def destroy?
     @user&.can_delete?(@record.class.name)
   end
+
+  def permissions?
+    @user&.can_read?('Permission') || @user&.can_update?('Permission')
+  end
+
+  def set_permissions?
+    @user&.can_update?('Permission')
+  end
 end
