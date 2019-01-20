@@ -772,8 +772,8 @@ Plan.create(
     { contract_id: 3, technology_id: 1, model_gid: 'gid://liters-tracker/Village/100', goal: 93, people_goal: 465 },
     { contract_id: 3, technology_id: 1, model_gid: 'gid://liters-tracker/Village/99', goal: 91, people_goal: 455 },
     { contract_id: 3, technology_id: 1, model_gid: 'gid://liters-tracker/Village/104', goal: 165, people_goal: 825 },
-    # Rilima SAM3
-    { contract_id: 3, technology_id: 1, model_gid: 'gid://liters-tracker/Village/216', goal: 604, people_goal: 3020 },
+    # Rilima SAM3 (all goals dumped into 1 village)
+    # { contract_id: 3, technology_id: 1, model_gid: 'gid://liters-tracker/Village/216', goal: 604, people_goal: 3020 },
     # Masaka SAM2
     { contract_id: 1, technology_id: 3, model_gid: 'gid://liters-tracker/Facility/1', goal: 1, people_goal: 400 },
     { contract_id: 1, technology_id: 3, model_gid: 'gid://liters-tracker/Facility/2', goal: 1, people_goal: 400 },

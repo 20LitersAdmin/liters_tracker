@@ -1,32 +1,39 @@
 -# frozen_string_literal: true
-%h1 Listing villages
+.row.mb-3
+  .col-sm-4
+    %h4 Data: All Villages
+  .col-sm-3.text-center
+    = link_to 'All Sectors', sectors_path, class: 'btn btn-primary'
+  .col-sm-3.text-center
+    - if @skip_blanks
+      = link_to 'Show empty rows', request.fullpath.gsub('&skip_blanks=true', '').gsub('?skip_blanks=true', '') , class: 'btn btn-outline-dark', id: 'vill_skipblank'
+    - else
+      = link_to 'Hide empty rows',  @skip_blanks_rfp, class: 'btn btn-outline-dark', id: 'vill_skipblank'
+  .col-sm-2.text-right
+    - if current_user.can_manage_geography? || current_user.admin?
+      = link_to 'New', new_village_path, class: 'btn btn-primary'
+    = link_to 'Back', data_path, class: 'btn btn-dark'
 
-%table
+= render partial: 'shared/search', locals: { from: @from, to: @to, earliest: @earliest, latest: @latest }
+
+%table.table.table-striped#dttb_btn0-villages
   %thead
     %tr
-      %th Name
-      %th Gis
-      %th Latitude
-      %th Longitude
-      %th Population
-      %th Households
       %th
+      %th Village
+      %th Sector
+      %th.text-center Pop / HH
+      %th.text-center Dist / Checked
+      %th.text-right People served
+      %th.text-right= "People goal (by #{@plan_date})"
+  %tfoot
+    %tr
       %th
+      %th Grand Total
       %th
-
+      %th.text-center= @gttl_pop_hh
+      %th.text-center= @gttl_dist_chk
+      %th.text-right= human_number @reports.map(&:people_served).sum
+      %th.text-right= human_number @plans.sum(:people_goal)
   %tbody
-    - @villages.each do |village|
-      %tr
-        %td= village.name
-        %td= village.gis_id
-        %td= village.latitude
-        %td= village.longitude
-        %td= village.population
-        %td= village.households
-        %td= link_to 'Show', village
-        %td= link_to 'Edit', edit_village_path(village)
-        %td= link_to 'Destroy', village, method: :delete, data: { confirm: 'Are you sure?' }
-
-%br
-
-= link_to 'New Village', new_village_path
+    = render @villages

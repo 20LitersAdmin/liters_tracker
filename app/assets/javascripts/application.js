@@ -13,6 +13,7 @@
 //= require rails-ujs
 //= require jquery
 //= require turbolinks
+//= require datatables
 //= require popper
 //= require bootstrap
 //= require moment

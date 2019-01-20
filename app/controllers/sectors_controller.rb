@@ -4,7 +4,6 @@ class SectorsController < ApplicationController
   before_action :set_sector, only: %w[show edit update destroy]
 
   # GET /sectors
-  # GET /sectors.json
   def index
     authorize @sectors = Sector.all.order(:name)
 
@@ -31,7 +30,6 @@ class SectorsController < ApplicationController
   end
 
   # GET /sectors/1
-  # GET /sectors/1.json
   def show
     @earliest = form_date Report.earliest_date
     @latest =   form_date Report.latest_date
@@ -67,7 +65,6 @@ class SectorsController < ApplicationController
   end
 
   # POST /sectors
-  # POST /sectors.json
   def create
     authorize @sector = Sector.new(sector_params)
 
@@ -83,7 +80,6 @@ class SectorsController < ApplicationController
   end
 
   # PATCH/PUT /sectors/1
-  # PATCH/PUT /sectors/1.json
   def update
     respond_to do |format|
       if @sector.update(sector_params)
@@ -97,7 +93,6 @@ class SectorsController < ApplicationController
   end
 
   # DELETE /sectors/1
-  # DELETE /sectors/1.json
   def destroy
     authorize @sector.destroy
     respond_to do |format|

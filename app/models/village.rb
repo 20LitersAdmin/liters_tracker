@@ -16,4 +16,10 @@ class Village < ApplicationRecord
   def related_reports
     Report.where(model_gid: "gid://liters-tracker/Village/#{id}")
   end
+
+  def pop_hh
+    pop = population.present? ? ActiveSupport::NumberHelper.number_to_delimited(population, delimiter: ',') : '-'
+    hh = households.present? ? ActiveSupport::NumberHelper.number_to_delimited(households, delimiter: ',') : '-'
+    pop + ' / ' + hh
+  end
 end

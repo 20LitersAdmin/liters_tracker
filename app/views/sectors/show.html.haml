@@ -35,10 +35,10 @@
           %tr
             %th Grand Total
             %th.text-right= human_number @reports.sum(:distributed)
-            %th.text-right= human_number @targets.sum(:goal)
+            %th.text-right= human_number @plans.sum(:goal)
             %th.text-right= human_number @reports.sum(:checked)
             %th.text-right= human_number @reports.map(&:people_served).sum
-            %th.text-right= human_number @targets.sum(:people_goal)
+            %th.text-right= human_number @plans.sum(:people_goal)
         %tbody
           = render partial: 'technology', collection: @technologies
 - else

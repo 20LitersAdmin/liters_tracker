@@ -6,3 +6,6 @@ $(document).on 'turbolinks:load', ->
 
 $(document).on 'turbolinks:request-start', ->
   $('#loading_screen').show()
+
+$(document).on 'turbolinks:request-end', ->
+  $('#loading_screen').hide()
