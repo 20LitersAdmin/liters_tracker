@@ -74,6 +74,12 @@ class Report < ApplicationRecord
     GlobalID::Locator.locate model_gid
   end
 
+  # def distributed_checked
+  #   dist = distributed.present? ? ActiveSupport::NumberHelper.number_to_delimited(distributed, delimiter: ',') : '-'
+  #   chk = checked.present? ? ActiveSupport::NumberHelper.number_to_delimited(checked, delimiter: ',') : '-'
+  #   dist + ' / ' + chk
+  # end
+
   def people_served
     model_gid.include?('Facility') && model.impact.positive? ? model.impact : (technology.default_impact * distributed.to_i)
     # model_gid.include?('Village') -- could work the same as above, when Rebero starts reporting SAM3 dist impacts

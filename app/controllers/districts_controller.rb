@@ -16,18 +16,16 @@ class DistrictsController < ApplicationController
     @reports = Report.where(date: @from..@to).order(date: :asc)
     @plans = Plan.between(@from, @to)
 
-    @plan_date = human_date @plans.last&.contract&.end_date
+    @plan_date = human_date @plans.size.zero? ? nil : Contract.find(@plans.pluck(:contract_id).max).end_date
   end
 
-  # GET /districts/1
+  # GET /districts/:id
   def show
     @earliest = form_date Report.earliest_date
     @latest =   form_date Report.latest_date
 
     @from = params[:from].present? ? Date.parse(params[:from]) : @earliest
     @to =   params[:to].present? ? Date.parse(params[:to]) : @latest
-
-    @reports = Report.where(date: @from..@to).related_to_district(@district).order(date: :asc)
 
     @skip_blanks = params[:skip_blanks].present?
     @skip_blanks_rfp = request.fullpath.include?('?') ? request.fullpath + '&skip_blanks=true' : request.fullpath + '?skip_blanks=true'
@@ -40,15 +38,11 @@ class DistrictsController < ApplicationController
     @contract_search_param_add = @by_tech ? '&by_tech=true' : ''
     @contract_search_param_add += @skip_blanks ? '&skip_blanks=true' : ''
 
-    if @by_tech
-      @technologies = Technology.report_worthy
-      @targets = Target.between(@from, @to)
-      @target_date = human_date @targets.last&.date
-    else
-      @sectors = @district.sectors.order(name: :asc)
-      @plans = Plan.related_to_district(@district)
-      @plan_date = human_date @plans.last&.date
-    end
+    @reports = Report.where(date: @from..@to).related_to_district(@district).order(date: :asc)
+    @technologies = Technology.report_worthy
+    @plans = Plan.related_to_district(@district)
+    @plan_date = human_date @plans.size.zero? ? nil : Contract.find(@plans.pluck(:contract_id).max).end_date
+    @sectors = @district.sectors.order(name: :asc)
   end
 
   # GET /districts/new

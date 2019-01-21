@@ -11,6 +11,8 @@
   %body{'data-controller': controller.controller_name, 'data-action': controller.action_name }
     %header
       = render 'shared/navbar'
+    .fa-5x#loading_screen
+      %i.fa.fa-spinner.fa-pulse#loading_spinner
     %main.container
       = flash_messages
       = yield

@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 class CellsController < ApplicationController
-  before_action :set_cell, only: [:show, :edit, :update, :destroy]
+  before_action :set_cell, only: %w[show edit update destroy]
 
   # GET /cells
   # GET /cells.json
@@ -12,6 +12,28 @@ class CellsController < ApplicationController
   # GET /cells/1
   # GET /cells/1.json
   def show
+    @earliest = form_date Report.earliest_date
+    @latest =   form_date Report.latest_date
+
+    @from = params[:from].present? ? Date.parse(params[:from]) : @earliest
+    @to =   params[:to].present? ? Date.parse(params[:to]) : @latest
+
+    @skip_blanks = params[:skip_blanks].present?
+    @skip_blanks_rfp = request.fullpath.include?('?') ? request.fullpath + '&skip_blanks=true' : request.fullpath + '?skip_blanks=true'
+
+    @by_tech = params[:by_tech].present?
+    @by_tech_rfp = request.fullpath.include?('?') ? request.fullpath + '&by_tech=true' : request.fullpath + '?by_tech=true'
+
+    @searchbar_hidden_fields = @by_tech ? [{ name: 'by_tech', value: 'true' }] : []
+    @searchbar_hidden_fields << { name: 'skip_blanks', value: 'true' } if @skip_blanks
+    @contract_search_param_add = @by_tech ? '&by_tech=true' : ''
+    @contract_search_param_add += @skip_blanks ? '&skip_blanks=true' : ''
+
+    @reports = Report.where(date: @from..@to).related_to_cell(@cell).order(date: :asc)
+    @technologies = Technology.report_worthy
+    @plans = Plan.related_to_cell(@cell)
+    @plan_date = human_date @plans.size.zero? ? nil : Contract.find(@plans.pluck(:contract_id).max).end_date
+    @villages = @cell.villages.order(name: :asc)
   end
 
   # GET /cells/new

@@ -1,17 +1,17 @@
 -# frozen_string_literal: true
-- @report_sub = @reports.related_to_cell(cell)
-- @plan_sub = @plans.related_to_cell(cell)
+- @report_sub = @reports.related_to_village(village)
+- @plan_sub = @plans.related_to_village(village)
 - return if @plan_sub.blank? && @report_sub.blank? && @skip_blanks
 %tr
   %td.text-left
     - if @plan_sub.empty? && (current_user.can_manage_contracts? || current_user.admin?)
-      %span.float-left= link_to cell.name, cell_path(cell)
-      %span.float-right= link_to 'Add plan', new_plan_path(model_gid: cell.to_global_id.to_s), class: 'btn btn-outline-primary'
+      %span.float-left= link_to village.name, village_path(village)
+      %span.float-right= link_to 'Add plan', new_plan_path(model_gid: village.to_global_id.to_s), class: 'btn btn-outline-primary'
     - elsif @report_sub.empty? && (current_user.can_manage_reports? || current_user.admin?)
-      %span.float-left= link_to cell.name, cell_path(cell)
-      %span.float-right= link_to 'Add report', new_report_path(model_gid: cell.to_global_id.to_s), class: 'btn btn-outline-primary'
+      %span.float-left= link_to village.name, village_path(village)
+      %span.float-right= link_to 'Add report', new_report_path(model_gid: village.to_global_id.to_s), class: 'btn btn-outline-primary'
     -else
-      = link_to cell.name, cell_path(cell)
+      = link_to village.name, village_path(village)
   - if @plan_sub.any? || @report_sub.any?
     - @technologies.each do |technology|
       - next if @reports.where(technology: technology).size.zero? && @plans.where(technology: technology).size.zero?
@@ -20,8 +20,8 @@
     %td.text-right= human_number @report_sub.map(&:people_served).sum
     %td.text-right= human_number @plan_sub.sum(:people_goal)
   - else
-    %td= "No plans or reports related to #{@sector.name} for this cell and time period"
+    %td= "No plans or reports related to #{@cell.name} for this village and time period"
     - if current_user.can_manage_reports? || current_user.admin?
-      %td= link_to 'Add report', new_report_path(model_gid: cell.to_global_id.to_s), class: 'btn btn-outline-primary'
+      %td= link_to 'Add report', new_report_path(model_gid: village.to_global_id.to_s), class: 'btn btn-outline-primary'
     - else
       %td

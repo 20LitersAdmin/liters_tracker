@@ -1,10 +1,9 @@
 # frozen_string_literal: true
 
 class SectorsController < ApplicationController
-  before_action :set_sector, only: %w[show edit update destroy report]
+  before_action :set_sector, only: %w[show edit update destroy]
 
   # GET /sectors
-  # GET /sectors.json
   def index
     authorize @sectors = Sector.all.order(:name)
 
@@ -17,7 +16,7 @@ class SectorsController < ApplicationController
     @reports = Report.where(date: @from..@to).order(date: :asc)
     @plans = Plan.between(@from, @to)
 
-    @plan_date = human_date @plans.last&.contract&.end_date
+    @plan_date = human_date @plans.size.zero? ? nil : Contract.find(@plans.pluck(:contract_id).max).end_date
   end
 
   def select
@@ -31,15 +30,12 @@ class SectorsController < ApplicationController
   end
 
   # GET /sectors/1
-  # GET /sectors/1.json
   def show
     @earliest = form_date Report.earliest_date
     @latest =   form_date Report.latest_date
 
     @from = params[:from].present? ? Date.parse(params[:from]) : @earliest
     @to =   params[:to].present? ? Date.parse(params[:to]) : @latest
-
-    @reports = Report.where(date: @from..@to).related_to_sector(@sector).order(date: :asc)
 
     @skip_blanks = params[:skip_blanks].present?
     @skip_blanks_rfp = request.fullpath.include?('?') ? request.fullpath + '&skip_blanks=true' : request.fullpath + '?skip_blanks=true'
@@ -51,16 +47,12 @@ class SectorsController < ApplicationController
     @searchbar_hidden_fields << { name: 'skip_blanks', value: 'true' } if @skip_blanks
     @contract_search_param_add = @by_tech ? '&by_tech=true' : ''
     @contract_search_param_add += @skip_blanks ? '&skip_blanks=true' : ''
-    @technologies = Technology.report_worthy
 
-    if @by_tech
-      @targets = Target.between(@from, @to)
-      @target_date = human_date @targets.last&.date
-    else # By Cell, with Tech columns?
-      @cells = @sector.cells.order(name: :asc)
-      @plans = Plan.related_to_sector(@sector)
-      @plan_date = human_date @plans.last&.date
-    end
+    @reports = Report.where(date: @from..@to).related_to_sector(@sector).order(date: :asc)
+    @technologies = Technology.report_worthy
+    @plans = Plan.related_to_sector(@sector)
+    @plan_date = human_date @plans.size.zero? ? nil : Contract.find(@plans.pluck(:contract_id).max).end_date
+    @cells = @sector.cells.order(name: :asc)
   end
 
   # GET /sectors/new
@@ -73,7 +65,6 @@ class SectorsController < ApplicationController
   end
 
   # POST /sectors
-  # POST /sectors.json
   def create
     authorize @sector = Sector.new(sector_params)
 
@@ -89,7 +80,6 @@ class SectorsController < ApplicationController
   end
 
   # PATCH/PUT /sectors/1
-  # PATCH/PUT /sectors/1.json
   def update
     respond_to do |format|
       if @sector.update(sector_params)
@@ -103,7 +93,6 @@ class SectorsController < ApplicationController
   end
 
   # DELETE /sectors/1
-  # DELETE /sectors/1.json
   def destroy
     authorize @sector.destroy
     respond_to do |format|

@@ -18,10 +18,6 @@ DONE: just use #index for reports instead of #all? E.g. technologies
 
 # More reports:
 * By Geography:
-- cells#show
---> by villages per sector, using Plan
---> by technologies, using Target
-
 - villages#index is too complex to bother with?
 - villages#show
 --> by facilities per village, using Plan
@@ -42,6 +38,7 @@ DONE: just use #index for reports instead of #all? E.g. technologies
 # Creating Reports
 
 # Forms
+-- redirect_back on model#create and #update isn't UX
 - Tech form
 - Contract form
 - Target form
