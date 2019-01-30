@@ -18,6 +18,10 @@ class SectorPolicy
     @user
   end
 
+  def select?
+    @user&.admin? || @user&.can_manage_reports?
+  end
+
   def new?
     @user&.admin? || @user&.can_manage_geography?
   end

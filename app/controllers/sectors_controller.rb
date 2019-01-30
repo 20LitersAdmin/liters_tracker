@@ -21,6 +21,7 @@ class SectorsController < ApplicationController
 
   def select
     authorize @sectors = Sector.all.order(:name)
+    @technologies = Technology.report_worthy
   end
 
   def report

@@ -572,7 +572,8 @@ Facility.create(
     { id: 135, name: 'EEAR Kabeza', category: 'Church', village_id: 204 },
     { id: 136, name: 'Baptist (AEBR) Church of Nyabagendwa', category: 'Church', village_id: 243, households: 430 },
     { id: 137, name: 'Anglican Church of Rilima', category: 'Church', village_id: 220 },
-    { id: 138, name: 'Catholic Church of Kalirisi', category: 'Church', village_id: 205 }
+    { id: 138, name: 'Catholic Church of Kalirisi', category: 'Church', village_id: 205 },
+    { id: 139, name: 'Pentecostal Church ', households: 720, category: 'Church', village_id: 247 }
   ]
 )
 
@@ -2065,11 +2066,86 @@ Report.create(
     { date: '2018-11-01', user_id: 2, contract_id: 4, technology_id: 1, model_gid: 'gid://liters-tracker/Village/37', checked: 23 },
     { date: '2018-11-01', user_id: 2, contract_id: 4, technology_id: 1, model_gid: 'gid://liters-tracker/Village/36', checked: 6 },
     { date: '2018-11-01', user_id: 2, contract_id: 4, technology_id: 1, model_gid: 'gid://liters-tracker/Village/29', checked: 5 },
-    # MISSING: June-August Gashora
+    # M June-August Gashora SAM3
     { date: '2018-06-01', user_id: 1, contract_id: 3, technology_id: 1, model_gid: 'gid://liters-tracker/Village/84', distributed: 8 },
     { date: '2018-08-01', user_id: 1, contract_id: 3, technology_id: 1, model_gid: 'gid://liters-tracker/Village/84', distributed: 40 },
     { date: '2018-08-01', user_id: 1, contract_id: 3, technology_id: 1, model_gid: 'gid://liters-tracker/Village/87', distributed: 42 },
-    { date: '2018-07-01', user_id: 1, contract_id: 3, technology_id: 1, model_gid: 'gid://liters-tracker/Village/79', distributed: 30 }
+    { date: '2018-07-01', user_id: 1, contract_id: 3, technology_id: 1, model_gid: 'gid://liters-tracker/Village/79', distributed: 30 },
+    # M Dec Ntarama
+    { date: '2018-12-01', user_id: 2, contract_id: 4, technology_id: 1, model_gid: 'gid://liters-tracker/Village/192', checked: 10 },
+    { date: '2018-12-01', user_id: 2, contract_id: 4, technology_id: 1, model_gid: 'gid://liters-tracker/Village/193', checked: 8 },
+    { date: '2018-12-01', user_id: 2, contract_id: 4, technology_id: 1, model_gid: 'gid://liters-tracker/Village/190', checked: 5 },
+    { date: '2018-12-01', user_id: 2, contract_id: 4, technology_id: 1, model_gid: 'gid://liters-tracker/Village/187', checked: 5 },
+    { date: '2018-12-01', user_id: 2, contract_id: 4, technology_id: 1, model_gid: 'gid://liters-tracker/Village/173', checked: 11 },
+    { date: '2018-12-01', user_id: 2, contract_id: 4, technology_id: 1, model_gid: 'gid://liters-tracker/Village/177', checked: 20 },
+    { date: '2018-12-01', user_id: 2, contract_id: 4, technology_id: 1, model_gid: 'gid://liters-tracker/Village/174', checked: 9 },
+    { date: '2018-12-01', user_id: 2, contract_id: 4, technology_id: 1, model_gid: 'gid://liters-tracker/Village/172', checked: 10 },
+    { date: '2018-12-01', user_id: 2, contract_id: 4, technology_id: 1, model_gid: 'gid://liters-tracker/Village/176', checked: 5 },
+    { date: '2018-12-01', user_id: 2, contract_id: 4, technology_id: 1, model_gid: 'gid://liters-tracker/Village/175', checked: 7 },
+    { date: '2018-12-01', user_id: 2, contract_id: 4, technology_id: 1, model_gid: 'gid://liters-tracker/Village/178', checked: 10 },
+    { date: '2018-12-01', user_id: 2, contract_id: 4, technology_id: 1, model_gid: 'gid://liters-tracker/Village/186', checked: 8 },
+    { date: '2018-12-01', user_id: 2, contract_id: 4, technology_id: 1, model_gid: 'gid://liters-tracker/Village/181', checked: 7 },
+    { date: '2018-12-01', user_id: 2, contract_id: 4, technology_id: 1, model_gid: 'gid://liters-tracker/Village/179', checked: 15 },
+    { date: '2018-12-01', user_id: 2, contract_id: 4, technology_id: 1, model_gid: 'gid://liters-tracker/Village/183', checked: 19 },
+    { date: '2018-12-01', user_id: 2, contract_id: 4, technology_id: 1, model_gid: 'gid://liters-tracker/Village/185', checked: 6 },
+    # M Dec Mwogo
+    { date: '2018-12-01', user_id: 2, contract_id: 4, technology_id: 1, model_gid: 'gid://liters-tracker/Village/158', checked: 13 },
+    { date: '2018-12-01', user_id: 2, contract_id: 4, technology_id: 1, model_gid: 'gid://liters-tracker/Village/155', checked: 35 },
+    { date: '2018-12-01', user_id: 2, contract_id: 4, technology_id: 1, model_gid: 'gid://liters-tracker/Village/156', checked: 27 },
+    { date: '2018-12-01', user_id: 2, contract_id: 4, technology_id: 1, model_gid: 'gid://liters-tracker/Village/168', checked: 32 },
+    { date: '2018-12-01', user_id: 2, contract_id: 4, technology_id: 1, model_gid: 'gid://liters-tracker/Village/171', checked: 30 },
+    { date: '2018-12-01', user_id: 2, contract_id: 4, technology_id: 1, model_gid: 'gid://liters-tracker/Village/166', checked: 19 },
+    { date: '2018-12-01', user_id: 2, contract_id: 4, technology_id: 1, model_gid: 'gid://liters-tracker/Village/170', checked: 26 },
+    # M Dec Juru
+    { date: '2018-12-01', user_id: 2, contract_id: 4, technology_id: 1, model_gid: 'gid://liters-tracker/Village/134', checked: 7 },
+    { date: '2018-12-01', user_id: 2, contract_id: 4, technology_id: 1, model_gid: 'gid://liters-tracker/Village/129', checked: 9 },
+    { date: '2018-12-01', user_id: 2, contract_id: 4, technology_id: 1, model_gid: 'gid://liters-tracker/Village/132', checked: 4 },
+    { date: '2018-12-01', user_id: 2, contract_id: 4, technology_id: 1, model_gid: 'gid://liters-tracker/Village/133', checked: 6 },
+    { date: '2018-12-01', user_id: 2, contract_id: 4, technology_id: 1, model_gid: 'gid://liters-tracker/Village/120', checked: 11 },
+    { date: '2018-12-01', user_id: 2, contract_id: 4, technology_id: 1, model_gid: 'gid://liters-tracker/Village/118', checked: 3 },
+    { date: '2018-12-01', user_id: 2, contract_id: 4, technology_id: 1, model_gid: 'gid://liters-tracker/Village/115', checked: 7 },
+    { date: '2018-12-01', user_id: 2, contract_id: 4, technology_id: 1, model_gid: 'gid://liters-tracker/Village/144', checked: 3 },
+    { date: '2018-12-01', user_id: 2, contract_id: 4, technology_id: 1, model_gid: 'gid://liters-tracker/Village/141', checked: 5 },
+    { date: '2018-12-01', user_id: 2, contract_id: 4, technology_id: 1, model_gid: 'gid://liters-tracker/Village/146', checked: 10 },
+    { date: '2018-12-01', user_id: 2, contract_id: 4, technology_id: 1, model_gid: 'gid://liters-tracker/Village/142', checked: 2 },
+    { date: '2018-12-01', user_id: 2, contract_id: 4, technology_id: 1, model_gid: 'gid://liters-tracker/Village/127', checked: 3 },
+    { date: '2018-12-01', user_id: 2, contract_id: 4, technology_id: 1, model_gid: 'gid://liters-tracker/Village/125', checked: 1 },
+    { date: '2018-12-01', user_id: 2, contract_id: 4, technology_id: 1, model_gid: 'gid://liters-tracker/Village/126', checked: 4 },
+    { date: '2018-12-01', user_id: 2, contract_id: 4, technology_id: 1, model_gid: 'gid://liters-tracker/Village/138', checked: 7 },
+    { date: '2018-12-01', user_id: 2, contract_id: 4, technology_id: 1, model_gid: 'gid://liters-tracker/Village/136', checked: 2 },
+    # M Dec Gashora
+    { date: '2018-12-01', user_id: 2, contract_id: 4, technology_id: 1, model_gid: 'gid://liters-tracker/Village/103', checked: 4 },
+    { date: '2018-12-01', user_id: 2, contract_id: 4, technology_id: 1, model_gid: 'gid://liters-tracker/Village/97', checked: 11 },
+    { date: '2018-12-01', user_id: 2, contract_id: 4, technology_id: 1, model_gid: 'gid://liters-tracker/Village/81', checked: 9 },
+    { date: '2018-12-01', user_id: 2, contract_id: 4, technology_id: 1, model_gid: 'gid://liters-tracker/Village/92', checked: 3 },
+    { date: '2018-12-01', user_id: 2, contract_id: 4, technology_id: 6, model_gid: 'gid://liters-tracker/Village/79', distributed: 7 },
+    { date: '2018-12-01', user_id: 2, contract_id: 4, technology_id: 6, model_gid: 'gid://liters-tracker/Village/80', distributed: 15 },
+    { date: '2018-12-01', user_id: 2, contract_id: 4, technology_id: 6, model_gid: 'gid://liters-tracker/Village/82', distributed: 44 },
+    # M Dec Gahanga
+    { date: '2018-12-01', user_id: 2, contract_id: 4, technology_id: 1, model_gid: 'gid://liters-tracker/Village/43', distributed: 13 },
+    { date: '2018-12-01', user_id: 2, contract_id: 4, technology_id: 1, model_gid: 'gid://liters-tracker/Village/39', distributed: 13 },
+    { date: '2018-12-01', user_id: 2, contract_id: 4, technology_id: 1, model_gid: 'gid://liters-tracker/Village/41', distributed: 2 },
+    { date: '2018-12-01', user_id: 2, contract_id: 4, technology_id: 1, model_gid: 'gid://liters-tracker/Village/38', distributed: 1, checked: 32 },
+    { date: '2018-12-01', user_id: 2, contract_id: 4, technology_id: 1, model_gid: 'gid://liters-tracker/Village/14', distributed: 1 },
+    { date: '2018-12-01', user_id: 2, contract_id: 4, technology_id: 1, model_gid: 'gid://liters-tracker/Village/3', distributed: 2, checked: 2 },
+    { date: '2018-12-01', user_id: 2, contract_id: 4, technology_id: 1, model_gid: 'gid://liters-tracker/Village/7', checked: 7 },
+    { date: '2018-12-01', user_id: 2, contract_id: 4, technology_id: 1, model_gid: 'gid://liters-tracker/Village/8', checked: 3 },
+    { date: '2018-12-01', user_id: 2, contract_id: 4, technology_id: 1, model_gid: 'gid://liters-tracker/Village/6', checked: 2 },
+    { date: '2018-12-01', user_id: 2, contract_id: 4, technology_id: 1, model_gid: 'gid://liters-tracker/Village/24', distributed: 13 },
+    { date: '2018-12-01', user_id: 2, contract_id: 4, technology_id: 1, model_gid: 'gid://liters-tracker/Village/30', distributed: 14 },
+    { date: '2018-12-01', user_id: 2, contract_id: 4, technology_id: 1, model_gid: 'gid://liters-tracker/Village/28', distributed: 13, checked: 2 },
+    { date: '2018-12-01', user_id: 2, contract_id: 4, technology_id: 1, model_gid: 'gid://liters-tracker/Village/31', distributed: 14, checked: 4 },
+    { date: '2018-12-01', user_id: 2, contract_id: 4, technology_id: 1, model_gid: 'gid://liters-tracker/Village/29', distributed: 14, checked: 5 },
+    { date: '2018-12-01', user_id: 2, contract_id: 4, technology_id: 1, model_gid: 'gid://liters-tracker/Village/26', distributed: 14, checked: 4 },
+    { date: '2018-12-01', user_id: 2, contract_id: 4, technology_id: 1, model_gid: 'gid://liters-tracker/Village/25', distributed: 14 },
+    { date: '2018-12-01', user_id: 2, contract_id: 4, technology_id: 1, model_gid: 'gid://liters-tracker/Village/27', distributed: 14 },
+    { date: '2018-12-01', user_id: 2, contract_id: 4, technology_id: 1, model_gid: 'gid://liters-tracker/Village/35', distributed: 14, checked: 5 },
+    { date: '2018-12-01', user_id: 2, contract_id: 4, technology_id: 1, model_gid: 'gid://liters-tracker/Village/36', distributed: 11 },
+    { date: '2018-12-01', user_id: 2, contract_id: 4, technology_id: 1, model_gid: 'gid://liters-tracker/Village/34', distributed: 13 },
+    { date: '2018-12-01', user_id: 2, contract_id: 4, technology_id: 1, model_gid: 'gid://liters-tracker/Village/32', distributed: 14 },
+    { date: '2018-12-01', user_id: 2, contract_id: 4, technology_id: 1, model_gid: 'gid://liters-tracker/Village/33', distributed: 13 },
+    { date: '2018-12-01', user_id: 2, contract_id: 4, technology_id: 1, model_gid: 'gid://liters-tracker/Village/37', distributed: 14, checked: 4 },
+    { date: '2018-12-20', user_id: 2, contract_id: 3, technology_id: 5, model_gid: 'gid://liters-tracker/Facility/139', distributed: 1 }
   ]
 )
 ActiveRecord::Base.connection.reset_pk_sequence!('reports')
