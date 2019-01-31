@@ -10,7 +10,7 @@ class Village < ApplicationRecord
   validates_uniqueness_of :gis_id, allow_nil: true
 
   def current_plan
-    Plan.where(contract_id: Constants::Contract::CURRENT).where(model_gid: "gid://liters-tracker/Village/#{id}").last
+    Plan.where(contract_id: Constants::Contract::CURRENT).where(model_gid: "gid://liters-tracker/Village/#{id}").order(:created_at).last
   end
 
   def related_reports

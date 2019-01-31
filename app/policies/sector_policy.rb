@@ -22,6 +22,10 @@ class SectorPolicy
     @user&.admin? || @user&.can_manage_reports?
   end
 
+  def report?
+    @user&.admin? || @user&.can_manage_reports?
+  end
+
   def new?
     @user&.admin? || @user&.can_manage_geography?
   end

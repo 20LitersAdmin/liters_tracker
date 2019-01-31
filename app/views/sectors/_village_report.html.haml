@@ -1,0 +1,7 @@
+-# frozen_string_literal: true
+- @report = village_report.related_reports.order(date: :desc).first_or_create
+%tr
+  %td= village_report.name
+  %td.text-center= human_number village_report.current_plan&.goal
+  %td= number_field_tag 'reports[][distributed]', @report.distributed, min: 0, step: 1
+  %td checked

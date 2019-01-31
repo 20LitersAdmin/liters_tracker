@@ -9,49 +9,33 @@
   .col-12
     .row
       .col-12
+        %h4= "#{@technology.short_name}: #{@sector.name}"
+      .col-12
         = form_tag(batch_process_reports_path) do
-          %h4= "SAM3: #{@sector.name}"
-          %table.table.tight
-            %thead
-              %tr
-                %th Cells
-                %th Villages
-                %th id
-                %th Planned
-                %th.text-center Distributed
-                %th.text-center Checked
-            %tbody
-              = render partial: 'cell', collection: @cells
-
-          %h4= "SAM2: #{@sector.name}"
-          %table.table
-            %thead
-              %tr
-                %th Facilities
-                %th Population
-                %th Households
-                %th Category
-                %th Cell
-                %th Village
-                %th Installed
-                %th Checked
+          =hidden_field_tag 'reports[sector_id]', @sector.id, disabled: true
+          =hidden_field_tag 'reports[technology_id]', @technology.id, disabled: true
+          =hidden_field_tag 'reports[date]', @form_date, disabled: true
+          - if @technology.scale == 'Family'
+            %table.table.tight
+              %thead
+                %tr
+                  %th Villages
+                  %th.text-center Planned
+                  %th.text-right Distributed
+                  %th.text-right Checked
               %tbody
-                = render partial: 'facility', collection: @facilities_sam2, locals: { tech: 3, offset: 10_000 }
-
-          %h4= "RWHS: #{@sector.name}"
-          %table.table
-            %thead
-              %tr
-                %th Facilities
-                %th Population
-                %th Households
-                %th Category
-                %th Cell
-                %th Village
-                %th Installed
-                %th Checked
-              %tbody
-                = render partial: 'facility', collection: @facilities_rwhs, locals: { tech: 5, offset: 20_000 }
-
-
-
+                = render partial: 'cell_report', collection: @cells
+          - else
+            %table.table
+              %thead
+                %tr
+                  %th Facilities
+                  %th Population
+                  %th Households
+                  %th Category
+                  %th Cell
+                  %th Village
+                  %th Installed
+                  %th Checked
+                %tbody
+                  = render partial: 'facility_report', collection: @facilities

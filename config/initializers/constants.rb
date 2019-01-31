@@ -31,4 +31,8 @@ module Constants
   class Contract
     CURRENT = 4
   end
+
+  class Population
+    HOUSEHOLD_SIZE = 5
+  end
 end

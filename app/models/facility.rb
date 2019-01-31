@@ -13,7 +13,7 @@ class Facility < ApplicationRecord
   scope :not_churches, -> { where.not(category: 'Church') }
 
   def current_plan
-    Plan.where(contract_id: Constants::Contract::CURRENT).where(model_gid: "gid://liters-tracker/Facility/#{id}").last
+    Plan.where(contract_id: Constants::Contract::CURRENT).where(model_gid: "gid://liters-tracker/Facility/#{id}").order(:created_at).last
   end
 
   def related_reports
@@ -21,6 +21,6 @@ class Facility < ApplicationRecord
   end
 
   def impact
-    population.to_i + (households.to_i * 5)
+    population.to_i + (households.to_i * Constants::Population::HOUSEHOLD_SIZE)
   end
 end

@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 class SectorsController < ApplicationController
-  before_action :set_sector, only: %w[show edit update destroy]
+  before_action :set_sector, only: %w[show edit update destroy report]
 
   # GET /sectors
   def index
@@ -21,13 +21,24 @@ class SectorsController < ApplicationController
 
   def select
     authorize @sectors = Sector.all.order(:name)
-    @technologies = Technology.report_worthy
+    @technologies = Technology.report_worthy.order(:short_name)
+
+    @date = params[:date] || Date.today.beginning_of_month - 1.month
+    @form_date = form_date @date
   end
 
   def report
-    @cells = @sector.cells
-    @facilities_sam2 = @sector.facilities.not_churches.order(:name)
-    @facilities_rwhs = @sector.facilities.churches.order(:name)
+    @technology = Technology.find(params[:tech])
+
+    @plans = Plan.related_to_sector(@sector).where(contract_id: Constants::Contract::CURRENT, technology: @technology)
+
+    if @technology.scale == 'Family' # %w[SAM3, SAM3-M, SS].include?(@technology.short_name)
+      @cells = @sector.cells.order(:name)
+    elsif @technology.short_name != 'RWHS' # %w[SAM2, SAM2-M].include?(@technology.short_name)
+      @facilities = @sector.facilities.not_churches.order(:name)
+    else # @technology.short_name == 'RWHS'
+      @facilities = @sector.facilities.churches.order(:name)
+    end
   end
 
   # GET /sectors/1
@@ -110,9 +121,5 @@ class SectorsController < ApplicationController
 
   def sector_params
     params.require(:sector).permit(:name, :gis_id, :latitude, :longitude, :population, :households)
-  end
-
-  def report_params
-    params.require(:reports).permit(:all)
   end
 end

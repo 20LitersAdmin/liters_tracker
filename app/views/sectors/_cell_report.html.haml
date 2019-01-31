@@ -1,0 +1,5 @@
+-# frozen_string_literal: true
+%tr
+  %td{colspan: '4'}
+    %h3= cell_report.name.upcase + ' CELL'
+= render partial: 'village_report', collection: cell_report.villages.order(:name)

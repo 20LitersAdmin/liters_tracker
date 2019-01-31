@@ -7,8 +7,17 @@
 
 .row
   .col-12
-    %h3 Select a technology and sector:
+    %h3 1. Select report date:
+  #date-chooser.col-12
+    .row
+      .col-12.col-sm-6.text-right
+        = select_month(@date)
+      .col-12.col-sm-6
+        = select_year(@date, start_year: (@date - 1.year).year, end_year: (@date + 1.year).year)
+.row
   .col-12
+    %h3 2. Select a technology by sector:
+  #sector-chooser.col-12
     %table.table.table-striped
       %thead
         %tr
@@ -16,12 +25,10 @@
           %th District
           - @technologies.size.times do
             %th
-
-
       %tbody
         - @sectors.each do |sector|
           %tr
             %td= sector.name
             %td= sector.district.name
             - @technologies.each do |tech|
-              %td= link_to tech.short_name, report_sector_path(sector, tech: tech.id), class: 'btn btn-primary '
+              %td= link_to tech.short_name, report_sector_path(sector, tech: tech.id, date: @form_date), class: 'btn btn-primary', data: { finder: 'tech-report-btn' }

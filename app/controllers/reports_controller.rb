@@ -63,7 +63,9 @@ class ReportsController < ApplicationController
     end
   end
 
-  def process
+  def batch_process
+    @user = current_user
+    @sector = Sector.find(params[:sector_id])
     # handle the creation of multiple reports from sectors/#id/report
 
     # params[:reports].each do |single_report_params|
@@ -80,5 +82,9 @@ class ReportsController < ApplicationController
 
   def report_params
     params.require(:report).permit(:date, :technology_id, :distributed, :checked, :user_id, :model_gid, :distribute, :check)
+  end
+
+  def batch_report_params
+    params.require(:reports).permit(:all)
   end
 end

@@ -1,8 +1,6 @@
 # LITERS TRACKER
 A custom reporting app for 20 Liters
 
-DONE: just use #index for reports instead of #all? E.g. technologies
-
 * 'Add plan' && 'Add report' buttons on technologies#show?by_sector don't do anything, but should
 - POLICED by current_user.can_create('Report') && current_user.can_create('Plan')
 
@@ -48,6 +46,7 @@ DONE: just use #index for reports instead of #all? E.g. technologies
 - Cell form
 - Village form
 - Facility form
+  -- facility.impact sums population and households, the form should note to not duplicate these values
 
 # Managing User Permissions
 - Or handle all within custom user routes and kill the permissions_controller
@@ -62,6 +61,10 @@ DONE: just use #index for reports instead of #all? E.g. technologies
 # Improvements
 - Districts#index doesn't have [Add Plan, Add Report, Add Target] functionality
 - Technologies#index doesn't have [Add Plan, Add Report, Add Target] functionality
+
+# SPEED
+- check which is faster: `@reports.related_to_village(village)` or `village.related_reports`
+  -- Affects all reporting partials
 
 
 # Remind myself:
