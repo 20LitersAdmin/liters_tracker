@@ -1,0 +1,18 @@
+-# frozen_string_literal: true
+- report = facility_report.related_reports.where(technology: @technology).within_month(@date).order(date: :desc).first_or_initialize
+%tr
+  %td
+    -if current_user.can_manage_geography? || current_user.admin?
+      = link_to facility_report.name, edit_facility_path(facility_report), target: '_blank'
+    -else
+      = facility_report.name
+    =hidden_field_tag "batch_reports[reports][][model_gid]", facility_report.to_global_id.to_s
+  %td.text-center= human_number facility_report.population
+  %td.text-center= human_number facility_report.households
+  %td= facility_report.category
+  %td= facility_report.cell.name
+  %td= facility_report.village.name
+  %td.text-center= number_field_tag "batch_reports[reports][][distributed]", report.distributed, min: 0, step: 1, class: 'form-control'
+  %td= text_field_tag "batch_reports[reports][][date]", report.new_record? ? '' : report.date, class: 'form-control datetimepicker-input', id: "report_form_date_#{report.object_id}", data: { toggle: 'datetimepicker', target: "#report_form_date_#{report.object_id}", record: "#{report.new_record? ? 'new' : 'existing'}" }
+  %td.text-right= number_field_tag "batch_reports[reports][][people]", report.people, min: 0, step: 1, class: 'form-control'
+  %td.text-right= number_field_tag "batch_reports[reports][][household]", report.households, min: 0, step: 1, class: 'form-control'

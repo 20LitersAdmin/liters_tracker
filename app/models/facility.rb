@@ -9,7 +9,7 @@ class Facility < ApplicationRecord
   validates_presence_of :name, :village_id
   validates :category, inclusion: { in: Constants::Facility::CATEGORY, message: "must be one of these: #{Constants::Facility::CATEGORY.to_sentence}" }
 
-  scope :churches, -> { where(category: 'Church') }
+  scope :churches,     -> { where(category: 'Church') }
   scope :not_churches, -> { where.not(category: 'Church') }
 
   def related_plans

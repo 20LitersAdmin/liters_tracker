@@ -64,14 +64,18 @@ class ReportsController < ApplicationController
   end
 
   def batch_process
-    @user = current_user
-    @sector = Sector.find(params[:sector_id])
-    # handle the creation of multiple reports from sectors/#id/report
+    authorize @user = current_user
 
-    # params[:reports].each do |single_report_params|
-    #   Don't forget to set the globalID
-    #   Report.create(single_report_params)
-    # end
+    if Report.key_params_are_missing?(batch_report_params)
+      flash[:error] = 'Oops, some data got lost. Please try again'
+    else
+      Report.batch_process(batch_report_params, @user.id)
+      flash[:success] = 'The report was successfully submitted.'
+      # ReportBatchProcessorJob.perform_later(batch_report_params, @user.id)
+      # flash[:success] = 'The report was successfully submitted. It\'s being processed in the background.'
+    end
+
+    redirect_to select_sectors_path
   end
 
   private
@@ -85,6 +89,6 @@ class ReportsController < ApplicationController
   end
 
   def batch_report_params
-    params.require(:reports).permit(:all)
+    params.require(:batch_reports).permit(:technology_id, :contract_id, reports: %i[date technology_id model_gid distributed checked people households])
   end
 end

@@ -1,25 +1,28 @@
 -# frozen_string_literal: true
-= form_for @facility do |f|
+= simple_form_for @facility do |f|
   - if @facility.errors.any?
     = render partial: 'shared/form_errors', locals: { object: @facility }
 
-  .field
-    = f.label :name
-    = f.text_field :name
-  .field
-    = f.label :latitude
-    = f.text_field :latitude
-  .field
-    = f.label :longitude
-    = f.text_field :longitude
-  .field
-    = f.label :population
-    = f.number_field :population
-  .field
-    = f.label :households
-    = f.number_field :households
-  .field
-    = f.label :category
-    = f.text_field :category
-  .actions
-    = f.submit 'Save'
+  .row
+    .col.field
+      = f.input :name
+    .col.field
+      = f.input :category, collection: Constants::Facility::CATEGORY
+  .row
+    .col.field
+      = f.input :description, as: :text
+  .row
+    .col.field
+      = f.input :population
+    .col.field
+      = f.input :households
+  .row
+    .col.field
+      = f.input :latitude, hint: 'like -2.054922'
+    .col.field
+      = f.input :longitude, hint: 'like 30.0912883'
+  .row.my-3.actions
+    .col.text-left
+      = link_to 'Back', request.referrer, class: 'btn btn-primary'
+    .col.text-right
+      = f.button :submit, class: 'btn btn-primary'

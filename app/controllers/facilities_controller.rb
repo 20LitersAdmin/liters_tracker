@@ -70,6 +70,6 @@ class FacilitiesController < ApplicationController
   end
 
   def facility_params
-    params.require(:facility).permit(:name, :gis_id, :latitude, :longitude, :population, :households, :category)
+    params.require(:facility).permit(:name, :description, :latitude, :longitude, :population, :households, :category, :village_id)
   end
 end

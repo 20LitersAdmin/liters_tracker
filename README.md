@@ -1,13 +1,12 @@
 # LITERS TRACKER
 A custom reporting app for 20 Liters
 
+latest real report: 1166
+
 # CURRENT:
 # Creating/Updating Reports
 * Submitting a report needs to be intuitive for the user
 -- Add facilities on the fly
--- SAM3 should have # of people & households served (for greater accuracy), default to 5 on Report.people_served
-  ^ Finish fleshing this out
--- Handle report record creation in a `.perform_later` job for submission speed, just pass the whole hash through to a method: `batch_update_or_create` on the Report model.
 
 # More reports:
 * By Geography:
@@ -26,6 +25,7 @@ A custom reporting app for 20 Liters
 
 * 'Add plan' && 'Add report' buttons on technologies#show?by_sector don't do anything, but should
 - POLICED by current_user.can_create('Report') && current_user.can_create('Plan')
+- Since they vary in their provided params [and since sector/id/report relies on date and tech], we should go to a chooser that considers the provided params.
 
 * technologies#show?by_mou could have 'Add Target' button if it's missing, but these should be pre-built with each new MOU
 
@@ -72,3 +72,11 @@ A custom reporting app for 20 Liters
 
 # Remind myself:
 * magic_frozen_string_literal . #get those frozen string benefits
+* byebug commands
+    continue   -- Runs until program ends, hits a breakpoint or reaches a line
+    delete     -- Deletes breakpoints
+    finish     -- Runs the program until frame returns
+    irb        -- Starts an IRB session
+    kill       -- Sends a signal to the current process
+    quit       -- Exits byebug
+    restart    -- Restarts the debugged program

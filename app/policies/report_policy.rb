@@ -37,8 +37,4 @@ class ReportPolicy
   def destroy?
     @user&.admin?
   end
-
-  def batch_process?
-    @user&.admin? || @user&.can_manage_reports?
-  end
 end

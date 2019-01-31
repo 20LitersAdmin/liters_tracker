@@ -5,7 +5,7 @@ Rails.application.routes.draw do
   get 'data', to: 'users#data'
 
   resources :reports do
-    get 'batch_process', on: :collection
+    post 'batch_process', on: :collection
   end
   resources :contracts
   resources :plans

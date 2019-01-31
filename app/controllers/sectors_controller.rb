@@ -38,6 +38,7 @@ class SectorsController < ApplicationController
 
     @plans = Plan.where(technology: @technology).nearest_to_date(@date).related_to_sector(@sector)
     @reports = Report.where(technology: @technology, date: @date).related_to_sector(@sector).select(:distributed, :checked, :people, :households)
+    @contract = Contract.between(@date, @date).first
 
     if @technology.scale == 'Family' # %w[SAM3, SAM3-M, SS].include?(@technology.short_name)
       @cells = @sector.cells.order(:name)

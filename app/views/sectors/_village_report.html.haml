@@ -1,10 +1,13 @@
 -# frozen_string_literal: true
-- report = village_report.related_reports.where(date: @date, technology: @technology).order(date: :desc).first_or_create
+- report = village_report.related_reports.where(date: @date, technology: @technology).order(date: :desc).first_or_initialize
 - plan = village_report.related_plans.where(technology: @technology).nearest_to_date(@date).first
 %tr
-  %td= village_report.name
+  %td
+    = village_report.name
+    =hidden_field_tag "batch_reports[reports][][date]", @date
+    =hidden_field_tag "batch_reports[reports][][model_gid]", village_report.to_global_id.to_s
   %td.text-center= human_number(plan&.goal)
-  %td.text-center= number_field_tag 'reports[][distributed]', report.distributed, min: 0, step: 1, class: 'report-field'
-  %td.text-center= number_field_tag 'reports[][checked]', report.checked, min: 0, step: 1, class: 'report-field'
-  %td.text-right= number_field_tag 'reports[][people]', report.people, min: 0, step: 1, class: 'report-field'
-  %td.text-right= number_field_tag 'reports[][households]', report.households, min: 0, step: 1, class: 'report-field'
+  %td.text-center= number_field_tag "batch_reports[reports][][distributed]", report.distributed, min: 0, step: 1, class: 'form-control'
+  %td.text-center= number_field_tag "batch_reports[reports][][people]", report.people, min: 0, step: 1, class: 'form-control'
+  %td.text-center= number_field_tag "batch_reports[reports][][households]", report.households, min: 0, step: 1, class: 'form-control'
+  %td.text-right= number_field_tag "batch_reports[reports][][checked]", report.checked, min: 0, step: 1, class: 'form-control'
