@@ -23,14 +23,21 @@ class SectorsController < ApplicationController
     authorize @sectors = Sector.all.order(:name)
     @technologies = Technology.report_worthy.order(:short_name)
 
-    @date = params[:date] || Date.today.beginning_of_month - 1.month
-    @form_date = form_date @date
+    @date = params[:date].present? ? Date.parse(params[:date]) : Date.today.beginning_of_month - 1.month
   end
 
   def report
-    @technology = Technology.find(params[:tech])
+    begin
+      @technology = Technology.find(params[:tech])
+    rescue ActiveRecord::RecordNotFound
+      flash[:alert] = 'Oops, lost the technology selection somehow. Please try again.'
+      redirect_to select_sectors_path and return
+    end
 
-    @plans = Plan.related_to_sector(@sector).where(contract_id: Constants::Contract::CURRENT, technology: @technology)
+    @date = params[:date].present? ? Date.parse(params[:date]) : Date.today.beginning_of_month - 1.month
+
+    @plans = Plan.where(technology: @technology).nearest_to_date(@date).related_to_sector(@sector)
+    @reports = Report.where(technology: @technology, date: @date).related_to_sector(@sector).select(:distributed, :checked, :people, :households)
 
     if @technology.scale == 'Family' # %w[SAM3, SAM3-M, SS].include?(@technology.short_name)
       @cells = @sector.cells.order(:name)

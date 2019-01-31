@@ -12,8 +12,8 @@ class Facility < ApplicationRecord
   scope :churches, -> { where(category: 'Church') }
   scope :not_churches, -> { where.not(category: 'Church') }
 
-  def current_plan
-    Plan.where(contract_id: Constants::Contract::CURRENT).where(model_gid: "gid://liters-tracker/Facility/#{id}").order(:created_at).last
+  def related_plans
+    Plan.where(model_gid: "gid://liters-tracker/Facility/#{id}")
   end
 
   def related_reports

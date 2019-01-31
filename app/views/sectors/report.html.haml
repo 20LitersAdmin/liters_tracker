@@ -1,41 +1,51 @@
 -# frozen_string_literal: true
 .row
   .col-10
-    %h2= "Sector report: #{@sector.name}"
+    %h1= "#{@sector.name} Sector report:"
   .col-2
     =link_to 'Back', select_sectors_path, class: 'btn btn-primary'
+.row
+  .col-12
+    %h2= "#{@technology.short_name} achievements in #{@date.strftime("%B, %Y")}"
 
 .row#sector_report
-  .col-12
-    .row
-      .col-12
-        %h4= "#{@technology.short_name}: #{@sector.name}"
-      .col-12
-        = form_tag(batch_process_reports_path) do
-          =hidden_field_tag 'reports[sector_id]', @sector.id, disabled: true
-          =hidden_field_tag 'reports[technology_id]', @technology.id, disabled: true
-          =hidden_field_tag 'reports[date]', @form_date, disabled: true
-          - if @technology.scale == 'Family'
-            %table.table.tight
-              %thead
-                %tr
-                  %th Villages
-                  %th.text-center Planned
-                  %th.text-right Distributed
-                  %th.text-right Checked
-              %tbody
-                = render partial: 'cell_report', collection: @cells
-          - else
-            %table.table
-              %thead
-                %tr
-                  %th Facilities
-                  %th Population
-                  %th Households
-                  %th Category
-                  %th Cell
-                  %th Village
-                  %th Installed
-                  %th Checked
-                %tbody
-                  = render partial: 'facility_report', collection: @facilities
+  .col-12.table-responsive
+    = form_tag(batch_process_reports_path) do
+      =text_field_tag 'reports[sector_id]', @sector.id, disabled: true
+      =text_field_tag 'reports[technology_id]', @technology.id, disabled: true
+      =text_field_tag 'reports[date]', @date, disabled: true
+      - if @technology.scale == 'Family'
+        %table.table.table-sm.table-hover
+          %thead
+            %tr
+              %th Villages
+              - if @plans.any?
+                %th= "Planned (by #{human_date(@plans.first&.date)})"
+              - else
+                %th Planned
+              - if @reports.any?
+                %th.text-center= human_number(@reports.sum(:distributed)) + ' Distributed'
+                %th.text-center= human_number(@reports.sum(:checked)) + ' Checked'
+                %th.text-right People Served
+                %th.text-right Households Served
+              - else
+                %th.text-center Distributed
+                %th.text-center Checked
+                %th.text-right People Served
+                %th.text-right Households Served
+          %tbody
+            = render partial: 'cell_report', collection: @cells
+      - else
+        %table.table.table-sm.table-hover.table-responsive
+          %thead
+            %tr
+              %th Facilities
+              %th Population
+              %th Households
+              %th Category
+              %th Cell
+              %th Village
+              %th Installed
+              %th Checked
+            %tbody
+              = render partial: 'facility_report', collection: @facilities

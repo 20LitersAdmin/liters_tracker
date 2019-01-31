@@ -1,18 +1,13 @@
 # LITERS TRACKER
 A custom reporting app for 20 Liters
 
-* 'Add plan' && 'Add report' buttons on technologies#show?by_sector don't do anything, but should
-- POLICED by current_user.can_create('Report') && current_user.can_create('Plan')
-
-* technologies#show?by_mou could have 'Add Target' button if it's missing, but these should be buit with each new MOU
-
-* technologies#index should also have buttons? [Add Plan, Add Report, Add Target]
-
+# CURRENT:
+# Creating/Updating Reports
 * Submitting a report needs to be intuitive for the user
--- Each technology independently
---- Tech.scale == "Family", show villages, Tech.scale == "Community", show facilities
---- Add facilities on the fly
---- SAM3 should have # of people served (for greater accuracy), default to 5 on Report.people_served
+-- Add facilities on the fly
+-- SAM3 should have # of people & households served (for greater accuracy), default to 5 on Report.people_served
+  ^ Finish fleshing this out
+-- Handle report record creation in a `.perform_later` job for submission speed, just pass the whole hash through to a method: `batch_update_or_create` on the Report model.
 
 # More reports:
 * By Geography:
@@ -29,11 +24,17 @@ A custom reporting app for 20 Liters
 -- By technology: [Report.distributed | Target.goal | Report.people_served | Target.people_goal ]
 -- By sector: [ Report.people_served | Target.people_goal ]
 
-# Creating Targets
+* 'Add plan' && 'Add report' buttons on technologies#show?by_sector don't do anything, but should
+- POLICED by current_user.can_create('Report') && current_user.can_create('Plan')
 
-# Creating Plans
+* technologies#show?by_mou could have 'Add Target' button if it's missing, but these should be pre-built with each new MOU
 
-# Creating Reports
+* technologies#index should also have buttons? [Add Plan, Add Report, Add Target]
+
+# Creating/Updating Targets
+
+# Creating/Updating Plans
+* Copy the sector/select && sector/#id/report process
 
 # Forms
 -- redirect_back on model#create and #update isn't UX
@@ -62,9 +63,11 @@ A custom reporting app for 20 Liters
 - Districts#index doesn't have [Add Plan, Add Report, Add Target] functionality
 - Technologies#index doesn't have [Add Plan, Add Report, Add Target] functionality
 
-# SPEED
+# SPEED THINGS UP
 - check which is faster: `@reports.related_to_village(village)` or `village.related_reports`
-  -- Affects all reporting partials
+  -- Affects cell and village reporting partials
+- use `.select()` to speed up queries by only pulling what you need e.g.: `@reports.#stuff.select(:distributed, :checked)`
+
 
 
 # Remind myself:
