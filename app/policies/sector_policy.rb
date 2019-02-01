@@ -45,4 +45,8 @@ class SectorPolicy
   def destroy?
     @user&.admin?
   end
+
+  def village_finder?
+    @user&.admin? || @user&.can_manage_geography? || @user&.can_manage_reports?
+  end
 end

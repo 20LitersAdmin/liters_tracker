@@ -20,7 +20,9 @@ Rails.application.routes.draw do
   end
   resources :cells
   resources :villages
-  resources :facilities
+  resources :facilities do
+    get 'village_finder', on: :collection
+  end
 
   devise_for :users
 

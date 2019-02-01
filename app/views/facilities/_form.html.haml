@@ -13,6 +13,11 @@
       = f.input :description, as: :text
   .row
     .col.field
+      = f.input :sector, collection: @sectors, required: true
+    .col.field
+      = f.input :village_id, collection: [['Please select a sector','0']], disabled: 0
+  .row
+    .col.field
       = f.input :population
     .col.field
       = f.input :households

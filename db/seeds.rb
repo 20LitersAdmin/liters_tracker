@@ -2148,4 +2148,5 @@ Report.create(
     { date: '2018-12-20', user_id: 2, contract_id: 3, technology_id: 5, model_gid: 'gid://liters-tracker/Facility/139', distributed: 1 }
   ]
 )
+
 ActiveRecord::Base.connection.reset_pk_sequence!('reports')
