@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 class SectorsController < ApplicationController
-  before_action :set_sector, only: %w[show edit update destroy]
+  before_action :set_sector, only: %w[show edit update destroy report]
 
   # GET /sectors
   def index
@@ -21,12 +21,32 @@ class SectorsController < ApplicationController
 
   def select
     authorize @sectors = Sector.all.order(:name)
+    @technologies = Technology.report_worthy.order(:short_name)
+
+    @date = params[:date].present? ? Date.parse(params[:date]) : Date.today.beginning_of_month - 1.month
   end
 
   def report
-    @cells = @sector.cells
-    @facilities_sam2 = @sector.facilities.not_churches.order(:name)
-    @facilities_rwhs = @sector.facilities.churches.order(:name)
+    begin
+      @technology = Technology.find(params[:tech])
+    rescue ActiveRecord::RecordNotFound
+      flash[:alert] = 'Oops, lost the technology selection somehow. Please try again.'
+      redirect_to select_sectors_path and return
+    end
+
+    @date = params[:date].present? ? Date.parse(params[:date]) : Date.today.beginning_of_month - 1.month
+
+    @plans = Plan.where(technology: @technology).nearest_to_date(@date).related_to_sector(@sector)
+    @reports = Report.where(technology: @technology, date: @date).related_to_sector(@sector).select(:distributed, :checked, :people, :households)
+    @contract = Contract.between(@date, @date).first
+
+    if @technology.scale == 'Family' # %w[SAM3, SAM3-M, SS].include?(@technology.short_name)
+      @cells = @sector.cells.order(:name)
+    elsif @technology.short_name != 'RWHS' # %w[SAM2, SAM2-M].include?(@technology.short_name)
+      @facilities = @sector.facilities.not_churches.order(:name)
+    else # @technology.short_name == 'RWHS'
+      @facilities = @sector.facilities.churches.order(:name)
+    end
   end
 
   # GET /sectors/1
@@ -109,9 +129,5 @@ class SectorsController < ApplicationController
 
   def sector_params
     params.require(:sector).permit(:name, :gis_id, :latitude, :longitude, :population, :households)
-  end
-
-  def report_params
-    params.require(:reports).permit(:all)
   end
 end

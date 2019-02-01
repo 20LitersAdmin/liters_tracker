@@ -18,6 +18,14 @@ class SectorPolicy
     @user
   end
 
+  def select?
+    @user&.admin? || @user&.can_manage_reports?
+  end
+
+  def report?
+    @user&.admin? || @user&.can_manage_reports?
+  end
+
   def new?
     @user&.admin? || @user&.can_manage_geography?
   end
@@ -36,5 +44,9 @@ class SectorPolicy
 
   def destroy?
     @user&.admin?
+  end
+
+  def village_finder?
+    @user&.admin? || @user&.can_manage_geography? || @user&.can_manage_reports?
   end
 end

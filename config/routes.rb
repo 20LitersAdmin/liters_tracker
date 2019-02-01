@@ -5,7 +5,7 @@ Rails.application.routes.draw do
   get 'data', to: 'users#data'
 
   resources :reports do
-    get 'batch_process', on: :collection
+    post 'batch_process', on: :collection
   end
   resources :contracts
   resources :plans
@@ -20,7 +20,9 @@ Rails.application.routes.draw do
   end
   resources :cells
   resources :villages
-  resources :facilities
+  resources :facilities do
+    get 'village_finder', on: :collection
+  end
 
   devise_for :users
 

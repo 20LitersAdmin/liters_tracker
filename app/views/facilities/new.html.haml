@@ -1,6 +1,10 @@
 -# frozen_string_literal: true
-%h1 New facility
+.row
+  .col-10
+    %h1 New facility
+  .col-2.text-right
+    = link_to 'Back', request.referrer, class: 'btn btn-primary'
 
-= render 'form'
-
-= link_to 'Back', facilities_path
+.row
+  .col-12
+    = render 'form'

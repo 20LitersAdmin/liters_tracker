@@ -9,11 +9,11 @@ class Facility < ApplicationRecord
   validates_presence_of :name, :village_id
   validates :category, inclusion: { in: Constants::Facility::CATEGORY, message: "must be one of these: #{Constants::Facility::CATEGORY.to_sentence}" }
 
-  scope :churches, -> { where(category: 'Church') }
+  scope :churches,     -> { where(category: 'Church') }
   scope :not_churches, -> { where.not(category: 'Church') }
 
-  def current_plan
-    Plan.where(contract_id: Constants::Contract::CURRENT).where(model_gid: "gid://liters-tracker/Facility/#{id}").last
+  def related_plans
+    Plan.where(model_gid: "gid://liters-tracker/Facility/#{id}")
   end
 
   def related_reports
@@ -21,6 +21,6 @@ class Facility < ApplicationRecord
   end
 
   def impact
-    population.to_i + (households.to_i * 5)
+    population.to_i + (households.to_i * Constants::Population::HOUSEHOLD_SIZE)
   end
 end

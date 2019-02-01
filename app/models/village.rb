@@ -9,8 +9,8 @@ class Village < ApplicationRecord
   validates_presence_of :name, :cell_id
   validates_uniqueness_of :gis_id, allow_nil: true
 
-  def current_plan
-    Plan.where(contract_id: Constants::Contract::CURRENT).where(model_gid: "gid://liters-tracker/Village/#{id}").last
+  def related_plans
+    Plan.where(model_gid: "gid://liters-tracker/Village/#{id}")
   end
 
   def related_reports

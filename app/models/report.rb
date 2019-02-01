@@ -11,6 +11,7 @@ class Report < ApplicationRecord
   scope :only_cells,      -> { where('model_gid ILIKE ?', '%/Cell/%') }
   scope :only_villages,   -> { where('model_gid ILIKE ?', '%/Village/%') }
   scope :only_facilities, -> { where('model_gid ILIKE ?', '%/Facility/%') }
+  scope :within_month, ->(date) { where(date: date.beginning_of_month..date.end_of_month) }
 
   def self.related_to(record)
     where(model_gid: record.to_global_id.to_s)
@@ -70,18 +71,53 @@ class Report < ApplicationRecord
     self.all.order(date: :asc).last.date
   end
 
+  def self.key_params_are_missing?(batch_process_params)
+    batch_process_params[:technology_id].blank? ||
+      batch_process_params[:contract_id].blank? ||
+      batch_process_params[:reports].count.zero?
+  end
+
+  def self.batch_process(batch_report_params, user_id)
+    technology_id = batch_report_params[:technology_id].to_i
+    contract_id = batch_report_params[:contract_id].to_i
+
+    batch_report_params[:reports].each do |report_params|
+      next if report_params[:distributed].blank? && report_params[:checked].blank?
+
+      process(report_params, technology_id, contract_id, user_id)
+    end
+  end
+
+  def self.process(report_params, technology_id, contract_id, user_id)
+    report = Report.where(date: report_params[:date], model_gid: report_params[:model_gid], technology_id: technology_id).first_or_initialize
+    report.tap do |rep|
+      rep.contract_id = contract_id
+      rep.user_id = user_id
+      rep.distributed = report_params[:distributed]
+      rep.checked = report_params[:checked]
+      rep.people = report_params[:people]
+      rep.households = report_params[:households]
+    end
+    report.save
+  end
+
   def model
     GlobalID::Locator.locate model_gid
   end
 
-  # def distributed_checked
-  #   dist = distributed.present? ? ActiveSupport::NumberHelper.number_to_delimited(distributed, delimiter: ',') : '-'
-  #   chk = checked.present? ? ActiveSupport::NumberHelper.number_to_delimited(checked, delimiter: ',') : '-'
-  #   dist + ' / ' + chk
-  # end
-
   def people_served
-    model_gid.include?('Facility') && model.impact.positive? ? model.impact : (technology.default_impact * distributed.to_i)
-    # model_gid.include?('Village') -- could work the same as above, when Rebero starts reporting SAM3 dist impacts
+    return people if people&.positive?
+
+    model_gid.include?('Facility') && model.population&.positive? ? model.population : (technology.default_impact * distributed.to_i)
+  end
+
+  def households_served
+    return households if households&.positive?
+
+    model_gid.include?('Facility') && model.households&.positive? ? model.households : (technology.default_household_impact * distributed.to_i)
+  end
+
+  def impact
+    mode_gid.include?('Facility') ? model.impact * distributed.to_i : people_served
   end
 end

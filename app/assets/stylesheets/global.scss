@@ -43,12 +43,20 @@ main.container {
   }
 }
 
-table.tight td {
-  padding: 0.05rem;
-}
-
 .hidden {
   display: none;
+}
+
+.small-text-container {
+  line-height: 0.75rem;
+}
+
+.small-text {
+  font-size: 0.75rem;
+}
+
+.no-padding {
+  padding: 0 !important;
 }
 
 #error_explanation {

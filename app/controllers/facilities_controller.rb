@@ -17,6 +17,7 @@ class FacilitiesController < ApplicationController
   # GET /facilities/new
   def new
     authorize @facility = Facility.new
+    @sectors = Sector.all.select(:name, :id).order(:name)
   end
 
   # GET /facilities/1/edit
@@ -28,14 +29,14 @@ class FacilitiesController < ApplicationController
   def create
     authorize @facility = Facility.new(facility_params)
 
-    respond_to do |format|
-      if @facility.save
-        format.html { redirect_to @facility, notice: 'Facility was successfully created.' }
-        format.json { render :show, status: :created, location: @facility }
-      else
-        format.html { render :new }
-        format.json { render json: @facility.errors, status: :unprocessable_entity }
-      end
+    byebug
+
+    if @facility.save
+      flash[:success] = 'Facility was successfully created.'
+      redirect_to root_path
+    else
+      @sectors = Sector.all.select(:name, :id).order(:name)
+      render :new
     end
   end
 
@@ -63,6 +64,14 @@ class FacilitiesController < ApplicationController
     end
   end
 
+  def village_finder
+    authorize @sector = Sector.find(params[:sector])
+
+    villages = @sector.villages.select(:id, :name).order(:name)
+
+    render json: villages
+  end
+
   private
 
   def set_facility
@@ -70,6 +79,6 @@ class FacilitiesController < ApplicationController
   end
 
   def facility_params
-    params.require(:facility).permit(:name, :gis_id, :latitude, :longitude, :population, :households, :category)
+    params.require(:facility).permit(:name, :category, :description, :village_id, :population, :households, :latitude, :longitude)
   end
 end

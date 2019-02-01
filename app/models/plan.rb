@@ -7,15 +7,9 @@ class Plan < ApplicationRecord
 
   validates_presence_of :contract_id, :technology_id, :model_gid, :goal
 
+  scope :between,         ->(from, to) { joins(:contract).where('contracts.end_date >= ? AND contracts.start_date <= ?', from, to) }
   scope :current,         -> { where(contract_id: Contract.current) }
-  scope :only_districts,  -> { where('model_gid ILIKE ?', '%/District/%') }
-  scope :only_sectors,    -> { where('model_gid ILIKE ?', '%/Sector/%') }
-  scope :only_cells,      -> { where('model_gid ILIKE ?', '%/Cell/%') }
-  scope :only_villages,   -> { where('model_gid ILIKE ?', '%/Village/%') }
-  scope :only_facilities, -> { where('model_gid ILIKE ?', '%/Facility/%') }
-
-  # scope :between, ->(sdate, edate) { joins(:contract).where('contracts.start_date BETWEEN ? AND ?', sdate, edate).order('contracts.end_date') }
-  scope :between, ->(from, to) { joins(:contract).where('contracts.end_date >= ? AND contracts.start_date <= ?', from, to) }
+  scope :nearest_to_date, ->(date) { joins(:contract).where('contracts.end_date >= ?', date).order(:created_at) }
 
   def self.related_to(record)
     where(model_gid: record.to_global_id.to_s)

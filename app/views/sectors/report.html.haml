@@ -1,57 +1,60 @@
 -# frozen_string_literal: true
 .row
   .col-10
-    %h2= "Sector report: #{@sector.name}"
-  .col-2
+    %h1= "#{@sector.name} Sector report:"
+  .col-2.text-right
     =link_to 'Back', select_sectors_path, class: 'btn btn-primary'
+.row
+  .col-12
+    %h2= "#{@technology.short_name} achievements in #{@date.strftime("%B, %Y")}"
 
 .row#sector_report
-  .col-12
-    .row
-      .col-12
-        = form_tag(batch_process_reports_path) do
-          %h4= "SAM3: #{@sector.name}"
-          %table.table.tight
-            %thead
-              %tr
-                %th Cells
-                %th Villages
-                %th id
+  .col-12.table-responsive
+    = form_tag(batch_process_reports_path) do
+      .row
+        .col-12.text-center
+          = submit_tag 'Submit report', class: 'btn btn-success'
+      =hidden_field_tag 'batch_reports[technology_id]', @technology.id
+      =hidden_field_tag 'batch_reports[contract_id]', @contract.id
+      - if @technology.scale == 'Family'
+        %table.table.table-sm.table-hover
+          %thead
+            %tr
+              %th Villages
+              - if @plans.any?
+                %th= "Planned (by #{human_date(@plans.first&.date)})"
+              - else
                 %th Planned
+              - if @reports.any?
+                %th.text-center= human_number(@reports.sum(:distributed)) + ' Distributed'
+                %th.text-center= human_number(@reports.sum(:checked)) + ' Checked'
+                %th.text-right= "People<br>served".html_safe
+                %th.text-right= "Households<br>served".html_safe
+              - else
                 %th.text-center Distributed
+                %th.text-right= "People<br>served".html_safe
+                %th.text-right= "Households<br>served".html_safe
                 %th.text-center Checked
+          %tbody
+            = render partial: 'cell_report', collection: @cells
+      - else
+        %table.table.table-sm
+          %thead
+            %tr
+              %th Facilities
+              %th.text-center Population
+              %th.text-center Households
+              %th Type
+              %th Cell
+              %th Village
+              %th.text-center= "#<br>Installed".html_safe
+              %th.text-center Install date
+              %th.text-center= "People<br>served".html_safe
+              %th.text-center= "Households<br>served".html_safe
             %tbody
-              = render partial: 'cell', collection: @cells
-
-          %h4= "SAM2: #{@sector.name}"
-          %table.table
-            %thead
-              %tr
-                %th Facilities
-                %th Population
-                %th Households
-                %th Category
-                %th Cell
-                %th Village
-                %th Installed
-                %th Checked
-              %tbody
-                = render partial: 'facility', collection: @facilities_sam2, locals: { tech: 3, offset: 10_000 }
-
-          %h4= "RWHS: #{@sector.name}"
-          %table.table
-            %thead
-              %tr
-                %th Facilities
-                %th Population
-                %th Households
-                %th Category
-                %th Cell
-                %th Village
-                %th Installed
-                %th Checked
-              %tbody
-                = render partial: 'facility', collection: @facilities_rwhs, locals: { tech: 5, offset: 20_000 }
-
-
-
+              = render partial: 'facility_report', collection: @facilities
+        .row
+          .col-12.text-right= link_to 'Add Facility', new_facility_path, target: '_blank', class: 'btn btn-primary'
+      .row
+        .col-12.text-center
+          = submit_tag 'Submit report', class: 'btn btn-success'
