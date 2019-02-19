@@ -33,7 +33,7 @@
       %th
       %th.text-center= @gttl_pop_hh
       %th.text-center= @gttl_dist_chk
-      %th.text-right= human_number @reports.map(&:people_served).sum
+      %th.text-right= human_number @reports.map(&:impact).sum
       %th.text-right= human_number @plans.sum(:people_goal)
   %tbody
     = render @villages

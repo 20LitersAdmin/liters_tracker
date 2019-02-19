@@ -15,8 +15,8 @@ A custom reporting app for 20 Liters
 
 * By MOU
 - contracts#index && contracts#show
--- By technology: [Report.distributed | Target.goal | Report.people_served | Target.people_goal ]
--- By sector: [ Report.people_served | Target.people_goal ]
+-- By technology: [Report.distributed | Target.goal | Report.impact | Target.people_goal ]
+-- By sector: [ Report.impact | Target.people_goal ]
 
 * 'Add plan' && 'Add report' buttons on technologies#show?by_sector don't do anything, but should
 - POLICED by current_user.can_create('Report') && current_user.can_create('Plan')

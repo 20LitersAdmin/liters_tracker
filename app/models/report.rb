@@ -107,6 +107,10 @@ class Report < ApplicationRecord
 
   def people_served
     return people if people&.positive?
+    # I don't love this, but right now every data view utilizes people_served
+    # and there are cases, like RWHS and SAM2 reports where people is nil and households is positive
+    # I need to switch to using impact for all report calculations
+    return households_impact if households&.positive?
 
     model_gid.include?('Facility') && model.population&.positive? ? model.population : (technology.default_impact * distributed.to_i)
   end
@@ -117,7 +121,12 @@ class Report < ApplicationRecord
     model_gid.include?('Facility') && model.households&.positive? ? model.households : (technology.default_household_impact * distributed.to_i)
   end
 
+  def households_impact
+    households.to_i * Constants::Population::HOUSEHOLD_SIZE
+  end
+
   def impact
-    mode_gid.include?('Facility') ? model.impact * distributed.to_i : people_served
+    # use this instead of calculating all data views from people_served
+    people_served > households_impact ? people_served : households_impact
   end
 end

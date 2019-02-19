@@ -19,7 +19,7 @@
       %th Grand Total
       %th
       %th
-      %th.text-right= human_number @reports.where(date: @from..@to).map(&:people_served).sum
+      %th.text-right= human_number @reports.where(date: @from..@to).map(&:impact).sum
       %th
       %th.text-right= human_number @targets.between(@from,@to).sum(:people_goal)
   %tbody

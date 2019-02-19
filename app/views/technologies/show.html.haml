@@ -38,7 +38,7 @@
             %th.text-right= human_number @reports.sum(:distributed)
             %th.text-right= human_number @reports.sum(:checked)
             %th.text-right= human_number @targets.sum(:people_goal)
-            %th.text-right= human_number @reports.map(&:people_served).sum
+            %th.text-right= human_number @reports.map(&:impact).sum
         %tbody
           = render partial: 'mou', collection: @mous
 - else
@@ -60,6 +60,6 @@
             %th.text-right= human_number @reports.sum(:distributed)
             %th.text-right= human_number @reports.sum(:checked)
             %th.text-right= human_number @plans.sum(:people_goal)
-            %th.text-right= human_number @reports.map(&:people_served).sum
+            %th.text-right= human_number @reports.map(&:impact).sum
         %tbody
           = render partial: 'sector', collection: @sectors
