@@ -1,12 +1,7 @@
 # LITERS TRACKER
 A custom reporting app for 20 Liters
 
-latest real report: 1166
-
 # CURRENT:
-# Creating/Updating Reports
-* Submitting a report needs to be intuitive for the user
--- Add facilities on the fly
 
 # More reports:
 * By Geography:
@@ -48,11 +43,8 @@ latest real report: 1166
 - Village form
 - Facility form
   -- facility.impact sums population and households, the form should note to not duplicate these values
-
-# Managing User Permissions
-- Or handle all within custom user routes and kill the permissions_controller
--- NO NO NO! Just use some booleans on User and KILL Permisisons, controller, policy, specs, views, etc.
--- Still need to scrape current_user.can_* out of views, replace with .can_manage_*
+  -- Sector lookup is showing the record, not the record.name
+  -- Village lookup is blank, but should say "please select a sector", hint maybe?
 
 # Bugs?
 - JS call to /favicons?
@@ -67,7 +59,6 @@ latest real report: 1166
 - check which is faster: `@reports.related_to_village(village)` or `village.related_reports`
   -- Affects cell and village reporting partials
 - use `.select()` to speed up queries by only pulling what you need e.g.: `@reports.#stuff.select(:distributed, :checked)`
-
 
 
 # Remind myself:
