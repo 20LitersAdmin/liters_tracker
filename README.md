@@ -2,8 +2,6 @@
 A custom reporting app for 20 Liters
 
 # CURRENT:
-* @report.sum(:people_served) doesn't work for RWHS and SAM2 `reports.where(people: nil, households: ##)`
-- Switch to using `report.impact` and `@reports.sum(:impact)` in all data views
 
 # More reports:
 * By Geography:
@@ -17,8 +15,8 @@ A custom reporting app for 20 Liters
 
 * By MOU
 - contracts#index && contracts#show
--- By technology: [Report.distributed | Target.goal | Report.people_served | Target.people_goal ]
--- By sector: [ Report.people_served | Target.people_goal ]
+-- By technology: [Report.distributed | Target.goal | Report.impact | Target.people_goal ]
+-- By sector: [ Report.impact | Target.people_goal ]
 
 * 'Add plan' && 'Add report' buttons on technologies#show?by_sector don't do anything, but should
 - POLICED by current_user.can_create('Report') && current_user.can_create('Plan')

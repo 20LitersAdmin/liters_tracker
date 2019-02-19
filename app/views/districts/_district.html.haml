@@ -3,5 +3,5 @@
 - @plan_sub = @plans.related_to_district(district)
 %tr
   %td= link_to district.name, district_path(district)
-  %td.text-right= human_number @report_sub.map(&:people_served).sum
+  %td.text-right= human_number @report_sub.map(&:impact).sum
   %td.text-right= human_number @plan_sub.sum(:people_goal)

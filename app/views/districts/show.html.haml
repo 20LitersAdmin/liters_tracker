@@ -37,7 +37,7 @@
             %th.text-right= human_number @reports.sum(:distributed)
             %th.text-right= human_number @plans.sum(:goal)
             %th.text-right= human_number @reports.sum(:checked)
-            %th.text-right= human_number @reports.map(&:people_served).sum
+            %th.text-right= human_number @reports.map(&:impact).sum
             %th.text-right= human_number @plans.sum(:people_goal)
         %tbody
           = render partial: 'technology', collection: @technologies
@@ -61,7 +61,7 @@
               - next if @reports.where(technology: technology).size.zero? && @plans.where(technology: technology).size.zero?
               %th.text-right= human_number @reports.where(technology: technology).sum(:distributed)
               %th.text-right= human_number @plans.where(technology: technology).sum(:goal)
-            %th.text-right= human_number @reports.map(&:people_served).sum
+            %th.text-right= human_number @reports.map(&:impact).sum
             %th.text-right= human_number @plans.sum(:people_goal)
         %tbody
           = render partial: 'sector', collection: @sectors

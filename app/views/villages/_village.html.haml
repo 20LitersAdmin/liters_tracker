@@ -12,5 +12,5 @@
   %td= village.sector.name
   %td.text-center= village.pop_hh
   %td.text-center= @ttl_dist_chk
-  %td.text-right= human_number @report_sub.map(&:people_served).sum
+  %td.text-right= human_number @report_sub.map(&:impact).sum
   %td.text-right= human_number @plan_sub.sum(:people_goal)

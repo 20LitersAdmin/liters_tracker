@@ -22,7 +22,7 @@
       %th Grand Total
       %th
       %th
-      %th.text-right= human_number @reports.map(&:people_served).sum
+      %th.text-right= human_number @reports.map(&:impact).sum
       %th
       %th.text-right= human_number @targets.sum(:people_goal)
   %tbody

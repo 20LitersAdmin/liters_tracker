@@ -16,7 +16,7 @@
     %td.text-right= human_number @report_sub.sum(:distributed)
     %td.text-right= human_number @plan_sub.sum(:goal)
     %td.text-right= human_number @report_sub.sum(:checked)
-    %td.text-right= human_number @report_sub.map(&:people_served).sum
+    %td.text-right= human_number @report_sub.map(&:impact).sum
     %td.text-right= human_number @plan_sub.sum(:people_goal)
   - else
     %td{colspan: 4}= "No plans or reports related to #{@district.name} for this time period"
