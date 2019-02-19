@@ -2,6 +2,8 @@
 A custom reporting app for 20 Liters
 
 # CURRENT:
+* @report.sum(:people_served) doesn't work for RWHS and SAM2 `reports.where(people: nil, households: ##)`
+- Switch to using `report.impact` and `@reports.sum(:impact)` in all data views
 
 # More reports:
 * By Geography:
