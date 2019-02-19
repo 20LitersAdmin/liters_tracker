@@ -15,4 +15,4 @@
   %td.text-center= number_field_tag "batch_reports[reports][][distributed]", report.distributed, min: 0, step: 1, class: 'form-control'
   %td= text_field_tag "batch_reports[reports][][date]", report.new_record? ? '' : report.date, class: 'form-control datetimepicker-input', id: "report_form_date_#{report.object_id}", data: { toggle: 'datetimepicker', target: "#report_form_date_#{report.object_id}", record: "#{report.new_record? ? 'new' : 'existing'}" }
   %td.text-right= number_field_tag "batch_reports[reports][][people]", report.people, min: 0, step: 1, class: 'form-control'
-  %td.text-right= number_field_tag "batch_reports[reports][][household]", report.households, min: 0, step: 1, class: 'form-control'
+  %td.text-right= number_field_tag "batch_reports[reports][][households]", report.households, min: 0, step: 1, class: 'form-control'
