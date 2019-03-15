@@ -6,10 +6,10 @@ $(document).on 'turbolinks:load', ->
   return unless controllerMatches(['sectors']) &&
     actionMatches(['report'])
 
-    dateStr = getParameterByName('date')
-    date = moment(dateStr, 'YYYY-MM-DD')
-    first = date.startOf('month').format('YYYY-MM-DD')
-    last = date.endOf('month').format('YYYY-MM-DD')
+  dateStr = getParameterByName('date')
+  date = moment(dateStr, 'YYYY-MM-DD')
+  first = date.startOf('month').format('YYYY-MM-DD')
+  last = date.endOf('month').format('YYYY-MM-DD')
 
   $('.datetimepicker-input').datetimepicker({
     format: 'YYYY-MM-DD'
