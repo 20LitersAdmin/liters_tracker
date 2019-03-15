@@ -2,18 +2,11 @@
 A custom reporting app for 20 Liters
 
 # CURRENT:
-URL: http://localhost:3000/sectors/2/report?date=2019-02-01&tech=3
-When submitting a new facility from the modal, with no reports,
-```
-ActionView::Template::Error (undefined method `beginning_of_month' for nil:NilClass):
-    1: -# frozen_string_literal: true
-    2: - report = facility_report.related_reports.where(technology: @technology).within_month(@date).order(date: :desc).first_or_initialize
-    3: %tr
-    4:   %td
-    5:     -if current_user.can_manage_geography? || current_user.admin?
-```
 
 # More reports:
+* Last Month:
+- Display the latest reports (a way for Rebero to check his submission)
+
 * By Geography:
 - villages#index is too complex to bother with?
 - villages#show
@@ -57,6 +50,7 @@ ActionView::Template::Error (undefined method `beginning_of_month' for nil:NilCl
   -- Village lookup is blank, but should say "please select a sector", hint maybe?
 
 # Bugs?
+- Cells#show grand total row doesn't match table
 - JS call to /favicons?
 - Devise mail doesn't send? Mailgun shows nothing going out.
 - No reports on cell#index or village#index because of length, must get to them by sector
@@ -74,6 +68,7 @@ ActionView::Template::Error (undefined method `beginning_of_month' for nil:NilCl
 # Remind myself:
 * magic_frozen_string_literal . #get those frozen string benefits
 * production backup / development restore-from production (https://github.com/thoughtbot/parity)
+  `User.first.update(password: 'password', password_confirmation: 'password')`
 * byebug commands
     continue   -- Runs until program ends, hits a breakpoint or reaches a line
     delete     -- Deletes breakpoints

@@ -59,11 +59,12 @@
         .col-12.text-center
           = submit_tag 'Submit report', class: 'btn btn-success'
 
-.modal.fade#new_facility_modal{tabindex: '-1', role: 'dialog', 'aria-labelledby': 'newFacilityLabel', 'aria-hidden': 'true' }
-  .modal-dialog{ role: 'document' }
-    .modal-content
-      .modal-header
-        %h5.modal-title#new_facility_title Add Facility
-        %button.close{ type: 'button', 'data-dismiss': 'modal', 'aria-label': 'Close' }
-          %span{ 'aria-hidden': true } &times;
-      .modal-body= render partial: 'facilities/form', locals: { facility: @facility, modal: true }
+- if @technology.scale == 'Community'
+  .modal.fade#new_facility_modal{tabindex: '-1', role: 'dialog', 'aria-labelledby': 'newFacilityLabel', 'aria-hidden': 'true' }
+    .modal-dialog{ role: 'document' }
+      .modal-content
+        .modal-header
+          %h5.modal-title#new_facility_title Add Facility
+          %button.close{ type: 'button', 'data-dismiss': 'modal', 'aria-label': 'Close' }
+            %span{ 'aria-hidden': true } &times;
+        .modal-body= render partial: 'facilities/form', locals: { facility: @facility, modal: true }
