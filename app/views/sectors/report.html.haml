@@ -10,14 +10,14 @@
 
 .row#sector_report
   .col-12.table-responsive
-    = form_tag(batch_process_reports_path) do
+    = form_tag batch_process_reports_path, autocomplete: 'off' do
       .row
         .col-12.text-center
           = submit_tag 'Submit report', class: 'btn btn-success'
       =hidden_field_tag 'batch_reports[technology_id]', @technology.id
       =hidden_field_tag 'batch_reports[contract_id]', @contract.id
       - if @technology.scale == 'Family'
-        %table.table.table-sm.table-hover
+        %table.table.table-sm.table-hover#villages_table
           %thead
             %tr
               %th Villages
@@ -38,7 +38,7 @@
           %tbody
             = render partial: 'cell_report', collection: @cells
       - else
-        %table.table.table-sm
+        %table.table.table-sm#facilities_table
           %thead
             %tr
               %th Facilities
@@ -52,9 +52,18 @@
               %th.text-center= "People<br>served".html_safe
               %th.text-center= "Households<br>served".html_safe
             %tbody
-              = render partial: 'facility_report', collection: @facilities
+              = render partial: 'facility_report', collection: @facilities, locals: { technology: @technology, date: @date, modal: false }
         .row
-          .col-12.text-right= link_to 'Add Facility', new_facility_path, target: '_blank', class: 'btn btn-primary'
+          .col-12.text-right= link_to 'Add Facility', '#', id: 'facility-trigger', class: 'btn btn-primary', data: { toggle:  "modal", target: '#new_facility_modal' }
       .row
         .col-12.text-center
           = submit_tag 'Submit report', class: 'btn btn-success'
+
+.modal.fade#new_facility_modal{tabindex: '-1', role: 'dialog', 'aria-labelledby': 'newFacilityLabel', 'aria-hidden': 'true' }
+  .modal-dialog{ role: 'document' }
+    .modal-content
+      .modal-header
+        %h5.modal-title#new_facility_title Add Facility
+        %button.close{ type: 'button', 'data-dismiss': 'modal', 'aria-label': 'Close' }
+          %span{ 'aria-hidden': true } &times;
+      .modal-body= render partial: 'facilities/form', locals: { facility: @facility, modal: true }

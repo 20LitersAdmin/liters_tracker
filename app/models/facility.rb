@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 class Facility < ApplicationRecord
-  belongs_to :village, inverse_of: :facilities, dependent: :destroy
+  belongs_to :village, inverse_of: :facilities
   has_one :cell, through: :village, inverse_of: :facilities
   has_one :sector, through: :cell, inverse_of: :facilities
   has_one :district, through: :sector, inverse_of: :facilities

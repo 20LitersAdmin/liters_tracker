@@ -2,7 +2,7 @@
 
 class Village < ApplicationRecord
   belongs_to :cell,     inverse_of: :villages
-  has_many :facilities, inverse_of: :village
+  has_many :facilities, inverse_of: :village, dependent: :destroy
   has_one :sector, through: :cell, inverse_of: :villages
   has_one :district, through: :sector, inverse_of: :villages
 
