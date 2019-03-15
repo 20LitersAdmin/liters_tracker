@@ -3,6 +3,7 @@ $(document).on 'turbolinks:load', ->
     event.preventDefault
     false
   $('#loading_screen').hide()
+  $('[data-toggle="popover"]').popover()
 
 $(document).on 'turbolinks:request-start', ->
   $('#loading_screen').show()

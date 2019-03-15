@@ -2,6 +2,16 @@
 A custom reporting app for 20 Liters
 
 # CURRENT:
+URL: http://localhost:3000/sectors/2/report?date=2019-02-01&tech=3
+When submitting a new facility from the modal, with no reports,
+```
+ActionView::Template::Error (undefined method `beginning_of_month' for nil:NilClass):
+    1: -# frozen_string_literal: true
+    2: - report = facility_report.related_reports.where(technology: @technology).within_month(@date).order(date: :desc).first_or_initialize
+    3: %tr
+    4:   %td
+    5:     -if current_user.can_manage_geography? || current_user.admin?
+```
 
 # More reports:
 * By Geography:
@@ -63,6 +73,7 @@ A custom reporting app for 20 Liters
 
 # Remind myself:
 * magic_frozen_string_literal . #get those frozen string benefits
+* production backup / development restore-from production (https://github.com/thoughtbot/parity)
 * byebug commands
     continue   -- Runs until program ends, hits a breakpoint or reaches a line
     delete     -- Deletes breakpoints

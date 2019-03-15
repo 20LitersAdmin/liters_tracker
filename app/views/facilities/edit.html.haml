@@ -1,8 +1,4 @@
 -# frozen_string_literal: true
 %h1 Editing facility
 
-= render 'form'
-
-= link_to 'Show', @facility
-\|
-= link_to 'Back', facilities_path
+= render partial: 'form', locals: { facility: @facility }

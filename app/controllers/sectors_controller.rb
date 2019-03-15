@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 class SectorsController < ApplicationController
-  before_action :set_sector, only: %w[show edit update destroy report]
+  before_action :set_sector, only: %w[show edit update destroy report new_facility]
 
   # GET /sectors
   def index
@@ -46,6 +46,11 @@ class SectorsController < ApplicationController
       @facilities = @sector.facilities.not_churches.order(:name)
     else # @technology.short_name == 'RWHS'
       @facilities = @sector.facilities.churches.order(:name)
+    end
+
+    if @technology.scale == 'Community'
+      @facility = Facility.new
+      @villages = @sector.villages.select(:id, :name).order(:name)
     end
   end
 
@@ -118,6 +123,15 @@ class SectorsController < ApplicationController
     respond_to do |format|
       format.html { redirect_to sectors_url, notice: 'Sector was successfully destroyed.' }
       format.json { head :no_content }
+    end
+  end
+
+  def new_facility
+    authorize @sector
+
+    respond_to do |format|
+      format.html
+      format.js
     end
   end
 

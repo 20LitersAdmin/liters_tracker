@@ -1,0 +1,14 @@
+var errors = {};
+<% @facility.errors.collect do |field, msg| %>
+  errors["<%= field %>"] = "<%= msg.html_safe %>";
+<% end %>
+var form = $('form#new_facility');
+var i
+var field; message; input;
+for (i = 0; i < Object.keys(errors).length; i++) {
+  var field = Object.keys(errors)[i];
+  var message = Object.values(errors)[i];
+  var input = $('#facility_' + field);
+  input.addClass('is-invalid');
+  input.parent('.form-group').siblings('.invalid-feedback-modal').html(message);
+};

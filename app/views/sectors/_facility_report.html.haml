@@ -1,5 +1,5 @@
 -# frozen_string_literal: true
-- report = facility_report.related_reports.where(technology: @technology).within_month(@date).order(date: :desc).first_or_initialize
+- report = modal ? facility_report.related_reports.new : facility_report.related_reports.where(technology: technology).within_month(date).order(date: :desc).first_or_initialize
 %tr
   %td
     -if current_user.can_manage_geography? || current_user.admin?

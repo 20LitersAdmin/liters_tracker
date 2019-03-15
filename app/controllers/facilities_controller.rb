@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 class FacilitiesController < ApplicationController
-  before_action :set_facility, only: [:show, :edit, :update, :destroy]
+  before_action :set_facility, only: %i[show edit update destroy facility_error]
 
   # GET /facilities
   # GET /facilities.json
@@ -22,6 +22,7 @@ class FacilitiesController < ApplicationController
 
   # GET /facilities/1/edit
   def edit
+    @sectors = Sector.all.select(:name, :id).order(:name)
   end
 
   # POST /facilities
@@ -29,15 +30,36 @@ class FacilitiesController < ApplicationController
   def create
     authorize @facility = Facility.new(facility_params)
 
-    byebug
-
-    if @facility.save
-      flash[:success] = 'Facility was successfully created.'
-      redirect_to root_path
-    else
-      @sectors = Sector.all.select(:name, :id).order(:name)
-      render :new
+    respond_to do |format|
+      if @facility.save
+        format.html do
+          flash[:success] = 'Facility was successfully created.'
+          redirect_to root_path
+        end
+        format.js do
+          # render json: @facility, status: :created
+          render action: 'facility_created', location: @facility, status: :created
+        end
+      else
+        format.html do
+          @sectors = Sector.all.select(:name, :id).order(:name)
+          render :new
+        end
+        format.js do
+          # the JSON isn't compatible with rails_ujs
+          # Maybe try to figure out how to send it as an array?
+          render action: 'facility_error', status: :unprocessable_entity, location: @facility
+        end
+      end
     end
+  end
+
+  def facility_error
+    authorize @facility
+  end
+
+  def facility_created
+    authorize @facility.reload
   end
 
   # PATCH/PUT /facilities/1
