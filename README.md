@@ -50,10 +50,12 @@ A custom reporting app for 20 Liters
   -- CHECK: Sector lookup is showing the record, not the record.name
 
 # Bugs?
-- Cells#show grand total row doesn't match table
+- `sessions/new?return-to` doesn't do anything
+- Cells#show grand total rows don't match table
 - JS call to /favicons?
 - Devise mail doesn't send? Mailgun shows nothing going out.
 - No reports on cell#index or village#index because of length, must get to them by sector
+- `development restore-from production` doesn't map relationships correctly? Is this a mis-matched PG version between me and Heroku?
 
 # Improvements
 - Districts#index doesn't have [Add Plan, Add Report, Add Target] functionality
