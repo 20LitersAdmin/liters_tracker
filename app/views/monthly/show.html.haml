@@ -1,0 +1,9 @@
+.row.mb-3
+  .col-sm-10
+    %h4= "Monthly Technology Report for #{@date.strftime('%B %Y')}"
+  .col-sm-2
+    = link_to 'Back', monthly_path, class: 'btn btn-dark'
+
+.row
+  .col-12
+    %h3 Put something interesting here

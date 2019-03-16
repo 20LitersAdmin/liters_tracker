@@ -2,8 +2,9 @@
 A custom reporting app for 20 Liters
 
 # CURRENT:
+* Monthly#show
 
-# More reports:
+# More data views:
 * Last Month:
 - Display reports by month (a way for Rebero to easily check his submissions)
 
