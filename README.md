@@ -5,7 +5,7 @@ A custom reporting app for 20 Liters
 
 # More reports:
 * Last Month:
-- Display the latest reports (a way for Rebero to check his submission)
+- Display reports by month (a way for Rebero to easily check his submissions)
 
 * By Geography:
 - villages#index is too complex to bother with?
@@ -13,7 +13,9 @@ A custom reporting app for 20 Liters
 --> by facilities per village, using Plan
 --> by technologies, using Target
 
-- facilities#index - make searchable?
+- facilities#index
+  -- make searchable?
+  -- communicate if a RWHS or SAM2 is present / planned
 - facilities#show is pointless?
 
 * By MOU
@@ -44,16 +46,16 @@ A custom reporting app for 20 Liters
 - Sector form
 - Cell form
 - Village form
-- Facility form
-  -- facility.impact sums population and households, the form should note to not duplicate these values
-  -- Sector lookup is showing the record, not the record.name
-  -- Village lookup is blank, but should say "please select a sector", hint maybe?
++ Facility form (also submits as partial from SectorsController#Reports)
+  -- CHECK: Sector lookup is showing the record, not the record.name
 
 # Bugs?
-- Cells#show grand total row doesn't match table
+- `sessions/new?return-to` doesn't do anything
+- Cells#show grand total rows don't match table
 - JS call to /favicons?
 - Devise mail doesn't send? Mailgun shows nothing going out.
 - No reports on cell#index or village#index because of length, must get to them by sector
+- `development restore-from production` doesn't map relationships correctly? Is this a mis-matched PG version between me and Heroku?
 
 # Improvements
 - Districts#index doesn't have [Add Plan, Add Report, Add Target] functionality
@@ -70,7 +72,7 @@ A custom reporting app for 20 Liters
 * production backup / development restore-from production (https://github.com/thoughtbot/parity)
   `User.first.update(password: 'password', password_confirmation: 'password')`
 * byebug commands
-    continue   -- Runs until program ends, hits a breakpoint or reaches a line
+    continue   -- Runs on
     delete     -- Deletes breakpoints
     finish     -- Runs the program until frame returns
     irb        -- Starts an IRB session

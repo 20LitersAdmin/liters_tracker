@@ -82,14 +82,18 @@ class Report < ApplicationRecord
     contract_id = batch_report_params[:contract_id].to_i
 
     batch_report_params[:reports].each do |report_params|
-      next if report_params[:distributed].blank? && report_params[:checked].blank?
-
       process(report_params, technology_id, contract_id, user_id)
     end
   end
 
   def self.process(report_params, technology_id, contract_id, user_id)
     report = Report.where(date: report_params[:date], model_gid: report_params[:model_gid], technology_id: technology_id).first_or_initialize
+    action = report.determine_action(report_params, contract_id, user_id)
+
+    return if action.zero?
+
+    return report.destroy if action == 1
+
     report.tap do |rep|
       rep.contract_id = contract_id
       rep.user_id = user_id
@@ -99,6 +103,33 @@ class Report < ApplicationRecord
       rep.households = report_params[:households]
     end
     report.save
+  end
+
+  def determine_action(params, contract_id, user_id)
+    # 0 = Skip (record is new and meaningful params are nil OR record persists and attributes match)
+    # 1 = Destroy (record persists and meaningful params are nil)
+    # 2 = Create (meaningful params are not nil)
+    # 3 = Update (meaningful params are not nil)
+
+    return 0 if new_record? &&
+                !params[:distributed].to_i.positive? &&
+                !params[:checked].to_i.positive?
+
+    # handles the "equality" of nil and 0 by forcing conversion to integers
+    return 0 if self.contract_id == contract_id &&
+                self.user_id == user_id &&
+                distributed.to_i == params[:distributed].to_i &&
+                checked.to_i == params[:checked].to_i &&
+                people.to_i == params[:people].to_i &&
+                households.to_i == params[:households].to_i
+
+    return 1 if persisted? &&
+                !params[:distributed].to_i.positive? &&
+                !params[:checked].to_i.positive?
+
+    return 2 if new_record?
+
+    3 # if persisted?
   end
 
   def model
@@ -126,7 +157,7 @@ class Report < ApplicationRecord
   end
 
   def impact
-    # use this instead of calculating all data views from people_served
+    # use this on all data views instead of calculating from people_served
     people_served > households_impact ? people_served : households_impact
   end
 end

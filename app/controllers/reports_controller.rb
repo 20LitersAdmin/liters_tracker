@@ -64,15 +64,13 @@ class ReportsController < ApplicationController
   end
 
   def batch_process
-    authorize @user = current_user
+    authorize current_user
 
     if Report.key_params_are_missing?(batch_report_params)
       flash[:error] = 'Oops, some data got lost. Please try again'
     else
-      Report.batch_process(batch_report_params, @user.id)
+      Report.batch_process(batch_report_params, current_user.id)
       flash[:success] = 'The report was successfully submitted.'
-      # ReportBatchProcessorJob.perform_later(batch_report_params, @user.id)
-      # flash[:success] = 'The report was successfully submitted. It\'s being processed in the background.'
     end
 
     redirect_to select_sectors_path
