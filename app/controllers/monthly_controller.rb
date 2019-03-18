@@ -22,6 +22,10 @@ class MonthlyController < ApplicationController
     @date = Date.new(monthly.year, monthly.month, 1)
 
     @reports = Report.within_month(@date)
+    @sectors = Sector.where(id: @reports.map { |r| r.model.sector.id }.uniq)
+    @cells = Cell.where(id: @reports.map { |r| r.model.cell.id }.uniq)
+    @villages = Village.where(id: @reports.map { |r| r.model.village.id }.uniq)
+    @technologies = Technology.report_worthy.order(scale: :desc, id: :asc)
   end
 
   private

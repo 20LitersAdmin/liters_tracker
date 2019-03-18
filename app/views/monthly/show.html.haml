@@ -4,6 +4,7 @@
   .col-sm-2
     = link_to 'Back', monthly_path, class: 'btn btn-dark'
 
-.row
-  .col-12
-    %h3 Put something interesting here
+.row.mt-3#tech_section
+  .col
+    = render partial: 'technology', collection: @technologies, locals: { all_reports: @reports, all_sectors: @sectors, all_cells: @cells, all_villages: @villages }
+

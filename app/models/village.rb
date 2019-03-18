@@ -22,4 +22,8 @@ class Village < ApplicationRecord
     hh = households.present? ? ActiveSupport::NumberHelper.number_to_delimited(households, delimiter: ',') : '-'
     pop + ' / ' + hh
   end
+
+  def village
+    self
+  end
 end

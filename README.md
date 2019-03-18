@@ -67,7 +67,6 @@ A custom reporting app for 20 Liters
   -- Affects cell and village reporting partials
 - use `.select()` to speed up queries by only pulling what you need e.g.: `@reports.#stuff.select(:distributed, :checked)`
 
-
 # Remind myself:
 * magic_frozen_string_literal . #get those frozen string benefits
 * production backup / development restore-from production (https://github.com/thoughtbot/parity)
