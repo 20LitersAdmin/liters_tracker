@@ -1,9 +1,11 @@
 -# frozen_string_literal: true
-- tech_reports = all_reports.where(technology: technology)
-
+- tech_reports = @reports.where(technology: technology)
+- sectors = tech_reports.related_sectors.order(name: :asc)
 .row
-  .col-12
-    %h5= "#{technology.name}:"
+  .col-10
+    %h4= "#{technology.name}:"
+  .col-2
+    +/-
   .col-12
     - if tech_reports.any?
       %table.table.table-striped
@@ -11,42 +13,18 @@
           %tr
             %th
             %th Sector
+            %th Cell
+            %th Village
             %th.text-right Distributed
-            - if technology.scale == 'Family'
-              %th.text-right Checked
+            %th.text-right Checked
             %th.text-right People served
         %tfoot
           %tr
-            %th
-            %th Total
+            %th{colspan: 4} Technology Total
             %th.text-right= human_number tech_reports.sum(:distributed)
-            - if technology.scale == 'Family'
-              %th.text-right= human_number tech_reports.sum(:checked)
+            %th.text-right= human_number tech_reports.sum(:checked)
             %th.text-right= human_number tech_reports.map(&:impact).sum
         %tbody
-          - all_sectors.each do |sector|
-            - sector_reports = tech_reports.related_to_sector(sector)
-            %tr
-              %td
-              %td= sector.name
-              %td.text-right= human_number sector_reports.sum(:distributed)
-              %td.text-right= human_number sector_reports.sum(:checked)
-              %td.text-right= human_number sector_reports.map(&:impact).sum
-            - all_cells.where(sector: sector).each do |cell|
-              - cell_reports = tech_reports.related_to_cell(cell)
-              %tr
-                %td
-                %td= "Cell: #{cell.name}"
-                %td.text-right= human_number cell_reports.sum(:distributed)
-                %td.text-right= human_number cell_reports.sum(:checked)
-                %td.text-right= human_number cell_reports.map(&:impact).sum
-              - all_villages.where(cell: cell).each do |village|
-                - village_reports = cell_reports.related_to_village(village)
-                %tr
-                  %td
-                  %td= "Village: #{village.name}"
-                  %td.text-right= human_number village_reports.sum(:distributed)
-                  %td.text-right= human_number village_reports.sum(:checked)
-                  %td.text-right= human_number village_reports.map(&:impact).sum
+          = render partial: 'sector', collection: sectors, locals: { reports: tech_reports, technology: technology }
     - else
       %p No activity

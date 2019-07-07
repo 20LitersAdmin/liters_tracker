@@ -63,9 +63,12 @@ A custom reporting app for 20 Liters
 - Technologies#index doesn't have [Add Plan, Add Report, Add Target] functionality
 
 # SPEED THINGS UP
+- https://medium.com/@sean.handley/one-second-page-loads-with-rails-ffb1ba4aa19f
 - check which is faster: `@reports.related_to_village(village)` or `village.related_reports`
   -- Affects cell and village reporting partials
 - use `.select()` to speed up queries by only pulling what you need e.g.: `@reports.#stuff.select(:distributed, :checked)`
+- use `.includes()` to eager-load associated records
+- use AJAX on slow pages (e.g. load the page, then ajax the data into the apropriate places)
 
 # Remind myself:
 * magic_frozen_string_literal . #get those frozen string benefits

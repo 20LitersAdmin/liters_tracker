@@ -4,17 +4,19 @@ class Report < ApplicationRecord
   belongs_to :technology, inverse_of: :reports
   belongs_to :user,       inverse_of: :reports
   belongs_to :contract,   inverse_of: :reports
-  serialize :model_gid
+  # serialize :model_gid
+  # enum geography: { district: 'district', sector: 'sector', cell: 'cell', village: 'village', facility: 'facility' }
+  belongs_to :reportable, polymorphic: true
 
-  scope :only_districts,  -> { where('model_gid ILIKE ?', '%/District/%') }
-  scope :only_sectors,    -> { where('model_gid ILIKE ?', '%/Sector/%') }
-  scope :only_cells,      -> { where('model_gid ILIKE ?', '%/Cell/%') }
-  scope :only_villages,   -> { where('model_gid ILIKE ?', '%/Village/%') }
-  scope :only_facilities, -> { where('model_gid ILIKE ?', '%/Facility/%') }
+  scope :only_districts,  -> { where(reportable_type: 'District') }
+  scope :only_sectors,    -> { where(reportable_type: 'Sector') }
+  scope :only_cells,      -> { where(reportable_type: 'Cell') }
+  scope :only_villages,   -> { where(reportable_type: 'Village') }
+  scope :only_facilities, -> { where(reportable_type: 'Facility') }
   scope :within_month, ->(date) { where(date: date.beginning_of_month..date.end_of_month) }
 
   def self.related_to(record)
-    where(model_gid: record.to_global_id.to_s)
+    where(reportable_type: record.class.to_s, reportable_id: record.id)
   end
 
   def self.related_to_facility(facility, only_ary: false)
@@ -26,8 +28,7 @@ class Report < ApplicationRecord
   end
 
   def self.related_to_village(village, only_ary: false)
-    report_ids = []
-    report_ids << related_to(village).pluck(:id)
+    report_ids = related_to(village).pluck(:id)
     village.facilities.each { |facility| report_ids << related_to_facility(facility, only_ary: true) }
 
     return report_ids.flatten.uniq if only_ary
@@ -36,8 +37,7 @@ class Report < ApplicationRecord
   end
 
   def self.related_to_cell(cell, only_ary: false)
-    report_ids = []
-    report_ids << related_to(cell).pluck(:id)
+    report_ids = related_to(cell).pluck(:id)
     cell.villages.each { |village| report_ids << related_to_village(village, only_ary: true) }
 
     return report_ids.flatten.uniq if only_ary
@@ -46,8 +46,7 @@ class Report < ApplicationRecord
   end
 
   def self.related_to_sector(sector, only_ary: false)
-    report_ids = []
-    report_ids << related_to(sector).pluck(:id)
+    report_ids = related_to(sector).pluck(:id)
     sector.cells.each { |cell| report_ids << related_to_cell(cell, only_ary: true) }
 
     return report_ids.flatten.uniq if only_ary
@@ -56,11 +55,56 @@ class Report < ApplicationRecord
   end
 
   def self.related_to_district(district)
-    report_ids = []
-    report_ids << related_to(district).pluck(:id)
+    report_ids = related_to(district).pluck(:id)
     district.sectors.each { |sector| report_ids << Report.related_to_sector(sector, only_ary: true) }
 
     where(id: report_ids.flatten.uniq)
+  end
+
+  def self.related_facilities
+    # return a collection of Facilities from a collection of Reports
+    return Facility.none if self.only_facilities.empty?
+
+    ary = self.only_facilities.map(&:reportable_id)
+    Facility.all.where(id: ary)
+  end
+
+  def self.related_villages
+    # return a collection of Villages from a collection of Reports
+    return Village.none if self.only_facilities.empty? && self.only_villages.empty?
+
+    ary_of_ids = self.only_villages.map(&:reportable_id)
+    ary_of_ids += self.ary_of_village_ids_from_facilities if self.only_facilities.any?
+
+    Village.all.where(id: ary_of_ids.uniq)
+  end
+
+  def self.related_cells
+    # return a collection of Cells from a collection of Reports
+    return Cell.none if self.only_facilities.empty? && self.only_villages.empty? && self.only_cells.empty?
+
+    ary_of_ids = self.only_cells.map(&:reportable_id)
+    ary_of_ids += self.ary_of_cell_ids_from_villages if self.only_villages.any? || self.only_facilities.any?
+
+    Cell.all.where(id: ary_of_ids.uniq)
+  end
+
+  def self.related_sectors
+    # return a collection of Sectors from a collection of Reports
+    return Sector.none if self.only_facilities.empty? && self.only_villages.empty? && self.only_cells.empty? && self.only_sectors.empty?
+
+    ary_of_ids = self.only_sectors.map(&:reportable_id)
+    ary_of_ids += self.ary_of_sector_ids_from_cells if self.only_cells.any? || self.only_villages.any? || self.only_facilities.any?
+
+    Sector.all.where(id: ary_of_ids.uniq)
+  end
+
+  def self.related_districts
+    # return a collection of Districts from a collection of Reports
+    return District.none if self.only_facilities.empty? && self.only_villages.empty? && self.only_cells.empty? && self.only_sectors.empty? && self.only_districts.empty?
+
+    ary_of_ids = self.only_districts.map(&:reportable_id)
+    ary_of_ids += self.ary_of_district_ids_from_sectors if self.only_sectors.any? || self.only_cells.any? || self.only_villages.any? || self.only_facilities.any?
   end
 
   def self.earliest_date
@@ -87,7 +131,13 @@ class Report < ApplicationRecord
   end
 
   def self.process(report_params, technology_id, contract_id, user_id)
-    report = Report.where(date: report_params[:date], model_gid: report_params[:model_gid], technology_id: technology_id).first_or_initialize
+    report = Report.where(
+        date: report_params[:date],
+        model_gid: report_params[:model_gid],
+        technology_id: technology_id,
+        reportable_id: report_params[:reportable_id].to_i,
+        reportable_type: report_params[:reportable_type]
+      ).first_or_initialize
     action = report.determine_action(report_params, contract_id, user_id)
 
     return if action.zero?
@@ -143,7 +193,7 @@ class Report < ApplicationRecord
     # I need to switch to using impact for all report calculations
     return households_impact if households&.positive?
 
-    model_gid.include?('Facility') && model.population&.positive? ? model.population : (technology.default_impact * distributed.to_i)
+    reportable_type == 'Facility' && model.population&.positive? ? model.population : (technology.default_impact * distributed.to_i)
   end
 
   def households_served
@@ -159,5 +209,29 @@ class Report < ApplicationRecord
   def impact
     # use this on all data views instead of calculating from people_served
     people_served > households_impact ? people_served : households_impact
+  end
+
+  # after next pull request, this can be deleted
+  def migrate_to_polymorphic
+    regex = %r{\n...\n}
+    self.update(reportable_id: model_gid.match(/\d+/)[0].to_i, reportable_type: model_gid.match(/\/[a-zA-Z]+\//)[0].tr('/',''), model_gid: model_gid.gsub('--- ','').gsub(regex,''))
+  end
+
+  private
+
+  def self.ary_of_village_ids_from_facilities
+    related_facilities.map(&:village_id)
+  end
+
+  def self.ary_of_cell_ids_from_villages
+    related_villages.map(&:cell_id)
+  end
+
+  def self.ary_of_sector_ids_from_cells
+    related_cells.map(&:sector_id)
+  end
+
+  def self.ary_of_district_ids_from_sectors
+    related_sectors.map(&:district)
   end
 end
