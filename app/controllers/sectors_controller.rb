@@ -142,6 +142,6 @@ class SectorsController < ApplicationController
   end
 
   def sector_params
-    params.require(:sector).permit(:name, :gis_id, :latitude, :longitude, :population, :households)
+    params.require(:sector).permit(:name, :gis_code, :latitude, :longitude, :population, :households)
   end
 end

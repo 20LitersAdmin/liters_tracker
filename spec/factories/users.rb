@@ -2,7 +2,7 @@
 
 FactoryBot.define do
   factory :user_viewer, class: User do
-    fname 'Viewer'
+    fname { 'Viewer' }
     sequence(:lname) { |n| "McUser#{n}" }
     password { 'password' }
     password_confirmation { 'password' }
@@ -10,7 +10,7 @@ FactoryBot.define do
   end
 
   factory :user_admin, class: User do
-    fname 'Admin'
+    fname { 'Admin' }
     sequence(:lname) { |n| "McUser#{n}" }
     admin { true }
     password { 'password' }
@@ -19,7 +19,7 @@ FactoryBot.define do
   end
 
   factory :user_reports, class: User do
-    fname 'Reporter'
+    fname { 'Reporter' }
     sequence(:lname) { |n| "McUser#{n}" }
     password { 'password' }
     password_confirmation { 'password' }
@@ -28,7 +28,7 @@ FactoryBot.define do
   end
 
   factory :user_geography, class: User do
-    fname 'Geographer'
+    fname { 'Geographer' }
     sequence(:lname) { |n| "McUser#{n}" }
     password { 'password' }
     password_confirmation { 'password' }
@@ -37,7 +37,7 @@ FactoryBot.define do
   end
 
   factory :user_contracts, class: User do
-    fname 'Contractor'
+    fname { 'Contractor' }
     sequence(:lname) { |n| "McUser#{n}" }
     password { 'password' }
     password_confirmation { 'password' }
@@ -46,7 +46,7 @@ FactoryBot.define do
   end
 
   factory :user_technology, class: User do
-    fname 'Technologist'
+    fname { 'Technologist' }
     sequence(:lname) { |n| "McUser#{n}" }
     password { 'password' }
     password_confirmation { 'password' }

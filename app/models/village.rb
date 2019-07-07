@@ -9,7 +9,7 @@ class Village < ApplicationRecord
   has_many :plans, as: :planable, inverse_of: :planable
 
   validates_presence_of :name, :cell_id
-  validates_uniqueness_of :gis_id, allow_nil: true
+  validates_uniqueness_of :gis_code, allow_nil: true
 
   def related_plans
     Plan.where(model_gid: "gid://liters-tracker/Village/#{id}")

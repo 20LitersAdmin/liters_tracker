@@ -9,5 +9,5 @@ class Cell < ApplicationRecord
   has_many :plans, as: :planable, inverse_of: :planable
 
   validates_presence_of :name, :sector_id
-  validates_uniqueness_of :gis_id, allow_nil: true
+  validates_uniqueness_of :gis_code, allow_blank: true
 end
