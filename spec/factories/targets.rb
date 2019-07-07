@@ -2,8 +2,8 @@
 
 FactoryBot.define do
   factory :target do
-    contract { nil }
-    technology { nil }
+    contract
+    technology
     goal { 1 }
     people_goal { 1 }
   end
