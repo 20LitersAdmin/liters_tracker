@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_07_07_000254) do
+ActiveRecord::Schema.define(version: 2019_07_07_154822) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -73,7 +73,10 @@ ActiveRecord::Schema.define(version: 2019_07_07_000254) do
     t.integer "people_goal"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.integer "planable_id"
+    t.string "planable_type"
     t.index ["contract_id"], name: "index_plans_on_contract_id"
+    t.index ["planable_type", "planable_id"], name: "index_plans_on_planable_type_and_planable_id"
     t.index ["technology_id"], name: "index_plans_on_technology_id"
   end
 

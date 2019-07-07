@@ -6,6 +6,7 @@ class Village < ApplicationRecord
   has_one :sector, through: :cell, inverse_of: :villages
   has_one :district, through: :sector, inverse_of: :villages
   has_many :reports, as: :reportable, inverse_of: :reportable
+  has_many :plans, as: :planable, inverse_of: :planable
 
   validates_presence_of :name, :cell_id
   validates_uniqueness_of :gis_id, allow_nil: true

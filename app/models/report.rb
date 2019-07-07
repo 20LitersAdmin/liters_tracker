@@ -65,7 +65,7 @@ class Report < ApplicationRecord
     # return a collection of Facilities from a collection of Reports
     return Facility.none if self.only_facilities.empty?
 
-    ary = self.only_facilities.map(&:reportable_id)
+    ary = self.only_facilities.pluck(:reportable_id)
     Facility.all.where(id: ary)
   end
 
@@ -73,7 +73,7 @@ class Report < ApplicationRecord
     # return a collection of Villages from a collection of Reports
     return Village.none if self.only_facilities.empty? && self.only_villages.empty?
 
-    ary_of_ids = self.only_villages.map(&:reportable_id)
+    ary_of_ids = self.only_villages.pluck(:reportable_id)
     ary_of_ids += self.ary_of_village_ids_from_facilities if self.only_facilities.any?
 
     Village.all.where(id: ary_of_ids.uniq)
@@ -83,7 +83,7 @@ class Report < ApplicationRecord
     # return a collection of Cells from a collection of Reports
     return Cell.none if self.only_facilities.empty? && self.only_villages.empty? && self.only_cells.empty?
 
-    ary_of_ids = self.only_cells.map(&:reportable_id)
+    ary_of_ids = self.only_cells.pluck(:reportable_id)
     ary_of_ids += self.ary_of_cell_ids_from_villages if self.only_villages.any? || self.only_facilities.any?
 
     Cell.all.where(id: ary_of_ids.uniq)
@@ -93,7 +93,7 @@ class Report < ApplicationRecord
     # return a collection of Sectors from a collection of Reports
     return Sector.none if self.only_facilities.empty? && self.only_villages.empty? && self.only_cells.empty? && self.only_sectors.empty?
 
-    ary_of_ids = self.only_sectors.map(&:reportable_id)
+    ary_of_ids = self.only_sectors.pluck(:reportable_id)
     ary_of_ids += self.ary_of_sector_ids_from_cells if self.only_cells.any? || self.only_villages.any? || self.only_facilities.any?
 
     Sector.all.where(id: ary_of_ids.uniq)
@@ -103,8 +103,10 @@ class Report < ApplicationRecord
     # return a collection of Districts from a collection of Reports
     return District.none if self.only_facilities.empty? && self.only_villages.empty? && self.only_cells.empty? && self.only_sectors.empty? && self.only_districts.empty?
 
-    ary_of_ids = self.only_districts.map(&:reportable_id)
+    ary_of_ids = self.only_districts.pluck(:reportable_id)
     ary_of_ids += self.ary_of_district_ids_from_sectors if self.only_sectors.any? || self.only_cells.any? || self.only_villages.any? || self.only_facilities.any?
+
+    District.all.where(id: ary_of_ids.uniq)
   end
 
   def self.earliest_date
@@ -220,18 +222,18 @@ class Report < ApplicationRecord
   private
 
   def self.ary_of_village_ids_from_facilities
-    related_facilities.map(&:village_id)
+    related_facilities.pluck(:village_id)
   end
 
   def self.ary_of_cell_ids_from_villages
-    related_villages.map(&:cell_id)
+    related_villages.pluck(:cell_id)
   end
 
   def self.ary_of_sector_ids_from_cells
-    related_cells.map(&:sector_id)
+    related_cells.pluck(:sector_id)
   end
 
   def self.ary_of_district_ids_from_sectors
-    related_sectors.map(&:district)
+    related_sectors.pluck(:district_id)
   end
 end
