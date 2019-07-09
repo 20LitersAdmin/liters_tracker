@@ -14,14 +14,6 @@ class Facility < ApplicationRecord
   scope :churches,     -> { where(category: 'Church') }
   scope :not_churches, -> { where.not(category: 'Church') }
 
-  def related_plans
-    Plan.where(model_gid: "gid://liters-tracker/Facility/#{id}")
-  end
-
-  # def related_reports
-  #   Report.where(model_gid: "gid://liters-tracker/Facility/#{id}")
-  # end
-
   def impact
     population.to_i + (households.to_i * Constants::Population::HOUSEHOLD_SIZE)
   end

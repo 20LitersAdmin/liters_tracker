@@ -9,7 +9,6 @@ RSpec.describe Cell, type: :model do
     let(:no_name) { build :cell, name: nil }
     let(:no_sector) { build :cell, sector_id: nil }
 
-
     it 'name' do
       no_name.valid?
       expect(no_name.errors[:name]).to match_array("can't be blank")
@@ -36,7 +35,7 @@ RSpec.describe Cell, type: :model do
       expect(no_sector.errors.any?).to eq false
     end
 
-    fcontext 'gis_code which' do
+    context 'gis_code which' do
       let(:duplicate_gis) { build :cell }
 
       it 'can be nil' do

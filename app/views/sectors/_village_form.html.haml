@@ -1,6 +1,6 @@
 -# frozen_string_literal: true
 - report = village_form.reports.where(date: @date, technology: @technology).order(date: :desc).first_or_initialize
-- plan = village_form.related_plans.where(technology: @technology).nearest_to_date(@date).first
+- plan = village_form.plans.where(technology: @technology).nearest_to_date(@date).first
 %tr
   %td
     = village_form.name

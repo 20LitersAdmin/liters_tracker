@@ -9,23 +9,16 @@ class Village < ApplicationRecord
   has_many :plans, as: :planable, inverse_of: :planable
 
   validates_presence_of :name, :cell_id
-  validates_uniqueness_of :gis_code, allow_nil: true
-
-  def related_plans
-    Plan.where(model_gid: "gid://liters-tracker/Village/#{id}")
-  end
-
-  # def related_reports
-  #   Report.where(model_gid: "gid://liters-tracker/Village/#{id}")
-  # end
+  validates_uniqueness_of :gis_code, allow_blank: true
 
   def pop_hh
     pop = population.present? ? ActiveSupport::NumberHelper.number_to_delimited(population, delimiter: ',') : '-'
     hh = households.present? ? ActiveSupport::NumberHelper.number_to_delimited(households, delimiter: ',') : '-'
-    pop + ' / ' + hh
+    "#{pop} / #{hh}"
   end
 
   def village
+    # Reports and Plans have `.model` which needs to respond to `report.model.village`
     self
   end
 end

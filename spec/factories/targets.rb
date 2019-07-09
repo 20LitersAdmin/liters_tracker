@@ -3,7 +3,7 @@
 FactoryBot.define do
   factory :target do
     contract
-    technology
+    association :technology, factory: :technology_family
     goal { 1 }
     people_goal { 1 }
   end

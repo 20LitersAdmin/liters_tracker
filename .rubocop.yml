@@ -18,9 +18,6 @@ Style/BracesAroundHashParameters:
   Enabled: false
 Style/DoubleNegation:
   Enabled: false
-Style/MixinUsage:
-  Exclude:
-    - spec/*
 Layout/IndentHash:
   Enabled: false
 Lint/AmbiguousBlockAssociation:

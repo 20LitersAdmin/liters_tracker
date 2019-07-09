@@ -120,27 +120,28 @@ class Plan < ApplicationRecord
     GlobalID::Locator.locate model_gid
   end
 
-  def district
-    model.district
-  end
+  # Instead use plan.planable.#geography
+  # def district
+  #   model.district
+  # end
 
-  def sector
-    return model if model.class == Sector
+  # def sector
+  #   return model if model.class == Sector
 
-    model.sector
-  end
+  #   model.sector
+  # end
 
-  def cell
-    return model if model.class == Cell
+  # def cell
+  #   return model if model.class == Cell
 
-    model.cell
-  end
+  #   model.cell
+  # end
 
-  def village
-    return model if model.class == Village
+  # def village
+  #   return model if model.class == Village
 
-    model.village
-  end
+  #   model.village
+  # end
 
   # after next pull request, this can be deleted
   def migrate_to_polymorphic
