@@ -23,6 +23,8 @@ class Plan < ApplicationRecord
   end
 
   def self.related_to_facility(facility, only_ary: false)
+    raise 'ERROR. Must provide a facility.' if !facility.is_a? Facility
+
     plans = related_to(facility)
 
     return plans.pluck(:id) if only_ary
@@ -31,6 +33,8 @@ class Plan < ApplicationRecord
   end
 
   def self.related_to_village(village, only_ary: false)
+    raise 'ERROR. Must provide a village.' if !village.is_a? Village
+
     plan_ids = related_to(village).pluck(:id)
     village.facilities.each { |facility| plan_ids << related_to_facility(facility, only_ary: true) }
 
@@ -40,6 +44,8 @@ class Plan < ApplicationRecord
   end
 
   def self.related_to_cell(cell, only_ary: false)
+    raise 'ERROR. Must provide a cell.' if !cell.is_a? Cell
+
     plan_ids = related_to(cell).pluck(:id)
     cell.villages.each { |village| plan_ids << related_to_village(village, only_ary: true) }
 
@@ -49,6 +55,8 @@ class Plan < ApplicationRecord
   end
 
   def self.related_to_sector(sector, only_ary: false)
+    raise 'ERROR. Must provide a sector.' if !sector.is_a? Sector
+
     plan_ids = related_to(sector).pluck(:id)
     sector.cells.each { |cell| plan_ids << related_to_cell(cell, only_ary: true) }
 
@@ -58,6 +66,8 @@ class Plan < ApplicationRecord
   end
 
   def self.related_to_district(district)
+    raise 'ERROR. Must provide a district.' if !district.is_a? District
+
     plan_ids = related_to(district).pluck(:id)
     district.sectors.each { |sector| plan_ids << related_to_sector(sector, only_ary: true) }
 

@@ -138,50 +138,744 @@ RSpec.describe Plan, type: :model do
 
   context 'single geography methods' do
     context '#related_to' do
+      let(:village) { create :village }
+      let(:related_plan1) { create :plan_village, planable: village }
+      let(:related_plan2) { create :plan_village, planable: village }
+      let(:unrelated_plan) { create :plan_village }
+
+      it 'returns a collection of plans directly related to the given geography' do
+        related_plan1
+        related_plan2
+        collection = Plan.related_to(village)
+
+        expect(collection).to include related_plan1
+        expect(collection).to include related_plan2
+        expect(collection).not_to include unrelated_plan
+      end
+
+      it 'returns an empty ActiveRecord collection if no records are found' do
+        related_plan1.delete
+        related_plan2.delete
+
+        collection = Plan.related_to(village)
+        expect(collection.is_a?(ActiveRecord::Relation)).to eq true
+        expect(collection.empty?).to eq true
+      end
     end
 
     context '#related_to_facility' do
+      let(:facility) { create :facility }
+      let(:related_plan1) { create :plan_facility, planable: facility }
+      let(:related_plan2) { create :plan_facility, planable: facility }
+      let(:unrelated_plan) { create :plan_facility }
+
+      it 'returns a collection of plans directly related to the given facility' do
+        related_plan1
+        related_plan2
+        collection = Plan.related_to_facility(facility)
+
+        expect(collection).to include related_plan1
+        expect(collection).to include related_plan2
+        expect(collection).not_to include unrelated_plan
+      end
+
+      it 'returns an empty ActiveRecord collection if no records are found' do
+        related_plan1.delete
+        related_plan2.delete
+
+        collection = Plan.related_to_facility(facility)
+        expect(collection.is_a?(ActiveRecord::Relation)).to eq true
+        expect(collection.empty?).to eq true
+      end
+
+      it 'returns an error if facility is not provided' do
+        village = FactoryBot.create(:village)
+        expect { Plan.related_to_facility(village) }.to raise_error RuntimeError
+      end
     end
 
     context '#related_to_village' do
+      let(:village) { create :village }
+      let(:facility) { create :facility, village: village }
+      let(:related_plan1) { create :plan_village, planable: village }
+      let(:related_plan2) { create :plan_village, planable: village }
+      let(:unrelated_plan) { create :plan_village }
+      let(:child_plan1) { create :plan_facility, planable: facility }
+      let(:child_plan2) { create :plan_facility, planable: facility }
+      let(:unrelated_plan2) { create :plan_facility }
+
+      it 'returns a collection of plans related to the given village and its children' do
+        related_plan1
+        related_plan2
+        child_plan1
+        child_plan2
+        collection = Plan.related_to_village(village)
+
+        expect(collection).to include related_plan1
+        expect(collection).to include related_plan2
+        expect(collection).to include child_plan1
+        expect(collection).to include child_plan2
+        expect(collection).not_to include unrelated_plan
+        expect(collection).not_to include unrelated_plan2
+      end
+
+      it 'returns an empty ActiveRecord collection if no records are found' do
+        related_plan1.delete
+        related_plan2.delete
+        child_plan1.delete
+        child_plan2.delete
+
+        collection = Plan.related_to_village(village)
+        expect(collection.is_a?(ActiveRecord::Relation)).to eq true
+        expect(collection.empty?).to eq true
+      end
+
+      it 'returns an error if village is not provided' do
+        district = FactoryBot.create(:district)
+        expect { Plan.related_to_village(district) }.to raise_error RuntimeError
+      end
     end
 
     context '#related_to_cell' do
+      let(:cell) { create :cell }
+      let(:village) { create :village, cell: cell }
+      let(:facility) { create :facility, village: village }
+      let(:related_plan1) { create :plan_village, planable: village }
+      let(:related_plan2) { create :plan_village, planable: village }
+      let(:related_plan3) { create :plan_facility, planable: facility }
+      let(:related_plan4) { create :plan_facility, planable: facility }
+      let(:related_plan5) { create :plan_cell, planable: cell }
+      let(:unrelated_plan1) { create :plan_facility }
+      let(:unrelated_plan2) { create :plan_village }
+      let(:unrelated_plan3) { create :plan_cell }
+
+      it 'returns a collection of plans related to the given cell and its children' do
+        related_plan1
+        related_plan2
+        related_plan3
+        related_plan4
+        related_plan5
+        collection = Plan.related_to_cell(cell)
+
+        expect(collection).to include related_plan1
+        expect(collection).to include related_plan2
+        expect(collection).to include related_plan3
+        expect(collection).to include related_plan4
+        expect(collection).to include related_plan5
+        expect(collection).not_to include unrelated_plan1
+        expect(collection).not_to include unrelated_plan2
+        expect(collection).not_to include unrelated_plan3
+      end
+
+      it 'returns an empty ActiveRecord collection if no records are found' do
+        related_plan1.delete
+        related_plan2.delete
+        related_plan3.delete
+        related_plan4.delete
+        related_plan5.delete
+
+        collection = Plan.related_to_cell(cell)
+        expect(collection.is_a?(ActiveRecord::Relation)).to eq true
+        expect(collection.empty?).to eq true
+      end
+
+      it 'returns an error if cell is not provided' do
+        district = FactoryBot.create(:district)
+        expect { Plan.related_to_cell(district) }.to raise_error RuntimeError
+      end
     end
 
     context '#related_to_sector' do
+      let(:sector) { create :sector }
+      let(:cell) { create :cell, sector: sector }
+      let(:village) { create :village, cell: cell }
+      let(:facility) { create :facility, village: village }
+      let(:related_plan1) { create :plan_village, planable: village }
+      let(:related_plan2) { create :plan_village, planable: village }
+      let(:related_plan3) { create :plan_facility, planable: facility }
+      let(:related_plan4) { create :plan_facility, planable: facility }
+      let(:related_plan5) { create :plan_cell, planable: cell }
+      let(:related_plan6) { create :plan_sector, planable: sector }
+      let(:unrelated_plan1) { create :plan_facility }
+      let(:unrelated_plan2) { create :plan_village }
+      let(:unrelated_plan3) { create :plan_cell }
+      let(:unrelated_plan4) { create :plan_sector }
+
+      it 'returns a collection of plans related to the given sector and its children' do
+        related_plan1
+        related_plan2
+        related_plan3
+        related_plan4
+        related_plan5
+        related_plan6
+        collection = Plan.related_to_sector(sector)
+
+        expect(collection).to include related_plan1
+        expect(collection).to include related_plan2
+        expect(collection).to include related_plan3
+        expect(collection).to include related_plan4
+        expect(collection).to include related_plan5
+        expect(collection).to include related_plan6
+        expect(collection).not_to include unrelated_plan1
+        expect(collection).not_to include unrelated_plan2
+        expect(collection).not_to include unrelated_plan3
+        expect(collection).not_to include unrelated_plan4
+      end
+
+      it 'returns an empty ActiveRecord collection if no records are found' do
+        related_plan1.delete
+        related_plan2.delete
+        related_plan3.delete
+        related_plan4.delete
+        related_plan5.delete
+        related_plan6.delete
+
+        collection = Plan.related_to_sector(sector)
+        expect(collection.is_a?(ActiveRecord::Relation)).to eq true
+        expect(collection.empty?).to eq true
+      end
+
+      it 'returns an error if sector is not provided' do
+        district = FactoryBot.create(:district)
+        expect { Plan.related_to_sector(district) }.to raise_error RuntimeError
+      end
     end
 
     context '#related_to_district' do
-    end
+      let(:district) { create :district }
+      let(:sector) { create :sector, district: district }
+      let(:cell) { create :cell, sector: sector }
+      let(:village) { create :village, cell: cell }
+      let(:facility) { create :facility, village: village }
+      let(:related_plan1) { create :plan_village, planable: village }
+      let(:related_plan2) { create :plan_facility, planable: facility }
+      let(:related_plan3) { create :plan_cell, planable: cell }
+      let(:related_plan4) { create :plan_sector, planable: sector }
+      let(:related_plan5) { create :plan_district, planable: district }
+      let(:unrelated_plan1) { create :plan_facility }
+      let(:unrelated_plan2) { create :plan_village }
+      let(:unrelated_plan3) { create :plan_cell }
+      let(:unrelated_plan4) { create :plan_sector }
+      let(:unrelated_plan5) { create :plan_district }
 
-    context '#related_facilities' do
+      it 'returns a collection of plans related to the given district and its children' do
+        related_plan1
+        related_plan2
+        related_plan3
+        related_plan4
+        related_plan5
+        collection = Plan.related_to_district(district)
+
+        expect(collection).to include related_plan1
+        expect(collection).to include related_plan2
+        expect(collection).to include related_plan3
+        expect(collection).to include related_plan4
+        expect(collection).to include related_plan5
+        expect(collection).not_to include unrelated_plan1
+        expect(collection).not_to include unrelated_plan2
+        expect(collection).not_to include unrelated_plan3
+        expect(collection).not_to include unrelated_plan4
+        expect(collection).not_to include unrelated_plan5
+      end
+
+      it 'returns an empty ActiveRecord collection if no records are found' do
+        related_plan1.delete
+        related_plan2.delete
+        related_plan3.delete
+        related_plan4.delete
+        related_plan5.delete
+
+        collection = Plan.related_to_district(district)
+        expect(collection.is_a?(ActiveRecord::Relation)).to eq true
+        expect(collection.empty?).to eq true
+      end
+
+      it 'returns an error if district is not provided' do
+        expect { Plan.related_to_district(facility) }.to raise_error RuntimeError
+      end
     end
   end
 
   context 'geography collection methods' do
+    context '#related_facilities' do
+      let(:contract) { create :contract }
+      let(:related_facility1) { create :facility }
+      let(:related_facility2) { create :facility }
+      let(:related_facility3) { create :facility }
+      let(:unrelated_facility1) { create :facility }
+      let(:unrelated_facility2) { create :facility }
+      let(:unrelated_facility3) { create :facility }
+      let(:related_plan1) { create :plan_facility, contract: contract, planable: related_facility1 }
+      let(:related_plan2) { create :plan_facility, contract: contract, planable: related_facility2 }
+      let(:related_plan3) { create :plan_facility, contract: contract, planable: related_facility3 }
+      let(:unrelated_plan1) { create :plan_district, contract: contract }
+      let(:unrelated_plan2) { create :plan_facility, planable: related_facility1 }
+      let(:unrelated_plan3) { create :plan_facility, planable: unrelated_facility1 }
+
+      it 'returns a collection of facilities from a collection of plans' do
+        related_plan1
+        related_plan2
+        related_plan3
+        unrelated_plan1
+        unrelated_plan2
+        unrelated_plan3
+
+        collection = contract.plans
+
+        expect(collection.related_facilities).to include related_facility1
+        expect(collection.related_facilities).to include related_facility2
+        expect(collection.related_facilities).to include related_facility3
+
+        expect(collection.related_facilities).not_to include unrelated_facility1
+        expect(collection.related_facilities).not_to include unrelated_facility2
+        expect(collection.related_facilities).not_to include unrelated_facility3
+      end
+
+      it 'returns an empty ActiveRecord::Relation if none are found' do
+        related_plan1.delete
+        related_plan2.delete
+        related_plan3.delete
+        unrelated_plan1
+        unrelated_plan2
+        unrelated_plan3
+
+        collection = contract.plans
+
+        expect(collection.related_facilities.is_a?(ActiveRecord::Relation)).to eq true
+        expect(collection.related_facilities.empty?).to eq true
+      end
+    end
+
     context '#related_villages' do
+      let(:contract) { create :contract }
+      let(:related_village) { create :village }
+      let(:related_facility1) { create :facility, village: related_village }
+      let(:related_facility2) { create :facility, village: related_village }
+      let(:related_facility3) { create :facility, village: related_village }
+      let(:related_village1) { create :village }
+      let(:related_village2) { create :village }
+      let(:related_village3) { create :village }
+      let(:unrelated_village1) { create :village }
+      let(:unrelated_village2) { create :village }
+      let(:unrelated_village3) { create :village }
+      let(:related_plan1) { create :plan_facility, contract: contract, planable: related_facility1 }
+      let(:related_plan2) { create :plan_facility, contract: contract, planable: related_facility2 }
+      let(:related_plan3) { create :plan_facility, contract: contract, planable: related_facility3 }
+      let(:related_plan4) { create :plan_village, contract: contract, planable: related_village1 }
+      let(:related_plan5) { create :plan_village, contract: contract, planable: related_village2 }
+      let(:related_plan6) { create :plan_village, contract: contract, planable: related_village3 }
+      let(:unrelated_plan1) { create :plan_district, contract: contract }
+      let(:unrelated_plan2) { create :plan_facility, planable: related_facility1 }
+      let(:unrelated_plan3) { create :plan_village, planable: unrelated_village1 }
+
+      it 'returns a collection of villages from a collection of plans' do
+        related_plan1
+        related_plan2
+        related_plan3
+        related_plan4
+        related_plan5
+        related_plan6
+        unrelated_plan1
+        unrelated_plan2
+        unrelated_plan3
+
+        collection = contract.plans
+
+        expect(collection.related_villages).to include related_village
+        expect(collection.related_villages).to include related_village1
+        expect(collection.related_villages).to include related_village2
+        expect(collection.related_villages).to include related_village3
+
+        expect(collection.related_villages).not_to include unrelated_village1
+        expect(collection.related_villages).not_to include unrelated_village2
+        expect(collection.related_villages).not_to include unrelated_village3
+      end
+
+      it 'returns an empty ActiveRecord::Relation if none are found' do
+        related_plan1.delete
+        related_plan2.delete
+        related_plan3.delete
+        related_plan4.delete
+        related_plan5.delete
+        related_plan6.delete
+        unrelated_plan1
+        unrelated_plan2
+        unrelated_plan3
+
+        collection = contract.plans
+
+        expect(collection.related_villages.is_a?(ActiveRecord::Relation)).to eq true
+        expect(collection.related_villages.empty?).to eq true
+      end
     end
 
     context '#related_cells' do
+      let(:contract) { create :contract }
+      let(:related_cell) { create :cell }
+      let(:related_cell1) { create :cell }
+      let(:related_cell2) { create :cell }
+      let(:related_village) { create :village, cell: related_cell }
+      let(:related_facility) { create :facility, village: related_village }
+      let(:unrelated_cell1) { create :cell }
+      let(:unrelated_cell2) { create :cell }
+
+      let(:related_plan1) { create :plan_facility, contract: contract, planable: related_facility }
+      let(:related_plan2) { create :plan_village, contract: contract, planable: related_village }
+      let(:related_plan3) { create :plan_cell, contract: contract, planable: related_cell }
+      let(:related_plan4) { create :plan_cell, contract: contract, planable: related_cell1 }
+      let(:related_plan5) { create :plan_cell, contract: contract, planable: related_cell2 }
+      let(:unrelated_plan1) { create :plan_district, contract: contract }
+      let(:unrelated_plan2) { create :plan_facility, planable: related_facility }
+      let(:unrelated_plan3) { create :plan_cell, planable: unrelated_cell1 }
+
+      it 'returns a collection of cells from a collection of plans' do
+        related_plan1
+        related_plan2
+        related_plan3
+        related_plan4
+        related_plan5
+        unrelated_plan1
+        unrelated_plan2
+        unrelated_plan3
+
+        collection = contract.plans
+
+        expect(collection.related_cells).to include related_cell
+        expect(collection.related_cells).to include related_cell1
+        expect(collection.related_cells).to include related_cell2
+
+        expect(collection.related_cells).not_to include unrelated_cell1
+        expect(collection.related_cells).not_to include unrelated_cell2
+      end
+
+      it 'returns an empty ActiveRecord::Relation if none are found' do
+        related_plan1.delete
+        related_plan2.delete
+        related_plan3.delete
+        related_plan4.delete
+        related_plan5.delete
+        unrelated_plan1
+        unrelated_plan2
+        unrelated_plan3
+
+        collection = contract.plans
+
+        expect(collection.related_cells.is_a?(ActiveRecord::Relation)).to eq true
+        expect(collection.related_cells.empty?).to eq true
+      end
     end
 
     context '#related_sectors' do
+      let(:contract) { create :contract }
+      let(:related_sector) { create :sector }
+      let(:related_sector1) { create :sector }
+      let(:related_sector2) { create :sector }
+      let(:related_cell) { create :cell, sector: related_sector }
+      let(:related_village) { create :village, cell: related_cell }
+      let(:related_facility) { create :facility, village: related_village }
+      let(:unrelated_sector1) { create :sector }
+      let(:unrelated_sector2) { create :sector }
+
+      let(:related_plan1) { create :plan_facility, contract: contract, planable: related_facility }
+      let(:related_plan2) { create :plan_village, contract: contract, planable: related_village }
+      let(:related_plan3) { create :plan_cell, contract: contract, planable: related_cell }
+      let(:related_plan4) { create :plan_sector, contract: contract, planable: related_sector }
+      let(:related_plan5) { create :plan_sector, contract: contract, planable: related_sector1 }
+      let(:related_plan6) { create :plan_sector, contract: contract, planable: related_sector2 }
+      let(:unrelated_plan1) { create :plan_district, contract: contract }
+      let(:unrelated_plan2) { create :plan_facility, planable: related_facility }
+      let(:unrelated_plan3) { create :plan_sector, planable: unrelated_sector1 }
+
+      it 'returns a collection of sectors from a collection of plans' do
+        related_plan1
+        related_plan2
+        related_plan3
+        related_plan4
+        related_plan5
+        related_plan6
+        unrelated_plan1
+        unrelated_plan2
+        unrelated_plan3
+
+        collection = contract.plans
+
+        expect(collection.related_sectors).to include related_sector
+        expect(collection.related_sectors).to include related_sector1
+        expect(collection.related_sectors).to include related_sector2
+
+        expect(collection.related_sectors).not_to include unrelated_sector1
+        expect(collection.related_sectors).not_to include unrelated_sector2
+      end
+
+      it 'returns an empty ActiveRecord::Relation if none are found' do
+        related_plan1.delete
+        related_plan2.delete
+        related_plan3.delete
+        related_plan4.delete
+        related_plan5.delete
+        related_plan6.delete
+        unrelated_plan1
+        unrelated_plan2
+        unrelated_plan3
+
+        collection = contract.plans
+
+        expect(collection.related_sectors.is_a?(ActiveRecord::Relation)).to eq true
+        expect(collection.related_sectors.empty?).to eq true
+      end
     end
 
     context '#related_districts' do
+      let(:contract) { create :contract }
+      let(:related_district) { create :district, name: 'related_district' }
+      let(:related_district1) { create :district, name: 'related_district1' }
+      let(:related_district2) { create :district, name: 'related_district2' }
+      let(:related_sector) { create :sector, district: related_district }
+      let(:related_cell) { create :cell, sector: related_sector }
+      let(:related_village) { create :village, cell: related_cell }
+      let(:related_facility) { create :facility, village: related_village }
+      let(:unrelated_district1) { create :district, name: 'unrelated_district1' }
+      let(:unrelated_district2) { create :district, name: 'unrelated_district2' }
+
+      let(:related_plan1) { create :plan_facility, contract: contract, planable: related_facility }
+      let(:related_plan2) { create :plan_village, contract: contract, planable: related_village }
+      let(:related_plan3) { create :plan_cell, contract: contract, planable: related_cell }
+      let(:related_plan4) { create :plan_sector, contract: contract, planable: related_sector }
+      let(:related_plan5) { create :plan_district, contract: contract, planable: related_district }
+      let(:related_plan6) { create :plan_district, contract: contract, planable: related_district1 }
+      let(:related_plan7) { create :plan_district, contract: contract, planable: related_district2 }
+      let(:unrelated_plan1) { create :plan_facility }
+      let(:unrelated_plan2) { create :plan_facility, planable: related_facility }
+      let(:unrelated_plan3) { create :plan_district, planable: unrelated_district1 }
+
+      it 'returns a collection of districts from a collection of plans' do
+        related_plan1
+        related_plan2
+        related_plan3
+        related_plan4
+        related_plan5
+        related_plan6
+        related_plan7
+        unrelated_plan1
+        unrelated_plan2
+        unrelated_plan3
+
+        collection = contract.plans
+
+        expect(collection.related_districts).to include related_district
+        expect(collection.related_districts).to include related_district1
+        expect(collection.related_districts).to include related_district2
+
+        expect(collection.related_districts).not_to include unrelated_district1
+        expect(collection.related_districts).not_to include unrelated_district2
+      end
+
+      it 'returns an empty ActiveRecord::Relation if none are found' do
+        related_plan1.delete
+        related_plan2.delete
+        related_plan3.delete
+        related_plan4.delete
+        related_plan5.delete
+        related_plan6.delete
+        related_plan7.delete
+        unrelated_plan1
+        unrelated_plan2
+        unrelated_plan3
+
+        collection = contract.plans
+
+        expect(collection.related_districts.is_a?(ActiveRecord::Relation)).to eq true
+        expect(collection.related_districts.empty?).to eq true
+      end
     end
 
     context '#ary_of_village_ids_from_facilities' do
+      let(:contract) { create :contract }
+      let(:related_facility1) { create :facility }
+      let(:related_facility2) { create :facility }
+      let(:related_facility3) { create :facility }
+      let(:unrelated_facility1) { create :facility }
+      let(:unrelated_facility2) { create :facility }
+      let(:unrelated_facility3) { create :facility }
+      let(:related_plan1) { create :plan_facility, contract: contract, planable: related_facility1 }
+      let(:related_plan2) { create :plan_facility, contract: contract, planable: related_facility2 }
+      let(:related_plan3) { create :plan_facility, contract: contract, planable: related_facility3 }
+      let(:unrelated_plan1) { create :plan_district, contract: contract }
+      let(:unrelated_plan2) { create :plan_facility, planable: related_facility1 }
+      let(:unrelated_plan3) { create :plan_facility, planable: unrelated_facility1 }
+
+      it 'returns the village_ids of the results of #related_facilites' do
+        related_plan1
+        related_plan2
+        related_plan3
+        unrelated_plan1
+        unrelated_plan2
+        unrelated_plan3
+        collection = contract.plans
+        expect(collection.send(:ary_of_village_ids_from_facilities).empty?).to eq false
+        expect(collection.send(:ary_of_village_ids_from_facilities)).to eq collection.related_facilities.pluck(:village_id)
+      end
+
+      it 'returns an array' do
+        related_plan1
+        related_plan2
+        related_plan3
+        unrelated_plan1
+        unrelated_plan2
+        unrelated_plan3
+        collection = contract.plans
+        expect(collection.send(:ary_of_village_ids_from_facilities).is_a?(Array)).to eq true
+      end
     end
 
     context '#ary_of_cell_ids_from_villages' do
+      let(:contract) { create :contract }
+      let(:related_village) { create :village }
+      let(:related_facility1) { create :facility, village: related_village }
+      let(:related_facility2) { create :facility, village: related_village }
+      let(:related_facility3) { create :facility, village: related_village }
+      let(:related_village1) { create :village }
+      let(:related_village2) { create :village }
+      let(:related_village3) { create :village }
+      let(:unrelated_village1) { create :village }
+      let(:unrelated_village2) { create :village }
+      let(:unrelated_village3) { create :village }
+      let(:related_plan1) { create :plan_facility, contract: contract, planable: related_facility1 }
+      let(:related_plan2) { create :plan_facility, contract: contract, planable: related_facility2 }
+      let(:related_plan3) { create :plan_facility, contract: contract, planable: related_facility3 }
+      let(:related_plan4) { create :plan_village, contract: contract, planable: related_village1 }
+      let(:related_plan5) { create :plan_village, contract: contract, planable: related_village2 }
+      let(:related_plan6) { create :plan_village, contract: contract, planable: related_village3 }
+      let(:unrelated_plan1) { create :plan_district, contract: contract }
+      let(:unrelated_plan2) { create :plan_facility, planable: related_facility1 }
+      let(:unrelated_plan3) { create :plan_village, planable: unrelated_village1 }
+
+      it 'returns the cell_ids of the results of #related_villages' do
+        related_plan1
+        related_plan2
+        related_plan3
+        related_plan4
+        related_plan5
+        related_plan6
+        unrelated_plan1
+        unrelated_plan2
+        unrelated_plan3
+        collection = contract.plans
+        expect(collection.send(:ary_of_cell_ids_from_villages).empty?).to eq false
+        expect(collection.send(:ary_of_cell_ids_from_villages)).to eq collection.related_villages.pluck(:cell_id)
+      end
+
+      it 'returns an array' do
+        related_plan1
+        related_plan2
+        related_plan3
+        related_plan4
+        related_plan5
+        related_plan6
+        unrelated_plan1
+        unrelated_plan2
+        unrelated_plan3
+        collection = contract.plans
+        expect(collection.send(:ary_of_cell_ids_from_villages).is_a?(Array)).to eq true
+      end
     end
 
     context '#ary_of_sector_ids_from_cells' do
+      let(:contract) { create :contract }
+      let(:related_cell) { create :cell }
+      let(:related_cell1) { create :cell }
+      let(:related_cell2) { create :cell }
+      let(:related_village) { create :village, cell: related_cell }
+      let(:related_facility) { create :facility, village: related_village }
+      let(:unrelated_cell1) { create :cell }
+      let(:unrelated_cell2) { create :cell }
+
+      let(:related_plan1) { create :plan_facility, contract: contract, planable: related_facility }
+      let(:related_plan2) { create :plan_village, contract: contract, planable: related_village }
+      let(:related_plan3) { create :plan_cell, contract: contract, planable: related_cell }
+      let(:related_plan4) { create :plan_cell, contract: contract, planable: related_cell1 }
+      let(:related_plan5) { create :plan_cell, contract: contract, planable: related_cell2 }
+      let(:unrelated_plan1) { create :plan_district, contract: contract }
+      let(:unrelated_plan2) { create :plan_facility, planable: related_facility }
+      let(:unrelated_plan3) { create :plan_cell, planable: unrelated_cell1 }
+
+      it 'returns the sector_ids of the results of #related_cells' do
+        related_plan1
+        related_plan2
+        related_plan3
+        related_plan4
+        related_plan5
+        unrelated_plan1
+        unrelated_plan2
+        unrelated_plan3
+        collection = contract.plans
+        expect(collection.send(:ary_of_sector_ids_from_cells).empty?).to eq false
+        expect(collection.send(:ary_of_sector_ids_from_cells)).to eq collection.related_cells.pluck(:sector_id)
+      end
+
+      it 'returns an array' do
+        related_plan1
+        related_plan2
+        related_plan3
+        related_plan4
+        related_plan5
+        unrelated_plan1
+        unrelated_plan2
+        unrelated_plan3
+        collection = contract.plans
+        expect(collection.send(:ary_of_sector_ids_from_cells).is_a?(Array)).to eq true
+      end
     end
 
     context '#ary_of_district_ids_from_sectors' do
+      let(:contract) { create :contract }
+      let(:related_sector) { create :sector }
+      let(:related_sector1) { create :sector }
+      let(:related_sector2) { create :sector }
+      let(:related_cell) { create :cell, sector: related_sector }
+      let(:related_village) { create :village, cell: related_cell }
+      let(:related_facility) { create :facility, village: related_village }
+      let(:unrelated_sector1) { create :sector }
+      let(:unrelated_sector2) { create :sector }
+
+      let(:related_plan1) { create :plan_facility, contract: contract, planable: related_facility }
+      let(:related_plan2) { create :plan_village, contract: contract, planable: related_village }
+      let(:related_plan3) { create :plan_cell, contract: contract, planable: related_cell }
+      let(:related_plan4) { create :plan_sector, contract: contract, planable: related_sector }
+      let(:related_plan5) { create :plan_sector, contract: contract, planable: related_sector1 }
+      let(:related_plan6) { create :plan_sector, contract: contract, planable: related_sector2 }
+      let(:unrelated_plan1) { create :plan_district, contract: contract }
+      let(:unrelated_plan2) { create :plan_facility, planable: related_facility }
+      let(:unrelated_plan3) { create :plan_sector, planable: unrelated_sector1 }
+
+      it 'returns the district_ids of the results of #related_sectors' do
+        related_plan1
+        related_plan2
+        related_plan3
+        related_plan4
+        related_plan5
+        related_plan6
+        unrelated_plan1
+        unrelated_plan2
+        unrelated_plan3
+        collection = contract.plans
+        expect(collection.send(:ary_of_district_ids_from_sectors).empty?).to eq false
+        expect(collection.send(:ary_of_district_ids_from_sectors)).to eq collection.related_sectors.pluck(:district_id)
+      end
+
+      it 'returns an array' do
+        related_plan1
+        related_plan2
+        related_plan3
+        related_plan4
+        related_plan5
+        related_plan6
+        unrelated_plan1
+        unrelated_plan2
+        unrelated_plan3
+        collection = contract.plans
+        expect(collection.send(:ary_of_district_ids_from_sectors).is_a?(Array)).to eq true
+      end
     end
   end
 
