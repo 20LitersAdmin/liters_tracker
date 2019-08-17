@@ -8,10 +8,11 @@ To contribute please look at the open Issues and create a Pull Request with the 
 
 **MacOS**
 ```
-rbenv local 2.4.5
+rbenv local 2.5.3
 gem install bundler
 bundle install
 bundle exec rake db:create
 bundle exec rake db:migrate
+bundle exec rake db:seed #local seed optional
 bundle exec rails s
 ```
