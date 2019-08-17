@@ -16,4 +16,8 @@ class Technology < ApplicationRecord
   def default_household_impact
     default_impact.to_i / Constants::Population::HOUSEHOLD_SIZE
   end
+
+  def lifetime_impact
+    reports.map{ |report| report.people.to_i }.sum
+  end
 end

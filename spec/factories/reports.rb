@@ -5,10 +5,9 @@ FactoryBot.define do
     date { '2019-01-10' }
     technology { nil }
     distributed { 1 }
+    people { nil }
     checked { 1 }
     user { nil }
     sequence(:model_gid) { |n| "gid://liters-tracker/FactoryReport/#{n}" }
-    distribute { 1 }
-    check { 1 }
   end
 end
