@@ -7,5 +7,5 @@ class ApplicationController < ActionController::Base
   protect_from_forgery with: :exception
 
   # REMOVE BEFORE PRODUCTION
-  after_action :verify_authorized, unless: :devise_controller?
+  # after_action :verify_authorized, unless: :devise_controller?
 end
