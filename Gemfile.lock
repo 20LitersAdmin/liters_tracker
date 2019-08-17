@@ -312,6 +312,7 @@ GEM
 
 PLATFORMS
   ruby
+  x86_64-darwin-18
 
 DEPENDENCIES
   bootsnap (>= 1.1.0)
@@ -355,4 +356,4 @@ RUBY VERSION
    ruby 2.4.5p335
 
 BUNDLED WITH
-   1.17.1
+   2.0.2
