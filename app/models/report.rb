@@ -8,18 +8,23 @@ class Report < ApplicationRecord
   # enum geography: { district: 'district', sector: 'sector', cell: 'cell', village: 'village', facility: 'facility' }
   belongs_to :reportable, polymorphic: true
 
+  validates_presence_of :date, :user_id, :contract_id, :technology_id, :model_gid
+
   scope :only_districts,  -> { where(reportable_type: 'District') }
   scope :only_sectors,    -> { where(reportable_type: 'Sector') }
   scope :only_cells,      -> { where(reportable_type: 'Cell') }
   scope :only_villages,   -> { where(reportable_type: 'Village') }
   scope :only_facilities, -> { where(reportable_type: 'Facility') }
   scope :within_month, ->(date) { where(date: date.beginning_of_month..date.end_of_month) }
+  scope :earliest_date, -> { order(date: :asc).first.date }
+  scope :latest_date, -> { order(date: :asc).last.date }
 
   def self.related_to(record)
     where(reportable_type: record.class.to_s, reportable_id: record.id)
   end
 
   def self.related_to_facility(facility, only_ary: false)
+    raise 'ERROR. Must provide a facility.' if !facility.is_a? Facility
     reports = related_to(facility)
 
     return reports.pluck(:id) if only_ary
@@ -28,6 +33,7 @@ class Report < ApplicationRecord
   end
 
   def self.related_to_village(village, only_ary: false)
+    raise 'ERROR. Must provide a village.' if !village.is_a? Village
     report_ids = related_to(village).pluck(:id)
     village.facilities.each { |facility| report_ids << related_to_facility(facility, only_ary: true) }
 
@@ -37,6 +43,7 @@ class Report < ApplicationRecord
   end
 
   def self.related_to_cell(cell, only_ary: false)
+    raise 'ERROR. Must provide a cell.' if !cell.is_a? Cell
     report_ids = related_to(cell).pluck(:id)
     cell.villages.each { |village| report_ids << related_to_village(village, only_ary: true) }
 
@@ -46,6 +53,7 @@ class Report < ApplicationRecord
   end
 
   def self.related_to_sector(sector, only_ary: false)
+    raise 'ERROR. Must provide a sector.' if !sector.is_a? Sector
     report_ids = related_to(sector).pluck(:id)
     sector.cells.each { |cell| report_ids << related_to_cell(cell, only_ary: true) }
 
@@ -55,6 +63,7 @@ class Report < ApplicationRecord
   end
 
   def self.related_to_district(district)
+    raise 'ERROR. Must provide a district.' if !district.is_a? District
     report_ids = related_to(district).pluck(:id)
     district.sectors.each { |sector| report_ids << Report.related_to_sector(sector, only_ary: true) }
 
@@ -109,14 +118,6 @@ class Report < ApplicationRecord
     District.all.where(id: ary_of_ids.uniq)
   end
 
-  def self.earliest_date
-    self.all.order(date: :asc).first.date
-  end
-
-  def self.latest_date
-    self.all.order(date: :asc).last.date
-  end
-
   def self.key_params_are_missing?(batch_process_params)
     batch_process_params[:technology_id].blank? ||
       batch_process_params[:contract_id].blank? ||
@@ -140,8 +141,8 @@ class Report < ApplicationRecord
         reportable_id: report_params[:reportable_id].to_i,
         reportable_type: report_params[:reportable_type]
       ).first_or_initialize
-    action = report.determine_action(report_params, contract_id, user_id)
 
+    action = report.determine_action(report_params, contract_id, user_id)
     return if action.zero?
 
     return report.destroy if action == 1

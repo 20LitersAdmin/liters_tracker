@@ -137,11 +137,22 @@ RSpec.describe Plan, type: :model do
   end
 
   context 'single geography methods' do
+    let(:district) { create :district }
+    let(:sector) { create :sector, district: district }
+    let(:cell) { create :cell, sector: sector }
+    let(:village) { create :village, cell: cell }
+    let(:facility) { create :facility, village: village }
+
+    let(:other_district) { create :district }
+    let(:other_sector) { create :sector }
+    let(:other_cell) { create :cell }
+    let(:other_village) { create :village }
+    let(:other_facility) { create :facility }
+
     context '#related_to' do
-      let(:village) { create :village }
       let(:related_plan1) { create :plan_village, planable: village }
       let(:related_plan2) { create :plan_village, planable: village }
-      let(:unrelated_plan) { create :plan_village }
+      let(:unrelated_plan) { create :plan_village, planable: other_village }
 
       it 'returns a collection of plans directly related to the given geography' do
         related_plan1
@@ -164,10 +175,9 @@ RSpec.describe Plan, type: :model do
     end
 
     context '#related_to_facility' do
-      let(:facility) { create :facility }
       let(:related_plan1) { create :plan_facility, planable: facility }
       let(:related_plan2) { create :plan_facility, planable: facility }
-      let(:unrelated_plan) { create :plan_facility }
+      let(:unrelated_plan) { create :plan_facility, planable: other_facility }
 
       it 'returns a collection of plans directly related to the given facility' do
         related_plan1
@@ -180,29 +190,25 @@ RSpec.describe Plan, type: :model do
       end
 
       it 'returns an empty ActiveRecord collection if no records are found' do
-        related_plan1.delete
-        related_plan2.delete
+        unrelated_plan.delete
 
-        collection = Plan.related_to_facility(facility)
+        collection = Plan.related_to_facility(other_facility)
         expect(collection.is_a?(ActiveRecord::Relation)).to eq true
         expect(collection.empty?).to eq true
       end
 
       it 'returns an error if facility is not provided' do
-        village = FactoryBot.create(:village)
         expect { Plan.related_to_facility(village) }.to raise_error RuntimeError
       end
     end
 
     context '#related_to_village' do
-      let(:village) { create :village }
-      let(:facility) { create :facility, village: village }
       let(:related_plan1) { create :plan_village, planable: village }
       let(:related_plan2) { create :plan_village, planable: village }
-      let(:unrelated_plan) { create :plan_village }
+      let(:unrelated_plan) { create :plan_village, planable: other_village }
       let(:child_plan1) { create :plan_facility, planable: facility }
       let(:child_plan2) { create :plan_facility, planable: facility }
-      let(:unrelated_plan2) { create :plan_facility }
+      let(:unrelated_plan2) { create :plan_facility, planable: other_facility }
 
       it 'returns a collection of plans related to the given village and its children' do
         related_plan1
@@ -220,34 +226,27 @@ RSpec.describe Plan, type: :model do
       end
 
       it 'returns an empty ActiveRecord collection if no records are found' do
-        related_plan1.delete
-        related_plan2.delete
-        child_plan1.delete
-        child_plan2.delete
+        unrelated_plan.delete
 
-        collection = Plan.related_to_village(village)
+        collection = Plan.related_to_village(other_village)
         expect(collection.is_a?(ActiveRecord::Relation)).to eq true
         expect(collection.empty?).to eq true
       end
 
       it 'returns an error if village is not provided' do
-        district = FactoryBot.create(:district)
         expect { Plan.related_to_village(district) }.to raise_error RuntimeError
       end
     end
 
     context '#related_to_cell' do
-      let(:cell) { create :cell }
-      let(:village) { create :village, cell: cell }
-      let(:facility) { create :facility, village: village }
       let(:related_plan1) { create :plan_village, planable: village }
       let(:related_plan2) { create :plan_village, planable: village }
       let(:related_plan3) { create :plan_facility, planable: facility }
       let(:related_plan4) { create :plan_facility, planable: facility }
       let(:related_plan5) { create :plan_cell, planable: cell }
-      let(:unrelated_plan1) { create :plan_facility }
-      let(:unrelated_plan2) { create :plan_village }
-      let(:unrelated_plan3) { create :plan_cell }
+      let(:unrelated_plan1) { create :plan_facility, planable: other_facility }
+      let(:unrelated_plan2) { create :plan_village, planable: other_village }
+      let(:unrelated_plan3) { create :plan_cell, planable: other_cell }
 
       it 'returns a collection of plans related to the given cell and its children' do
         related_plan1
@@ -268,38 +267,29 @@ RSpec.describe Plan, type: :model do
       end
 
       it 'returns an empty ActiveRecord collection if no records are found' do
-        related_plan1.delete
-        related_plan2.delete
-        related_plan3.delete
-        related_plan4.delete
-        related_plan5.delete
+        unrelated_plan3.delete
 
-        collection = Plan.related_to_cell(cell)
+        collection = Plan.related_to_cell(other_cell)
         expect(collection.is_a?(ActiveRecord::Relation)).to eq true
         expect(collection.empty?).to eq true
       end
 
       it 'returns an error if cell is not provided' do
-        district = FactoryBot.create(:district)
         expect { Plan.related_to_cell(district) }.to raise_error RuntimeError
       end
     end
 
     context '#related_to_sector' do
-      let(:sector) { create :sector }
-      let(:cell) { create :cell, sector: sector }
-      let(:village) { create :village, cell: cell }
-      let(:facility) { create :facility, village: village }
       let(:related_plan1) { create :plan_village, planable: village }
       let(:related_plan2) { create :plan_village, planable: village }
       let(:related_plan3) { create :plan_facility, planable: facility }
       let(:related_plan4) { create :plan_facility, planable: facility }
       let(:related_plan5) { create :plan_cell, planable: cell }
       let(:related_plan6) { create :plan_sector, planable: sector }
-      let(:unrelated_plan1) { create :plan_facility }
-      let(:unrelated_plan2) { create :plan_village }
-      let(:unrelated_plan3) { create :plan_cell }
-      let(:unrelated_plan4) { create :plan_sector }
+      let(:unrelated_plan1) { create :plan_facility, planable: other_facility }
+      let(:unrelated_plan2) { create :plan_village, planable: other_village }
+      let(:unrelated_plan3) { create :plan_cell, planable: other_cell }
+      let(:unrelated_plan4) { create :plan_sector, planable: other_sector }
 
       it 'returns a collection of plans related to the given sector and its children' do
         related_plan1
@@ -323,40 +313,29 @@ RSpec.describe Plan, type: :model do
       end
 
       it 'returns an empty ActiveRecord collection if no records are found' do
-        related_plan1.delete
-        related_plan2.delete
-        related_plan3.delete
-        related_plan4.delete
-        related_plan5.delete
-        related_plan6.delete
+        unrelated_plan4.delete
 
-        collection = Plan.related_to_sector(sector)
+        collection = Plan.related_to_sector(other_sector)
         expect(collection.is_a?(ActiveRecord::Relation)).to eq true
         expect(collection.empty?).to eq true
       end
 
       it 'returns an error if sector is not provided' do
-        district = FactoryBot.create(:district)
         expect { Plan.related_to_sector(district) }.to raise_error RuntimeError
       end
     end
 
     context '#related_to_district' do
-      let(:district) { create :district }
-      let(:sector) { create :sector, district: district }
-      let(:cell) { create :cell, sector: sector }
-      let(:village) { create :village, cell: cell }
-      let(:facility) { create :facility, village: village }
       let(:related_plan1) { create :plan_village, planable: village }
       let(:related_plan2) { create :plan_facility, planable: facility }
       let(:related_plan3) { create :plan_cell, planable: cell }
       let(:related_plan4) { create :plan_sector, planable: sector }
       let(:related_plan5) { create :plan_district, planable: district }
-      let(:unrelated_plan1) { create :plan_facility }
-      let(:unrelated_plan2) { create :plan_village }
-      let(:unrelated_plan3) { create :plan_cell }
-      let(:unrelated_plan4) { create :plan_sector }
-      let(:unrelated_plan5) { create :plan_district }
+      let(:unrelated_plan1) { create :plan_facility, planable: other_facility }
+      let(:unrelated_plan2) { create :plan_village, planable: other_village }
+      let(:unrelated_plan3) { create :plan_cell, planable: other_cell }
+      let(:unrelated_plan4) { create :plan_sector, planable: other_sector }
+      let(:unrelated_plan5) { create :plan_district, planable: other_district }
 
       it 'returns a collection of plans related to the given district and its children' do
         related_plan1
@@ -379,13 +358,9 @@ RSpec.describe Plan, type: :model do
       end
 
       it 'returns an empty ActiveRecord collection if no records are found' do
-        related_plan1.delete
-        related_plan2.delete
-        related_plan3.delete
-        related_plan4.delete
-        related_plan5.delete
+        unrelated_plan5.delete
 
-        collection = Plan.related_to_district(district)
+        collection = Plan.related_to_district(other_district)
         expect(collection.is_a?(ActiveRecord::Relation)).to eq true
         expect(collection.empty?).to eq true
       end
@@ -397,8 +372,9 @@ RSpec.describe Plan, type: :model do
   end
 
   context 'geography collection methods' do
+    let(:contract) { create :contract }
+
     context '#related_facilities' do
-      let(:contract) { create :contract }
       let(:related_facility1) { create :facility }
       let(:related_facility2) { create :facility }
       let(:related_facility3) { create :facility }
@@ -447,7 +423,6 @@ RSpec.describe Plan, type: :model do
     end
 
     context '#related_villages' do
-      let(:contract) { create :contract }
       let(:related_village) { create :village }
       let(:related_facility1) { create :facility, village: related_village }
       let(:related_facility2) { create :facility, village: related_village }
@@ -510,7 +485,6 @@ RSpec.describe Plan, type: :model do
     end
 
     context '#related_cells' do
-      let(:contract) { create :contract }
       let(:related_cell) { create :cell }
       let(:related_cell1) { create :cell }
       let(:related_cell2) { create :cell }
@@ -566,7 +540,6 @@ RSpec.describe Plan, type: :model do
     end
 
     context '#related_sectors' do
-      let(:contract) { create :contract }
       let(:related_sector) { create :sector }
       let(:related_sector1) { create :sector }
       let(:related_sector2) { create :sector }
@@ -626,7 +599,6 @@ RSpec.describe Plan, type: :model do
     end
 
     context '#related_districts' do
-      let(:contract) { create :contract }
       let(:related_district) { create :district, name: 'related_district' }
       let(:related_district1) { create :district, name: 'related_district1' }
       let(:related_district2) { create :district, name: 'related_district2' }
@@ -690,7 +662,6 @@ RSpec.describe Plan, type: :model do
     end
 
     context '#ary_of_village_ids_from_facilities' do
-      let(:contract) { create :contract }
       let(:related_facility1) { create :facility }
       let(:related_facility2) { create :facility }
       let(:related_facility3) { create :facility }
@@ -729,7 +700,6 @@ RSpec.describe Plan, type: :model do
     end
 
     context '#ary_of_cell_ids_from_villages' do
-      let(:contract) { create :contract }
       let(:related_village) { create :village }
       let(:related_facility1) { create :facility, village: related_village }
       let(:related_facility2) { create :facility, village: related_village }
@@ -781,7 +751,6 @@ RSpec.describe Plan, type: :model do
     end
 
     context '#ary_of_sector_ids_from_cells' do
-      let(:contract) { create :contract }
       let(:related_cell) { create :cell }
       let(:related_cell1) { create :cell }
       let(:related_cell2) { create :cell }
@@ -828,7 +797,6 @@ RSpec.describe Plan, type: :model do
     end
 
     context '#ary_of_district_ids_from_sectors' do
-      let(:contract) { create :contract }
       let(:related_sector) { create :sector }
       let(:related_sector1) { create :sector }
       let(:related_sector2) { create :sector }
