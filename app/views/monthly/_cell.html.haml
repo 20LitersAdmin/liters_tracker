@@ -1,0 +1,11 @@
+-# frozen_string_literal: true
+- cell_reports = reports.related_to_cell(cell)
+- villages = cell_reports.related_villages
+%tr
+  %td{colspan: 2} +/-
+  %td{colspan: 2}= "#{cell.name}"
+  %td.text-right= human_number cell_reports.sum(:distributed)
+  %td.text-right= human_number cell_reports.sum(:checked)
+  %td.text-right= human_number cell_reports.map(&:impact).sum
+= render partial: 'village', collection: villages, locals: { reports: cell_reports, technology: technology }
+

@@ -25,7 +25,7 @@
             %td= link_to cell.name, cell
             %td= cell.sector.name
             %td= cell.district.name
-            %td= cell.gis_id
+            %td= cell.gis_code
             %td.text-right= human_number cell.population
             %td.text-right= human_number cell.households
             %td= link_to 'Edit', edit_cell_path(cell), class: 'btn btn-outline-primary'

@@ -2,8 +2,8 @@
 
 FactoryBot.define do
   factory :cell do
-    name { "MyString" }
-    gis_id { 1 }
+    name { "FactoryCell" }
+    sector
     latitude { 1.5 }
     longitude { 1.5 }
     population { 1 }

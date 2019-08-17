@@ -13,3 +13,8 @@
 //@import 'datatables/extensions/RowReorder/rowReorder.bootstrap4';
 //@import 'datatables/extensions/Scroller/scroller.bootstrap4';
 //@import 'datatables/extensions/Select/select.bootstrap4';
+
+.datetimepicker-input.fixed {
+  width: 74px !important;
+  font-size: 8px !important;
+}

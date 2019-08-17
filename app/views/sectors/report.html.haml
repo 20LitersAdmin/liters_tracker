@@ -36,7 +36,7 @@
                 %th.text-right= "Households<br>served".html_safe
                 %th.text-center Checked
           %tbody
-            = render partial: 'cell_report', collection: @cells
+            = render partial: 'cell_form', collection: @cells
       - else
         %table.table.table-sm#facilities_table
           %thead
@@ -49,10 +49,11 @@
               %th Village
               %th.text-center= "#<br>Installed".html_safe
               %th.text-center Install date
+              %th.text-center= "#<br>Checked".html_safe
               %th.text-center= "People<br>served".html_safe
               %th.text-center= "Households<br>served".html_safe
             %tbody
-              = render partial: 'facility_report', collection: @facilities, locals: { technology: @technology, date: @date, modal: false }
+              = render partial: 'facility_form', collection: @facilities, locals: { technology: @technology, date: @date, modal: false }
         .row
           .col-12.text-right= link_to 'Add Facility', '#', id: 'facility-trigger', class: 'btn btn-primary', data: { toggle:  "modal", target: '#new_facility_modal' }
       .row
