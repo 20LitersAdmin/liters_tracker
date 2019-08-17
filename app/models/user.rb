@@ -19,6 +19,6 @@ class User < ApplicationRecord
   scope :admins, -> { where(admin: true) }
 
   def name
-    fname + ' ' + lname
+    "#{fname} #{lname}"
   end
 end

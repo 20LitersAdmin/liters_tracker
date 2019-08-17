@@ -92,6 +92,6 @@ class CellsController < ApplicationController
   end
 
   def cell_params
-    params.require(:cell).permit(:name, :gis_id, :latitude, :longitude, :population, :households)
+    params.require(:cell).permit(:name, :gis_code, :latitude, :longitude, :population, :households)
   end
 end

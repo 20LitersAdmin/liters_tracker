@@ -83,10 +83,10 @@ class ReportsController < ApplicationController
   end
 
   def report_params
-    params.require(:report).permit(:date, :technology_id, :distributed, :checked, :user_id, :model_gid, :distribute, :check)
+    params.require(:report).permit(:date, :technology_id, :distributed, :checked, :user_id, :model_gid, :distribute, :checked, :people, :households, :reportable_id, :reportable_type)
   end
 
   def batch_report_params
-    params.require(:batch_reports).permit(:technology_id, :contract_id, reports: %i[date technology_id model_gid distributed checked people households])
+    params.require(:batch_reports).permit(:technology_id, :contract_id, reports: %i[date technology_id model_gid distributed checked people households reportable_id reportable_type])
   end
 end
