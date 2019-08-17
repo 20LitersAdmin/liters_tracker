@@ -1,0 +1,15 @@
+-# frozen_string_literal: true
+.row.align-items-center
+  .col-10
+    %h1 Select your date
+  .col-2
+    = link_to 'Back', root_path, class: 'btn btn-outline-secondary'
+
+= simple_form_for @monthly, url: monthly_redirector_path do |m|
+  .row.align-items-center
+    .col-12.col-sm-5
+      = m.input :year, collection: @years
+    .col-12.col-sm-5
+      = m.input :month, collection: @months
+    .col-12.col-sm-2
+      = m.submit 'Go', class: 'btn btn-primary'

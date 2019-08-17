@@ -2,8 +2,7 @@
 
 FactoryBot.define do
   factory :district do
-    name { "MyString" }
-    gis_id { 1 }
+    name { "FactoryDistrict" }
     latitude { 1.5 }
     longitude { 1.5 }
     population { 1 }
