@@ -98,6 +98,6 @@ class DistrictsController < ApplicationController
   end
 
   def district_params
-    params.require(:district).permit(:name, :gis_id, :latitude, :longitude, :population, :households)
+    params.require(:district).permit(:name, :gis_code, :latitude, :longitude, :population, :households)
   end
 end

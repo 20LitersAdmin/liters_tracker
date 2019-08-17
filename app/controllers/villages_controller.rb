@@ -92,6 +92,6 @@ class VillagesController < ApplicationController
   end
 
   def village_params
-    params.require(:village).permit(:name, :gis_id, :latitude, :longitude, :population, :households)
+    params.require(:village).permit(:name, :gis_code, :latitude, :longitude, :population, :households)
   end
 end

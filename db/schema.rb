@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_01_30_183503) do
+ActiveRecord::Schema.define(version: 2019_07_07_194748) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -18,14 +18,14 @@ ActiveRecord::Schema.define(version: 2019_01_30_183503) do
   create_table "cells", force: :cascade do |t|
     t.string "name", null: false
     t.bigint "sector_id", null: false
-    t.integer "gis_id"
+    t.integer "gis_code"
     t.float "latitude"
     t.float "longitude"
     t.integer "population"
     t.integer "households"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.index ["gis_id"], name: "index_cells_on_gis_id", unique: true
+    t.index ["gis_code"], name: "index_cells_on_gis_code", unique: true
     t.index ["sector_id"], name: "index_cells_on_sector_id"
   end
 
@@ -41,14 +41,14 @@ ActiveRecord::Schema.define(version: 2019_01_30_183503) do
 
   create_table "districts", force: :cascade do |t|
     t.string "name", null: false
-    t.integer "gis_id"
+    t.integer "gis_code"
     t.float "latitude"
     t.float "longitude"
     t.integer "population"
     t.integer "households"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.index ["gis_id"], name: "index_districts_on_gis_id", unique: true
+    t.index ["gis_code"], name: "index_districts_on_gis_code", unique: true
   end
 
   create_table "facilities", force: :cascade do |t|
@@ -73,7 +73,10 @@ ActiveRecord::Schema.define(version: 2019_01_30_183503) do
     t.integer "people_goal"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.integer "planable_id"
+    t.string "planable_type"
     t.index ["contract_id"], name: "index_plans_on_contract_id"
+    t.index ["planable_type", "planable_id"], name: "index_plans_on_planable_type_and_planable_id"
     t.index ["technology_id"], name: "index_plans_on_technology_id"
   end
 
@@ -89,7 +92,10 @@ ActiveRecord::Schema.define(version: 2019_01_30_183503) do
     t.datetime "updated_at", null: false
     t.integer "people"
     t.integer "households"
+    t.integer "reportable_id"
+    t.string "reportable_type"
     t.index ["contract_id"], name: "index_reports_on_contract_id"
+    t.index ["reportable_type", "reportable_id"], name: "index_reports_on_reportable_type_and_reportable_id"
     t.index ["technology_id"], name: "index_reports_on_technology_id"
     t.index ["user_id"], name: "index_reports_on_user_id"
   end
@@ -97,7 +103,7 @@ ActiveRecord::Schema.define(version: 2019_01_30_183503) do
   create_table "sectors", force: :cascade do |t|
     t.string "name", null: false
     t.bigint "district_id", null: false
-    t.integer "gis_id"
+    t.integer "gis_code"
     t.float "latitude"
     t.float "longitude"
     t.integer "population"
@@ -105,7 +111,7 @@ ActiveRecord::Schema.define(version: 2019_01_30_183503) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["district_id"], name: "index_sectors_on_district_id"
-    t.index ["gis_id"], name: "index_sectors_on_gis_id", unique: true
+    t.index ["gis_code"], name: "index_sectors_on_gis_code", unique: true
   end
 
   create_table "targets", force: :cascade do |t|
@@ -173,7 +179,7 @@ ActiveRecord::Schema.define(version: 2019_01_30_183503) do
   create_table "villages", force: :cascade do |t|
     t.string "name", null: false
     t.bigint "cell_id", null: false
-    t.integer "gis_id"
+    t.integer "gis_code"
     t.float "latitude"
     t.float "longitude"
     t.integer "population"
@@ -181,7 +187,7 @@ ActiveRecord::Schema.define(version: 2019_01_30_183503) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["cell_id"], name: "index_villages_on_cell_id"
-    t.index ["gis_id"], name: "index_villages_on_gis_id", unique: true
+    t.index ["gis_code"], name: "index_villages_on_gis_code", unique: true
   end
 
   add_foreign_key "plans", "contracts"

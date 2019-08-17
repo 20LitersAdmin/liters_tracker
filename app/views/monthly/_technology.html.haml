@@ -1,0 +1,30 @@
+-# frozen_string_literal: true
+- tech_reports = @reports.where(technology: technology)
+- sectors = tech_reports.related_sectors.order(name: :asc)
+.row
+  .col-10
+    %h4= "#{technology.name}:"
+  .col-2
+    +/-
+  .col-12
+    - if tech_reports.any?
+      %table.table.table-striped
+        %thead
+          %tr
+            %th
+            %th Sector
+            %th Cell
+            %th Village
+            %th.text-right Distributed
+            %th.text-right Checked
+            %th.text-right People served
+        %tfoot
+          %tr
+            %th{colspan: 4} Technology Total
+            %th.text-right= human_number tech_reports.sum(:distributed)
+            %th.text-right= human_number tech_reports.sum(:checked)
+            %th.text-right= human_number tech_reports.map(&:impact).sum
+        %tbody
+          = render partial: 'sector', collection: sectors, locals: { reports: tech_reports, technology: technology }
+    - else
+      %p No activity

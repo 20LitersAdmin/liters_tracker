@@ -1,0 +1,9 @@
+-# frozen_string_literal: true
+- village_reports = reports.related_to_village(village)
+- #facilities = village_reports.related_facilities
+%tr
+  %td{colspan: 3}
+  %td= "#{village.name}"
+  %td.text-right= human_number village_reports.sum(:distributed)
+  %td.text-right= human_number village_reports.sum(:checked)
+  %td.text-right= human_number village_reports.map(&:impact).sum

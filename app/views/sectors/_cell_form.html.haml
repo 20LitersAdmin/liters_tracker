@@ -1,9 +1,9 @@
 -# frozen_string_literal: true
-- plans = @plans.related_to_cell(cell_report)
-- reports = @reports.related_to_cell(cell_report).select(:distributed, :checked)
+- plans = @plans.related_to_cell(cell_form)
+- reports = @reports.related_to_cell(cell_form).select(:distributed, :checked)
 %tr
   %td.align-middle{rowspan: 2}
-    %h5= cell_report.name.upcase + ' CELL'
+    %h5= cell_form.name.upcase + ' CELL'
   %td.align-middle.text-center{rowspan: 2}
     %i= human_number(plans.sum(:goal)) + ' planned'
   %td.align-middle.text-center{rowspan: 2}
@@ -17,4 +17,4 @@
 %tr
   %td{colspan: 2, class: 'text-center no-padding small-text-container'}
     %i.small-text Don't duplicate people and households
-= render partial: 'village_report', collection: cell_report.villages.order(:name)
+= render partial: 'village_form', collection: cell_form.villages.order(:name)
