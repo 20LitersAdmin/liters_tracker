@@ -77,8 +77,6 @@ GEM
       zeitwerk (~> 2.1, >= 2.1.8)
     addressable (2.6.0)
       public_suffix (>= 2.0.2, < 4.0)
-    archive-zip (0.12.0)
-      io-like (~> 0.3.0)
     ast (2.4.0)
     autoprefixer-rails (9.6.1)
       execjs
@@ -108,12 +106,9 @@ GEM
       capybara (~> 3.0)
     childprocess (1.0.1)
       rake (< 13.0)
-    chromedriver-helper (2.1.1)
-      archive-zip (~> 0.10)
-      nokogiri (~> 1.8)
-    coffee-rails (4.2.2)
+    coffee-rails (5.0.0)
       coffee-script (>= 2.2.0)
-      railties (>= 4.0.0)
+      railties (>= 5.2.0)
     coffee-script (2.4.1)
       coffee-script-source
       execjs
@@ -151,7 +146,6 @@ GEM
       ruby_parser (~> 3.5)
     i18n (1.6.0)
       concurrent-ruby (~> 1.0)
-    io-like (0.3.0)
     jaro_winkler (1.5.3)
     jquery-datatables (1.10.19.1)
     jquery-rails (4.3.5)
@@ -321,6 +315,10 @@ GEM
       activemodel (>= 6.0.0)
       bindex (>= 0.4.0)
       railties (>= 6.0.0)
+    webdrivers (4.1.2)
+      nokogiri (~> 1.6)
+      rubyzip (~> 1.0)
+      selenium-webdriver (>= 3.0, < 4.0)
     websocket-driver (0.7.1)
       websocket-extensions (>= 0.1.0)
     websocket-extensions (0.1.4)
@@ -339,8 +337,7 @@ DEPENDENCIES
   byebug
   capybara (>= 2.15)
   capybara-slow_finder_errors
-  chromedriver-helper
-  coffee-rails (~> 4.2)
+  coffee-rails
   database_cleaner
   devise!
   factory_bot_rails
@@ -360,7 +357,6 @@ DEPENDENCIES
   rspec-rails
   rspec_junit_formatter
   rubocop
-  selenium-webdriver
   shoulda-matchers!
   simple_form
   spring
@@ -369,6 +365,7 @@ DEPENDENCIES
   tzinfo-data
   uglifier (>= 1.3.0)
   web-console (>= 3.3.0)
+  webdrivers
 
 RUBY VERSION
    ruby 2.5.3p105
