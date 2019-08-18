@@ -23,7 +23,7 @@ class UserPolicy
   end
 
   def show?
-    @user&.admin? || @user == current_user
+    @user&.admin? || @user == @record
   end
 
   def new?
@@ -35,7 +35,7 @@ class UserPolicy
   end
 
   def edit?
-    @user&.admin? || @user == current_user
+    @user&.admin? || @user == @record
   end
 
   def update?
@@ -47,6 +47,6 @@ class UserPolicy
   end
 
   def batch_process?
-    @user&.admin? || @user.can_manage_reports?
+    @user&.admin? || @user&.can_manage_reports?
   end
 end
