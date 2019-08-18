@@ -4,7 +4,7 @@ Rails.application.routes.draw do
   root to: 'dashboard#index'
   get 'data', to: 'users#data'
 
-  resources :dashboard, only: [:show, :index]
+  resources :dashboard, only: %i[show index]
   resources :reports do
     post 'batch_process', on: :collection
   end
