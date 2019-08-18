@@ -11,7 +11,7 @@ end
 gem 'bootsnap', '>= 1.1.0', require: false
 gem 'bootstrap', '~> 4.2.1'
 gem 'bootstrap4-datetime-picker-rails'
-gem 'coffee-rails', '~> 4.2'
+gem 'coffee-rails'
 gem 'devise', git: 'https://github.com/plataformatec/devise.git'
 gem 'font-awesome-rails'
 gem 'haml'
@@ -47,16 +47,13 @@ group :development do
 end
 
 group :test do
-  # Adds support for Capybara system testing and selenium driver
   gem 'capybara', '>= 2.15'
   gem 'capybara-slow_finder_errors'
-  # Easy installation and use of chromedriver to run system tests with Chrome
-  gem 'chromedriver-helper'
   gem 'database_cleaner'
   gem 'rspec-rails'
   gem 'rspec_junit_formatter'
-  gem 'selenium-webdriver'
   gem 'shoulda-matchers', git: 'https://github.com/thoughtbot/shoulda-matchers.git', branch: 'rails-5'
+  gem 'webdrivers'
 end
 
 group :production do
