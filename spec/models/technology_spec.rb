@@ -3,6 +3,36 @@
 require 'rails_helper'
 
 RSpec.describe Technology, type: :model do
+  let(:user) { create :user_admin }
+
+  describe '#lifetime_impact' do
+    let!(:technology) { create :technology }
+    let(:contract)    { create :contract }
+    let!(:report)     { create :report_facility, user: user, contract: contract, technology: technology, people: 10 }
+
+    it do
+      expect(technology.reload.lifetime_impact).to eq(10)
+    end
+
+    context 'has no reports' do
+      before { technology.reports.last.destroy }
+
+      it do
+        expect(technology.reload.lifetime_impact).to eq(0)
+      end
+    end
+
+    context 'has reports with nil people' do
+      let!(:report_1) { create :report_facility, user: user, contract: contract, technology: technology, people: 5 }
+      let!(:report_2) { create :report_facility, user: user, contract: contract, technology: technology, people: nil }
+      let!(:report_3) { create :report_facility, user: user, contract: contract, technology: technology, people: 13 }
+
+      it do
+        expect(technology.reload.lifetime_impact).to eq(28)
+      end
+    end
+  end
+
   let(:technology) { build :technology_family }
 
   context 'has validations on' do

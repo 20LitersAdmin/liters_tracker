@@ -1,9 +1,10 @@
 # frozen_string_literal: true
 
 Rails.application.routes.draw do
-  root to: 'users#homepage'
+  root to: 'dashboard#index'
   get 'data', to: 'users#data'
 
+  resources :dashboard, only: %i[show index]
   resources :reports do
     post 'batch_process', on: :collection
   end

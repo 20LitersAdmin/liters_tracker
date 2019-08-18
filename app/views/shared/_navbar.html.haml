@@ -7,9 +7,11 @@
     %ul.navbar-nav.ml-auto
       - if current_user
         %li.nav-item.mr-3
-          = link_to 'Your profile', edit_user_path(current_user), class: 'btn btn-outline-primary'
+          = link_to 'Data Entry/Reports', homepage_user_path(current_user), class: 'btn btn-outline-primary'
+        %li.nav-item.mr-3
+          = link_to 'Your Profile', edit_user_path(current_user), class: 'btn btn-outline-secondary'
       %li.nav-item.mr-3
         -if current_user
-          =link_to 'Sign out', destroy_user_session_path, method: :delete, class: 'btn btn-outline-secondary'
+          =link_to 'Sign Out', destroy_user_session_path, method: :delete, class: 'btn btn-outline-secondary'
         -else
-          =link_to 'Sign in', new_user_session_path
+          =link_to 'Sign In', new_user_session_path

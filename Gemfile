@@ -12,7 +12,7 @@ gem 'bootsnap', '>= 1.1.0', require: false
 gem 'bootstrap', '~> 4.2.1'
 gem 'bootstrap4-datetime-picker-rails'
 gem 'coffee-rails', '~> 4.2'
-gem 'devise'
+gem 'devise', git: 'https://github.com/plataformatec/devise.git'
 gem 'font-awesome-rails'
 gem 'haml'
 gem 'haml-rails', '~> 1.0'
