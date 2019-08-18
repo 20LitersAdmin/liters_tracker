@@ -2,10 +2,12 @@
 
 class DashboardController < ApplicationController
   def index
-    @lifetime_stats = Technology.all.map do |technology|
+    @lifetime_stats = Technology.report_worthy.map do |technology|
       next if technology.lifetime_impact.zero?
 
-      { stat: technology.lifetime_impact, title: technology.name }
+      { stat: technology.lifetime_impact, title: "#{technology.name}s" }
     end
+
+    @global_impact = Report.all.sum(:people)
   end
 end
