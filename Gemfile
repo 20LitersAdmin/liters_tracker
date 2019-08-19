@@ -8,8 +8,8 @@ git_source(:github) do |repo_name|
   "https://github.com/#{repo_name}.git"
 end
 
-gem 'bootsnap', '>= 1.1.0', require: false
-gem 'bootstrap', '~> 4.2.1'
+gem 'bootsnap', '>= 1.4', require: false
+gem 'bootstrap', '~> 4'
 gem 'bootstrap4-datetime-picker-rails'
 gem 'coffee-rails'
 gem 'devise', git: 'https://github.com/plataformatec/devise.git'
