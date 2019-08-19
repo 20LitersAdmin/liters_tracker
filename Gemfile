@@ -8,11 +8,11 @@ git_source(:github) do |repo_name|
   "https://github.com/#{repo_name}.git"
 end
 
-gem 'bootsnap', '>= 1.1.0', require: false
-gem 'bootstrap', '~> 4.2.1'
+gem 'bootsnap', '>= 1.4', require: false
+gem 'bootstrap', '~> 4'
 gem 'bootstrap4-datetime-picker-rails'
-gem 'coffee-rails', '~> 4.2'
-gem 'devise'
+gem 'coffee-rails'
+gem 'devise', git: 'https://github.com/plataformatec/devise'
 gem 'font-awesome-rails'
 gem 'haml'
 gem 'haml-rails', '~> 1.0'
@@ -50,8 +50,6 @@ group :test do
   # Adds support for Capybara system testing and selenium driver
   gem 'capybara', '>= 2.15'
   gem 'capybara-slow_finder_errors'
-  # Easy installation and use of chromedriver to run system tests with Chrome
-  gem 'chromedriver-helper'
   gem 'database_cleaner'
   gem 'rspec-rails'
   gem 'rspec_junit_formatter'
