@@ -8,7 +8,6 @@ RSpec.describe Plan, type: :model do
   context 'has validations on' do
     let(:no_contract) { build :plan_village, contract: nil }
     let(:no_technology) { build :plan_village, technology: nil }
-    let(:no_model_gid) { build :plan_village, model_gid: nil }
     let(:no_goal) { build :plan_village, goal: nil }
 
     it 'contract' do
@@ -21,11 +20,6 @@ RSpec.describe Plan, type: :model do
       no_technology.valid?
       expect(no_technology.errors[:technology]).to match_array('must exist')
       expect(no_technology.errors[:technology_id]).to match_array("can't be blank")
-    end
-
-    it 'model_gid' do
-      no_model_gid.valid?
-      expect(no_model_gid.errors[:model_gid]).to match_array("can't be blank")
     end
 
     it 'goal' do
@@ -851,14 +845,6 @@ RSpec.describe Plan, type: :model do
     it 'returns the end_date of the associated contract' do
       plan.save
       expect(plan.date).to eq plan.contract.end_date
-    end
-  end
-
-  context '.model' do
-    it 'returns the associated geography' do
-      plan.model_gid = plan.planable.to_global_id.to_s
-      plan.save
-      expect(plan.model).to eq plan.planable
     end
   end
 end

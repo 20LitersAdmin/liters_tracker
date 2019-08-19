@@ -6,7 +6,6 @@
       = link_to facility_form.name, edit_facility_path(facility_form), target: '_blank'
     -else
       = facility_form.name
-    =hidden_field_tag "batch_reports[reports][][model_gid]", facility_form.to_global_id.to_s
     =hidden_field_tag "batch_reports[reports][][reportable_type]", facility_form.class.to_s
     =hidden_field_tag "batch_reports[reports][][reportable_id]", facility_form.id
   %td.text-center= human_number facility_form.population

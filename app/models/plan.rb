@@ -3,10 +3,9 @@
 class Plan < ApplicationRecord
   belongs_to :contract,   inverse_of: :plans
   belongs_to :technology, inverse_of: :plans
-  # serialize :model_gid
   belongs_to :planable, polymorphic: true
 
-  validates_presence_of :contract_id, :technology_id, :model_gid, :goal
+  validates_presence_of :contract_id, :technology_id, :planable_type, :planable_id, :goal
 
   scope :between,         ->(from, to) { joins(:contract).where('contracts.end_date >= ? AND contracts.start_date <= ?', from, to) }
   scope :current,         -> { where(contract_id: Contract.current) }
@@ -23,7 +22,7 @@ class Plan < ApplicationRecord
   end
 
   def self.related_to_facility(facility, only_ary: false)
-    raise 'ERROR. Must provide a facility.' if !facility.is_a? Facility
+    raise 'ERROR. Must provide a facility.' unless facility.is_a? Facility
 
     plans = related_to(facility)
 
@@ -33,7 +32,7 @@ class Plan < ApplicationRecord
   end
 
   def self.related_to_village(village, only_ary: false)
-    raise 'ERROR. Must provide a village.' if !village.is_a? Village
+    raise 'ERROR. Must provide a village.' unless village.is_a? Village
 
     plan_ids = related_to(village).pluck(:id)
     village.facilities.each { |facility| plan_ids << related_to_facility(facility, only_ary: true) }
@@ -44,7 +43,7 @@ class Plan < ApplicationRecord
   end
 
   def self.related_to_cell(cell, only_ary: false)
-    raise 'ERROR. Must provide a cell.' if !cell.is_a? Cell
+    raise 'ERROR. Must provide a cell.' unless cell.is_a? Cell
 
     plan_ids = related_to(cell).pluck(:id)
     cell.villages.each { |village| plan_ids << related_to_village(village, only_ary: true) }
@@ -55,7 +54,7 @@ class Plan < ApplicationRecord
   end
 
   def self.related_to_sector(sector, only_ary: false)
-    raise 'ERROR. Must provide a sector.' if !sector.is_a? Sector
+    raise 'ERROR. Must provide a sector.' unless sector.is_a? Sector
 
     plan_ids = related_to(sector).pluck(:id)
     sector.cells.each { |cell| plan_ids << related_to_cell(cell, only_ary: true) }
@@ -66,7 +65,7 @@ class Plan < ApplicationRecord
   end
 
   def self.related_to_district(district)
-    raise 'ERROR. Must provide a district.' if !district.is_a? District
+    raise 'ERROR. Must provide a district.' unless district.is_a? District
 
     plan_ids = related_to(district).pluck(:id)
     district.sectors.each { |sector| plan_ids << related_to_sector(sector, only_ary: true) }
@@ -125,41 +124,6 @@ class Plan < ApplicationRecord
   def date
     contract.end_date
   end
-
-  def model
-    GlobalID::Locator.locate model_gid
-  end
-
-  # Instead use plan.planable.#geography
-  # def district
-  #   model.district
-  # end
-
-  # def sector
-  #   return model if model.class == Sector
-
-  #   model.sector
-  # end
-
-  # def cell
-  #   return model if model.class == Cell
-
-  #   model.cell
-  # end
-
-  # def village
-  #   return model if model.class == Village
-
-  #   model.village
-  # end
-
-  # after next pull request, this can be deleted
-  def migrate_to_polymorphic
-    regex = %r{\n...\n}
-    self.update(planable_id: model_gid.match(/\d+/)[0].to_i, planable_type: model_gid.match(/\/[a-zA-Z]+\//)[0].tr('/',''), model_gid: model_gid.gsub('--- ','').gsub(regex,''))
-  end
-
-  private
 
   def self.ary_of_village_ids_from_facilities
     related_facilities.pluck(:village_id)

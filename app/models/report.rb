@@ -6,7 +6,7 @@ class Report < ApplicationRecord
   belongs_to :contract,   inverse_of: :reports
   belongs_to :reportable, polymorphic: true
 
-  validates_presence_of :date, :user_id, :contract_id, :technology_id, :model_gid
+  validates_presence_of :date, :user_id, :contract_id, :technology_id, :reportable_type, :reportable_id
 
   scope :only_districts,  -> { where(reportable_type: 'District') }
   scope :only_sectors,    -> { where(reportable_type: 'Sector') }
@@ -33,7 +33,6 @@ class Report < ApplicationRecord
 
   def self.related_to_village(village, only_ary: false)
     raise 'ERROR. Must provide a village.' unless village.is_a? Village
-
 
     report_ids = related_to(village).pluck(:id)
     village.facilities.each { |facility| report_ids << related_to_facility(facility, only_ary: true) }
@@ -140,7 +139,6 @@ class Report < ApplicationRecord
   def self.process(report_params, technology_id, contract_id, user_id)
     report = Report.where(
       date: report_params[:date],
-      model_gid: report_params[:model_gid],
       technology_id: technology_id,
       reportable_id: report_params[:reportable_id].to_i,
       reportable_type: report_params[:reportable_type]
@@ -189,10 +187,6 @@ class Report < ApplicationRecord
     3 # if persisted?
   end
 
-  def model
-    GlobalID::Locator.locate model_gid
-  end
-
   def people_served
     return people if people&.positive?
     # I don't love this, but right now every data view utilizes people_served
@@ -206,7 +200,7 @@ class Report < ApplicationRecord
   def households_served
     return households if households&.positive?
 
-    model_gid.include?('Facility') && model.households&.positive? ? model.households : (technology.default_household_impact * distributed.to_i)
+    reportable_type.include?('Facility') && model.households&.positive? ? model.households : (technology.default_household_impact * distributed.to_i)
   end
 
   def households_impact
@@ -216,12 +210,6 @@ class Report < ApplicationRecord
   def impact
     # use this on all data views instead of calculating from people_served
     people_served > households_impact ? people_served : households_impact
-  end
-
-  # after next pull request, this can be deleted
-  def migrate_to_polymorphic
-    regex = /\n...\n/
-    self.update(reportable_id: model_gid.match(/\d+/)[0].to_i, reportable_type: model_gid.match(%r{\/[a-zA-Z]+\/})[0].tr('/', ''), model_gid: model_gid.gsub('--- ', '').gsub(regex, ''))
   end
 
   def self.ary_of_village_ids_from_facilities
