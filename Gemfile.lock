@@ -1,5 +1,5 @@
 GIT
-  remote: https://github.com/plataformatec/devise
+  remote: https://github.com/plataformatec/devise.git
   revision: 12fc5b76d89cf6e9c47289416fb24bf1a85f03da
   specs:
     devise (4.6.2)
@@ -328,6 +328,7 @@ GEM
 
 PLATFORMS
   ruby
+  x86_64-darwin-18
 
 DEPENDENCIES
   bootsnap (>= 1.4)
@@ -356,7 +357,6 @@ DEPENDENCIES
   rspec-rails
   rspec_junit_formatter
   rubocop
-  selenium-webdriver
   shoulda-matchers!
   simple_form
   spring

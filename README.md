@@ -1,84 +1,39 @@
 # LITERS TRACKER
-A custom reporting app for 20 Liters
 
-# CURRENT:
-* Monthly#show
+A custom reporting app for 20 Liters.
 
-# More data views:
-* Last Month:
-- Display reports by month (a way for Rebero to easily check his submissions)
+## Contributing
 
-* By Geography:
-- villages#index is too complex to bother with?
-- villages#show
---> by facilities per village, using Plan
---> by technologies, using Target
+To contribute please look at the open Issues and create a Pull Request with the solution. If you have any questions about the Project please reach out to Chip. All Pull Requests must be approved by a maintainer before being merged in.
 
-- facilities#index
-  -- make searchable?
-  -- communicate if a RWHS or SAM2 is present / planned
-- facilities#show is pointless?
+## Developer Setup
 
-* By MOU
-- contracts#index && contracts#show
--- By technology: [Report.distributed | Target.goal | Report.impact | Target.people_goal ]
--- By sector: [ Report.impact | Target.people_goal ]
+**MacOS**
 
-* 'Add plan' && 'Add report' buttons on technologies#show?by_sector don't do anything, but should
-- POLICED by current_user.can_create('Report') && current_user.can_create('Plan')
-- Since they vary in their provided params [and since sector/id/report relies on date and tech], we should go to a chooser that considers the provided params.
+```
+rbenv local 2.5.3
+gem install bundler
+bundle install
+bundle exec rake db:create
+bundle exec rake db:migrate
+bundle exec rake db:seed #local seed optional
+bundle exec rails s
+```
 
-* technologies#show?by_mou could have 'Add Target' button if it's missing, but these should be pre-built with each new MOU
+## Production Database Restore
 
-* technologies#index should also have buttons? [Add Plan, Add Report, Add Target]
+### Requirements
 
-# Creating/Updating Targets
+[Heroku CLI](https://devcenter.heroku.com/articles/heroku-cli)
 
-# Creating/Updating Plans
-* Copy the sector/select && sector/#id/report process
+[Parity](https://github.com/thoughtbot/parity) - N.B. This only works for Postgres databases
 
-# Forms
--- redirect_back on model#create and #update isn't UX
-- Tech form
-- Contract form
-- Target form
-- Plan form
-- Dist form
-- Sector form
-- Cell form
-- Village form
-+ Facility form (also submits as partial from SectorsController#Reports)
-  -- CHECK: Sector lookup is showing the record, not the record.name
+Permissions to the 20 Liters Heroku App, and a `git remote` named `production` that points to the Heroku repo (see https://github.com/thoughtbot/parity#convention)
 
-# Bugs?
-- `sessions/new?return-to` doesn't do anything
-- Cells#show grand total rows don't match table
-- JS call to /favicons?
-- Devise mail doesn't send? Mailgun shows nothing going out.
-- No reports on cell#index or village#index because of length, must get to them by sector
-- `development restore-from production` doesn't map relationships correctly? Is this a mis-matched PG version between me and Heroku?
+### Restore to Local Development Database
 
-# Improvements
-- Districts#index doesn't have [Add Plan, Add Report, Add Target] functionality
-- Technologies#index doesn't have [Add Plan, Add Report, Add Target] functionality
+If using a traditional Postgres installation (including using Homebrew) then running `development restore_from production` will pull down an up-to-date backup from the production Postgres instance and run a wipe/restore on the local database.
 
-# SPEED THINGS UP
-- https://medium.com/@sean.handley/one-second-page-loads-with-rails-ffb1ba4aa19f
-- check which is faster: `@reports.related_to_village(village)` or `village.related_reports`
-  -- Affects cell and village reporting partials
-- use `.select()` to speed up queries by only pulling what you need e.g.: `@reports.#stuff.select(:distributed, :checked)`
-- use `.includes()` to eager-load associated records
-- use AJAX on slow pages (e.g. load the page, then ajax the data into the apropriate places)
+Otherwise the environment variables `PGHOST`, `PGPORT`, and `PGUSER` can be set before running the restoration script to configure different development database setups.
 
-# Remind myself:
-* magic_frozen_string_literal . #get those frozen string benefits
-* production backup / development restore-from production (https://github.com/thoughtbot/parity)
-  `User.first.update(password: 'password', password_confirmation: 'password')`
-* byebug commands
-    continue   -- Runs on
-    delete     -- Deletes breakpoints
-    finish     -- Runs the program until frame returns
-    irb        -- Starts an IRB session
-    kill       -- Sends a signal to the current process
-    quit       -- Exits byebug
-    restart    -- Restarts the debugged program
+E.g. Running on docker with Postgres defaults (`docker run --name 20litres_db -v 20litres_db_data:/var/lib/postgresql/data -d postgres:10.10-alpine`), then `PGHOST` will ne to be set to `localhost` and `PGUSER` will need to be set to `postgres`.
