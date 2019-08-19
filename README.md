@@ -1,6 +1,7 @@
 # LITERS TRACKER
 
 A custom reporting app for 20 Liters.
+*Built with love by [Code for Good West Michigan](https://codeforgoodwm.org/)*
 
 ## Contributing
 
@@ -36,4 +37,4 @@ If using a traditional Postgres installation (including using Homebrew) then run
 
 Otherwise the environment variables `PGHOST`, `PGPORT`, and `PGUSER` can be set before running the restoration script to configure different development database setups.
 
-E.g. Running on docker with Postgres defaults (`docker run --name 20litres_db -v 20litres_db_data:/var/lib/postgresql/data -d postgres:10.10-alpine`), then `PGHOST` will ne to be set to `localhost` and `PGUSER` will need to be set to `postgres`.
+E.g. Running on docker with Postgres defaults (`docker run --name 20liters_db -v 20liters_db_data:/var/lib/postgresql/data -d postgres:10.10-alpine`), then `PGHOST` will need to be set to `localhost` and `PGUSER` will need to be set to `postgres`.
