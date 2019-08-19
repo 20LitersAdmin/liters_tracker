@@ -41,6 +41,8 @@ class UsersController < ApplicationController
 
   def edit
     @skip_password_message = 'Leave blank to keep current password'
+
+    @name = current_user == @user ? 'your' : @user.name
   end
 
   def update

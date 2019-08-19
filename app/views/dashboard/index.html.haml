@@ -1,0 +1,8 @@
+%h2
+  How we are measuring success
+.row.justify-content-center
+  - if @lifetime_stats.any?
+    - @lifetime_stats.each do |stat_block|
+      - next if stat_block.blank?
+      = render partial: "shared/basic_stat_block", locals: { stat: stat_block[:stat], title: stat_block[:title] }
+  = render partial: "shared/basic_stat_block", locals: { stat: @global_impact, title: 'People served' }

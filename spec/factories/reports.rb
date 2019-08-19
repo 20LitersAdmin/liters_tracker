@@ -8,8 +8,8 @@ FactoryBot.define do
     contract
     sequence(:model_gid) { |n| "gid://liters-tracker/Facility/#{n}" }
     distributed { 1 }
+    people { nil }
     checked { 1 }
-    people { 1 }
     households { 1 }
     association :reportable, factory: :facility
   end

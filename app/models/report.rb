@@ -4,8 +4,6 @@ class Report < ApplicationRecord
   belongs_to :technology, inverse_of: :reports
   belongs_to :user,       inverse_of: :reports
   belongs_to :contract,   inverse_of: :reports
-  # serialize :model_gid
-  # enum geography: { district: 'district', sector: 'sector', cell: 'cell', village: 'village', facility: 'facility' }
   belongs_to :reportable, polymorphic: true
 
   validates_presence_of :date, :user_id, :contract_id, :technology_id, :model_gid
@@ -24,7 +22,8 @@ class Report < ApplicationRecord
   end
 
   def self.related_to_facility(facility, only_ary: false)
-    raise 'ERROR. Must provide a facility.' if !facility.is_a? Facility
+    raise 'ERROR. Must provide a facility.' unless facility.is_a? Facility
+
     reports = related_to(facility)
 
     return reports.pluck(:id) if only_ary
@@ -33,7 +32,9 @@ class Report < ApplicationRecord
   end
 
   def self.related_to_village(village, only_ary: false)
-    raise 'ERROR. Must provide a village.' if !village.is_a? Village
+    raise 'ERROR. Must provide a village.' unless village.is_a? Village
+
+
     report_ids = related_to(village).pluck(:id)
     village.facilities.each { |facility| report_ids << related_to_facility(facility, only_ary: true) }
 
@@ -43,7 +44,8 @@ class Report < ApplicationRecord
   end
 
   def self.related_to_cell(cell, only_ary: false)
-    raise 'ERROR. Must provide a cell.' if !cell.is_a? Cell
+    raise 'ERROR. Must provide a cell.' unless cell.is_a? Cell
+
     report_ids = related_to(cell).pluck(:id)
     cell.villages.each { |village| report_ids << related_to_village(village, only_ary: true) }
 
@@ -53,7 +55,8 @@ class Report < ApplicationRecord
   end
 
   def self.related_to_sector(sector, only_ary: false)
-    raise 'ERROR. Must provide a sector.' if !sector.is_a? Sector
+    raise 'ERROR. Must provide a sector.' unless sector.is_a? Sector
+
     report_ids = related_to(sector).pluck(:id)
     sector.cells.each { |cell| report_ids << related_to_cell(cell, only_ary: true) }
 
@@ -63,7 +66,8 @@ class Report < ApplicationRecord
   end
 
   def self.related_to_district(district)
-    raise 'ERROR. Must provide a district.' if !district.is_a? District
+    raise 'ERROR. Must provide a district.' unless district.is_a? District
+
     report_ids = related_to(district).pluck(:id)
     district.sectors.each { |sector| report_ids << Report.related_to_sector(sector, only_ary: true) }
 
@@ -135,12 +139,12 @@ class Report < ApplicationRecord
 
   def self.process(report_params, technology_id, contract_id, user_id)
     report = Report.where(
-        date: report_params[:date],
-        model_gid: report_params[:model_gid],
-        technology_id: technology_id,
-        reportable_id: report_params[:reportable_id].to_i,
-        reportable_type: report_params[:reportable_type]
-      ).first_or_initialize
+      date: report_params[:date],
+      model_gid: report_params[:model_gid],
+      technology_id: technology_id,
+      reportable_id: report_params[:reportable_id].to_i,
+      reportable_type: report_params[:reportable_type]
+    ).first_or_initialize
 
     action = report.determine_action(report_params, contract_id, user_id)
     return if action.zero?
@@ -216,11 +220,9 @@ class Report < ApplicationRecord
 
   # after next pull request, this can be deleted
   def migrate_to_polymorphic
-    regex = %r{\n...\n}
-    self.update(reportable_id: model_gid.match(/\d+/)[0].to_i, reportable_type: model_gid.match(/\/[a-zA-Z]+\//)[0].tr('/',''), model_gid: model_gid.gsub('--- ','').gsub(regex,''))
+    regex = /\n...\n/
+    self.update(reportable_id: model_gid.match(/\d+/)[0].to_i, reportable_type: model_gid.match(%r{\/[a-zA-Z]+\/})[0].tr('/', ''), model_gid: model_gid.gsub('--- ', '').gsub(regex, ''))
   end
-
-  private
 
   def self.ary_of_village_ids_from_facilities
     related_facilities.pluck(:village_id)
