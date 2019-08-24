@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 class District < ApplicationRecord
-  include GeographyNaming
+  include GeographyType
 
   belongs_to :country,    inverse_of: :districts
 

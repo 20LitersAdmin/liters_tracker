@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 class Country < ApplicationRecord
-  include GeographyNaming
+  include GeographyType
 
   has_many :districts,  inverse_of: :country
   has_many :sectors,    through: :districts, inverse_of: :country
@@ -14,7 +14,7 @@ class Country < ApplicationRecord
   validates_presence_of :name
   validates_uniqueness_of :gis_code, allow_nil: true
 
-  # see config/initializers/geography_naming.rb
+  # see config/initializers/geography_type.rb
   def country
     self
   end

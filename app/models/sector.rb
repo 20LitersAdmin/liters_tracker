@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 class Sector < ApplicationRecord
-  include GeographyNaming
+  include GeographyType
 
   belongs_to :district,   inverse_of: :sectors
 

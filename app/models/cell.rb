@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 class Cell < ApplicationRecord
-  include GeographyNaming
+  include GeographyType
 
   belongs_to :sector,     inverse_of: :cells
 

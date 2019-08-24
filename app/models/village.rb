@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 class Village < ApplicationRecord
-  include GeographyNaming
+  include GeographyType
 
   belongs_to :cell,       inverse_of: :villages
 
