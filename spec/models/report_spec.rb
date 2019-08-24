@@ -3,13 +3,11 @@
 require 'rails_helper'
 
 RSpec.describe Report, type: :model do
-
   context 'has validations on' do
     let(:no_date) { build :report_village, date: nil }
     let(:no_user) { build :report_village, user: nil }
     let(:no_contract) { build :report_village, contract: nil }
-    let(:no_technology ) { build :report_village, technology: nil }
-    let(:no_model) { build :report_village, model_gid: nil }
+    let(:no_technology) { build :report_village, technology: nil }
 
     it 'date' do
       no_date.valid?
@@ -32,11 +30,6 @@ RSpec.describe Report, type: :model do
       no_technology.valid?
       expect(no_technology.errors[:technology]).to match_array('must exist')
       expect(no_technology.errors[:technology_id]).to match_array("can't be blank")
-    end
-
-    it 'model' do
-      no_model.valid?
-      expect(no_model.errors[:model_gid]).to match_array("can't be blank")
     end
   end
 

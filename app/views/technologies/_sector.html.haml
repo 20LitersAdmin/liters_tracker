@@ -6,10 +6,10 @@
   %td.text-left
     - if @plan_sub.empty?
       %span.float-left= link_to sector.name, sector_path(sector)
-      %span.float-right= link_to 'Add plan', new_plan_path(technology_id: @technology.id, model_gid: sector.to_global_id.to_s), class: 'btn btn-outline-primary'
+      %span.float-right= link_to 'Add plan', '#', class: 'btn btn-outline-primary'
     - elsif @report_sub.empty?
       %span.float-left= link_to sector.name, sector_path(sector)
-      %span.float-right= link_to 'Add report', new_report_path(technology_id: @technology.id, model_gid: sector.to_global_id.to_s), class: 'btn btn-outline-primary'
+      %span.float-right= link_to 'Add report', '#', class: 'btn btn-outline-primary'
     -else
       = link_to sector.name, sector_path(sector)
   - if @plan_sub.any? || @report_sub.any?
@@ -20,4 +20,4 @@
     %td.text-right= human_number @report_sub.map(&:impact).sum
   - else
     %td{'colspan': '4'}= "No plans or reports related to #{@technology.short_name} for this sector and time period"
-    %td= link_to 'Add report', new_report_path(technology_id: @technology.id, model_gid: sector.to_global_id.to_s), class: 'btn btn-outline-primary'
+    %td= link_to 'Add report', '#', class: 'btn btn-outline-primary'

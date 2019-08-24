@@ -70,6 +70,6 @@ class PlansController < ApplicationController
   end
 
   def plan_params
-    params.require(:plan).permit(:contract_id, :technology_id, :model_gid, :goal, :people_goal)
+    params.require(:plan).permit(:contract_id, :technology_id, :goal, :people_goal, :planable_type, :planable_id)
   end
 end

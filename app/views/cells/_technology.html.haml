@@ -6,10 +6,10 @@
   %td.text-left
     - if @plan_sub.empty? && (current_user.can_manage_contracts? || current_user.admin?)
       %span.float-left= link_to technology.name, technology_path(technology)
-      %span.float-right= link_to 'Add plan', new_plan_path(model_gid: @cell.to_global_id.to_s, technology: technology), class: 'btn btn-outline-primary'
+      %span.float-right= link_to 'Add plan', '#', class: 'btn btn-outline-primary'
     - elsif @report_sub.empty? && (current_user.can_manage_reports? || current_user.admin?)
       %span.float-left= link_to technology.name, technology_path(technology)
-      %span.float-right= link_to 'Add report', new_report_path(model_gid: @cell.to_global_id.to_s, technology: technology), class: 'btn btn-outline-primary'
+      %span.float-right= link_to 'Add report', report_sector_path(@cell.sector, tech: technology), class: 'btn btn-outline-primary'
     - else
       = link_to technology.name, technology_path(technology)
   - if @plan_sub.any? || @report_sub.any?
@@ -21,6 +21,6 @@
   - else
     %td{colspan: 4}= "No plans or reports related to #{@cell.name} for this time period"
     - if current_user.can_manage_reports? || current_user.admin?
-      %td= link_to 'Add report', new_report_path(model_gid: @cell.to_global_id.to_s, technology: technology), class: 'btn btn-outline-primary'
+      %td= link_to 'Add report', report_sector_path(@cell.sector, tech: technology), class: 'btn btn-outline-primary'
     - else
       %td

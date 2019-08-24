@@ -6,7 +6,6 @@ FactoryBot.define do
     association :technology, factory: :technology_family
     association :user, factory: :user_reports
     contract
-    sequence(:model_gid) { |n| "gid://liters-tracker/Facility/#{n}" }
     distributed { 1 }
     people { nil }
     checked { 1 }
@@ -19,7 +18,6 @@ FactoryBot.define do
     association :technology, factory: :technology_family
     association :user, factory: :user_reports
     contract
-    sequence(:model_gid) { |n| "gid://liters-tracker/Village/#{n}" }
     distributed { 1 }
     checked { 1 }
     people { 1 }
@@ -32,7 +30,6 @@ FactoryBot.define do
     association :technology, factory: :technology_family
     association :user, factory: :user_reports
     contract
-    sequence(:model_gid) { |n| "gid://liters-tracker/Cell/#{n}" }
     distributed { 1 }
     checked { 1 }
     people { 1 }
@@ -45,7 +42,6 @@ FactoryBot.define do
     association :technology, factory: :technology_family
     association :user, factory: :user_reports
     contract
-    sequence(:model_gid) { |n| "gid://liters-tracker/Sector/#{n}" }
     distributed { 1 }
     checked { 1 }
     people { 1 }
@@ -58,7 +54,6 @@ FactoryBot.define do
     association :technology, factory: :technology_family
     association :user, factory: :user_reports
     contract
-    sequence(:model_gid) { |n| "gid://liters-tracker/District/#{n}" }
     distributed { 1 }
     checked { 1 }
     people { 1 }
