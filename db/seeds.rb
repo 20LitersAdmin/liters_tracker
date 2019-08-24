@@ -63,12 +63,22 @@ Target.create(
 
 ActiveRecord::Base.connection.reset_pk_sequence!('targets')
 
+Country.create(
+  [
+    { id: 1, name: 'Rwanda', gis_code: 1 },
+    { id: 2, name: 'United States', gis_code: 2 }
+  ]
+)
+
+ActiveRecord::Base.connection.reset_pk_sequence!('countries')
+
 District.create(
   [
-    { id: 1, name: 'Nyarugenge', gis_code: 11 },
-    { id: 2, name: 'Kicukiro', gis_code: 13 },
-    { id: 3, name: 'Bugesera', gis_code: 57 },
-    { id: 4, name: 'Ngoma', gis_code: 56 }
+    { id: 1, name: 'Nyarugenge', gis_code: 11, country_id: 1 },
+    { id: 2, name: 'Kicukiro', gis_code: 13, country_id: 1 },
+    { id: 3, name: 'Bugesera', gis_code: 57, country_id: 1 },
+    { id: 4, name: 'Ngoma', gis_code: 56, country_id: 1 },
+    { id: 5, name: 'Midwest', gis_code: 100, country_id: 2 }
   ]
 )
 
@@ -84,7 +94,8 @@ Sector.create(
     { id: 6, name: 'Mwogo', gis_code: 5707, district_id: 3 },
     { id: 7, name: 'Ntarama', gis_code: 5709, district_id: 3 },
     { id: 8, name: 'Rilima', gis_code: 5712, district_id: 3 },
-    { id: 9, name: 'Rukumberi', gis_code: 5611, district_id: 4 }
+    { id: 9, name: 'Rukumberi', gis_code: 5611, district_id: 4 },
+    { id: 10, name: 'Michigan', gis_code: 1001, district_id: 5 }
   ]
 )
 
@@ -131,7 +142,9 @@ Cell.create(
     { id: 37, name: 'Gituza', gis_code: 561101, sector_id: 9 },
     { id: 38, name: 'Ntovi', gis_code: 561102, sector_id: 9 },
     { id: 39, name: 'Rubona', gis_code: 561104, sector_id: 9 },
-    { id: 40, name: 'Rwintashya', gis_code: 561105, sector_id: 9 }
+    { id: 40, name: 'Rwintashya', gis_code: 561105, sector_id: 9 },
+    { id: 41, name: 'Kent', gis_code: 10011, sector_id: 10 },
+    { id: 42, name: 'Ottawa', gis_code: 10012, sector_id: 10 }
   ]
 )
 
@@ -414,6 +427,10 @@ Village.create(
     { id: 273, name: 'Rwimpongo I', gis_code: 56110503, cell_id: 39 },
     { id: 274, name: 'Rwimpongo Ii', gis_code: 56110504, cell_id: 39 },
     { id: 275, name: 'Shyembe', gis_code: 56110505, cell_id: 39 },
+    { id: 276, name: 'Grand Rapids', gis_code: 100111, cell_id: 41 },
+    { id: 277, name: 'Grandville', gis_code: 100112, cell_id: 41 },
+    { id: 278, name: 'Hudsonville', gis_code: 100121, cell_id: 42 },
+    { id: 278, name: 'Zeeland', gis_code: 100122, cell_id: 42 }
   ]
 )
 

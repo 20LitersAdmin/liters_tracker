@@ -1,0 +1,16 @@
+-# frozen_string_literal: true
+%h1 Listing Countries
+
+%table#dttb-countries.responsive.nowrap.table.table-hover data-sort="true" data-source="#{url_for(format: :json)}"
+  %thead
+    %tr
+      %th data-data="name" Name
+      %th data-data="gis_code" Gis code
+      %th data-data="latitude" Latitude
+      %th data-data="longitude" Longitude
+      %th data-data="population" Population
+      %th data-data="households" Households
+      %th data-data="url" data-orderable="false" data-class-name="all" data-searchable="false" class="skip-export" width="100px"
+
+
+= link_to 'New Country', new_country_path

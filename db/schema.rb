@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_08_19_020913) do
+ActiveRecord::Schema.define(version: 2019_08_24_195542) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -39,6 +39,18 @@ ActiveRecord::Schema.define(version: 2019_08_19_020913) do
     t.datetime "updated_at", null: false
   end
 
+  create_table "countries", force: :cascade do |t|
+    t.string "name"
+    t.integer "gis_code"
+    t.float "latitude"
+    t.float "longitude"
+    t.integer "population"
+    t.integer "households"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["gis_code"], name: "index_countries_on_gis_code"
+  end
+
   create_table "districts", force: :cascade do |t|
     t.string "name", null: false
     t.integer "gis_code"
@@ -48,6 +60,8 @@ ActiveRecord::Schema.define(version: 2019_08_19_020913) do
     t.integer "households"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.bigint "country_id"
+    t.index ["country_id"], name: "index_districts_on_country_id"
     t.index ["gis_code"], name: "index_districts_on_gis_code", unique: true
   end
 
