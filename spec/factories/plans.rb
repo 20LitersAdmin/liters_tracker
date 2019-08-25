@@ -40,5 +40,4 @@ FactoryBot.define do
     people_goal { 1 }
     association :planable, factory: :district
   end
-
 end

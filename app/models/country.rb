@@ -14,8 +14,8 @@ class Country < ApplicationRecord
   validates_presence_of :name
   validates_uniqueness_of :gis_code, allow_nil: true
 
-  # see config/initializers/geography_type.rb
   def country
+    # see config/initializers/geography_type.rb
     self
   end
 end

@@ -13,7 +13,6 @@ module Constants
   end
 
   class Geography
-    ALLOWED = %w[Country District Sector Cell Village Facility].freeze
     US_NAMES = { 'Country' => 'Country', 'District' => 'Region', 'Sector' => 'State', 'Cell' => 'County', 'Village' => 'City', 'Facility' => 'Facility' }.freeze
   end
 
