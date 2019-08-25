@@ -74,7 +74,7 @@ class Plan < ApplicationRecord
   end
 
   def self.related_facilities
-    # return a collection Facilities from a collection of Plans
+    # return a collection of Facilities from a collection of Plans
     return Facility.none if self.only_facilities.empty?
 
     ary = self.only_facilities.pluck(:planable_id)

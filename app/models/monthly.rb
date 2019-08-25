@@ -7,5 +7,5 @@ class Monthly
   attribute :year, :integer, default: -> { Date.today.year }
   attribute :month, :integer, default: -> { Date.today.month - 1 }
 
-  validates :year, :month, presence: true, numericality: true
+  validates_presence_of :year, :month
 end

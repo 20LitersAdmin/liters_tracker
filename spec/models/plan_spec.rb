@@ -9,6 +9,7 @@ RSpec.describe Plan, type: :model do
     let(:no_contract) { build :plan_village, contract: nil }
     let(:no_technology) { build :plan_village, technology: nil }
     let(:no_goal) { build :plan_village, goal: nil }
+    let(:no_planable) { build :plan_village, planable_type: nil, planable_id: nil }
 
     it 'contract' do
       no_contract.valid?
@@ -25,6 +26,13 @@ RSpec.describe Plan, type: :model do
     it 'goal' do
       no_goal.valid?
       expect(no_goal.errors[:goal]).to match_array("can't be blank")
+    end
+
+    it 'planable' do
+      no_planable.valid?
+
+      expect(no_planable.errors[:planable_id]).to match_array("can't be blank")
+      expect(no_planable.errors[:planable_type]).to match_array("can't be blank")
     end
   end
 

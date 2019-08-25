@@ -38,4 +38,10 @@ RSpec.describe Country, type: :model do
       end
     end
   end
+
+  context 'country' do
+    it 'returns itself, because I need all Geography models to respond to record.country' do
+      expect(country.country).to eq country
+    end
+  end
 end
