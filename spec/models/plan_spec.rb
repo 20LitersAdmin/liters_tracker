@@ -601,15 +601,15 @@ RSpec.describe Plan, type: :model do
     end
 
     context '#related_districts' do
-      let(:related_district) { create :district, name: 'related_district' }
-      let(:related_district1) { create :district, name: 'related_district1' }
-      let(:related_district2) { create :district, name: 'related_district2' }
+      let(:related_district) { create :district }
+      let(:related_district1) { create :district }
+      let(:related_district2) { create :district }
       let(:related_sector) { create :sector, district: related_district }
       let(:related_cell) { create :cell, sector: related_sector }
       let(:related_village) { create :village, cell: related_cell }
       let(:related_facility) { create :facility, village: related_village }
-      let(:unrelated_district1) { create :district, name: 'unrelated_district1' }
-      let(:unrelated_district2) { create :district, name: 'unrelated_district2' }
+      let(:unrelated_district1) { create :district }
+      let(:unrelated_district2) { create :district }
 
       let(:related_plan1) { create :plan_facility, contract: contract, planable: related_facility }
       let(:related_plan2) { create :plan_village, contract: contract, planable: related_village }
@@ -660,6 +660,12 @@ RSpec.describe Plan, type: :model do
 
         expect(collection.related_districts.is_a?(ActiveRecord::Relation)).to eq true
         expect(collection.related_districts.empty?).to eq true
+      end
+    end
+
+    context '#date' do
+      it 'returns the end_date of the related contract' do
+        expect(plan.date).to eq plan.contract.end_date
       end
     end
 
