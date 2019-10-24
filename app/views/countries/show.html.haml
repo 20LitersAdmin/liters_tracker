@@ -1,0 +1,24 @@
+%p#notice= notice
+
+%p
+  %b Name:
+  = @country.name
+%p
+  %b Gis code:
+  = @country.gis_code
+%p
+  %b Latitude:
+  = @country.latitude
+%p
+  %b Longitude:
+  = @country.longitude
+%p
+  %b Population:
+  = @country.population
+%p
+  %b Households:
+  = @country.households
+
+= link_to 'Edit', edit_country_path(@country)
+\|
+= link_to 'Back', countries_path

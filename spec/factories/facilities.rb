@@ -2,12 +2,12 @@
 
 FactoryBot.define do
   factory :facility do
-    name { "FactoryFacility" }
+    name { 'FactoryFacility' }
     latitude { 1.5 }
     longitude { 1.5 }
     population { 1 }
     households { 1 }
-    category { "Church" }
+    category { 'Church' }
     village
   end
 end

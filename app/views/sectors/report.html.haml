@@ -12,10 +12,13 @@
   .col-12.table-responsive
     = form_tag batch_process_reports_path, autocomplete: 'off' do
       .row
-        .col-12.text-center
+        .col-12.text-center.submit-div
           = submit_tag 'Submit report', class: 'btn btn-success'
+        .col-12.text-center.warning-div
+          %p.warning-text Please check form for errors
       =hidden_field_tag 'batch_reports[technology_id]', @technology.id
       =hidden_field_tag 'batch_reports[contract_id]', @contract.id
+      =hidden_field_tag 'batch_reports[master_date]', @date
       - if @technology.scale == 'Family'
         %table.table.table-sm.table-hover#villages_table
           %thead
@@ -57,8 +60,10 @@
         .row
           .col-12.text-right= link_to 'Add Facility', '#', id: 'facility-trigger', class: 'btn btn-primary', data: { toggle:  "modal", target: '#new_facility_modal' }
       .row
-        .col-12.text-center
+        .col-12.text-center.submit-div
           = submit_tag 'Submit report', class: 'btn btn-success'
+        .col-12.text-center.warning-div
+          %p.warning-text Please check form for errors
 
 - if @technology.scale == 'Community'
   .modal.fade#new_facility_modal{tabindex: '-1', role: 'dialog', 'aria-labelledby': 'newFacilityLabel', 'aria-hidden': 'true' }

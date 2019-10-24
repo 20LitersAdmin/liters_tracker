@@ -2,7 +2,7 @@
 
 FactoryBot.define do
   factory :village do
-    name { "Factory Village" }
+    name { 'Factory Village' }
     cell
     latitude { 1.5 }
     longitude { 1.5 }

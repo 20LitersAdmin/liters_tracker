@@ -17,7 +17,7 @@ RSpec.describe Facility, type: :model do
 
       expect(no_name.errors[:name]).to match_array("can't be blank")
 
-      no_name.name = "has a name"
+      no_name.name = 'has a name'
       no_name.valid?
 
       expect(no_name.errors.any?).to eq false
@@ -40,7 +40,7 @@ RSpec.describe Facility, type: :model do
     end
   end
 
-  context "uses scopes to limit records" do
+  context 'uses scopes to limit records' do
     let(:church) { create :facility, category: 'Church' }
     let(:school) { create :facility, category: 'School' }
     let(:clinic) { create :facility, category: 'Clinic' }

@@ -14,6 +14,7 @@ Rails.application.routes.draw do
 
   resources :technologies
 
+  resources :countries
   resources :districts
   resources :sectors do
     get 'select', on: :collection

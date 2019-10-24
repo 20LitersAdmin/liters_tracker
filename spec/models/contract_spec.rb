@@ -67,9 +67,9 @@ RSpec.describe Contract, type: :model do
     it 'returns a string containing the ID and dates' do
       contract.save
 
-      expect(contract.name).to include("#{contract.id.to_s}:")
-      expect(contract.name).to include("#{contract.start_date.strftime('%m/%Y')}")
-      expect(contract.name).to include("#{contract.end_date.strftime('%m/%Y')}")
+      expect(contract.name).to include("#{contract.id}:")
+      expect(contract.name).to include(contract.start_date.strftime('%m/%Y'))
+      expect(contract.name).to include(contract.end_date.strftime('%m/%Y'))
     end
   end
 
@@ -77,10 +77,10 @@ RSpec.describe Contract, type: :model do
     it 'returns a string formatted as a URL search parameter with the dates' do
       contract.save
 
-      expect(contract.url_params).to include("?from=")
-      expect(contract.url_params).to include("&to=")
-      expect(contract.url_params).to include("#{contract.start_date.strftime('%Y-%m-%d')}")
-      expect(contract.url_params).to include("#{contract.end_date.strftime('%Y-%m-%d')}")
+      expect(contract.url_params).to include('?from=')
+      expect(contract.url_params).to include('&to=')
+      expect(contract.url_params).to include(contract.start_date.strftime('%Y-%m-%d'))
+      expect(contract.url_params).to include(contract.end_date.strftime('%Y-%m-%d'))
     end
   end
 end

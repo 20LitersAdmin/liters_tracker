@@ -9,6 +9,7 @@ RSpec.describe Plan, type: :model do
     let(:no_contract) { build :plan_village, contract: nil }
     let(:no_technology) { build :plan_village, technology: nil }
     let(:no_goal) { build :plan_village, goal: nil }
+    let(:no_planable) { build :plan_village, planable_type: nil, planable_id: nil }
 
     it 'contract' do
       no_contract.valid?
@@ -25,6 +26,13 @@ RSpec.describe Plan, type: :model do
     it 'goal' do
       no_goal.valid?
       expect(no_goal.errors[:goal]).to match_array("can't be blank")
+    end
+
+    it 'planable' do
+      no_planable.valid?
+
+      expect(no_planable.errors[:planable_id]).to match_array("can't be blank")
+      expect(no_planable.errors[:planable_type]).to match_array("can't be blank")
     end
   end
 
@@ -593,15 +601,15 @@ RSpec.describe Plan, type: :model do
     end
 
     context '#related_districts' do
-      let(:related_district) { create :district, name: 'related_district' }
-      let(:related_district1) { create :district, name: 'related_district1' }
-      let(:related_district2) { create :district, name: 'related_district2' }
+      let(:related_district) { create :district }
+      let(:related_district1) { create :district }
+      let(:related_district2) { create :district }
       let(:related_sector) { create :sector, district: related_district }
       let(:related_cell) { create :cell, sector: related_sector }
       let(:related_village) { create :village, cell: related_cell }
       let(:related_facility) { create :facility, village: related_village }
-      let(:unrelated_district1) { create :district, name: 'unrelated_district1' }
-      let(:unrelated_district2) { create :district, name: 'unrelated_district2' }
+      let(:unrelated_district1) { create :district }
+      let(:unrelated_district2) { create :district }
 
       let(:related_plan1) { create :plan_facility, contract: contract, planable: related_facility }
       let(:related_plan2) { create :plan_village, contract: contract, planable: related_village }
@@ -652,6 +660,12 @@ RSpec.describe Plan, type: :model do
 
         expect(collection.related_districts.is_a?(ActiveRecord::Relation)).to eq true
         expect(collection.related_districts.empty?).to eq true
+      end
+    end
+
+    context '#date' do
+      it 'returns the end_date of the related contract' do
+        expect(plan.date).to eq plan.contract.end_date
       end
     end
 

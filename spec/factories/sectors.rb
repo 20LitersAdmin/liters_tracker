@@ -2,7 +2,7 @@
 
 FactoryBot.define do
   factory :sector do
-    name { "FactorySector" }
+    name { 'FactorySector' }
     district
     latitude { 1.5 }
     longitude { 1.5 }

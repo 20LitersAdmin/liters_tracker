@@ -12,7 +12,7 @@ class Contract < ApplicationRecord
   scope :between, ->(from, to) { where('end_date >= ? AND start_date <= ?', from, to) }
 
   def name
-    "#{id.to_s}: #{start_date.strftime('%m/%Y')} - #{end_date.strftime('%m/%Y')}"
+    "#{id}: #{start_date.strftime('%m/%Y')} - #{end_date.strftime('%m/%Y')}"
   end
 
   def url_params

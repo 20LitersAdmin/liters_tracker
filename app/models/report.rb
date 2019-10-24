@@ -124,21 +124,27 @@ class Report < ApplicationRecord
   def self.key_params_are_missing?(batch_process_params)
     batch_process_params[:technology_id].blank? ||
       batch_process_params[:contract_id].blank? ||
+      batch_process_params[:master_date].blank? ||
       batch_process_params[:reports].count.zero?
   end
 
   def self.batch_process(batch_report_params, user_id)
     technology_id = batch_report_params[:technology_id].to_i
     contract_id = batch_report_params[:contract_id].to_i
+    fallback_date = batch_report_params[:master_date]
+
+    error_ary = []
 
     batch_report_params[:reports].each do |report_params|
-      process(report_params, technology_id, contract_id, user_id)
+      process(report_params, technology_id, contract_id, user_id, fallback_date)
     end
   end
 
-  def self.process(report_params, technology_id, contract_id, user_id)
+  def self.process(report_params, technology_id, contract_id, user_id, fallback_date)
+    date = report_params[:date].blank? ? fallback_date : report_params[:date]
+
     report = Report.where(
-      date: report_params[:date],
+      date: date,
       technology_id: technology_id,
       reportable_id: report_params[:reportable_id].to_i,
       reportable_type: report_params[:reportable_type]
