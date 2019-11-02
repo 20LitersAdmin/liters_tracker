@@ -1,32 +1,33 @@
 -# frozen_string_literal: true
-%h1 Listing reports
+%div.container
+  %h1.left Listing reports
 
-%table.table.table-dark.table-striped.table-hover.table-sm.table-responsive-sm
-  %thead.thead-dark
-    %tr
-      %th Date
-      %th Technology
-      %th Distributed
-      %th Checked
-      %th User
-      %th
-      %th
-      %th
-
-  %tbody
-    - @reports.each do |report|
+  %table.table.table-dark.table-striped.table-hover.table-sm.table-responsive-sm
+    %thead.thead-dark
       %tr
-        %td= report.date
-        %td= report.technology.name
-        %td= report.distributed
-        %td= report.checked
-        %td= report.user.fname
-        %td= link_to 'Show', report, :class => "badge badge-primary"
-        %td= link_to 'Edit', edit_report_path(report), :class => "badge badge-warning"
-        %td= link_to 'Destroy', report, method: :delete, data: { confirm: 'Are you sure?' }, :class => "badge badge-danger"
+        %th Date
+        %th Technology
+        %th Distributed
+        %th Checked
+        %th User
+        %th
+        %th
+        %th
 
-%br
+    %tbody
+      - @reports.each do |report|
+        %tr
+          %td= report.date
+          %td= report.technology.name
+          %td= report.distributed
+          %td= report.checked
+          %td= report.user.fname
+          %td= link_to 'Show', report, :class => "badge badge-info"
+          %td= link_to 'Edit', edit_report_path(report), :class => "badge badge-warning"
+          %td= link_to 'Destroy', report, method: :delete, data: { confirm: 'Are you sure?' }, :class => "badge badge-danger"
 
-= link_to 'New Report', new_report_path
-
-= will_paginate @reports, renderer: WillPaginate::ActionView::Bootstrap4LinkRenderer
+  %div.row.justify-content-center.align-self-center
+    %div.col-2
+      = link_to "\n + \n", new_report_path, class: "btn btn-outline-primary btn-sm float-left"
+    %div.col-10
+      = will_paginate @reports, class: "pagination-sm float-right", renderer: WillPaginate::ActionView::Bootstrap4LinkRenderer
