@@ -933,12 +933,6 @@ RSpec.describe Report, type: :model do
   context '.people_served' do
   end
 
-  context '.households_served' do
-  end
-
-  context '.household_impact' do
-  end
-
   context '.impact' do
   end
 end

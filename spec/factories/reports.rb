@@ -9,7 +9,6 @@ FactoryBot.define do
     distributed { 1 }
     people { nil }
     checked { 1 }
-    households { 1 }
     association :reportable, factory: :facility
   end
 
@@ -21,7 +20,6 @@ FactoryBot.define do
     distributed { 1 }
     checked { 1 }
     people { 1 }
-    households { 1 }
     association :reportable, factory: :village
   end
 
@@ -33,7 +31,6 @@ FactoryBot.define do
     distributed { 1 }
     checked { 1 }
     people { 1 }
-    households { 1 }
     association :reportable, factory: :cell
   end
 
@@ -45,7 +42,6 @@ FactoryBot.define do
     distributed { 1 }
     checked { 1 }
     people { 1 }
-    households { 1 }
     association :reportable, factory: :sector
   end
 
@@ -57,7 +53,6 @@ FactoryBot.define do
     distributed { 1 }
     checked { 1 }
     people { 1 }
-    households { 1 }
     association :reportable, factory: :district
   end
 end
