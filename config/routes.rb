@@ -35,7 +35,7 @@ Rails.application.routes.draw do
   resources :users do
     get 'homepage', on: :member
   end
-  
+
   get 'monthly', to: 'monthly#index'
   post 'monthly/redirector', to: 'monthly#redirector', as: 'monthly_redirector'
   get ':year/:month', to: 'monthly#show', as: 'monthly_w_date'

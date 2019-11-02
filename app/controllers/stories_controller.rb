@@ -2,12 +2,16 @@ class StoriesController < ApplicationController
 
 	def index
 	end
-	
+
 	def show
 	end
 
 	def new
-	end
+  end
+
+  def edit
+    @story = Story.find(params[:id])
+  end
 
     # POST /stories
     # POST /stories.json
