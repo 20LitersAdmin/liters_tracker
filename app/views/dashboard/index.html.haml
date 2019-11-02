@@ -1,8 +1,9 @@
 = render partial: 'carousel', locals: { data: [{title: "Some report title", image: "image url for report data or static", desc: "report description"}] }
-
 .container
-  %h2
-    How we are measuring success
+  .row.w-100.justify-content-center
+    %p.w-50.text-center
+      Access to clean water is a fundamental human need that must be met if we expect to sustain progress toward ending poverty, ensuring access to education, and improving global health standards.
+.container
   .row.justify-content-center
     - if @lifetime_stats.any?
       - @lifetime_stats.each do |stat_block|
@@ -10,11 +11,7 @@
         = render partial: "shared/basic_stat_block", locals: { stat: stat_block[:stat], title: stat_block[:title] }
     = render partial: "shared/basic_stat_block", locals: { stat: @global_impact, title: 'People served' }
 
-:scss
-  #heroCarousel {
-    margin-bottom: 50px;
-  }
-  .carousel-inner{
-    width:100%;
-    max-height: 500px !important;
-  }
+-# Menu for time
+.container
+
+-# Gallery with links to stories
