@@ -9,14 +9,29 @@ class StoriesController < ApplicationController
 	def new
 	end
 
+    # POST /stories
+    # POST /stories.json
 	def create
-      save_image(params)
+	  # save_image(params)
+      # does this work wth our image saving stuff
+      authorize @story = Story.new(story_params)
+      
+      respond_to do |format|
+        if @story.save
+          format.html { redirect_to @story, notice: 'Report was successfully created.' }
+          format.json { render :show, status: :created, location: @story }
+        else
+          # todo can we keep the form elements on error?
+          format.html { render :new }
+          format.json { render json: @story.errors, status: :unprocessable_entity }
+        end
+      end
     end
 	
 	private
 
 	def save_image(params)
-	  image_io = params[:stories][:picture]
+	  image_io = params[:stories][:photo]
       image_path = Rails.root.join('tmp', image_io.original_filename)
 
       aws_id = Rails.application.credentials.aws[:access_key]
