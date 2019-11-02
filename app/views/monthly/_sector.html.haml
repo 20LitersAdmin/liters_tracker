@@ -7,4 +7,5 @@
   %td.text-right= human_number sector_reports.sum(:distributed)
   %td.text-right= human_number sector_reports.sum(:checked)
   %td.text-right= human_number sector_reports.map(&:impact).sum
+  %td
 = render partial: 'cell', collection: cells, locals: { reports: sector_reports, technology: technology }
