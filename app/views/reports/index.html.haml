@@ -1,8 +1,8 @@
 -# frozen_string_literal: true
 %h1 Listing reports
 
-%table
-  %thead
+%table.table.table-dark.table-striped.table-hover.table-sm.table-responsive-sm
+  %thead.thead-dark
     %tr
       %th Date
       %th Technology
@@ -21,10 +21,12 @@
         %td= report.distributed
         %td= report.checked
         %td= report.user.fname
-        %td= link_to 'Show', report
-        %td= link_to 'Edit', edit_report_path(report)
-        %td= link_to 'Destroy', report, method: :delete, data: { confirm: 'Are you sure?' }
+        %td= link_to 'Show', report, :class => "badge badge-primary"
+        %td= link_to 'Edit', edit_report_path(report), :class => "badge badge-warning"
+        %td= link_to 'Destroy', report, method: :delete, data: { confirm: 'Are you sure?' }, :class => "badge badge-danger"
 
 %br
 
 = link_to 'New Report', new_report_path
+
+= will_paginate @reports, renderer: WillPaginate::ActionView::Bootstrap4LinkRenderer

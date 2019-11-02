@@ -16,6 +16,7 @@ class Report < ApplicationRecord
   scope :within_month, ->(date) { where(date: date.beginning_of_month..date.end_of_month) }
   scope :earliest_date, -> { order(date: :asc).first.date }
   scope :latest_date, -> { order(date: :asc).last.date }
+  scope :sorted, -> { order(date: :desc) }
 
   def self.related_to(record)
     where(reportable_type: record.class.to_s, reportable_id: record.id)
