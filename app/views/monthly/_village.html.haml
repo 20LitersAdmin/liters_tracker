@@ -10,6 +10,6 @@
   %td.text-right= human_number village_report.impact
   %td.text-right
     - if story.nil?
-      =button_to 'Add', new_story_path, method: :get
+      =button_to 'Add', new_story_path, { method: :get, params: { report_id: village_report.id } }
     - else
       =button_to 'Edit', edit_story_path(story.id), method: :get
