@@ -1,9 +1,10 @@
-= render partial: 'carousel', locals: { data: [{title: "Some report title", image: "image url for report data or static", desc: "report description"}] }
-.container
-  .row.w-100.justify-content-center
-    %p.w-50.text-center
-      Access to clean water is a fundamental human need that must be met if we expect to sustain progress toward ending poverty, ensuring access to education, and improving global health standards.
-.container
+%section.bgimage
+  .container-fluid
+    .row.w-100.justify-content-center
+      %h5.w-50.text-center.bgtextcenter
+        Access to clean water is a fundamental human need that must be met if we expect to sustain progress toward ending poverty, ensuring access to education, and improving global health standards.
+
+.container.mt-5
   .row.justify-content-center
     - if @lifetime_stats.any?
       - @lifetime_stats.each do |stat_block|
@@ -24,9 +25,24 @@
   .card-columns
     = render partial: 'story', collection: @stories
 
-
-
--# Menu for time
-.container
-
--# Gallery with links to stories
+:scss
+  .bgimage {
+    width:100%;
+    height:500px;
+    background: url("https://d5t73r6km0hzm.cloudfront.net/images/325+Rwanda+RWHS+children.jpg");
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size:cover;
+    background-attachment: fixed;
+  }
+  .bgimage h5 {
+    color:white;
+    text-shadow:2px 2px #333;
+  }
+  .bgtextcenter{
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    text-color: white;
+    color: white;
+  }

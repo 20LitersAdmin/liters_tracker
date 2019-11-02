@@ -10,7 +10,7 @@ class DashboardController < ApplicationController
       { stat: technology.lifetime_impact, title: "#{technology.name}s" }
     end
 
-    @global_impact = Report.all.sum(:people)
+    # @global_impact = Report.all.sum(:people)
     @stories = Story.all
   end
 end
