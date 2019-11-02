@@ -7,7 +7,7 @@
 
   = form_for @story do |f|
 	
-    = f.hidden_field :report_id, value: @report_id
+    = f.hidden_field :report_id, value: @story.report_id
     .field
       = f.label 'Title'
       = f.text_field :title, value: @story.title

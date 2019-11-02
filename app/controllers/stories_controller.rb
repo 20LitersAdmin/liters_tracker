@@ -109,7 +109,8 @@ class StoriesController < ApplicationController
   end
 
   def set_story
-    authorize @story = Story.find(params[:id])
+    @story = Story.find(params[:id])
+    authorize @story
   end
 
 end
