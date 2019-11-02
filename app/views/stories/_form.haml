@@ -18,20 +18,16 @@
     .actions
       = f.submit 'Save'
 
-  - if story_exists && story.image
+  - if @story.image
     %br
     %div
       %p Image Preview:
-      =image_tag story.image, width: '400'
+      =image_tag @story.image, width: '400'
 
-  - if story_exists && story.image_thumbnail
+  - if @story.image_thumbnail
     %br
     %div
       %p Thumbnail Preview:
-      =image_tag story.image_thumbnail, width: '400'
-
-- else
-  %br
-  %br
-  %p Something went wrong and the report_id wasn't properly associated to this new story. Please navigate back and try again!
+      =image_tag @story.image_thumbnail, width: '400'
+  
 

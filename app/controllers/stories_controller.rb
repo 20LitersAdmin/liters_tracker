@@ -8,12 +8,15 @@ class StoriesController < ApplicationController
 	end
 
   def new
+    @story = Story.new
     @story.report_id = params[:report_id]
   end
 
   def edit
   end
 
+  # PATCH /stories
+  # PATCH /stories.json
   def update
     updated_params = story_params.except(:photo)
     if story_params[:photo]
@@ -27,7 +30,6 @@ class StoriesController < ApplicationController
 
     respond_to do |format|
       if @story.update(updated_params)
-        puts "hey there"
         format.html { redirect_to @story, notice: 'Report was successfully edited.' }
         format.json { render :show, status: :ok, location: @story }
       else
@@ -38,8 +40,8 @@ class StoriesController < ApplicationController
     
   end
 
-    # POST /stories
-    # POST /stories.json
+  # POST /stories
+  # POST /stories.json
 	def create
 	  
     # does this work wth our image saving stuff
@@ -107,7 +109,8 @@ class StoriesController < ApplicationController
   end
 
   def set_story
-    authorize @story = Story.find(params[:id])
+    @story = Story.find(params[:id])
+    authorize @story
   end
 
 end

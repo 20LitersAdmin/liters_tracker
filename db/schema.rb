@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_11_02_171346) do
+ActiveRecord::Schema.define(version: 2019_11_02_142156) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -91,7 +91,6 @@ ActiveRecord::Schema.define(version: 2019_11_02_171346) do
     t.integer "planable_id"
     t.string "planable_type"
     t.date "date"
-    t.index ["contract_id", "technology_id", "planable_id", "planable_type"], name: "idx_has_many_reports", unique: true
     t.index ["contract_id"], name: "index_plans_on_contract_id"
     t.index ["created_at"], name: "index_plans_on_created_at"
     t.index ["date"], name: "index_plans_on_date"
