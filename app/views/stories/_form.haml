@@ -1,28 +1,36 @@
 - story = local_assigns[:story]
 - story_exists = !story.nil?
+- report_id_exists = !@report_id.blank?
 
-= form_for :stories, url: {action: 'create'} do |f|
+- if report_id_exists
+  = form_for :stories, url: {action: 'create'} do |f|
 
-  .field
-    = f.label 'Title'
-    = f.text_field :title, value: (story.title if story_exists)
-  .field
-    = f.label 'Story Text'
-    = f.text_area :text, value: (story.text if story_exists)
-  .field
-    = f.label 'Photo'
-    = f.file_field :photo
-  .actions
-    = f.submit 'Save'
+    = f.hidden_field :report_id, value: @report_id
+    .field
+      = f.label 'Title'
+      = f.text_field :title, value: (story.title if story_exists)
+    .field
+      = f.label 'Story Text'
+      = f.text_area :text, value: (story.text if story_exists)
+    .field
+      = f.label 'Photo'
+      = f.file_field :photo
+    .actions
+      = f.submit 'Save'
 
-- if story_exists && story.image
+  - if story_exists && story.image
+    %br
+    %div
+      %p Image Preview:
+      =image_tag story.image
+
+  - if story_exists && story.image_thumbnail
+    %br
+    %div
+      %p Thumbnail Preview:
+      =image_tag story.image_thumbnail
+
+- else
   %br
-  %div
-    %p Image Preview:
-    =image_tag story.image
-
-- if story_exists && story.image_thumbnail
   %br
-  %div
-    %p Thumbnail Preview:
-    =image_tag story.image_thumbnail
+  %p Something went wrong and the report_id wasn't properly associated to this new story. Please navigate back and try again!

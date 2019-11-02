@@ -6,7 +6,8 @@ class StoriesController < ApplicationController
 	def show
 	end
 
-	def new
+  def new
+    @report_id = params[:report_id]
   end
 
   def edit
