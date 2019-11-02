@@ -11,6 +11,17 @@ To contribute please look at the open Issues and create a Pull Request with the 
 
 **MacOS**
 
+Prerequisites:
+- Install Postgresql
+- Start Postgresql
+
+Via Homebrew:
+```
+brew install postgresql
+brew services start postgresql
+```
+
+Setup the Repository:
 ```
 rbenv local 2.5.3
 gem install bundler
@@ -20,6 +31,9 @@ bundle exec rake db:migrate
 bundle exec rake db:seed #local seed optional
 bundle exec rails s
 ```
+
+**Testing emails**
+Install https://github.com/mailhog/MailHog for a useful local SMTP server
 
 ## Production Database Restore
 

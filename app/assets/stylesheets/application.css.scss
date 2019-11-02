@@ -14,3 +14,28 @@
  *= require_tree .
  *= require datatables
  */
+
+@font-face {
+  font-family: 'DIN-Bold';
+  src: font-url('DIN-Bold.ttf');
+  font-weight: bold;
+  font-style:normal
+}
+
+@font-face {
+  font-family: 'DIN';
+  src: font-url('DIN.ttf');
+  font-weight: normal;
+  font-style:normal
+}
+
+@font-face {
+  font-family: 'DIN-Light';
+  src: font-url('DIN-Light-Regular.otf');
+  font-weight: 300;
+  font-style:normal
+}
+
+* {
+  font-family: 'DIN', Helvetica, sans-serif !important;
+}
