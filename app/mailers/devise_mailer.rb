@@ -1,7 +1,6 @@
 # frozen_string_literal: true
 
 class DeviseMailer < Devise::Mailer
-  helper MailerHelper
   include Devise::Controllers::UrlHelpers
   default template_path: 'users/mailer'
   layout 'mailer'
