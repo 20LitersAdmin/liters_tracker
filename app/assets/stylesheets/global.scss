@@ -76,3 +76,9 @@ main.container {
 .card.match-height {
   min-height: 100%
 }
+
+table {
+  .form-control {
+    display: inline-block;
+  }
+}
