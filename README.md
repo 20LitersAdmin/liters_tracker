@@ -11,6 +11,17 @@ To contribute please look at the open Issues and create a Pull Request with the 
 
 **MacOS**
 
+Prerequisites:
+- Install Postgresql
+- Start Postgresql
+
+Via Homebrew:
+```
+brew install postgresql
+brew services start postgresql
+```
+
+Setup the Repository:
 ```
 rbenv local 2.5.3
 gem install bundler
