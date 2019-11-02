@@ -10,6 +10,7 @@ class StoriesController < ApplicationController
   def new
     @story = Story.new
     @story.report_id = params[:report_id]
+    authorize @story
   end
 
   def edit
