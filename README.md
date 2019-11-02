@@ -21,6 +21,9 @@ bundle exec rake db:seed #local seed optional
 bundle exec rails s
 ```
 
+**Testing emails**
+Install https://github.com/mailhog/MailHog for a useful local SMTP server
+
 ## Production Database Restore
 
 ### Requirements
