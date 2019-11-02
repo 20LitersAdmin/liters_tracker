@@ -32,6 +32,7 @@ class UsersController < ApplicationController
     authorize @user = User.new(user_params)
 
     if @user.save
+      # Net::SMTPSyntaxError (501 Invalid command or cannot parse from address
       flash[:success] = 'User was successfully created'
       redirect_to users_path
     else
