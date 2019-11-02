@@ -14,7 +14,7 @@ module ErrorHandler
       redirect_to root_path
     else
       flash[:error] = 'You need to sign in first'
-      redirect_to new_user_session_path(return_to: request.env['PATH_INFO'])
+      redirect_to new_user_session_path()
     end
   end
 

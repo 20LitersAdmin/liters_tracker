@@ -851,7 +851,7 @@ RSpec.describe Report, type: :model do
     end
 
     context '#key_params_are_missing?' do
-      it 'returns false if #technology_id, #contract_id are present and #reports.count is not zero' do
+      pending 'returns false if #technology_id, #contract_id are present and #reports.count is not zero' do
         expect(Report.key_params_are_missing?(@batch_params)).to eq false
       end
 
