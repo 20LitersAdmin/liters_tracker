@@ -88,6 +88,8 @@ GEM
       autoprefixer-rails (>= 9.1.0)
       popper_js (>= 1.14.3, < 2)
       sassc-rails (>= 2.0.0)
+    bootstrap-will_paginate (1.0.0)
+      will_paginate
     bootstrap4-datetime-picker-rails (0.3.1)
       jquery-rails (~> 4.2, >= 4.2.0)
       moment-timezone-rails (~> 1.0)
@@ -126,6 +128,7 @@ GEM
       factory_bot (~> 5.0.2)
       railties (>= 4.2.0)
     ffi (1.11.1)
+    flamegraph (0.9.5)
     font-awesome-rails (4.7.0.5)
       railties (>= 3.2, < 6.1)
     globalid (0.4.2)
@@ -163,6 +166,7 @@ GEM
       mini_mime (>= 0.1.1)
     marcel (0.3.3)
       mimemagic (~> 0.3.2)
+    memory_profiler (0.9.14)
     method_source (0.9.2)
     mimemagic (0.3.3)
     mini_mime (1.0.2)
@@ -196,6 +200,8 @@ GEM
     pundit (2.1.0)
       activesupport (>= 3.0.0)
     rack (2.0.7)
+    rack-mini-profiler (1.1.3)
+      rack (>= 1.2.0)
     rack-test (1.1.0)
       rack (>= 1.0, < 3)
     rails (6.0.0)
@@ -268,7 +274,7 @@ GEM
     ruby_dep (1.5.0)
     ruby_parser (3.13.1)
       sexp_processor (~> 4.9)
-    rubyzip (1.2.3)
+    rubyzip (1.3.0)
     sassc (2.0.1)
       ffi (~> 1.9)
       rake
@@ -296,6 +302,7 @@ GEM
       actionpack (>= 4.0)
       activesupport (>= 4.0)
       sprockets (>= 3.0.0)
+    stackprof (0.2.13)
     temple (0.8.1)
     thor (0.20.3)
     thread_safe (0.3.6)
@@ -322,6 +329,7 @@ GEM
     websocket-driver (0.7.1)
       websocket-extensions (>= 0.1.0)
     websocket-extensions (0.1.4)
+    will_paginate (3.2.1)
     xpath (3.2.0)
       nokogiri (~> 1.8)
     zeitwerk (2.1.9)
@@ -333,6 +341,7 @@ PLATFORMS
 DEPENDENCIES
   bootsnap (>= 1.4)
   bootstrap (~> 4)
+  bootstrap-will_paginate (~> 1.0.0)
   bootstrap4-datetime-picker-rails
   byebug
   capybara (>= 2.15)
@@ -341,17 +350,20 @@ DEPENDENCIES
   database_cleaner
   devise!
   factory_bot_rails
+  flamegraph
   font-awesome-rails
   haml
   haml-rails (~> 1.0)
   jquery-datatables
   jquery-rails
   listen (>= 3.0.5, < 3.2)
+  memory_profiler
   momentjs-rails
   money-rails
   pg (>= 0.18, < 2.0)
   puma (~> 3.11)
   pundit
+  rack-mini-profiler
   rails (>= 5.2)
   rails_12factor
   rspec-rails
@@ -361,11 +373,13 @@ DEPENDENCIES
   simple_form
   spring
   spring-watcher-listen (~> 2.0.0)
+  stackprof
   turbolinks (~> 5)
   tzinfo-data
   uglifier (>= 1.3.0)
   web-console (>= 3.3.0)
   webdrivers
+  will_paginate (~> 3.2.1)
 
 RUBY VERSION
    ruby 2.5.3p105
