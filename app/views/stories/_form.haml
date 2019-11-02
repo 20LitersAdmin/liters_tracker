@@ -23,6 +23,9 @@
       = f.label 'Title'
       = f.text_field :title, value: (story.title if story_exists)
     .field
+      = f.label 'Prominent'
+      = f.check_box :prominent, value: @story.prominent
+    .field
       = f.label 'Story Text'
       = f.text_area :text, value: @story.text, :class => "tinymce", style: "height: 500px;"
     .field
@@ -31,16 +34,17 @@
     .actions
       = f.submit 'Save'
 
-  - if @story.image
+  - if !@story.image.blank?
     %br
     %div
       %p Image Preview:
       =image_tag @story.image, width: '400'
 
-  - if @story.image_thumbnail
+  - if !@story.image_thumbnail.blank?
     %br
     %div
       %p Thumbnail Preview:
       =image_tag @story.image_thumbnail, width: '400'
 
+  %br
   = tinymce
