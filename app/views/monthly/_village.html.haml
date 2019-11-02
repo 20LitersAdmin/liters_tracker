@@ -1,14 +1,16 @@
 -# frozen_string_literal: true
-- village_reports = reports.related_to_village(village)
-- #facilities = village_reports.related_facilities
+- village_report = reports.related_to_village(village).first
+- story = @stories.select{ |story| story.report_id == village_report.id}.first
+- #facilities = village_report.related_facilities
 %tr
   %td{colspan: 3}
   %td= "#{village.name}"
-  %td.text-right= human_number village_reports.sum(:distributed)
-  %td.text-right= human_number village_reports.sum(:checked)
-  %td.text-right= human_number village_reports.map(&:impact).sum
+  %td.text-right= human_number village_report.distributed
+  %td.text-right= human_number village_report.checked
+  %td.text-right= human_number village_report.impact
   %td.text-right
-    - if true
+    - if story.nil?
       =button_to 'Add', {}
     - else
       =button_to 'Edit', {}
+%p= story
