@@ -41,7 +41,7 @@ class StoriesController < ApplicationController
         else
           format.html { redirect_to monthly_w_date_url(:month => params[:month], :year => params[:year]), notice: 'Report was successfully edited.' }
         end
-        
+
         format.json { render :show, status: :ok, location: @story }
       else
         format.html { render :edit }
@@ -68,7 +68,12 @@ class StoriesController < ApplicationController
 
     respond_to do |format|
       if @story.save
-        format.html { redirect_to monthly_w_date_url(:month => params[:month], :year => params[:year]), notice: 'Report was successfully created.' }
+        if params[:month] && params[:year]
+          format.html { redirect_to monthly_w_date_url(:month => params[:month], :year => params[:year]), notice: 'Report was successfully created.' }
+        else
+          format.html { redirect_to @story, notice: 'Report was successfully created.' }
+        end
+        
         format.json { render :show, status: :created, location: @story }
       else
         # todo can we keep the form elements on error?
