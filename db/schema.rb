@@ -91,6 +91,7 @@ ActiveRecord::Schema.define(version: 2019_11_02_175331) do
     t.integer "planable_id"
     t.string "planable_type"
     t.date "date"
+    t.index ["contract_id", "technology_id", "planable_id", "planable_type"], name: "idx_has_many_reports", unique: true
     t.index ["contract_id"], name: "index_plans_on_contract_id"
     t.index ["created_at"], name: "index_plans_on_created_at"
     t.index ["date"], name: "index_plans_on_date"

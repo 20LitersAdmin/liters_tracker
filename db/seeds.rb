@@ -15,7 +15,7 @@ User.create(
   ]
 )
 
-ActiveRecord::Base.connection.reset_pk_sequence!('users')
+ActiveRecord::Base.connection.reset_pk_sequence!('stories')
 
 Technology.create(
   [
