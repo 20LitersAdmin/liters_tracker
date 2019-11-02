@@ -7,3 +7,8 @@
   %td.text-right= human_number village_reports.sum(:distributed)
   %td.text-right= human_number village_reports.sum(:checked)
   %td.text-right= human_number village_reports.map(&:impact).sum
+  %td.text-right
+    - if true
+      =button_to 'Add', {}
+    - else
+      =button_to 'Edit', {}
