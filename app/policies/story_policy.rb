@@ -15,7 +15,7 @@ class StoryPolicy
   end
 
   def show?
-    @user
+    
   end
 
   def new?
