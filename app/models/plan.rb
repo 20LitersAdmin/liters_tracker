@@ -20,7 +20,7 @@ class Plan < ApplicationRecord
   scope :with_reports,    -> { joins('LEFT JOIN reports ON plans.contract_id = reports.contract_id AND plans.technology_id = reports.technology_id AND plans.planable_id = reports.reportable_id AND plans.planable_type = reports.reportable_type') }
 
   def self.incomplete
-    having('plans.goal > SUM(reports.distributed)').group('plans.id, reports.id')
+    with_reports.having('plans.goal > SUM(reports.distributed)').group('plans.id, reports.id')
   end 
 
   def self.related_to(record)
