@@ -133,6 +133,18 @@ ActiveRecord::Schema.define(version: 2019_11_02_175331) do
     t.index ["gis_code"], name: "index_sectors_on_gis_code", unique: true
   end
 
+  create_table "stories", force: :cascade do |t|
+    t.string "title"
+    t.string "text"
+    t.string "image"
+    t.string "image_thumbnail"
+    t.bigint "report_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.boolean "prominent", default: false
+    t.index ["report_id"], name: "index_stories_on_report_id"
+  end
+
   create_table "targets", force: :cascade do |t|
     t.bigint "contract_id", null: false
     t.bigint "technology_id", null: false
@@ -215,6 +227,7 @@ ActiveRecord::Schema.define(version: 2019_11_02_175331) do
   add_foreign_key "reports", "contracts"
   add_foreign_key "reports", "technologies"
   add_foreign_key "reports", "users"
+  add_foreign_key "stories", "reports"
   add_foreign_key "targets", "contracts"
   add_foreign_key "targets", "technologies"
 end

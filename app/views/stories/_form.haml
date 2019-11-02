@@ -1,0 +1,50 @@
+- if @story.report_id.blank?
+  %br
+  %br
+  %p Something went wrong and the report_id wasn't properly associated to this new story. Please navigate back and try again!
+
+- elsif @year.blank?
+  %br
+  %br
+  %p Something went wrong and the year of the report wasn't passed to this page. Please navigate back and try again!
+
+- elsif @month.blank?
+  %br
+  %br
+  %p Something went wrong and the month of the report wasn't passed to this page. Please navigate back and try again!
+
+- else
+  = form_for @story do |f|
+
+    = f.hidden_field :report_id, value: @story.report_id
+    = hidden_field_tag :year, @year
+    = hidden_field_tag :month, @month
+    .field
+      = f.label 'Title'
+      = f.text_field :title, value: @story.title
+    .field
+      = f.label 'Prominent'
+      = f.check_box :prominent, value: @story.prominent
+    .field
+      = f.label 'Story Text'
+      = f.text_area :text, value: @story.text, :class => "tinymce", style: "height: 500px;"
+    .field
+      = f.label 'Photo'
+      = f.file_field :photo
+    .actions
+      = f.submit 'Save'
+
+  - if !@story.image.blank?
+    %br
+    %div
+      %p Image Preview:
+      =image_tag @story.image, width: '400'
+
+  - if !@story.image_thumbnail.blank?
+    %br
+    %div
+      %p Thumbnail Preview:
+      =image_tag @story.image_thumbnail, width: '400'
+
+  %br
+  = tinymce

@@ -28,6 +28,8 @@ Rails.application.routes.draw do
     get 'facility_error', on: :member
   end
 
+  resources :stories
+
   devise_for :users
 
   resources :users do
