@@ -393,6 +393,7 @@ DEPENDENCIES
   simple_form
   spring
   spring-watcher-listen (~> 2.0.0)
+  stackprof
   tinymce-rails (~> 5.1)
   turbolinks (~> 5)
   tzinfo-data

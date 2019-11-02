@@ -11,11 +11,13 @@ class DashboardController < ApplicationController
     end
 
     @global_impact = Report.all.sum(:people)
-    @stories = Story.all
+    @stories = Story.get_stories_by_year(Time.now.year.to_s)
   end
 
   def year_handler
-    year = params["year"]
-    
+    @stories = Story.get_stories_by_year(params["year"]) 
+    respond_to do |format|
+      format.js
+    end
   end
 end

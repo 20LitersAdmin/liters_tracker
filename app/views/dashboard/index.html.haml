@@ -22,7 +22,7 @@
     = link_to '2015', year_handler_path(year: 2015), remote: true, class: "nav-item nav-link", style: "color: white;"
     
 .container.mt-5
-  .card-columns
+  #story_column.card-columns
     = render partial: 'story', collection: @stories
 
 :scss
