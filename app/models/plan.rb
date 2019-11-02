@@ -17,6 +17,12 @@ class Plan < ApplicationRecord
   scope :only_villages,   -> { where(planable_type: 'Village') }
   scope :only_facilities, -> { where(planable_type: 'Facility') }
 
+  scope :with_reports,    -> { joins('LEFT JOIN reports ON plans.contract_id = reports.contract_id AND plans.technology_id = reports.technology_id AND plans.planable_id = reports.reportable_id AND plans.planable_type = reports.reportable_type') }
+
+  def self.incomplete
+    having('plans.goal > SUM(reports.distributed)').group('plans.id, reports.id')
+  end 
+
   def self.related_to(record)
     where(planable_type: record.class.to_s, planable_id: record.id)
   end
@@ -139,5 +145,16 @@ class Plan < ApplicationRecord
 
   def self.ary_of_district_ids_from_sectors
     related_sectors.pluck(:district_id)
+  end
+
+  def reports
+    Report.where(contract_id: self.contract_id,
+                 technology_id: self.technology_id,
+                 reportable_id: self.planable_id,
+                 reportable_type: self.planable_type)
+  end
+
+  def complete?
+    (self.goal || 0) < (reports.sum(:distributed) || 0)
   end
 end
