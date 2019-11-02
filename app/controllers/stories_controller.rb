@@ -7,10 +7,8 @@ class StoriesController < ApplicationController
 	def show
 	end
 
-	def new
-    report_id = 1530
-    @story = Story.new(report_id: report_id)
-    authorize @story 
+  def new
+    @report_id = params[:report_id]
   end
 
   def edit
