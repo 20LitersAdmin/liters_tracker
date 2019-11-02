@@ -1,6 +1,6 @@
 - story = local_assigns[:story]
 - story_exists = !story.nil?
-- report_id_exists = !@report_id.blank?
+- report_id_exists = !@story.report_id.blank?
 
 - if report_id_exists
   = form_for @story do |f|
@@ -22,17 +22,16 @@
     %br
     %div
       %p Image Preview:
-      =image_tag story.image
+      =image_tag story.image, width: '400'
 
   - if story_exists && story.image_thumbnail
     %br
     %div
       %p Thumbnail Preview:
-      =image_tag story.image_thumbnail
+      =image_tag story.image_thumbnail, width: '400'
 
 - else
   %br
   %br
   %p Something went wrong and the report_id wasn't properly associated to this new story. Please navigate back and try again!
 
-<%= tinymce %>
