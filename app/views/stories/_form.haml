@@ -1,7 +1,7 @@
 - story = local_assigns[:story]
 - story_exists = !story.nil?
 
-= form_for @story, url: {action: 'create'} do |f|
+= form_for @story do |f|
 	
   = f.hidden_field :report_id, value: @story.report_id
   .field
