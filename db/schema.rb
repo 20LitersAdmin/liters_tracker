@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_11_02_142156) do
+ActiveRecord::Schema.define(version: 2019_11_02_165500) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -37,8 +37,6 @@ ActiveRecord::Schema.define(version: 2019_11_02_142156) do
     t.integer "people_goal"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.index ["end_date", "start_date"], name: "between_end_start_dates"
-    t.index ["end_date"], name: "index_contracts_on_end_date"
   end
 
   create_table "countries", force: :cascade do |t|
@@ -90,10 +88,7 @@ ActiveRecord::Schema.define(version: 2019_11_02_142156) do
     t.datetime "updated_at", null: false
     t.integer "planable_id"
     t.string "planable_type"
-    t.date "date"
     t.index ["contract_id"], name: "index_plans_on_contract_id"
-    t.index ["created_at"], name: "index_plans_on_created_at"
-    t.index ["date"], name: "index_plans_on_date"
     t.index ["planable_type", "planable_id"], name: "index_plans_on_planable_type_and_planable_id"
     t.index ["technology_id"], name: "index_plans_on_technology_id"
   end
@@ -112,7 +107,6 @@ ActiveRecord::Schema.define(version: 2019_11_02_142156) do
     t.integer "reportable_id"
     t.string "reportable_type"
     t.index ["contract_id"], name: "index_reports_on_contract_id"
-    t.index ["date"], name: "index_reports_on_date"
     t.index ["reportable_type", "reportable_id"], name: "index_reports_on_reportable_type_and_reportable_id"
     t.index ["technology_id"], name: "index_reports_on_technology_id"
     t.index ["user_id"], name: "index_reports_on_user_id"
@@ -140,6 +134,7 @@ ActiveRecord::Schema.define(version: 2019_11_02_142156) do
     t.bigint "report_id", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.boolean "prominent", default: false
     t.index ["report_id"], name: "index_stories_on_report_id"
   end
 
@@ -171,7 +166,6 @@ ActiveRecord::Schema.define(version: 2019_11_02_142156) do
     t.string "local_cost_currency", default: "USD", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.index ["report_worthy"], name: "index_technologies_on_report_worthy"
   end
 
   create_table "users", force: :cascade do |t|
