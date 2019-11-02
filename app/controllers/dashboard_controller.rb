@@ -11,5 +11,6 @@ class DashboardController < ApplicationController
     end
 
     @global_impact = Report.all.sum(:people)
+    @stories = Story.all
   end
 end

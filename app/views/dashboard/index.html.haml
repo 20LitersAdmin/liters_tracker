@@ -11,6 +11,21 @@
         = render partial: "shared/basic_stat_block", locals: { stat: stat_block[:stat], title: stat_block[:title] }
     = render partial: "shared/basic_stat_block", locals: { stat: @global_impact, title: 'People served' }
 
+.container.mt-5
+  .row.justify-content-center
+  %nav.nav.nav-pills.nav-fill
+    %a.nav-item.nav-link.active{:href => "#"} 2019
+    %a.nav-item.nav-link{:href => "#"} 2018
+    %a.nav-item.nav-link{:href => "#"} 2017
+    %a.nav-item.nav-link{:href => "#"} 2016
+    %a.nav-item.nav-link{:href => "#"} 2015
+    
+.container.mt-5
+  .card-columns
+    = render partial: 'story', collection: @stories
+
+
+
 -# Menu for time
 .container
 

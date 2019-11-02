@@ -1,0 +1,10 @@
+.card
+    -if story.id % 2 == 0
+        %img.card-img-top.img-fluid{:alt => "Card image cap", :src => story.image, :height => 800, :width => 560}/
+        .card-body
+            %h4.card-title= story.title
+    - else
+        %img.card-img-top.img-fluid{:alt => "Card image cap", :src => story.image, :height => 800, :width => 400}/
+        .card-body
+            %h4.card-title= story.title
+          
