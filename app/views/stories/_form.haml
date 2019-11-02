@@ -1,0 +1,6 @@
+= form_for :stories, url: {action: 'create'} do |f|
+  .field
+    = f.label 'Image'
+    = f.file_field :picture
+  .actions
+    = f.submit 'Save'

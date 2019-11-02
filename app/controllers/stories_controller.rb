@@ -19,13 +19,16 @@ class StoriesController < ApplicationController
 	  image_io = params[:stories][:picture]
       image_path = Rails.root.join('tmp', image_io.original_filename)
 
-	  File.open(image_path), 'wb') do |file|
+      aws_id = Rails.application.credentials.aws[:access_key]
+      aws_key = Rails.application.credentials.aws[:secret_key]
+
+	  File.open(image_path, 'wb') do |file|
         file.write(image_io.read)
       end
       
       s3 = Aws::S3::Resource.new(
       	region:'us-east-2',
-        credentials: Aws::Credentials.new(Rails.application.credentials.aws[:access_key], Rails.application.credentials.aws[:secret_key])
+        credentials: Aws::Credentials.new(aws_id, aws_key)
       )
 
       obj = s3.bucket('20litres-images').object(image_io.original_filename)
