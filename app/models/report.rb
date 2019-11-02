@@ -178,7 +178,6 @@ class Report < ApplicationRecord
       rep.distributed = report_params[:distributed]
       rep.checked = report_params[:checked]
       rep.people = report_params[:people]
-      rep.households = report_params[:households]
     end
     report.save
   end
@@ -198,8 +197,7 @@ class Report < ApplicationRecord
                 self.user_id == user_id &&
                 distributed.to_i == params[:distributed].to_i &&
                 checked.to_i == params[:checked].to_i &&
-                people.to_i == params[:people].to_i &&
-                households.to_i == params[:households].to_i
+                people.to_i == params[:people].to_i
 
     return 1 if persisted? &&
                 !params[:distributed].to_i.positive? &&
@@ -212,27 +210,12 @@ class Report < ApplicationRecord
 
   def people_served
     return people if people&.positive?
-    # I don't love this, but right now every data view utilizes people_served
-    # and there are cases, like RWHS and SAM2 reports where people is nil and households is positive
-    # I need to switch to using impact for all report calculations
-    return households_impact if households&.positive?
 
     reportable_type == 'Facility' && reportable.population&.positive? ? reportable.population : (technology.default_impact * distributed.to_i)
   end
 
-  def households_served
-    return households if households&.positive?
-
-    reportable_type.include?('Facility') && reportable.households&.positive? ? reportable.households : (technology.default_household_impact * distributed.to_i)
-  end
-
-  def households_impact
-    households.to_i * Constants::Population::HOUSEHOLD_SIZE
-  end
-
   def impact
-    # use this on all data views instead of calculating from people_served
-    people_served > households_impact ? people_served : households_impact
+    people_served
   end
 
   def self.ary_of_village_ids_from_facilities
