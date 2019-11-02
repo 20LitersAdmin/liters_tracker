@@ -17,18 +17,21 @@ class StoriesController < ApplicationController
 
 	def save_image(params)
 	  image_io = params[:stories][:picture]
+      image_path = Rails.root.join('tmp', image_io.original_filename)
 
-	  File.open(Rails.root.join('tmp', image_io.original_filename), 'wb') do |file|
+	  File.open(image_path), 'wb') do |file|
         file.write(image_io.read)
       end
       
       s3 = Aws::S3::Resource.new(
       	region:'us-east-2',
         credentials: Aws::Credentials.new(Rails.application.credentials.aws[:access_key], Rails.application.credentials.aws[:secret_key])
-      ) # todo what region
-      obj = s3.bucket('20litres-images').object(image_io.original_filename)
-      obj.upload_file(Rails.root.join('tmp', image_io.original_filename))
+      )
 
+      obj = s3.bucket('20litres-images').object(image_io.original_filename)
+      obj.upload_file(image_path)
+
+      File.delete(image_path) if File.exist?(image_path)
 	end
 
 end
