@@ -12,6 +12,7 @@ class StoriesController < ApplicationController
     @story.report_id = params[:report_id]
     @year = params[:year]
     @month = params[:month]
+    authorize @story
   end
 
   def edit
@@ -105,7 +106,8 @@ class StoriesController < ApplicationController
     thumb.upload_file(image_path)
 
     # cleanup temporary image to keep filespace safe
-    # File.delete(image_path) if File.exist?(image_path)
+    File.delete(image_path) if File.exist?(image_path)
+    # todo - should image be separated from cdn url?
     {
       raw: "https://d5t73r6km0hzm.cloudfront.net/images/#{image_name}",
       thumbnail: "https://d5t73r6km0hzm.cloudfront.net/thumbnails/#{image_name}"
