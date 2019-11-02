@@ -6,7 +6,7 @@ class ReportsController < ApplicationController
   # GET /reports
   # GET /reports.json
   def index
-    authorize @reports = Report.all
+    authorize @reports = Report.sorted.paginate(page: params[:page], per_page: params[:per_page] || 20)
   end
 
   # GET /reports/1
