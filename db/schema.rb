@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_08_24_195542) do
+ActiveRecord::Schema.define(version: 2019_11_02_120607) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -88,7 +88,9 @@ ActiveRecord::Schema.define(version: 2019_08_24_195542) do
     t.datetime "updated_at", null: false
     t.integer "planable_id"
     t.string "planable_type"
+    t.date "date"
     t.index ["contract_id"], name: "index_plans_on_contract_id"
+    t.index ["date"], name: "index_plans_on_date"
     t.index ["planable_type", "planable_id"], name: "index_plans_on_planable_type_and_planable_id"
     t.index ["technology_id"], name: "index_plans_on_technology_id"
   end
@@ -107,6 +109,7 @@ ActiveRecord::Schema.define(version: 2019_08_24_195542) do
     t.integer "reportable_id"
     t.string "reportable_type"
     t.index ["contract_id"], name: "index_reports_on_contract_id"
+    t.index ["date"], name: "index_reports_on_date"
     t.index ["reportable_type", "reportable_id"], name: "index_reports_on_reportable_type_and_reportable_id"
     t.index ["technology_id"], name: "index_reports_on_technology_id"
     t.index ["user_id"], name: "index_reports_on_user_id"
