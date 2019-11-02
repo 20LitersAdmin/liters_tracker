@@ -201,13 +201,13 @@ class Report < ApplicationRecord
     # I need to switch to using impact for all report calculations
     return households_impact if households&.positive?
 
-    reportable_type == 'Facility' && model.population&.positive? ? model.population : (technology.default_impact * distributed.to_i)
+    reportable_type == 'Facility' && reportable.population&.positive? ? reportable.population : (technology.default_impact * distributed.to_i)
   end
 
   def households_served
     return households if households&.positive?
 
-    reportable_type.include?('Facility') && model.households&.positive? ? model.households : (technology.default_household_impact * distributed.to_i)
+    reportable_type.include?('Facility') && reportable.households&.positive? ? reportable.households : (technology.default_household_impact * distributed.to_i)
   end
 
   def households_impact
