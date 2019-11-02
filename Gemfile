@@ -60,3 +60,5 @@ end
 group :production do
   gem 'rails_12factor'
 end
+
+gem "tinymce-rails", "~> 5.1"
