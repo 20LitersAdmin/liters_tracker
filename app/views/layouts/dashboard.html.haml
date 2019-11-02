@@ -1,0 +1,20 @@
+-# frozen_string_literal: true
+!!!
+%html
+  %head
+    %meta{:content => "text/html; charset=UTF-8", "http-equiv" => "Content-Type"}
+    %title Liters Tracker [20 Liters]
+    = csrf_meta_tags
+    = csp_meta_tag
+    = stylesheet_link_tag    'application', media: 'all', 'data-turbolinks-track': 'reload'
+    = javascript_include_tag 'application', 'data-turbolinks-track': 'reload'
+  %body{'data-controller': controller.controller_name, 'data-action': controller.action_name }
+    -# %header
+      -# = render 'shared/navbar'
+    .fa-5x#loading_screen
+      %i.fa.fa-spinner.fa-pulse#loading_spinner
+    %main
+      = flash_messages
+      = yield
+    %footer.footer
+      = render 'shared/footer'
