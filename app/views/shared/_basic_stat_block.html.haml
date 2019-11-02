@@ -1,7 +1,12 @@
-.col.px-1
+#basic-stat-block.col.px-1
   .card.text-center.match-height
     .card-body.pb-0
       %h5.card-title
         = human_number(stat)
       %h6.card-subtitle.mb-2.text-muted
         = title
+
+:scss
+  #basic-stat-block .card {
+    border-radius: 0 !important;
+  }
