@@ -91,9 +91,16 @@ class StoriesController < ApplicationController
 
 
     # get aws creds
-    aws_id = Rails.application.credentials.aws[:access_key]
-    aws_key = Rails.application.credentials.aws[:secret_key]
-
+    aws_id = ''
+    aws_key = ''
+    if Rails.env.production?
+      aws_id = ENV['AWS_ACCESS_KEY']
+      aws_key = ENV['AWS_SECRET_KEY']
+    else
+      aws_id = Rails.application.credentials.aws[:access_key]
+      aws_key = Rails.application.credentials.aws[:secret_key]
+    end
+    
     # save image temporarily to send to s3
     File.open(image_path, 'wb') do |file|
       file.write(image_io.read)
