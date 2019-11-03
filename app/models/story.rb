@@ -9,6 +9,28 @@ class Story < ApplicationRecord
     joins(:report).order('reports.date ASC').pluck('reports.date').uniq
   end
 
+  def self.bin_stories_by_year_and_month(collection_of_stories)
+    binned_stories = {} # variable for the final return of stories that are binned by month
+    months = Date.const_get(:ABBR_MONTHNAMES).compact # returns nil as the first entry, so use compact to remove it
+    years = self.get_story_years
+
+    years.each do |y|
+      tmp_hash = {}
+      (1..12).step(1) do |m|
+        # start with the first month and build a hash of all stories that are binned by a month
+        tmp_date = Date.new(y, m)
+        tmp_stories = self.between_dates(tmp_date.beginning_of_month, tmp_date.end_of_month)
+        tmp_hash[Date.const_get(:ABBR_MONTHNAMES)[m]] = tmp_stories #convert digit to abbreviated month name
+      end
+      binned_stories[y.to_s] = tmp_hash # store off the hashes of stories associated by month and year
+    end
+    binned_stories
+  end
+
+  def self.get_story_years
+    self.array_of_unique_dates.map(&:year).uniq.sort.reverse
+  end
+
   def picture
     image.blank? ? 'story_no_image.png' : image
   end
