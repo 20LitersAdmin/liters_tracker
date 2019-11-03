@@ -7,6 +7,7 @@ Rails.application.routes.draw do
   resources :dashboard, only: %i[index]
 
   get 'dashboard/handler', to: 'dashboard#handler', as: 'dashboard_handler'
+  get 'dashboard/planner', to: 'dashboard#planner', as: 'dashboard_planner'
 
   resources :reports do
     post 'batch_process', on: :collection

@@ -15,32 +15,10 @@
 .container.mt-5
   .row.justify-content-center
   %nav.nav.nav-pills.nav-fill.liters-gray-bg.liters-text-white
+    = link_to 'FUTURE', dashboard_planner_path, remote: true, class: "nav-item nav-link"
     - @years.each do |year|
-      = link_to year.to_s, dashboard_handler_path(year: year), remote: true, class: "nav-item nav-link", style: "color: white;"
+      = link_to year.to_s, dashboard_handler_path(year: year), remote: true, class: "nav-item nav-link"
 
 .container.mt-5
   #story_column.card-columns
     = render partial: 'story', collection: @stories
-
-:scss
-  .bgimage {
-    width:100%;
-    height:500px;
-    background: url("https://d5t73r6km0hzm.cloudfront.net/images/325+Rwanda+RWHS+children.jpg");
-    background-repeat: no-repeat;
-    background-position: center;
-    background-size:cover;
-    background-attachment: fixed;
-    position: relative;
-  }
-  .bgimage h5 {
-    color:white;
-    text-shadow:2px 2px #333;
-  }
-  .bgtextcenter{
-    position: absolute;
-    top: 50%;
-    transform: translateY(-50%);
-    text-color: white;
-    color: white;
-  }

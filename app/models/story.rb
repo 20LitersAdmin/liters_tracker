@@ -9,4 +9,8 @@ class Story < ApplicationRecord
     joins(:report).order('reports.date ASC').pluck('reports.date').uniq
   end
 
+  def picture
+    image.blank? ? 'story_no_image.png' : image
+  end
+
 end

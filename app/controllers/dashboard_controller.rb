@@ -20,10 +20,23 @@ class DashboardController < ApplicationController
   end
 
   def handler
-    # handle params[:year] vs params[:year] and params[:month]
-    start_date = Date.new(params[:year].to_i,01,01)
-    end_date = Date.new(params[:year].to_i,12,31)
+    if params[:month].present?
+      start_date = Date.new(params[:year].to_i,params[:month].to_i,01)
+      end_date = start_date.end_of_month
+    else
+      start_date = Date.new(params[:year].to_i,01,01)
+      end_date = Date.new(params[:year].to_i,12,31)
+    end
+
     @stories = Story.between_dates(start_date,end_date)
+
+    respond_to do |format|
+      format.js
+    end
+  end
+
+  def planner
+    @plans = Plan.current.incomplete.limit(20)
 
     respond_to do |format|
       format.js

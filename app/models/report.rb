@@ -34,10 +34,6 @@ class Report < ApplicationRecord
     { title: story_title, text: story_text, report_id: id }
   end
 
-  def self.array_of_unique_dates
-    order(date: :asc).pluck(:date).uniq
-  end
-
   def self.related_to(record)
     where(reportable_type: record.class.to_s, reportable_id: record.id)
   end
