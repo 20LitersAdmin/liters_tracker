@@ -7,8 +7,7 @@ default: &default
 development:
   <<: *default
   database: liters_tracker_dev
-  user: postgres
-  password: Jacquelin123!
+
 
   # The specified database role being used to connect to postgres.
   # To create additional roles in postgres see `$ createuser --help`.
@@ -32,8 +31,7 @@ development:
 
 test:
   <<: *default
-  database: liters_tracker_test
-  password: Jacquelin123!
+
 
 # On Heroku and other platform providers, you may have a full connection URL
 # available as an environment variable. For example:
