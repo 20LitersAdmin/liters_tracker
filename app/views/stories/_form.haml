@@ -15,28 +15,25 @@
     .field
       = f.label 'Prominent'
       = f.check_box :prominent, value: @story.prominent
-    .field
-      = f.label 'Prominent'
-      = f.check_box :prominent, value: @story.prominent
-    .field
+    .field.wysiwyg
       = f.label 'Story Text'
       = f.text_area :text, value: @story.text, :class => "tinymce", style: "height: 500px;"
     .field
       = f.label 'Photo'
-      = f.file_field :photo
+      = f.file_field :photo, id: "image_upload"
     .actions
       = f.submit 'Save'
 
-  - if !@story.image.blank?
-    %br
-    %div
-      %p Image Preview:
-      =image_tag @story.image, width: '400'
+    %div{ id: "image_preview_wrapper", :class => ("hide" if @story.image.blank?) }
+      %br
+      %div
+        %p Image Preview:
+        =image_tag @story.image, id: "image_preview", width: '400'
 
-  - if !@story.image_thumbnail.blank?
-    %br
-    %div
-      %p Thumbnail Preview:
-      =image_tag @story.image_thumbnail, width: '400'
+    %div{ id: "image_thumbnail_preview_wrapper", :class => ("hide" if @story.image_thumbnail.blank?) }
+      %br
+      %div
+        %p Thumbnail Preview:
+        =image_tag @story.image_thumbnail, id: "image_thumbnail_preview", width: '200'
 
   = tinymce

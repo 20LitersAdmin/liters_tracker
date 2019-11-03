@@ -42,9 +42,12 @@ class StoriesController < ApplicationController
           format.html { redirect_to stories_path, notice: 'Report was successfully edited.' }
         else
           format.html { redirect_to monthly_w_date_url(:month => params[:month], :year => params[:year]), notice: 'Report was successfully edited.' }
-        end        
+        end
+
         format.json { render :show, status: :ok, location: @story }
       else
+        @year = params[:year]
+        @month = params[:month]
         format.html { render :edit }
         format.json { render json: @story.errors, status: :unprocessable_entity }
       end
@@ -78,6 +81,8 @@ class StoriesController < ApplicationController
         format.json { render :show, status: :created, location: @story }
       else
         # todo can we keep the form elements on error?
+        @year = params[:year]
+        @month = params[:month]
         format.html { render :new }
         format.json { render json: @story.errors, status: :unprocessable_entity }
       end

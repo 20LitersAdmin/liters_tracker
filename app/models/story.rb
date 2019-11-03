@@ -3,6 +3,8 @@
 class Story < ApplicationRecord
   belongs_to :report, inverse_of: :story
   scope :between_dates, ->(start_date, end_date) { joins(:report).where('reports.date BETWEEN ? AND ?', start_date, end_date)}
+  
+  validates_presence_of :title, :text
 
   def save_image(image_io)
 
@@ -88,5 +90,4 @@ class Story < ApplicationRecord
   def picture
     image.blank? ? 'story_no_image.png' : image
   end
-
 end
