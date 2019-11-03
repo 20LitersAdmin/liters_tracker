@@ -81,3 +81,11 @@ table {
     display: inline-block;
   }
 }
+
+.badge {
+  @at-root #{selector-unify(&, "a")} {
+    &:visited {
+      color: inherit;
+    }
+  }
+}
