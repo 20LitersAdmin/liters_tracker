@@ -41,43 +41,51 @@ class Plan < ApplicationRecord
   def self.related_to_village(village, only_ary: false)
     raise 'ERROR. Must provide a village.' unless village.is_a? Village
 
-    plan_ids = related_to(village).pluck(:id)
-    village.facilities.each { |facility| plan_ids << related_to_facility(facility, only_ary: true) }
+    village.related_plans
 
-    return plan_ids.flatten.uniq if only_ary
+    # plan_ids = related_to(village).pluck(:id)
+    # village.facilities.each { |facility| plan_ids << related_to_facility(facility, only_ary: true) }
 
-    where(id: plan_ids.flatten.uniq)
+    # return plan_ids.flatten.uniq if only_ary
+
+    # where(id: plan_ids.flatten.uniq)
   end
 
   def self.related_to_cell(cell, only_ary: false)
     raise 'ERROR. Must provide a cell.' unless cell.is_a? Cell
 
-    plan_ids = related_to(cell).pluck(:id)
-    cell.villages.each { |village| plan_ids << related_to_village(village, only_ary: true) }
+    cell.related_plans
 
-    return plan_ids.flatten.uniq if only_ary
+    # plan_ids = related_to(cell).pluck(:id)
+    # cell.villages.each { |village| plan_ids << related_to_village(village, only_ary: true) }
 
-    where(id: plan_ids.flatten.uniq)
+    # return plan_ids.flatten.uniq if only_ary
+
+    # where(id: plan_ids.flatten.uniq)
   end
 
   def self.related_to_sector(sector, only_ary: false)
     raise 'ERROR. Must provide a sector.' unless sector.is_a? Sector
 
-    plan_ids = related_to(sector).pluck(:id)
-    sector.cells.each { |cell| plan_ids << related_to_cell(cell, only_ary: true) }
+    sector.related_plans
 
-    return plan_ids.flatten.uniq if only_ary
+    # plan_ids = related_to(sector).pluck(:id)
+    # sector.cells.each { |cell| plan_ids << related_to_cell(cell, only_ary: true) }
 
-    where(id: plan_ids.flatten.uniq)
+    # return plan_ids.flatten.uniq if only_ary
+
+    # where(id: plan_ids.flatten.uniq)
   end
 
   def self.related_to_district(district)
     raise 'ERROR. Must provide a district.' unless district.is_a? District
 
-    plan_ids = related_to(district).pluck(:id)
-    district.sectors.each { |sector| plan_ids << related_to_sector(sector, only_ary: true) }
+    district.related_plans
 
-    where(id: plan_ids.flatten.uniq)
+    # plan_ids = related_to(district).pluck(:id)
+    # district.sectors.each { |sector| plan_ids << related_to_sector(sector, only_ary: true) }
+
+    # where(id: plan_ids.flatten.uniq)
   end
 
   def self.related_facilities
