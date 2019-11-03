@@ -8,14 +8,23 @@
   background-attachment: fixed;
   position: relative;
 }
-.bgimage h5 {
+
+.bgimage h5, .bgimage h1 {
   color:white;
   text-shadow:2px 2px #333;
 }
-.bgtextcenter{
+
+.spacer {
+  width: 10% !important;
+}
+
+.title-text {
+  width: 80% !important;
+}
+
+
+.center-header{
   position: absolute;
   top: 50%;
   transform: translateY(-50%);
-  text-color: white;
-  color: white;
 }
