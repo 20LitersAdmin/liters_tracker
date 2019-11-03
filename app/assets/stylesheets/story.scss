@@ -47,10 +47,11 @@ $bottom-spacing: 16px;
     }
 }
 
-
 .card {
   margin: 20px 0px;
+}
 
+a.card {
   &:hover {
     color: black;
     background-color: #f8f8f8;
