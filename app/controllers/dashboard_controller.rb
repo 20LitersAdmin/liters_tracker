@@ -36,7 +36,8 @@ class DashboardController < ApplicationController
   end
 
   def planner
-    @plans = Plan.current.incomplete.limit(20)
+    @plans = Plan.incomplete.limit(20)
+    # @plans = Plan.current.incomplete.limit(20)
 
     respond_to do |format|
       format.js
