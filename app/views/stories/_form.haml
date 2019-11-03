@@ -14,10 +14,7 @@
     .field
       = f.label 'Prominent'
       = f.check_box :prominent, value: @story.prominent
-    .field
-      = f.label 'Prominent'
-      = f.check_box :prominent, value: @story.prominent
-    .field
+    .field.wysiwyg
       = f.label 'Story Text'
       = f.text_area :text, value: @story.text, :class => "tinymce", style: "height: 500px;"
     .field

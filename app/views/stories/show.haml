@@ -1,1 +1,11 @@
-%p Something else
+- @story
+
+=image_tag @story.image, width: '800'
+
+%p
+  %b 
+    = @story.title
+
+%p
+  = @story.text.html_safe
+

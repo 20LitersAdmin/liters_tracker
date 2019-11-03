@@ -41,9 +41,11 @@ class StoriesController < ApplicationController
         else
           format.html { redirect_to monthly_w_date_url(:month => params[:month], :year => params[:year]), notice: 'Report was successfully edited.' }
         end
-        
+
         format.json { render :show, status: :ok, location: @story }
       else
+        @year = params[:year]
+        @month = params[:month]
         format.html { render :edit }
         format.json { render json: @story.errors, status: :unprocessable_entity }
       end
@@ -68,10 +70,17 @@ class StoriesController < ApplicationController
 
     respond_to do |format|
       if @story.save
-        format.html { redirect_to monthly_w_date_url(:month => params[:month], :year => params[:year]), notice: 'Report was successfully created.' }
+        if params[:month] && params[:year]
+          format.html { redirect_to monthly_w_date_url(:month => params[:month], :year => params[:year]), notice: 'Report was successfully created.' }
+        else
+          format.html { redirect_to @story, notice: 'Report was successfully created.' }
+        end
+
         format.json { render :show, status: :created, location: @story }
       else
         # todo can we keep the form elements on error?
+        @year = params[:year]
+        @month = params[:month]
         format.html { render :new }
         format.json { render json: @story.errors, status: :unprocessable_entity }
       end
@@ -99,7 +108,7 @@ class StoriesController < ApplicationController
       aws_id = Rails.application.credentials.aws[:access_key]
       aws_key = Rails.application.credentials.aws[:secret_key]
     end
-    
+
     # save image temporarily to send to s3
     File.open(image_path, 'wb') do |file|
       file.write(image_io.read)
