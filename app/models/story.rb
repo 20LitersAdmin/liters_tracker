@@ -67,11 +67,9 @@ class Story < ApplicationRecord
 
   def related
     # grab a random offset to start grabing stories at
-    # todo - which is most efficient
     offset = rand(Story.all.size-4)
     # rand of a negative is zero, but we should be explicit
-    # todo .negative?
-    offset = 0 if offset < 0
+    offset = 0 if offset.negative?
     # grab 4 stories (this story could be one of them)
     random_stories = Story.offset(offset).first(4)
     # limit down to the stories that are not us
