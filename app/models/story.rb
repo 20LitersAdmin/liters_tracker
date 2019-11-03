@@ -2,7 +2,6 @@
 
 class Story < ApplicationRecord
   belongs_to :report, inverse_of: :story
-  scope :get_stories_by_year, ->(year_string) { joins(:report).where('reports.date BETWEEN ? AND ?', "#{year_string}-01-01", "#{year_string}-12-31")}
   scope :between_dates, ->(start_date, end_date) { joins(:report).where('reports.date BETWEEN ? AND ?', start_date, end_date)}
 
   def save_image(image_io)
