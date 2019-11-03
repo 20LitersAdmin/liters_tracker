@@ -1,8 +1,24 @@
-%h2
-  How we are measuring success
-.row.justify-content-center
-  - if @lifetime_stats.any?
-    - @lifetime_stats.each do |stat_block|
-      - next if stat_block.blank?
-      = render partial: "shared/basic_stat_block", locals: { stat: stat_block[:stat], title: stat_block[:title] }
-  = render partial: "shared/basic_stat_block", locals: { stat: @global_impact, title: 'People served' }
+%section.bgimage
+  .container-fluid
+    .row.w-100.justify-content-center
+      %h5.w-50.text-center.bgtextcenter
+        Access to clean water is a fundamental human need that must be met if we expect to sustain progress toward ending poverty, ensuring access to education, and improving global health standards.
+
+.container.mt-5
+  .row.justify-content-center
+    - if @lifetime_stats.any?
+      - @lifetime_stats.each do |stat_block|
+        - next if stat_block.blank?
+        = render partial: "shared/basic_stat_block", locals: { stat: stat_block[:stat], title: stat_block[:title] }
+    = render partial: "shared/basic_stat_block", locals: { stat: @global_impact, title: 'People served' }
+
+.container.mt-5
+  .row.justify-content-center
+  %nav.nav.nav-pills.nav-fill.liters-gray-bg.liters-text-white
+    = link_to 'FUTURE', dashboard_planner_path, remote: true, class: "nav-item nav-link"
+    - @years.each do |year|
+      = link_to year.to_s, dashboard_handler_path(year: year), remote: true, class: "nav-item nav-link"
+
+.container.mt-5
+  #story_column.card-columns
+    = render partial: 'story', collection: @stories

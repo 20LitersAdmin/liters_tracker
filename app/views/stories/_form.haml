@@ -2,7 +2,6 @@
   %br
   %br
   %p Something went wrong and the report_id wasn't properly associated to this new story. Please navigate back and try again!
-
 - else
   = form_for @story do |f|
 
@@ -11,7 +10,10 @@
     = hidden_field_tag :month, @month
     .field
       = f.label 'Title'
-      = f.text_field :title, value: @story.title
+      = f.text_field :title, value: (story.title if story_exists)
+    .field
+      = f.label 'Prominent'
+      = f.check_box :prominent, value: @story.prominent
     .field
       = f.label 'Prominent'
       = f.check_box :prominent, value: @story.prominent

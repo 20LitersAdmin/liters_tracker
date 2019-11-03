@@ -89,7 +89,6 @@ class StoriesController < ApplicationController
     image_name = "#{params[:report_id]}.#{image_extension}"
     image_path = Rails.root.join('tmp', image_name)
 
-
     # get aws creds
     aws_id = ''
     aws_key = ''
