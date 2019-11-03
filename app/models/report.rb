@@ -5,6 +5,7 @@ class Report < ApplicationRecord
   belongs_to :user,       inverse_of: :reports
   belongs_to :contract,   inverse_of: :reports
   belongs_to :reportable, polymorphic: true
+  has_one    :story, inverse_of: :report
 
   validates_presence_of :date, :user_id, :contract_id, :technology_id, :reportable_type, :reportable_id
 

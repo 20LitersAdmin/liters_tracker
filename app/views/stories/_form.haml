@@ -10,7 +10,7 @@
     = hidden_field_tag :month, @month
     .field
       = f.label 'Title'
-      = f.text_field :title, value: (story.title if story_exists)
+      = f.text_field :title, value: @story.title
     .field
       = f.label 'Prominent'
       = f.check_box :prominent, value: @story.prominent
