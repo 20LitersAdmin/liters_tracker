@@ -15,12 +15,9 @@
 .container.mt-5
   .row.justify-content-center
   %nav.nav.nav-pills.nav-fill.liters-gray-bg.liters-text-white
-    = link_to '2019', year_handler_path(year: 2019), remote: true, class: "nav-item nav-link", style: "color: white;"
-    = link_to '2018', year_handler_path(year: 2018), remote: true, class: "nav-item nav-link", style: "color: white;"
-    = link_to '2017', year_handler_path(year: 2017), remote: true, class: "nav-item nav-link", style: "color: white;"
-    = link_to '2016', year_handler_path(year: 2016), remote: true, class: "nav-item nav-link", style: "color: white;"
-    = link_to '2015', year_handler_path(year: 2015), remote: true, class: "nav-item nav-link", style: "color: white;"
-    
+    - @years.each do |year|
+      = link_to year.to_s, dashboard_handler_path(year: year), remote: true, class: "nav-item nav-link", style: "color: white;"
+
 .container.mt-5
   #story_column.card-columns
     = render partial: 'story', collection: @stories
