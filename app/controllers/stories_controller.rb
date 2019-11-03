@@ -1,5 +1,6 @@
 class StoriesController < ApplicationController
   before_action :set_story, only: %i[show edit update destroy]
+  layout "dashboard", :only => [ :show ]
 
 	def index
     @stories = Story.all.order(:title)
@@ -13,6 +14,7 @@ class StoriesController < ApplicationController
     @story.report_id = params[:report_id]
     @year = params[:year]
     @month = params[:month]
+
     authorize @story
   end
 
@@ -26,7 +28,7 @@ class StoriesController < ApplicationController
   def update
     updated_params = story_params.except(:photo)
     if story_params[:photo]
-      new_urls = save_image(story_params)
+      new_urls = @story.save_image(story_params[:photo])
       updated_params[:image] = new_urls[:raw]
       updated_params[:image_thumbnail] = new_urls[:thumbnail]
     else
@@ -41,9 +43,11 @@ class StoriesController < ApplicationController
         else
           format.html { redirect_to monthly_w_date_url(:month => params[:month], :year => params[:year]), notice: 'Report was successfully edited.' }
         end
-        
+
         format.json { render :show, status: :ok, location: @story }
       else
+        @year = params[:year]
+        @month = params[:month]
         format.html { render :edit }
         format.json { render json: @story.errors, status: :unprocessable_entity }
       end
@@ -58,7 +62,7 @@ class StoriesController < ApplicationController
     #handle image
     authorize @story = Story.new(story_params.except(:photo))
     if (!story_params[:photo].blank?)
-      urls = save_image(story_params)
+      urls = @story.save_image(story_params[:photo])
       @story.image = urls[:raw]
       @story.image_thumbnail = urls[:thumbnail]
     else
@@ -68,10 +72,17 @@ class StoriesController < ApplicationController
 
     respond_to do |format|
       if @story.save
-        format.html { redirect_to monthly_w_date_url(:month => params[:month], :year => params[:year]), notice: 'Report was successfully created.' }
+        if params[:month].blank? || params[:year].blank?
+          format.html { redirect_to @story, notice: 'Report was successfully created.' }
+        else
+          format.html { redirect_to monthly_w_date_url(:month => params[:month], :year => params[:year]), notice: 'Report was successfully created.' }
+        end
+
         format.json { render :show, status: :created, location: @story }
       else
         # todo can we keep the form elements on error?
+        @year = params[:year]
+        @month = params[:month]
         format.html { render :new }
         format.json { render json: @story.errors, status: :unprocessable_entity }
       end
@@ -79,52 +90,6 @@ class StoriesController < ApplicationController
   end
 
 	private
-
-	def save_image(params)
-
-    image_io = params[:photo]
-
-    # rename image to something consistent and safe
-    image_extension = image_io.original_filename.split(/\./).last
-    image_name = "#{params[:report_id]}.#{image_extension}"
-    image_path = Rails.root.join('tmp', image_name)
-
-    # get aws creds
-    aws_id = ''
-    aws_key = ''
-    if Rails.env.production?
-      aws_id = ENV['AWS_ACCESS_KEY']
-      aws_key = ENV['AWS_SECRET_KEY']
-    else
-      aws_id = Rails.application.credentials.aws[:access_key]
-      aws_key = Rails.application.credentials.aws[:secret_key]
-    end
-    
-    # save image temporarily to send to s3
-    File.open(image_path, 'wb') do |file|
-      file.write(image_io.read)
-    end
-
-    s3 = Aws::S3::Resource.new(
-      region:'us-east-2',
-      credentials: Aws::Credentials.new(aws_id, aws_key)
-    )
-
-    img = s3.bucket('20litres-images').object("images/#{image_name}")
-    img.upload_file(image_path)
-
-    # todo handle thumbnails, correct res
-    thumb = s3.bucket('20litres-images').object("thumbnails/#{image_name}")
-    thumb.upload_file(image_path)
-
-    # cleanup temporary image to keep filespace safe
-    File.delete(image_path) if File.exist?(image_path)
-    # todo - should image be separated from cdn url?
-    {
-      raw: "https://d5t73r6km0hzm.cloudfront.net/images/#{image_name}",
-      thumbnail: "https://d5t73r6km0hzm.cloudfront.net/thumbnails/#{image_name}"
-    }
-	end
 
   def story_params
     params.require(:story).permit(:title, :prominent, :text, :photo, :report_id)

@@ -18,8 +18,7 @@ Rails.application.configure do
   # Run rails dev:cache to toggle caching.
   if Rails.root.join('tmp', 'caching-dev.txt').exist?
     config.action_controller.perform_caching = true
-
-    config.cache_store = :memory_store
+    config.cache_store = :dalli_store || :memory_store
     config.public_file_server.headers = {
       'Cache-Control' => "public, max-age=#{2.days.to_i}"
     }
@@ -63,6 +62,7 @@ Rails.application.configure do
   # number of complex assets.
   config.assets.debug = true
 
+  # config.require_master_key = true
   # Suppress logger output for asset requests.
   config.assets.quiet = true
 
