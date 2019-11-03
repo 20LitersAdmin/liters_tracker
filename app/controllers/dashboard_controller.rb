@@ -16,23 +16,13 @@ class DashboardController < ApplicationController
 
     @global_impact = Report.all.sum(:people)
 
-    @stories = Story.between_dates(Date.today.beginning_of_year, Date.today.end_of_year)
-
-    @stories_binned_by_month = Story.bin_stories_by_month(@stories)
+    @stories, @months, @story_month_hash  = Story.bin_stories_by_year(Date.today.year)
 
   end
 
   def handler
-    if params[:month].present?
-      start_date = Date.new(params[:year].to_i,params[:month].to_i,01)
-      end_date = start_date.end_of_month
-    else
-      start_date = Date.new(params[:year].to_i,01,01)
-      end_date = Date.new(params[:year].to_i,12,31)
-    end
-
-    @stories = Story.between_dates(start_date,end_date)
-    @stories_binned_by_month = Story.bin_stories_by_month(@stories)
+    
+    @stories, @months, @story_month_hash = Story.bin_stories_by_year(params[:year].to_i)
 
     respond_to do |format|
       format.js
