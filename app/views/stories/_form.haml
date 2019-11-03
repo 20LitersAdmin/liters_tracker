@@ -2,17 +2,6 @@
   %br
   %br
   %p Something went wrong and the report_id wasn't properly associated to this new story. Please navigate back and try again!
-
-- elsif @year.blank?
-  %br
-  %br
-  %p Something went wrong and the year of the report wasn't passed to this page. Please navigate back and try again!
-
-- elsif @month.blank?
-  %br
-  %br
-  %p Something went wrong and the month of the report wasn't passed to this page. Please navigate back and try again!
-
 - else
   = form_for @story do |f|
 
@@ -21,7 +10,7 @@
     = hidden_field_tag :month, @month
     .field
       = f.label 'Title'
-      = f.text_field :title, value: (story.title if story_exists)
+      = f.text_field :title, value: @story.title
     .field
       = f.label 'Prominent'
       = f.check_box :prominent, value: @story.prominent
