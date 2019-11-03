@@ -6,7 +6,7 @@ class PlansController < ApplicationController
   # GET /plans
   # GET /plans.json
   def index
-    authorize @plans = Plan.all
+    authorize @plans = Plan.all.includes(:contract).includes(:technology)
   end
 
   # GET /plans/1

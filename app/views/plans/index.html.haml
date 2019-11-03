@@ -15,8 +15,8 @@
   %tbody
     - @plans.each do |plan|
       %tr
-        %td= plan.contract
-        %td= plan.technology
+        %td= plan.contract.name
+        %td= plan.technology.name
         %td= plan.goal
         %td= plan.people_goal
         %td= link_to 'Show', plan
