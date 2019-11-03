@@ -17,6 +17,9 @@ class DashboardController < ApplicationController
     @global_impact = Report.all.sum(:people)
 
     @stories = Story.between_dates(Date.today.beginning_of_year, Date.today.end_of_year)
+
+    @stories_binned_by_month = Story.bin_stories_by_month(@stories)
+
   end
 
   def handler
@@ -29,6 +32,7 @@ class DashboardController < ApplicationController
     end
 
     @stories = Story.between_dates(start_date,end_date)
+    @stories_binned_by_month = Story.bin_stories_by_month(@stories)
 
     respond_to do |format|
       format.js
