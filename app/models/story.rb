@@ -59,7 +59,18 @@ class Story < ApplicationRecord
   end
 
   def related
-    []
+    # grab a random offset to start grabing stories at
+    offset = rand(Story.count-4)
+    # rand of a negative is zero, but we should be explicit
+    offset = 0 if offset < 0
+    # grab 4 stories (this story could be one of them)
+    random_stories = Story.offset(offset).first(4)
+    # limit down to the stories that are not us
+    random_stories.select {|story| story.id != id}
+    # todo - add a query to get related stories
+    related = []
+    # grab the first 3 stories, prioritizing the related stories
+    (related + random_stories).first(3)
   end
 
 end
