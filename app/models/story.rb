@@ -41,25 +41,22 @@ class Story < ApplicationRecord
 
 
   def self.bin_stories_by_year(year)
-    story_collection = nil
-    stories_by_month = {}
     month_list = []
+    story_collection = nil
     (1..12).step(1) do |m|
-      tmp_hash = {}
       tmp_date = Date.new(year, m)
       # start with the first month and build a hash of all stories that are binned by a month
       tmp_stories = self.between_dates(tmp_date.beginning_of_month, tmp_date.end_of_month)
       if tmp_stories.size > 0 # check if there are stories for this month
         month_list << Date.const_get(:ABBR_MONTHNAMES)[m]
         if story_collection.nil?
-          story_collection = tmp_stories # combine all the active record collections for the year
+          story_collection = tmp_stories
         else
           story_collection += tmp_stories
         end
-        stories_by_month[Date.const_get(:ABBR_MONTHNAMES)[m]] = tmp_stories #convert digit to abbreviated month name
       end
     end
-    return story_collection, month_list, stories_by_month # return the whole collection of stories, the months where stories exists, and later if needed a hash where key=month, value=ActiveRecord collection
+    return month_list, story_collection
   end
 
   def self.get_story_years
