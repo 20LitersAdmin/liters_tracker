@@ -146,11 +146,11 @@ class Plan < ApplicationRecord
   def self.ary_of_district_ids_from_sectors
     related_sectors.pluck(:district_id)
   end
-
+  
   def picture
     planable_type == 'Facility' ? 'plan_facility.jpg' : 'plan_village.jpg'
   end
-
+  
   def reports
     Report.where(contract_id: self.contract_id,
                  technology_id: self.technology_id,

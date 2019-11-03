@@ -2,6 +2,7 @@ class StoriesController < ApplicationController
   before_action :set_story, only: %i[show edit update destroy]
 
 	def index
+    @stories = Story.all.order(:title)
 	end
 
 	def show
@@ -10,6 +11,8 @@ class StoriesController < ApplicationController
   def new
     @story = Story.new
     @story.report_id = params[:report_id]
+    @year = params[:year]
+    @month = params[:month]
     authorize @story
   end
 
@@ -33,7 +36,12 @@ class StoriesController < ApplicationController
 
     respond_to do |format|
       if @story.update(updated_params)
-        format.html { redirect_to monthly_w_date_url(:month => params[:month], :year => params[:year]), notice: 'Report was successfully edited.' }
+        if params[:month].blank? || params[:year].blank?
+          format.html { redirect_to stories_path, notice: 'Report was successfully edited.' }
+        else
+          format.html { redirect_to monthly_w_date_url(:month => params[:month], :year => params[:year]), notice: 'Report was successfully edited.' }
+        end
+        
         format.json { render :show, status: :ok, location: @story }
       else
         format.html { render :edit }
@@ -81,11 +89,17 @@ class StoriesController < ApplicationController
     image_name = "#{params[:report_id]}.#{image_extension}"
     image_path = Rails.root.join('tmp', image_name)
 
-
     # get aws creds
-    aws_id = Rails.application.credentials.aws[:access_key]
-    aws_key = Rails.application.credentials.aws[:secret_key]
-
+    aws_id = ''
+    aws_key = ''
+    if Rails.env.production?
+      aws_id = ENV['AWS_ACCESS_KEY']
+      aws_key = ENV['AWS_SECRET_KEY']
+    else
+      aws_id = Rails.application.credentials.aws[:access_key]
+      aws_key = Rails.application.credentials.aws[:secret_key]
+    end
+    
     # save image temporarily to send to s3
     File.open(image_path, 'wb') do |file|
       file.write(image_io.read)
@@ -106,7 +120,7 @@ class StoriesController < ApplicationController
     # cleanup temporary image to keep filespace safe
     File.delete(image_path) if File.exist?(image_path)
     # todo - should image be separated from cdn url?
-    { 
+    {
       raw: "https://d5t73r6km0hzm.cloudfront.net/images/#{image_name}",
       thumbnail: "https://d5t73r6km0hzm.cloudfront.net/thumbnails/#{image_name}"
     }
