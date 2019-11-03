@@ -12,6 +12,7 @@ class StoriesController < ApplicationController
     @story.report_id = params[:report_id]
     @year = params[:year]
     @month = params[:month]
+
     authorize @story
   end
 
@@ -39,7 +40,7 @@ class StoriesController < ApplicationController
           format.html { redirect_to @story, notice: 'Report was successfully created.' }
         else
           format.html { redirect_to monthly_w_date_url(:month => params[:month], :year => params[:year]), notice: 'Report was successfully created.' }
-          
+
         end
         format.json { render :show, status: :ok, location: @story }
       else
@@ -68,13 +69,11 @@ class StoriesController < ApplicationController
     respond_to do |format|
       if @story.save
         if params[:month].blank? || params[:year].blank?
-          puts "redirect to story"
           format.html { redirect_to @story, notice: 'Report was successfully created.' }
         else
-          puts "redirect to monthly"
           format.html { redirect_to monthly_w_date_url(:month => params[:month], :year => params[:year]), notice: 'Report was successfully created.' }
         end
-        
+
         format.json { render :show, status: :created, location: @story }
       else
         # todo can we keep the form elements on error?
@@ -87,7 +86,7 @@ class StoriesController < ApplicationController
 	private
 
   def story_params
-    params.require(:story).permit(:title, :text, :photo, :report_id)
+    params.require(:story).permit(:title, :prominent, :text, :photo, :report_id)
   end
 
   def set_story

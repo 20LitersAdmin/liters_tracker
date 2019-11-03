@@ -141,6 +141,7 @@ ActiveRecord::Schema.define(version: 2019_11_02_175331) do
     t.bigint "report_id", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.boolean "prominent", default: false
     t.index ["report_id"], name: "index_stories_on_report_id"
   end
 

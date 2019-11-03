@@ -8,6 +8,7 @@ development:
   <<: *default
   database: liters_tracker_dev
 
+
   # The specified database role being used to connect to postgres.
   # To create additional roles in postgres see `$ createuser --help`.
   # username: liters_tracker
