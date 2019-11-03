@@ -14,18 +14,17 @@ class DashboardController < ApplicationController
 
     @years = @dates.map(&:year).uniq.sort.reverse
 
-    @year = params[:year]
+    @year = Date.today.year
     if @year
-      @months = Story.bin_stories_by_year(@year)
+      @months, @stories = Story.bin_stories_by_year(@year)
     else
       @months = []
     end
 
-
     @global_impact = Report.all.sum(:people)
 
     @story_month_hash  = Story.bin_stories_by_year(Date.today.year)
-
+    
   end
 
   def handler
