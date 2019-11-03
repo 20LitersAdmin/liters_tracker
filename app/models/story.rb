@@ -1,8 +1,9 @@
 # frozen_string_literal: true
 
 class Story < ApplicationRecord
-  belongs_to :report
+  belongs_to :report, inverse_of: :story
   scope :get_stories_by_year, ->(year_string) { joins(:report).where('reports.date BETWEEN ? AND ?', "#{year_string}-01-01", "#{year_string}-12-31")}
+  scope :between_dates, ->(start_date, end_date) { joins(:report).where('reports.date BETWEEN ? AND ?', start_date, end_date)}
 
   def save_image(image_io)
 
@@ -27,10 +28,16 @@ class Story < ApplicationRecord
     image_name = "#{report_id}.#{image_extension}"
     image_path = Rails.root.join('tmp', image_name)
 
-
     # get aws creds
-    aws_id = Rails.application.credentials.aws[:access_key]
-    aws_key = Rails.application.credentials.aws[:secret_key]
+    aws_id = ''
+    aws_key = ''
+    if Rails.env.production?
+      aws_id = ENV['AWS_ACCESS_KEY']
+      aws_key = ENV['AWS_SECRET_KEY']
+    else
+      aws_id = Rails.application.credentials.aws[:access_key]
+      aws_key = Rails.application.credentials.aws[:secret_key]
+    end
 
     # save image temporarily to send to s3
     File.open(image_path, 'wb') do |file|
@@ -60,17 +67,29 @@ class Story < ApplicationRecord
 
   def related
     # grab a random offset to start grabing stories at
-    offset = rand(Story.count-4)
+    # todo - which is most efficient
+    offset = rand(Story.all.size-4)
     # rand of a negative is zero, but we should be explicit
+    # todo .negative?
     offset = 0 if offset < 0
     # grab 4 stories (this story could be one of them)
     random_stories = Story.offset(offset).first(4)
     # limit down to the stories that are not us
     random_stories.select {|story| story.id != id}
     # todo - add a query to get related stories
+    # similar technology id
+    # similar geography (reportable)
     related = []
     # grab the first 3 stories, prioritizing the related stories
     (related + random_stories).first(3)
+  end
+
+  def self.array_of_unique_dates
+    joins(:report).order('reports.date ASC').pluck('reports.date').uniq
+  end
+
+  def picture
+    image.blank? ? 'story_no_image.png' : image
   end
 
 end

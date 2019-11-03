@@ -4,7 +4,11 @@ Rails.application.routes.draw do
   root to: 'dashboard#index'
   get 'data', to: 'users#data'
 
-  resources :dashboard, only: %i[show index]
+  resources :dashboard, only: %i[index]
+
+  get 'dashboard/handler', to: 'dashboard#handler', as: 'dashboard_handler'
+  get 'dashboard/planner', to: 'dashboard#planner', as: 'dashboard_planner'
+
   resources :reports do
     post 'batch_process', on: :collection
   end
@@ -28,7 +32,6 @@ Rails.application.routes.draw do
     get 'facility_error', on: :member
   end
 
-  get 'year_handler', to: 'dashboard#year_handler', as: 'year_handler'
   resources :stories
 
   devise_for :users

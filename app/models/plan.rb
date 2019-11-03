@@ -21,7 +21,7 @@ class Plan < ApplicationRecord
 
   def self.incomplete
     with_reports.having('plans.goal > SUM(reports.distributed)').group('plans.id, reports.id')
-  end 
+  end
 
   def self.related_to(record)
     where(planable_type: record.class.to_s, planable_id: record.id)
@@ -128,7 +128,7 @@ class Plan < ApplicationRecord
   end
 
   def date
-    contract.end_date
+    read_attribute(:date) || contract.end_date
   end
 
   def self.ary_of_village_ids_from_facilities
@@ -146,12 +146,20 @@ class Plan < ApplicationRecord
   def self.ary_of_district_ids_from_sectors
     related_sectors.pluck(:district_id)
   end
-
+  
+  def picture
+    planable_type == 'Facility' ? 'plan_facility.jpg' : 'plan_village.jpg'
+  end
+  
   def reports
     Report.where(contract_id: self.contract_id,
                  technology_id: self.technology_id,
                  reportable_id: self.planable_id,
                  reportable_type: self.planable_type)
+  end
+
+  def title
+    "#{goal} #{technology.name}s for #{people_goal} people by #{date.strftime('%m/%d/%Y')}"
   end
 
   def complete?
