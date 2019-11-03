@@ -32,6 +32,7 @@ gem 'aws-sdk-s3'
 gem 'tzinfo-data', platforms: [:mingw, :mswin, :x64_mingw, :jruby]
 gem 'will_paginate', '~> 3.2.1'
 gem 'bootstrap-will_paginate', '~> 1.0.0'
+gem 'dalli', '~> 2.7.10'
 
 group :development, :test do
   # Call 'byebug' anywhere in the code to stop execution and get a debugger console
@@ -47,6 +48,7 @@ end
 
 group :development do
   gem 'web-console', '>= 3.3.0'
+  gem 'pry-rails'
   gem 'rack-mini-profiler'
   gem 'memory_profiler'
   gem 'flamegraph'
