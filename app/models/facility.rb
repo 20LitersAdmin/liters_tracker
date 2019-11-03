@@ -1,4 +1,8 @@
 # frozen_string_literal: true
+require 'cache/cortex.rb'
+
+# TODO Add after_save for create that calls self.reset_cache
+#      https://apidock.com/rails/ActiveRecord/Callbacks/after_save
 
 class Facility < ApplicationRecord
   include GeographyType
@@ -20,6 +24,25 @@ class Facility < ApplicationRecord
   scope :not_churches, -> { where.not(category: 'Church') }
 
   scope :for_village,  ->(ids) { where(village_id: ids) }
+
+  after_initialize :cortex
+
+  def cortex
+    return @dalli if @dalli
+    @dalli = Cache::Cortex.new
+  end
+
+  def reset_cache
+    geographies = [self.village, self.cell, self.sector, self.district]
+    geographies.each do |geo|
+      ids = geo.class.all.pluck(:id)
+      ids.each do |id|
+        geo.class::GEO_CHILDREN.each do |child|
+          cortex.delete("#{id}_#{child}")
+        end
+      end
+    end
+  end
 
   def impact
     population.to_i + (households.to_i * Constants::Population::HOUSEHOLD_SIZE)

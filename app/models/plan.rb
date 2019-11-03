@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+require 'cache/cortex.rb'
 
 class Plan < ApplicationRecord
   belongs_to :contract,   inverse_of: :plans

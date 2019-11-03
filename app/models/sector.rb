@@ -1,4 +1,8 @@
 # frozen_string_literal: true
+require 'cache/cortex.rb'
+
+# TODO Add after_save for create that calls self.reset_cache
+#      https://apidock.com/rails/ActiveRecord/Callbacks/after_save
 
 class Sector < ApplicationRecord
   include GeographyType
@@ -31,10 +35,13 @@ class Sector < ApplicationRecord
   end
 
   def reset_cache
-    ids = Sector.all.pluck(:id)
-    ids.each do |id|
-      GEO_CHILDREN.each do |child|
-        cortex.delete("#{id}_#{child}")
+    geographies = [self, self.district]
+    geographies.each do |geo|
+      ids = geo.class.all.pluck(:id)
+      ids.each do |id|
+        geo.class::GEO_CHILDREN.each do |child|
+          cortex.delete("#{id}_#{child}")
+        end
       end
     end
   end

@@ -1,0 +1,15 @@
+{
+    "ruby.format": "rubocop",
+    "ruby.interpreter.commandPath": "/Users/blauentag/.rubies/ruby-2.5.3/bin/ruby",
+    "ruby.pathToBundler": "/Users/blauentag/.gem/ruby/2.5.3/bin/bundle",
+    "solargraph.autoformat": true,
+    "solargraph.diagnostics": true,
+    "solargraph.formatting": true,
+    "solargraph.bundlerPath": "/Users/blauentag/.gem/ruby/2.5.3/bin/bundle",
+    "solargraph.commandPath": "/Users/blauentag/.gem/ruby/2.5.3/bin/solargraph",
+    "ruby.rubocop.configFilePath": "/Users/blauentag/Projects/liters_tracker/.rubocop.yml",
+    "ruby.rubocop.useBundler": true,
+    "ruby.codeCompletion": "rcodetools",
+    "ruby.intellisense": "rubyLocate",
+    "ruby.rubocop.executePath": "/Users/blauentag/.gem/ruby/2.5.3/bin/"
+}
