@@ -54,6 +54,18 @@ $bottom-spacing: 16px;
     }
 }
 
+
+.card {
+  margin: 20px 0px;
+
+  &:hover {
+    color: black;
+    background-color: #f8f8f8;
+    box-shadow: 0 0 18px #888;    
+    text-decoration: none;      
+  } 
+}
+
 .related-stories {
     padding-bottom: $bottom-spacing; // To handle the fixed position footer
 
