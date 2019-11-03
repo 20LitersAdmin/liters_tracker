@@ -1,7 +1,9 @@
-// A little hacky, sorry!  Change this if you ever change the order of the form fields
-// It should target the WYSIWYG editor to make it full width on failed validations
 .wysiwyg {
   .field_with_errors {
     width: 100%;
   }
+}
+
+.hide {
+  display: none;
 }
