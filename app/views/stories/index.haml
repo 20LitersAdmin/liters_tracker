@@ -1,4 +1,4 @@
 
 - @stories.each do |story|
-  = link_to story.title, edit_story_path(story)
+  = link_to "Has Image [#{!story.image.blank?}] - #{story.title}" , edit_story_path(story)
   %br
