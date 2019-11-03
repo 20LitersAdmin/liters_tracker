@@ -1,3 +1,4 @@
 
-.div 
-  %th.text-right= "Dist"
+- @stories.each do |story|
+  = link_to story.title, edit_story_path(story)
+  %br

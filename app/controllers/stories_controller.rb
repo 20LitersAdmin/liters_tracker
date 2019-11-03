@@ -2,6 +2,7 @@ class StoriesController < ApplicationController
   before_action :set_story, only: %i[show edit update destroy]
 
 	def index
+    @stories = Story.all.order(:title)
 	end
 
 	def show
@@ -35,7 +36,12 @@ class StoriesController < ApplicationController
 
     respond_to do |format|
       if @story.update(updated_params)
-        format.html { redirect_to monthly_w_date_url(:month => params[:month], :year => params[:year]), notice: 'Report was successfully edited.' }
+        if params[:month].blank? || params[:year].blank?
+          format.html { redirect_to stories_path, notice: 'Report was successfully edited.' }
+        else
+          format.html { redirect_to monthly_w_date_url(:month => params[:month], :year => params[:year]), notice: 'Report was successfully edited.' }
+        end
+        
         format.json { render :show, status: :ok, location: @story }
       else
         format.html { render :edit }

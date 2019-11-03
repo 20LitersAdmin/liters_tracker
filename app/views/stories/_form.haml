@@ -3,16 +3,6 @@
   %br
   %p Something went wrong and the report_id wasn't properly associated to this new story. Please navigate back and try again!
 
-- elsif @year.blank?
-  %br
-  %br
-  %p Something went wrong and the year of the report wasn't passed to this page. Please navigate back and try again!
-
-- elsif @month.blank?
-  %br
-  %br
-  %p Something went wrong and the month of the report wasn't passed to this page. Please navigate back and try again!
-
 - else
   = form_for @story do |f|
 
