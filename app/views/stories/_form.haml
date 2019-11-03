@@ -2,6 +2,7 @@
   %br
   %br
   %p Something went wrong and the report_id wasn't properly associated to this new story. Please navigate back and try again!
+
 - else
   = form_for @story do |f|
 
@@ -35,5 +36,4 @@
         %p Thumbnail Preview:
         =image_tag @story.image_thumbnail, id: "image_thumbnail_preview", width: '200'
 
-  %br
   = tinymce
