@@ -21,23 +21,23 @@ class DashboardController < ApplicationController
       @months = []
     end
 
-    @global_impact = Report.all.sum(:people)
+    @global_impact = Report.all.map(&:impact).sum
 
     @story_month_hash  = Story.bin_stories_by_year(Date.today.year)
-    
+
   end
 
   def handler
-    
+
     @year = params[:year].to_i
     @months, @stories = Story.bin_stories_by_year(@year)
 
     month = Date.const_get(:ABBR_MONTHNAMES).index(params[:month])
-  
+
     if params[:month]
       @stories = @stories.select{|story| story.report.date.month == month }
     end
-  
+
     respond_to do |format|
       format.js
     end
