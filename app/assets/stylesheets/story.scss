@@ -29,19 +29,6 @@ $bottom-spacing: 16px;
     right: 0;
     margin: 0 auto;
 
-
-    a {
-        padding: 3px 5px;
-        background-color: #fce000;
-        color: #4a4a4a;
-        border: 1px solid #e3c900;
-
-        &:hover {
-            background-color: #ffe830;
-            border: 1px solid #fce000;
-            text-decoration: none;   
-        }
-    }
 }
 
 .meta {
