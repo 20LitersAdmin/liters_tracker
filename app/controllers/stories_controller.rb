@@ -1,5 +1,6 @@
 class StoriesController < ApplicationController
   before_action :set_story, only: %i[show edit update destroy]
+  layout "dashboard", :only => [ :show ]
 
 	def index
 	end

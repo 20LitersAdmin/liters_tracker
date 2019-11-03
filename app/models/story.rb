@@ -58,4 +58,8 @@ class Story < ApplicationRecord
     }
   end
 
+  def related
+    []
+  end
+
 end

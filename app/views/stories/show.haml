@@ -1,11 +1,29 @@
 - @story
 
-=image_tag @story.image, width: '800'
+%div.hero{ :style => "background-image: url(#{@story.image})" }
+  %div.breadcrumbs.container
+    = link_to "Dashboard", dashboard_index_path
 
-%p
-  %b 
+%div.container.mt-5
+  %h1
     = @story.title
 
-%p
-  = @story.text.html_safe
+  %div.meta
+    %div
+      %span.author
+        = "#{@story.report.user.fname} #{@story.report.user.lname}"
+      %span.location
+        = "#{@story.report.reportable.village.name}, #{@story.report.reportable.sector.name}"
+    %div
+      %span.date
+        = @story.report.date.strftime("%B %d, %Y")
+  %div.story-text
+    = @story.text.html_safe
 
+  - if @story.related.length > 0
+    %div.related-stories
+      %div.heading
+        %h2
+          = "Related Stories"
+      %div.story-list.card-columns#story_column
+        = render partial: 'dashboard/story', collection: @story.related
