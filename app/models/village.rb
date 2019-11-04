@@ -67,7 +67,7 @@ class Village < ApplicationRecord
     key = key(__method__)
     ids = recall(key)
     if !ids
-      ids = Facility.where(village_id: village_ids).pluck(:id)
+      ids = Facility.where(village_id: self.id).pluck(:id)
       cortex.set(key, ids)
     end
     @facilities = ids

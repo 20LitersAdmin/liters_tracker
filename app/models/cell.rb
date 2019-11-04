@@ -69,7 +69,7 @@ class Cell < ApplicationRecord
     key = key(__method__)
     ids = recall(key)
     if !ids
-      ids = Village.where(cell_id: cell_ids).pluck(:id)
+      ids = Village.where(cell_id: self.id).pluck(:id)
       cortex.set(key, ids)
     end
     @villages = ids
