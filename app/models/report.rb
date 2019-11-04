@@ -19,21 +19,7 @@ class Report < ApplicationRecord
   scope :latest_date, -> { order(date: :asc).last.date }
   scope :sorted, -> { order(date: :desc) }
 
-  # temp: For seeding Stories
-  def story_title
-    verb = distributed.present? ? 'distributed' : 'checked'
-    "#{distributed} #{technology.name}s #{verb} in #{reportable.name}"
-  end
-
-  # temp: For seeding Stories
-  def story_text
-    story_title + ". And this was reported by #{user.name}. This happened on #{date.strftime('%d-%m-%y')}. It was really fun and our volunteers worked hard and the recipeints were really grateful."
-  end
-
-  # temp: For seeding Stories
-  def story_json
-    { title: story_title, text: story_text, report_id: id }
-  end
+  before_save :calculate_impact
 
   def self.related_to(record)
     where(reportable_type: record.class.to_s, reportable_id: record.id)
@@ -217,14 +203,10 @@ class Report < ApplicationRecord
     3 # if persisted?
   end
 
-  def people_served
+  def calculate_impact
     return people if people&.positive?
 
     reportable_type == 'Facility' && reportable.population&.positive? ? reportable.population : (technology.default_impact * distributed.to_i)
-  end
-
-  def impact
-    people_served
   end
 
   def self.ary_of_village_ids_from_facilities
