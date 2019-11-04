@@ -31,4 +31,8 @@ module Constants
   class Population
     HOUSEHOLD_SIZE = 5
   end
+
+  class Story
+    IMAGE_FORMATS = %w[apng bmp ico svg tiff webp png jpeg jpg gif].freeze
+  end
 end

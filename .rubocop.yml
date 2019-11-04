@@ -18,7 +18,7 @@ Style/BracesAroundHashParameters:
   Enabled: false
 Style/DoubleNegation:
   Enabled: false
-Layout/IndentHash:
+Layout/IndentFirstHashElement:
   Enabled: false
 Lint/AmbiguousBlockAssociation:
   Enabled: false

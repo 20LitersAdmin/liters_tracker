@@ -23,6 +23,11 @@
     = link_to 'FUTURE', dashboard_planner_path, remote: true, class: "nav-item nav-link"
     - @years.each do |year|
       = link_to year.to_s, dashboard_handler_path(year: year), remote: true, class: "nav-item nav-link"
+  .row.justify-content-center
+  %nav.nav.nav-pills.nav-fill.liters-gray-bg.liters-text-white#month_nav
+    - if @year.blank? == false
+      - @months.each do |month|
+        = link_to month.to_s, dashboard_handler_path(year: @year, month: month), remote: true, class: "nav-item nav-link"
 
 .container.mt-5
   #story_column.card-columns
