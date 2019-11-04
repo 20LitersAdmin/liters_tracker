@@ -28,6 +28,11 @@ class Story < ApplicationRecord
     image_name = "#{report_id}_#{report.date.year}-#{report.date.month}.#{image_extension}"
     image_path = Rails.root.join('tmp', image_name)
 
+    # save image temporarily to send to s3
+    File.open(image_path, 'wb') do |file|
+      file.write(image_io.read)
+    end
+
     # get aws creds
     if Rails.env.production?
       aws_id = ENV['AWS_ACCESS_KEY']
@@ -37,11 +42,6 @@ class Story < ApplicationRecord
       aws_key = Rails.application.credentials.aws[:secret_key]
     end
 
-    # save image temporarily to send to s3
-    File.open(image_path, 'wb') do |file|
-      file.write(image_io.read)
-    end
-
     s3 = Aws::S3::Resource.new(
       region: 'us-east-2',
       credentials: Aws::Credentials.new(aws_id, aws_key)
@@ -49,22 +49,26 @@ class Story < ApplicationRecord
 
     img = s3.bucket('20litres-images').object("images/#{image_name}")
     img.upload_file(image_path)
+    img_ver = img.version_id
 
     # TODO: handle thumbnails, correct res
     thumb = s3.bucket('20litres-images').object("thumbnails/#{image_name}")
     thumb.upload_file(image_path)
+    thumb_ver = img.version_id
 
     # cleanup temporary image to keep filespace safe
     # File.delete(image_path) if File.exist?(image_path)
     # TODO: - should image be separated from cdn url?
     {
-      raw: "https://d5t73r6km0hzm.cloudfront.net/images/#{image_name}",
-      thumbnail: "https://d5t73r6km0hzm.cloudfront.net/thumbnails/#{image_name}"
+      raw: "https://d5t73r6km0hzm.cloudfront.net/images/#{image_name}?ver=#{img_ver}",
+      thumbnail: "https://d5t73r6km0hzm.cloudfront.net/thumbnails/#{image_name}?ver=#{thumb_ver}"
     }
   end
 
   def related
-    # TODO: First try to get related, then default to random
+    # TODO: - add a query to get related stories
+    # similar technology id
+    # similar geography (reportable)
     related = []
     # grab a random offset to start grabing stories at
     offset = rand(Story.all.size - 4)
@@ -75,9 +79,6 @@ class Story < ApplicationRecord
     # limit down to the stories that are not us
     # random_stories.select { |story| story.id != id }
     random_stories.reject { |story| story.id == id }
-    # TODO: - add a query to get related stories
-    # similar technology id
-    # similar geography (reportable)
     # grab the first 3 stories, prioritizing the related stories
     (related + random_stories).first(3)
   end

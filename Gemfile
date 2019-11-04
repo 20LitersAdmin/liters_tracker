@@ -8,10 +8,13 @@ git_source(:github) do |repo_name|
   "https://github.com/#{repo_name}.git"
 end
 
+gem 'aws-sdk-s3'
 gem 'bootsnap', '>= 1.4', require: false
 gem 'bootstrap', '~> 4'
+gem 'bootstrap-will_paginate', '~> 1.0.0'
 gem 'bootstrap4-datetime-picker-rails'
 gem 'coffee-rails'
+gem 'dalli', '~> 2.7.10'
 gem 'devise', git: 'https://github.com/plataformatec/devise.git'
 gem 'font-awesome-rails'
 gem 'haml'
@@ -25,14 +28,12 @@ gem 'puma', '~> 3.11'
 gem 'pundit'
 gem 'rails', '>= 5.2'
 gem 'simple_form'
+gem 'tinymce-rails', '~> 5.1'
 gem 'turbolinks', '~> 5'
 gem 'uglifier', '>= 1.3.0'
-gem 'aws-sdk-s3'
 # Windows does not include zoneinfo files, so bundle the tzinfo-data gem
 gem 'tzinfo-data', platforms: [:mingw, :mswin, :x64_mingw, :jruby]
 gem 'will_paginate', '~> 3.2.1'
-gem 'bootstrap-will_paginate', '~> 1.0.0'
-gem 'dalli', '~> 2.7.10'
 
 group :development, :test do
   # Call 'byebug' anywhere in the code to stop execution and get a debugger console
@@ -47,12 +48,12 @@ group :development, :test do
 end
 
 group :development do
-  gem 'web-console', '>= 3.3.0'
+  gem 'flamegraph'
+  gem 'memory_profiler'
   gem 'pry-rails'
   gem 'rack-mini-profiler'
-  gem 'memory_profiler'
-  gem 'flamegraph'
   gem 'stackprof'
+  gem 'web-console', '>= 3.3.0'
 end
 
 group :test do
@@ -68,5 +69,3 @@ end
 group :production do
   gem 'rails_12factor'
 end
-
-gem "tinymce-rails", "~> 5.1"
