@@ -23,20 +23,16 @@ class DashboardController < ApplicationController
 
     @global_impact = Report.all.map(&:impact).sum
 
-    @story_month_hash  = Story.bin_stories_by_year(Date.today.year)
-
+    @story_month_hash = Story.bin_stories_by_year(Date.today.year)
   end
 
   def handler
-
     @year = params[:year].to_i
     @months, @stories = Story.bin_stories_by_year(@year)
 
     month = Date.const_get(:ABBR_MONTHNAMES).index(params[:month])
 
-    if params[:month]
-      @stories = @stories.select{|story| story.report.date.month == month }
-    end
+    @stories = @stories.select { |story| story.report.date.month == month } if params[:month]
 
     respond_to do |format|
       format.js
@@ -44,8 +40,7 @@ class DashboardController < ApplicationController
   end
 
   def planner
-    @plans = Plan.incomplete.limit(20)
-    # @plans = Plan.current.incomplete.limit(20)
+    @plans = Plan.current.incomplete.limit(20)
 
     respond_to do |format|
       format.js

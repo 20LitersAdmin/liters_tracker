@@ -2,23 +2,22 @@
 
 class Story < ApplicationRecord
   belongs_to :report, inverse_of: :story
-  scope :between_dates, ->(start_date, end_date) { joins(:report).where('reports.date BETWEEN ? AND ?', start_date, end_date)}
-  
+  scope :between_dates, ->(start_date, end_date) { joins(:report).where('reports.date BETWEEN ? AND ?', start_date, end_date) }
+
   validates_presence_of :title, :text
 
   def save_image(image_io)
-
     if Rails.env.production? == false
       return {
-      	raw: '',
-      	thumbnail: ''
+        raw: '',
+        thumbnail: ''
       }
     end
 
     # do not upload the file to s3 if the extension is not an image
     # https://developer.mozilla.org/en-US/docs/Web/HTML/Element/img
     image_extension = image_io.original_filename.split(/\./).last
-    unless ['apng','bmp', 'ico', 'svg', 'tiff', 'webp', 'png', 'jpeg', 'jpg', 'gif'].include? image_extension.downcase
+    unless Constants::Story::IMAGE_FORMATS.include? image_extension.downcase
       return {
         raw: '',
         thumbnail: ''
@@ -26,12 +25,10 @@ class Story < ApplicationRecord
     end
 
     # rename image to something consistent and safe
-    image_name = "#{report_id}.#{image_extension}"
+    image_name = "#{report_id}_#{report.date.year}-#{report.date.month}.#{image_extension}"
     image_path = Rails.root.join('tmp', image_name)
 
     # get aws creds
-    aws_id = ''
-    aws_key = ''
     if Rails.env.production?
       aws_id = ENV['AWS_ACCESS_KEY']
       aws_key = ENV['AWS_SECRET_KEY']
@@ -46,20 +43,20 @@ class Story < ApplicationRecord
     end
 
     s3 = Aws::S3::Resource.new(
-      region:'us-east-2',
+      region: 'us-east-2',
       credentials: Aws::Credentials.new(aws_id, aws_key)
     )
 
     img = s3.bucket('20litres-images').object("images/#{image_name}")
     img.upload_file(image_path)
 
-    # todo handle thumbnails, correct res
+    # TODO: handle thumbnails, correct res
     thumb = s3.bucket('20litres-images').object("thumbnails/#{image_name}")
     thumb.upload_file(image_path)
 
     # cleanup temporary image to keep filespace safe
     # File.delete(image_path) if File.exist?(image_path)
-    # todo - should image be separated from cdn url?
+    # TODO: - should image be separated from cdn url?
     {
       raw: "https://d5t73r6km0hzm.cloudfront.net/images/#{image_name}",
       thumbnail: "https://d5t73r6km0hzm.cloudfront.net/thumbnails/#{image_name}"
@@ -67,18 +64,20 @@ class Story < ApplicationRecord
   end
 
   def related
+    # TODO: First try to get related, then default to random
+    related = []
     # grab a random offset to start grabing stories at
-    offset = rand(Story.all.size-4)
+    offset = rand(Story.all.size - 4)
     # rand of a negative is zero, but we should be explicit
     offset = 0 if offset.negative?
     # grab 4 stories (this story could be one of them)
     random_stories = Story.offset(offset).first(4)
     # limit down to the stories that are not us
-    random_stories.select {|story| story.id != id}
-    # todo - add a query to get related stories
+    # random_stories.select { |story| story.id != id }
+    random_stories.reject { |story| story.id == id }
+    # TODO: - add a query to get related stories
     # similar technology id
     # similar geography (reportable)
-    related = []
     # grab the first 3 stories, prioritizing the related stories
     (related + random_stories).first(3)
   end
@@ -93,7 +92,7 @@ class Story < ApplicationRecord
   # OUTPUT:
   #
   #
-  # all_stories = 
+  # all_stories =
   #  {
   #
   #     "2019": {"Jac" .. "Dec"} .. "XXX": {"Jac" .. "Dec"}
