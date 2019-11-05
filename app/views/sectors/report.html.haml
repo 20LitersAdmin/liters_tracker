@@ -30,11 +30,11 @@
                 %th.text-center Planned
               - if @reports.any?
                 %th.text-center= human_number(@reports.sum(:distributed)) + ' Distributed'
+                %th.text-center= human_number(@reports.sum(:people)) + ' People served'
                 %th.text-center= human_number(@reports.sum(:checked)) + ' Checked'
-                %th.text-center= "People<br>served".html_safe
               - else
                 %th.text-center Distributed
-                %th.text-center= "People<br>served".html_safe
+                %th.text-center People served
                 %th.text-center Checked
           %tbody
             = render partial: 'cell_form', collection: @cells

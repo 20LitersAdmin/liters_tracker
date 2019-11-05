@@ -20,13 +20,16 @@ class District < ApplicationRecord
   validates_presence_of :name, :country_id
   validates_uniqueness_of :gis_code, allow_nil: true
 
-  scope :for_country,  ->(ids) { where(country_id: ids) }
+  scope :for_country, ->(ids) { where(country_id: ids) }
 
   after_initialize :cortex
-  GEO_CHILDREN = ['Sector', 'Cell', 'Village', 'Facility'].freeze
+  after_save :reset_cache
+
+  GEO_CHILDREN = %w[Sector Cell Village Facility].freeze
 
   def cortex
     return @dalli if @dalli
+
     @dalli = Cache::Cortex.new
   end
 
@@ -53,10 +56,10 @@ class District < ApplicationRecord
 
   def related_plans
     Plan.where(planable_type: 'District', planable_id: self.id)
-          .or(Plan.where(planable_type: 'Sector', planable_id: sector_ids))
-          .or(Plan.where(planable_type: 'Cell', planable_id: cell_ids))
-          .or(Plan.where(planable_type: 'Village', planable_id: village_ids))
-          .or(Plan.where(planable_type: 'Facility', planable_id: facility_ids))
+        .or(Plan.where(planable_type: 'Sector', planable_id: sector_ids))
+        .or(Plan.where(planable_type: 'Cell', planable_id: cell_ids))
+        .or(Plan.where(planable_type: 'Village', planable_id: village_ids))
+        .or(Plan.where(planable_type: 'Facility', planable_id: facility_ids))
   end
 
   def related_reports
@@ -69,9 +72,10 @@ class District < ApplicationRecord
 
   def sector_ids
     return @sectors if @sectors
+
     key = key(__method__)
     ids = recall(key)
-    if !ids
+    unless ids
       ids = Sector.where(district_id: self.id).pluck(:id)
       cortex.set(key, ids)
     end
@@ -80,9 +84,10 @@ class District < ApplicationRecord
 
   def cell_ids
     return @cells if @cells
+
     key = key(__method__)
     ids = recall(key)
-    if !ids
+    unless ids
       ids = Cell.where(sector_id: sector_ids).pluck(:id)
       cortex.set(key, ids)
     end
@@ -91,6 +96,7 @@ class District < ApplicationRecord
 
   def village_ids
     return @villages if @villages
+
     key = key(__method__)
     ids = recall(key)
     if !ids

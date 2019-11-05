@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 require 'cache/cortex.rb'
 
 class Plan < ApplicationRecord
@@ -17,76 +18,49 @@ class Plan < ApplicationRecord
   scope :only_cells,      -> { where(planable_type: 'Cell') }
   scope :only_villages,   -> { where(planable_type: 'Village') }
   scope :only_facilities, -> { where(planable_type: 'Facility') }
-
   scope :with_reports,    -> { joins('LEFT JOIN reports ON plans.contract_id = reports.contract_id AND plans.technology_id = reports.technology_id AND plans.planable_id = reports.reportable_id AND plans.planable_type = reports.reportable_type') }
 
   def self.incomplete
     with_reports.having('plans.goal > SUM(reports.distributed)').group('plans.id, reports.id')
   end
 
-  def self.related_to(record)
-    where(planable_type: record.class.to_s, planable_id: record.id)
-  end
+  # def self.related_to(record)
+  #   where(planable_type: record.class.to_s, planable_id: record.id)
+  # end
 
-  def self.related_to_facility(facility, only_ary: false)
-    raise 'ERROR. Must provide a facility.' unless facility.is_a? Facility
+  # def self.related_to_facility(facility, only_ary: false)
+  #   raise 'ERROR. Must provide a facility.' unless facility.is_a? Facility
 
-    plans = related_to(facility)
+  #   plans = related_to(facility)
 
-    return plans.pluck(:id) if only_ary
+  #   return plans.pluck(:id) if only_ary
 
-    plans
-  end
+  #   plans
+  # end
 
-  def self.related_to_village(village, only_ary: false)
-    raise 'ERROR. Must provide a village.' unless village.is_a? Village
+  # def self.related_to_village(village)
+  #   raise 'ERROR. Must provide a village.' unless village.is_a? Village
 
-    village.related_plans
+  #   village.related_plans
+  # end
 
-    # plan_ids = related_to(village).pluck(:id)
-    # village.facilities.each { |facility| plan_ids << related_to_facility(facility, only_ary: true) }
+  # def self.related_to_cell(cell)
+  #   raise 'ERROR. Must provide a cell.' unless cell.is_a? Cell
 
-    # return plan_ids.flatten.uniq if only_ary
+  #   cell.related_plans
+  # end
 
-    # where(id: plan_ids.flatten.uniq)
-  end
+  # def self.related_to_sector(sector)
+  #   raise 'ERROR. Must provide a sector.' unless sector.is_a? Sector
 
-  def self.related_to_cell(cell, only_ary: false)
-    raise 'ERROR. Must provide a cell.' unless cell.is_a? Cell
+  #   sector.related_plans
+  # end
 
-    cell.related_plans
+  # def self.related_to_district(district)
+  #   raise 'ERROR. Must provide a district.' unless district.is_a? District
 
-    # plan_ids = related_to(cell).pluck(:id)
-    # cell.villages.each { |village| plan_ids << related_to_village(village, only_ary: true) }
-
-    # return plan_ids.flatten.uniq if only_ary
-
-    # where(id: plan_ids.flatten.uniq)
-  end
-
-  def self.related_to_sector(sector, only_ary: false)
-    raise 'ERROR. Must provide a sector.' unless sector.is_a? Sector
-
-    sector.related_plans
-
-    # plan_ids = related_to(sector).pluck(:id)
-    # sector.cells.each { |cell| plan_ids << related_to_cell(cell, only_ary: true) }
-
-    # return plan_ids.flatten.uniq if only_ary
-
-    # where(id: plan_ids.flatten.uniq)
-  end
-
-  def self.related_to_district(district)
-    raise 'ERROR. Must provide a district.' unless district.is_a? District
-
-    district.related_plans
-
-    # plan_ids = related_to(district).pluck(:id)
-    # district.sectors.each { |sector| plan_ids << related_to_sector(sector, only_ary: true) }
-
-    # where(id: plan_ids.flatten.uniq)
-  end
+  #   district.related_plans
+  # end
 
   def self.related_facilities
     # return a collection of Facilities from a collection of Plans
@@ -97,7 +71,7 @@ class Plan < ApplicationRecord
   end
 
   def self.related_villages
-    # return a collection of Villages from a collection of Reports
+    # return a collection of Villages from a collection of Plans
     return Village.none if self.only_facilities.empty? && self.only_villages.empty?
 
     ary_of_ids = self.only_villages.pluck(:planable_id)
@@ -107,7 +81,7 @@ class Plan < ApplicationRecord
   end
 
   def self.related_cells
-    # return a collection of Cells from a collection of Reports
+    # return a collection of Cells from a collection of Plans
     return Cell.none if self.only_facilities.empty? && self.only_villages.empty? && self.only_cells.empty?
 
     ary_of_ids = self.only_cells.pluck(:planable_id)
@@ -117,7 +91,7 @@ class Plan < ApplicationRecord
   end
 
   def self.related_sectors
-    # return a collection of Sectors from a collection of Reports
+    # return a collection of Sectors from a collection of Plans
     return Sector.none if self.only_facilities.empty? && self.only_villages.empty? && self.only_cells.empty? && self.only_sectors.empty?
 
     ary_of_ids = self.only_sectors.pluck(:planable_id)
@@ -127,7 +101,7 @@ class Plan < ApplicationRecord
   end
 
   def self.related_districts
-    # return a collection of Districts from a collection of Reports
+    # return a collection of Districts from a collection of Plans
     return District.none if self.only_facilities.empty? && self.only_villages.empty? && self.only_cells.empty? && self.only_sectors.empty? && self.only_districts.empty?
 
     ary_of_ids = self.only_districts.pluck(:planable_id)
@@ -155,11 +129,11 @@ class Plan < ApplicationRecord
   def self.ary_of_district_ids_from_sectors
     related_sectors.pluck(:district_id)
   end
-  
+
   def picture
     planable_type == 'Facility' ? 'plan_facility.jpg' : 'plan_village.jpg'
   end
-  
+
   def reports
     Report.where(contract_id: self.contract_id,
                  technology_id: self.technology_id,

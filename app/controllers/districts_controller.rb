@@ -13,7 +13,7 @@ class DistrictsController < ApplicationController
     @from = params[:from].present? ? Date.parse(params[:from]) : @earliest
     @to =   params[:to].present? ? Date.parse(params[:to]) : @latest
 
-    @reports = Report.where(date: @from..@to).order(date: :asc)
+    @reports = Report.between(@from..@to).order(date: :asc)
     @plans = Plan.between(@from, @to)
 
     contract_id = @plans.select(:contract_id).maximum(:contract_id)
@@ -39,11 +39,9 @@ class DistrictsController < ApplicationController
     @contract_search_param_add = @by_tech ? '&by_tech=true' : ''
     @contract_search_param_add += @skip_blanks ? '&skip_blanks=true' : ''
 
-    # @reports = Report.where(date: @from..@to).related_to_district(@district).order(date: :asc)
     @reports = @district.related_reports.where(date: @from..@to).order(date: :asc)
-    @technologies = Technology.report_worthy
-    # @plans = Plan.related_to_district(@district)
     @plans = @district.related_plans
+    @technologies = Technology.report_worthy
     @plan_date = human_date @plans.size.zero? ? nil : Contract.find(@plans.pluck(:contract_id).max).end_date
     @sectors = @district.sectors.order(name: :asc)
   end
@@ -54,8 +52,7 @@ class DistrictsController < ApplicationController
   end
 
   # GET /districts/1/edit
-  def edit
-  end
+  def edit; end
 
   # POST /districts
   def create

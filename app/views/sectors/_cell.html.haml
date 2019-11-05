@@ -1,6 +1,6 @@
 -# frozen_string_literal: true
-- @report_sub = @reports.related_to_cell(cell)
-- @plan_sub = @plans.related_to_cell(cell)
+- @report_sub = cell.related_reports.between(@from, @to)
+- @plan_sub = cell.related_plans.between(@from, @to)
 - return if @plan_sub.blank? && @report_sub.blank? && @skip_blanks
 %tr
   %td.text-left

@@ -14,124 +14,100 @@ class Report < ApplicationRecord
   scope :only_cells,      -> { where(reportable_type: 'Cell') }
   scope :only_villages,   -> { where(reportable_type: 'Village') }
   scope :only_facilities, -> { where(reportable_type: 'Facility') }
-  scope :within_month, ->(date) { where(date: date.beginning_of_month..date.end_of_month) }
-  scope :earliest_date, -> { order(date: :asc).first.date }
-  scope :latest_date, -> { order(date: :asc).last.date }
-  scope :sorted, -> { order(date: :desc) }
+  scope :within_month,    ->(date) { where(date: date.beginning_of_month..date.end_of_month) }
+  scope :earliest_date,   -> { order(date: :asc).first.date }
+  scope :latest_date,     -> { order(date: :asc).last.date }
+  scope :sorted,          -> { order(date: :desc) }
+  scope :between,         ->(from, to) { where(date: from..to) }
+  scope :with_plans,      -> { joins('LEFT JOIN plans ON reports.contract_id = plans.contract_id AND reports.technology_id = plans.technology_id AND reports.reportable_id = plans.planable_id AND reports.reportable_type = plans.planable_type') }
 
   before_save :calculate_impact
 
   # def self.related_to(record)
-    # where(reportable_type: record.class.to_s, reportable_id: record.id)
+  #   where(reportable_type: record.class.to_s, reportable_id: record.id)
   # end
 
   # def self.related_to_facility(facility, only_ary: false)
-    # raise 'ERROR. Must provide a facility.' unless facility.is_a? Facility
+  #   raise 'ERROR. Must provide a facility.' unless facility.is_a? Facility
 
-    # reports = related_to(facility)
+  #   reports = related_to(facility)
 
-    # return reports.pluck(:id) if only_ary
+  #   return reports.pluck(:id) if only_ary
 
-    # reports
+  #   reports
   # end
 
-  # def self.related_to_village(village, only_ary: false)
-    # raise 'ERROR. Must provide a village.' unless village.is_a? Village
+  # def self.related_to_village(village)
+  #   raise 'ERROR. Must provide a village.' unless village.is_a? Village
 
-    # village.related_reports
-
-    # report_ids = related_to(village).pluck(:id)
-    # village.facilities.each { |facility| report_ids << related_to_facility(facility, only_ary: true) }
-
-    # return report_ids.flatten.uniq if only_ary
-
-    # where(id: report_ids.flatten.uniq)
+  #   village.related_reports
   # end
 
-  # def self.related_to_cell(cell, only_ary: false)
+  # def self.related_to_cell(cell)
   #   raise 'ERROR. Must provide a cell.' unless cell.is_a? Cell
 
-  # cell.related_reports
-
-    # report_ids = related_to(cell).pluck(:id)
-    # cell.villages.each { |village| report_ids << related_to_village(village, only_ary: true) }
-
-    # return report_ids.flatten.uniq if only_ary
-
-    # where(id: report_ids.flatten.uniq)
+  #   cell.related_reports
   # end
 
-  # def self.related_to_sector(sector, only_ary: false)
-    # raise 'ERROR. Must provide a sector.' unless sector.is_a? Sector
+  # def self.related_to_sector(sector)
+  #   raise 'ERROR. Must provide a sector.' unless sector.is_a? Sector
 
-    # sector.related_reports
-
-    # report_ids = related_to(sector).pluck(:id)
-    # sector.cells.each { |cell| report_ids << related_to_cell(cell, only_ary: true) }
-
-    # return report_ids.flatten.uniq if only_ary
-
-    # where(id: report_ids.flatten.uniq)
+  #   sector.related_reports
   # end
 
   # def self.related_to_district(district)
   #   raise 'ERROR. Must provide a district.' unless district.is_a? District
 
-    # district.related_reports
-
-    # report_ids = related_to(district).pluck(:id)
-    # district.sectors.each { |sector| report_ids << Report.related_to_sector(sector, only_ary: true) }
-
-    # where(id: report_ids.flatten.uniq)
+  #   district.related_reports
   # end
 
-  # def self.related_facilities
-  #   # return a collection of Facilities from a collection of Reports
-  #   return Facility.none if self.only_facilities.empty?
+  def self.related_facilities
+    # return a collection of Facilities from a collection of Reports
+    return Facility.none if self.only_facilities.empty?
 
-  #   ary = self.only_facilities.pluck(:reportable_id)
-  #   Facility.all.where(id: ary)
-  # end
+    ary = self.only_facilities.pluck(:reportable_id)
+    Facility.all.where(id: ary)
+  end
 
-  # def self.related_villages
-  #   # return a collection of Villages from a collection of Reports
-  #   return Village.none if self.only_facilities.empty? && self.only_villages.empty?
+  def self.related_villages
+    # return a collection of Villages from a collection of Reports
+    return Village.none if self.only_facilities.empty? && self.only_villages.empty?
 
-  #   ary_of_ids = self.only_villages.pluck(:reportable_id)
-  #   ary_of_ids += self.ary_of_village_ids_from_facilities if self.only_facilities.any?
+    ary_of_ids = self.only_villages.pluck(:reportable_id)
+    ary_of_ids += self.ary_of_village_ids_from_facilities if self.only_facilities.any?
 
-  #   Village.all.where(id: ary_of_ids.uniq)
-  # end
+    Village.all.where(id: ary_of_ids.uniq)
+  end
 
-  # def self.related_cells
-  #   # return a collection of Cells from a collection of Reports
-  #   return Cell.none if self.only_facilities.empty? && self.only_villages.empty? && self.only_cells.empty?
+  def self.related_cells
+    # return a collection of Cells from a collection of Reports
+    return Cell.none if self.only_facilities.empty? && self.only_villages.empty? && self.only_cells.empty?
 
-  #   ary_of_ids = self.only_cells.pluck(:reportable_id)
-  #   ary_of_ids += self.ary_of_cell_ids_from_villages if self.only_villages.any? || self.only_facilities.any?
+    ary_of_ids = self.only_cells.pluck(:reportable_id)
+    ary_of_ids += self.ary_of_cell_ids_from_villages if self.only_villages.any? || self.only_facilities.any?
 
-  #   Cell.all.where(id: ary_of_ids.uniq)
-  # end
+    Cell.all.where(id: ary_of_ids.uniq)
+  end
 
-  # def self.related_sectors
-  #   # return a collection of Sectors from a collection of Reports
-  #   return Sector.none if self.only_facilities.empty? && self.only_villages.empty? && self.only_cells.empty? && self.only_sectors.empty?
+  def self.related_sectors
+    # return a collection of Sectors from a collection of Reports
+    return Sector.none if self.only_facilities.empty? && self.only_villages.empty? && self.only_cells.empty? && self.only_sectors.empty?
 
-  #   ary_of_ids = self.only_sectors.pluck(:reportable_id)
-  #   ary_of_ids += self.ary_of_sector_ids_from_cells if self.only_cells.any? || self.only_villages.any? || self.only_facilities.any?
+    ary_of_ids = self.only_sectors.pluck(:reportable_id)
+    ary_of_ids += self.ary_of_sector_ids_from_cells if self.only_cells.any? || self.only_villages.any? || self.only_facilities.any?
 
-  #   Sector.all.where(id: ary_of_ids.uniq)
-  # end
+    Sector.all.where(id: ary_of_ids.uniq)
+  end
 
-  # def self.related_districts
-  #   # return a collection of Districts from a collection of Reports
-  #   return District.none if self.only_facilities.empty? && self.only_villages.empty? && self.only_cells.empty? && self.only_sectors.empty? && self.only_districts.empty?
+  def self.related_districts
+    # return a collection of Districts from a collection of Reports
+    return District.none if self.only_facilities.empty? && self.only_villages.empty? && self.only_cells.empty? && self.only_sectors.empty? && self.only_districts.empty?
 
-  #   ary_of_ids = self.only_districts.pluck(:reportable_id)
-  #   ary_of_ids += self.ary_of_district_ids_from_sectors if self.only_sectors.any? || self.only_cells.any? || self.only_villages.any? || self.only_facilities.any?
+    ary_of_ids = self.only_districts.pluck(:reportable_id)
+    ary_of_ids += self.ary_of_district_ids_from_sectors if self.only_sectors.any? || self.only_cells.any? || self.only_villages.any? || self.only_facilities.any?
 
-  #   District.all.where(id: ary_of_ids.uniq)
-  # end
+    District.all.where(id: ary_of_ids.uniq)
+  end
 
   def self.key_params_are_missing?(batch_process_params)
     batch_process_params[:technology_id].blank? ||
@@ -200,6 +176,7 @@ class Report < ApplicationRecord
 
     3 # if persisted?
   end
+
 
   def self.ary_of_village_ids_from_facilities
     related_facilities.pluck(:village_id)

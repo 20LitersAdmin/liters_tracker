@@ -1,7 +1,8 @@
 # frozen_string_literal: true
+
 require 'cache/cortex.rb'
 
-# TODO Add after_save for create that calls self.reset_cache
+# TODO: Add after_save for create that calls self.reset_cache
 #      https://apidock.com/rails/ActiveRecord/Callbacks/after_save
 
 class Sector < ApplicationRecord
@@ -20,13 +21,16 @@ class Sector < ApplicationRecord
   validates_presence_of :name, :district_id
   validates_uniqueness_of :gis_code, allow_blank: true
 
-  scope :for_district,  ->(ids) { where(district_id: ids) }
+  scope :for_district, ->(ids) { where(district_id: ids) }
 
   after_initialize :cortex
-  GEO_CHILDREN = ['Cell', 'Village', 'Facility'].freeze
+  after_save :reset_cache
+
+  GEO_CHILDREN = %w[Cell Village Facility].freeze
 
   def cortex
     return @dalli if @dalli
+
     @dalli = Cache::Cortex.new
   end
 
@@ -67,9 +71,10 @@ class Sector < ApplicationRecord
 
   def cell_ids
     return @cells if @cells
+
     key = key(__method__)
     ids = recall(key)
-    if !ids
+    unless ids
       ids = Cell.where(sector_id: self.id).pluck(:id)
       cortex.set(key, ids)
     end
@@ -78,9 +83,10 @@ class Sector < ApplicationRecord
 
   def village_ids
     return @villages if @villages
+
     key = key(__method__)
     ids = recall(key)
-    if !ids
+    unless ids
       ids = Village.where(cell_id: cell_ids).pluck(:id)
       cortex.set(key, ids)
     end
@@ -89,9 +95,10 @@ class Sector < ApplicationRecord
 
   def facility_ids
     return @facilities if @facilities
+
     key = key(__method__)
     ids = recall(key)
-    if !ids
+    unless ids
       ids = Facility.where(village_id: village_ids).pluck(:id)
       cortex.set(key, ids)
     end

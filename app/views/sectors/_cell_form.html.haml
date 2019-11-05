@@ -1,11 +1,11 @@
 -# frozen_string_literal: true
-- plans = @plans.related_to_cell(cell_form)
-- reports = @reports.related_to_cell(cell_form).select(:distributed, :checked)
+- plan_goals = cell_form.related_plans.nearest_to_date(@date).where(technology: @technology).pluck(:goal)
+- reports = cell_form.related_reports.where(date: @date, technology: @technology)
 %tr
   %td.align-middle
     %h5= "#{cell_form.name.upcase} CELL"
   %td.align-middle.text-center
-    %i= "#{human_number(plans.sum(:goal))} planned"
+    %i= "#{human_number(plan_goals.sum)} planned"
   %td.align-middle.text-center
     %i= "#{human_number(reports.sum(:distributed))} distributed"
   %td.align-middle.text-center
@@ -13,4 +13,5 @@
   %td.align-middle.text-center
     %i= "#{human_number(reports.sum(:checked))} checked"
 %tr
-= render partial: 'village_form', collection: cell_form.villages.order(:name)
+  = render partial: 'village_form', collection: cell_form.villages.order(:name)
+
