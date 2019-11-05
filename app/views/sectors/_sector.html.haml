@@ -1,6 +1,6 @@
 -# frozen_string_literal: true
-- @report_sub = @reports.related_to_sector(sector)
-- @plan_sub = @plans.related_to_sector(sector)
+- @report_sub = sector.related_reports.between(@from,@to)
+- @plan_sub = sector.related_plans.between(@from,@to)
 %tr
   %td= link_to sector.name, sector_path(sector)
   %td.text-right= human_number @report_sub.map(&:impact).sum

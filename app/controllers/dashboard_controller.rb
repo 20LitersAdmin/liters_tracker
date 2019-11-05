@@ -7,7 +7,7 @@ class DashboardController < ApplicationController
     @lifetime_stats = Technology.report_worthy.map do |technology|
       next if technology.lifetime_impact.zero?
 
-      { stat: technology.lifetime_impact, title: "#{technology.name}s" }
+      { stat: technology.lifetime_distributed, title: "#{technology.name}s" }
     end
 
     @dates = Story.array_of_unique_dates

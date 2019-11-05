@@ -1,11 +1,11 @@
 -# frozen_string_literal: true
-- sector_reports = reports.related_to_sector(sector)
+- sector_reports = sector.related_reports.where(technology: technology, date: @date)
 - cells = sector_reports.related_cells.order(name: :asc)
 %tr
-  %td +/-
+  %td.toggle{id: "#{sector.id}"} +/-
   %td{colspan: 3}= "#{sector.name}"
   %td.text-right= human_number sector_reports.sum(:distributed)
   %td.text-right= human_number sector_reports.sum(:checked)
   %td.text-right= human_number sector_reports.map(&:impact).sum
   %td
-= render partial: 'cell', collection: cells, locals: { reports: sector_reports, technology: technology }
+= render partial: 'cell', collection: cells, locals: {technology: technology }

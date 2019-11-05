@@ -18,6 +18,10 @@ class Technology < ApplicationRecord
   end
 
   def lifetime_impact
-    reports.map { |report| report.people.to_i }.sum
+    reports.map { |report| report.impact.to_i }.sum
+  end
+
+  def lifetime_distributed
+    reports.map { |report| report.distributed.to_i }.sum
   end
 end

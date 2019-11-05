@@ -14,8 +14,8 @@
       = link_to 'Hide empty rows',  @skip_blanks_rfp, class: 'btn btn-outline-dark', id: 'dist_skipblank'
   .col-sm-2.text-right
     - if current_user.can_manage_geography? || current_user.admin?
-      = link_to 'Edit', edit_cell_path(@cell), class: 'btn btn-primary'
-    = link_to 'Back', sector_path(@cell.sector), class: 'btn btn-dark'
+      = link_to 'Edit', edit_cell_path(@cell), class: 'btn yellow'
+    = link_to 'Back', sector_path(@cell.sector), class: 'btn blue'
 
 = render partial: 'shared/search', locals: { from: @from, to: @to, earliest: @earliest, latest: @latest }
 

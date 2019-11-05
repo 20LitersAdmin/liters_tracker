@@ -1,15 +1,15 @@
 -# frozen_string_literal: true
-- @report_sub = @reports.related_to_sector(sector)
-- @plan_sub = @plans.related_to_sector(sector)
+- @report_sub = sector.related_reports.between(@from,@to)
+- @plan_sub = sector.related_plans.between(@from,@to)
 - return if @plan_sub.blank? && @report_sub.blank? && @skip_blanks
 %tr
   %td.text-left
     - if @plan_sub.empty? && (current_user.can_manage_contracts? || current_user.admin?)
       %span.float-left= link_to sector.name, sector_path(sector)
-      %span.float-right= link_to 'Add plan', '#', class: 'btn btn-outline-primary'
+      %span.float-right= link_to 'Add plan', '#', class: 'btn empty'
     - elsif @report_sub.empty? && (current_user.can_manage_reports? || current_user.admin?)
       %span.float-left= link_to sector.name, sector_path(sector)
-      %span.float-right= link_to 'Add report', '#', class: 'btn btn-outline-primary'
+      %span.float-right= link_to 'Add report', '#', class: 'btn empty'
     -else
       = link_to sector.name, sector_path(sector)
   - if @plan_sub.any? || @report_sub.any?
@@ -22,6 +22,6 @@
   - else
     %td= "No plans or reports related to #{@district.name} for this sector and time period"
     - if current_user.can_manage_reports?  || current_user.admin?
-      %td= link_to 'Add report', '#', class: 'btn btn-outline-primary'
+      %td= link_to 'Add report', '#', class: 'btn empty'
     - else
       %td

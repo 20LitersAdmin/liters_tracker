@@ -26,6 +26,6 @@
             %th.text-right= human_number tech_reports.sum(:checked)
             %th.text-right= human_number tech_reports.map(&:impact).sum
         %tbody
-          = render partial: 'sector', collection: sectors, locals: { reports: tech_reports, technology: technology }
+          = render partial: 'sector', collection: sectors, locals: { technology: technology }
     - else
       %p No activity

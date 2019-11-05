@@ -15,7 +15,7 @@ class TechnologiesController < ApplicationController
     @to =   params[:to].present? ? Date.parse(params[:to]) : @latest
 
     @targets = Target.where(technology_id: @tech_ids).between(@from, @to).order(contract_id: :asc)
-    @reports = Report.where(technology_id: @tech_ids).where(date: @from..@to).order(date: :asc)
+    @reports = Report.where(technology_id: @tech_ids).between(@from, @to).order(date: :asc)
     @target_date = @targets.last&.date
   end
 
@@ -27,7 +27,7 @@ class TechnologiesController < ApplicationController
     @from = params[:from].present? ? Date.parse(params[:from]) : @earliest
     @to =   params[:to].present? ? Date.parse(params[:to]) : @latest
 
-    @reports = Report.where(technology: @technology).where(date: @from..@to)
+    @reports = Report.where(technology: @technology).between(@from, @to)
 
     @skip_blanks = params[:skip_blanks].present?
     @skip_blanks_rfp = request.fullpath.include?('?') ? request.fullpath + '&skip_blanks=true' : request.fullpath + '?skip_blanks=true'

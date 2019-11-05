@@ -3,7 +3,7 @@
   .col-8
     %h1 All users
   .col-4.text-right
-    = link_to 'New User', new_user_path, class: 'btn btn-primary'
+    = link_to 'New User', new_user_path, class: 'btn yellow'
 
 .row
   .col
@@ -26,6 +26,6 @@
           %td.text-center= human_boolean user.admin?
           %td.text-center= human_boolean user.confirmed_at.present?
           - if current_user.admin?
-            %td= link_to 'Edit', edit_user_path(user), class: 'btn btn-outline-primary'
-            %td= link_to 'Destroy', user, method: :delete, data: { confirm: 'Are you sure?' }, class: 'btn btn-outline-danger'
+            %td= link_to 'Edit', edit_user_path(user), class: 'btn yellow'
+            %td= link_to 'Destroy', user, method: :delete, data: { confirm: 'Are you sure?' }, class: 'btn red'
 

@@ -12,7 +12,7 @@
       .card-body
         %h5.card-title View the data
         %p.card-text Get information on progress
-        = link_to 'View', data_path, class: 'btn btn-primary'
+        = link_to 'View', data_path, class: 'btn yellow'
 
   - if @user.can_manage_reports? || @user.admin?
     .col-sm-12.col-md-6.col-lg-3
@@ -20,14 +20,14 @@
         .card-body
           %h5.card-title Submit a report
           %p.card-text Monthly report from the field
-          = link_to 'Submit', select_sectors_path, class: 'btn btn-primary'
+          = link_to 'Submit', select_sectors_path, class: 'btn yellow'
 
     .col-sm-12.col-md-6.col-lg-3
       .card.my-2
         .card-body
           %h5.card-title Manage reports
           %p.card-text Change or remove monthly reports
-          = link_to 'Go', reports_path, class: 'btn btn-primary'
+          = link_to 'Go', reports_path, class: 'btn yellow'
 
   - if @user.can_manage_geography? || @user.admin?
     .col-sm-12.col-md-6.col-lg-3
@@ -35,14 +35,14 @@
         .card-body
           %h5.card-title Manage facilities
           %p.card-text Churches, schools, health clinics
-          = link_to 'Go', facilities_path, class: 'btn btn-primary'
+          = link_to 'Go', facilities_path, class: 'btn yellow'
 
     .col-sm-12.col-md-6.col-lg-3
       .card.my-2
         .card-body
           %h5.card-title Manage geography
           %p.card-text Districts, sectors, cells, villages
-          = link_to 'Go', districts_path, class: 'btn btn-primary'
+          = link_to 'Go', districts_path, class: 'btn yellow'
 
   - if @user.can_manage_contracts? || @user.admin?
     .col-sm-12.col-md-6.col-lg-3
@@ -50,7 +50,7 @@
         .card-body
           %h5.card-title Manage MOUs
           %p.card-text Contracts, targets, plans
-          = link_to 'Go', contracts_path, class: 'btn btn-primary'
+          = link_to 'Go', contracts_path, class: 'btn yellow'
 
   - if @user.admin?
     .col-sm-12.col-md-6.col-lg-3
@@ -58,13 +58,13 @@
         .card-body
           %h5.card-title Manage users
           %p.card-text passwords, permissions, etc.
-          = link_to 'Go', users_path, class: 'btn btn-primary'
+          = link_to 'Go', users_path, class: 'btn yellow'
 
-  - if !@user.admin?
+  - unless @user.admin?
     .col-sm-12.col-md-6.col-lg-3
       .card.my-2
         .card-body
           %h5.card-title Need access to more?
           %p.card-text Talk to an administrator
           - @admins.each do |admin|
-            = link_to 'Email ' + admin.fname, 'mailto:' + admin.email, class: 'btn btn-primary', target: '_blank'
+            = link_to 'Email ' + admin.fname, 'mailto:' + admin.email, class: 'btn yellow', target: '_blank'

@@ -1,4 +1,5 @@
 -# frozen_string_literal: true
+
 - @report_sub = @reports.where(technology: technology)
 - @plan_sub = @plans.where(technology: technology)
 - return if @plan_sub.blank? && @report_sub.blank? && @skip_blanks
@@ -6,10 +7,10 @@
   %td.text-left
     - if @plan_sub.empty? && (current_user.can_manage_contracts? || current_user.admin?)
       %span.float-left= link_to technology.name, technology_path(technology)
-      %span.float-right= link_to 'Add plan', '#', class: 'btn btn-outline-primary'
+      %span.float-right= link_to 'Add plan', '#', class: 'btn empty'
     - elsif @report_sub.empty? && (current_user.can_manage_reports? || current_user.admin?)
       %span.float-left= link_to technology.name, technology_path(technology)
-      %span.float-right= link_to 'Add report', '#', class: 'btn btn-outline-primary'
+      %span.float-right= link_to 'Add report', '#', class: 'btn empty'
     - else
       = link_to technology.name, technology_path(technology)
   - if @plan_sub.any? || @report_sub.any?
@@ -21,6 +22,6 @@
   - else
     %td{colspan: 4}= "No plans or reports related to #{@sector.name} for this time period"
     - if current_user.can_manage_reports? || current_user.admin?
-      %td= link_to 'Add report', '#', technology: technology), class: 'btn btn-outline-primary'
+      %td= link_to 'Add report', '#', technology: technology, class: 'btn empty'
     - else
       %td

@@ -2,8 +2,9 @@
 .container
   %p.source-org.copyright
     20 Liters is a 501[c]3 non profit corporation, EIN 27-3378656
-    %a{:href => "/privacy-policy"} privacy policy
-    ©2019
+    %a{:href => "https://20liters.org/privacy-policy"}
+      privacy policy
+    = "©#{Date.today.year.to_s}"
     %a{:href => "https://www.facebook.com/20liters"}
       %i.fa.fa-facebook
     / <a href="https://twitter.com/20liters"><i class="fa fa-twitter"></i></a>

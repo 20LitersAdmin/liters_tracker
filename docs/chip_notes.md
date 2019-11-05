@@ -3,6 +3,15 @@
 * Things are bad here (cell math is bad): `http://localhost:3000/sectors/2/report?date=2019-09-01&tech=1`
 * Clean up Michael's dashboard_controller binning
 * Handle thumbnails or disregard them (they are duplicates of images at this point)
+* Footer needs to actually match
+
+# from amanda
+* Try to make it feel like we're on 20L/blog/updates to some extent.
+* Dashboard stats: bigger #s, vertically center in box
+* Dasboard collection: banding on bottom of photo instead of card text (brand style banding).
+* Story#show: banner image universal (jerrycans), show image in body of page, next to story title and text. Then put "back" and "donate buttons over top of it".
+* Spell check story input?
+* Add technology to Story#show info section
 
 # CURRENT:
 

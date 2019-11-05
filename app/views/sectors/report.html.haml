@@ -3,7 +3,7 @@
   .col-10
     %h1= "#{@sector.name} Sector report:"
   .col-2.text-right
-    =link_to 'Back', select_sectors_path, class: 'btn btn-primary'
+    =link_to 'Back', select_sectors_path, class: 'btn yellow'
 .row
   .col-12
     %h2= "#{@technology.short_name} achievements in #{@date.strftime("%B, %Y")}"
@@ -54,7 +54,7 @@
             %tbody
               = render partial: 'facility_form', collection: @facilities, locals: { technology: @technology, date: @date, modal: false }
         .row
-          .col-12.text-right= link_to 'Add Facility', '#', id: 'facility-trigger', class: 'btn btn-primary', data: { toggle:  "modal", target: '#new_facility_modal' }
+          .col-12.text-right= link_to 'Add Facility', '#', id: 'facility-trigger', class: 'btn yellow', data: { toggle:  "modal", target: '#new_facility_modal' }
       .row
         .col-12.text-center.submit-div
           = submit_tag 'Submit report', class: 'btn btn-success'

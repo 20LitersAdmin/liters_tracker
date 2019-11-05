@@ -3,7 +3,7 @@
   .col-sm-4
     %h4 Data: All Villages
   .col-sm-3.text-center
-    = link_to 'All Sectors', sectors_path, class: 'btn btn-primary'
+    = link_to 'All Sectors', sectors_path, class: 'btn yellow'
   .col-sm-3.text-center
     - if @skip_blanks
       = link_to 'Show empty rows', request.fullpath.gsub('&skip_blanks=true', '').gsub('?skip_blanks=true', '') , class: 'btn btn-outline-dark', id: 'vill_skipblank'
@@ -11,8 +11,8 @@
       = link_to 'Hide empty rows',  @skip_blanks_rfp, class: 'btn btn-outline-dark', id: 'vill_skipblank'
   .col-sm-2.text-right
     - if current_user.can_manage_geography? || current_user.admin?
-      = link_to 'New', new_village_path, class: 'btn btn-primary'
-    = link_to 'Back', data_path, class: 'btn btn-dark'
+      = link_to 'New', new_village_path, class: 'btn yellow'
+    = link_to 'Back', data_path, class: 'btn blue'
 
 = render partial: 'shared/search', locals: { from: @from, to: @to, earliest: @earliest, latest: @latest }
 

@@ -23,7 +23,7 @@ class MonthlyController < ApplicationController
 
     @date = Date.new(monthly.year, monthly.month, 1)
     @reports = Report.within_month(@date)
-    @stories = Story.where(report_id: @reports.map{|report| report.id}.uniq)
+    @stories = Story.where(report_id: @reports.pluck(:id).uniq)
   end
 
   private
