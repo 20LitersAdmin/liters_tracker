@@ -86,8 +86,8 @@ class Village < ApplicationRecord
   #   "#{pop} / #{hh}"
   # end
 
-  # def village
-  #   # Reports and Plans have `.model` which needs to respond to `report.model.village`
-  #   self
-  # end
+  def village
+    # Reports and Plans have `.model` which needs to respond to `report.model.village`
+    self
+  end
 end
