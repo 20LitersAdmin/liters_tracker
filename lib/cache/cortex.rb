@@ -1,10 +1,12 @@
+# frozen_string_literal: true
+
 require 'dalli'
 
 module Cache
   class Cortex
     attr_reader :client
 
-    def initialize(options={ expires_in: 1.day, compress: true})
+    def initialize(options = { expires_in: 1.day, compress: true })
       host = 'localhost:11211'
       if production?
         options = options.merge({ username: ENV['MEMCACHE_USERNAME'],
@@ -23,7 +25,7 @@ module Cache
       begin
         value = @client.get(key)
       rescue Exception => e
-        p "if local development, install memcached: `brew install memcached && brew services start memcached`"
+        p 'if local development, install memcached: `brew install memcached && brew services start memcached`'
         raise e
       end
       value
@@ -34,6 +36,7 @@ module Cache
     end
 
     private
+
     def production?
       Rails.env == 'production'
     end

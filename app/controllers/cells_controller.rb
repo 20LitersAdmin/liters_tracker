@@ -29,9 +29,9 @@ class CellsController < ApplicationController
     @contract_search_param_add = @by_tech ? '&by_tech=true' : ''
     @contract_search_param_add += @skip_blanks ? '&skip_blanks=true' : ''
 
-    @reports = Report.where(date: @from..@to).related_to_cell(@cell).order(date: :asc)
+    @reports = @cell.related_reports.between(@from, @to)
     @technologies = Technology.report_worthy
-    @plans = Plan.related_to_cell(@cell)
+    @plans = @cell.related_plans.between(@from, @to)
     @plan_date = human_date @plans.size.zero? ? nil : Contract.find(@plans.pluck(:contract_id).max).end_date
     @villages = @cell.villages.order(name: :asc)
   end

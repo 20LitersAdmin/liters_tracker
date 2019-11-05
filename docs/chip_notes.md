@@ -1,3 +1,9 @@
+# POST C4G:
+* I changed image naming conventions so the S3 bucket and the Story records are useless
+* Things are bad here (cell math is bad): `http://localhost:3000/sectors/2/report?date=2019-09-01&tech=1`
+* Clean up Michael's dashboard_controller binning
+* Handle thumbnails or disregard them (they are duplicates of images at this point)
+
 # CURRENT:
 
 # More reports:

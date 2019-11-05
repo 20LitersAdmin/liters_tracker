@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 require 'cache/cortex.rb'
 
 # TODO Add after_save for create that calls self.reset_cache
@@ -21,13 +22,16 @@ class Cell < ApplicationRecord
   validates_presence_of :name, :sector_id
   validates_uniqueness_of :gis_code, allow_blank: true
 
-  scope :for_sector,  ->(ids) { where(sector_id: ids) }
+  scope :for_sector, ->(ids) { where(sector_id: ids) }
 
   after_initialize :cortex
-  GEO_CHILDREN = ['Village', 'Facility'].freeze
+  after_save :reset_cache
+
+  GEO_CHILDREN = %w[Village Facility].freeze
 
   def cortex
     return @dalli if @dalli
+
     @dalli = Cache::Cortex.new
   end
 
@@ -36,7 +40,7 @@ class Cell < ApplicationRecord
   end
 
   def reset_cache
-    geographies = [self, self.sector, self.district]
+    geographies = [self, sector, district]
     geographies.each do |geo|
       ids = geo.class.all.pluck(:id)
       ids.each do |id|
@@ -49,13 +53,13 @@ class Cell < ApplicationRecord
 
   def key(method_name)
     geo_name = method_name.to_s.split('_').first.capitalize
-    "#{self.id}_#{geo_name}"
+    "#{id}_#{geo_name}"
   end
 
   def related_plans
-    Plan.where(planable_type: 'Cell', planable_id: self.id)
-          .or(Plan.where(planable_type: 'Village', planable_id: village_ids))
-          .or(Plan.where(planable_type: 'Facility', planable_id: facility_ids))
+    Plan.where(planable_type: 'Cell', planable_id: id)
+        .or(Plan.where(planable_type: 'Village', planable_id: village_ids))
+        .or(Plan.where(planable_type: 'Facility', planable_id: facility_ids))
   end
 
   def related_reports
@@ -66,9 +70,10 @@ class Cell < ApplicationRecord
 
   def village_ids
     return @villages if @villages
+
     key = key(__method__)
     ids = recall(key)
-    if !ids
+    unless ids
       ids = Village.where(cell_id: self.id).pluck(:id)
       cortex.set(key, ids)
     end
@@ -77,9 +82,10 @@ class Cell < ApplicationRecord
 
   def facility_ids
     return @facilities if @facilities
+
     key = key(__method__)
     ids = recall(key)
-    if !ids
+    unless ids
       ids = Facility.where(village_id: village_ids).pluck(:id)
       cortex.set(key, ids)
     end

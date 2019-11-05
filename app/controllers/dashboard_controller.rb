@@ -21,7 +21,7 @@ class DashboardController < ApplicationController
       @months = []
     end
 
-    @global_impact = Report.all.map(&:impact).sum
+    @global_impact = Report.sum(:impact)
 
     @story_month_hash = Story.bin_stories_by_year(Date.today.year)
   end

@@ -36,8 +36,10 @@ class SectorsController < ApplicationController
 
     @date = params[:date].present? ? Date.parse(params[:date]) : Date.today.beginning_of_month - 1.month
 
-    @plans = Plan.where(technology: @technology).nearest_to_date(@date).related_to_sector(@sector)
-    @reports = Report.where(technology: @technology, date: @date).related_to_sector(@sector).select(:distributed, :checked, :people)
+    # @plans = Plan.where(technology: @technology).nearest_to_date(@date).related_to_sector(@sector)
+    @plans = @sector.related_plans.where(technology: @technology).nearest_to_date(@date)
+    # @reports = Report.where(technology: @technology, date: @date).related_to_sector(@sector).select(:distributed, :checked, :people)
+    @reports = @sector.related_reports.where(technology: @technology, date: @date)
     @contract = Contract.between(@date, @date).first
 
     if @technology.scale == 'Family' # %w[SAM3, SAM3-M, SS].include?(@technology.short_name)
@@ -73,9 +75,9 @@ class SectorsController < ApplicationController
     @contract_search_param_add = @by_tech ? '&by_tech=true' : ''
     @contract_search_param_add += @skip_blanks ? '&skip_blanks=true' : ''
 
-    @reports = Report.where(date: @from..@to).related_to_sector(@sector).order(date: :asc)
+    @reports = @sector.related_reports.between(@from, @to)
     @technologies = Technology.report_worthy
-    @plans = Plan.related_to_sector(@sector)
+    @plans = @sector.related_plans.between(@from, @to)
     @plan_date = human_date @plans.size.zero? ? nil : Contract.find(@plans.pluck(:contract_id).max).end_date
     @cells = @sector.cells.order(name: :asc)
   end

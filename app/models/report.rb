@@ -14,90 +14,52 @@ class Report < ApplicationRecord
   scope :only_cells,      -> { where(reportable_type: 'Cell') }
   scope :only_villages,   -> { where(reportable_type: 'Village') }
   scope :only_facilities, -> { where(reportable_type: 'Facility') }
-  scope :within_month, ->(date) { where(date: date.beginning_of_month..date.end_of_month) }
-  scope :earliest_date, -> { order(date: :asc).first.date }
-  scope :latest_date, -> { order(date: :asc).last.date }
-  scope :sorted, -> { order(date: :desc) }
+  scope :within_month,    ->(date) { where(date: date.beginning_of_month..date.end_of_month) }
+  scope :earliest_date,   -> { order(date: :asc).first.date }
+  scope :latest_date,     -> { order(date: :asc).last.date }
+  scope :sorted,          -> { order(date: :desc) }
+  scope :between,         ->(from, to) { where(date: from..to) }
+  scope :with_plans,      -> { joins('LEFT JOIN plans ON reports.contract_id = plans.contract_id AND reports.technology_id = plans.technology_id AND reports.reportable_id = plans.planable_id AND reports.reportable_type = plans.planable_type') }
 
-  # temp: For seeding Stories
-  def story_title
-    verb = distributed.present? ? 'distributed' : 'checked'
-    "#{distributed} #{technology.name}s #{verb} in #{reportable.name}"
-  end
+  before_save :calculate_impact
 
-  # temp: For seeding Stories
-  def story_text
-    story_title + ". And this was reported by #{user.name}. This happened on #{date.strftime('%d-%m-%y')}. It was really fun and our volunteers worked hard and the recipeints were really grateful."
-  end
+  # def self.related_to(record)
+  #   where(reportable_type: record.class.to_s, reportable_id: record.id)
+  # end
 
-  # temp: For seeding Stories
-  def story_json
-    { title: story_title, text: story_text, report_id: id }
-  end
+  # def self.related_to_facility(facility, only_ary: false)
+  #   raise 'ERROR. Must provide a facility.' unless facility.is_a? Facility
 
-  def self.related_to(record)
-    where(reportable_type: record.class.to_s, reportable_id: record.id)
-  end
+  #   reports = related_to(facility)
 
-  def self.related_to_facility(facility, only_ary: false)
-    raise 'ERROR. Must provide a facility.' unless facility.is_a? Facility
+  #   return reports.pluck(:id) if only_ary
 
-    reports = related_to(facility)
+  #   reports
+  # end
 
-    return reports.pluck(:id) if only_ary
+  # def self.related_to_village(village)
+  #   raise 'ERROR. Must provide a village.' unless village.is_a? Village
 
-    reports
-  end
+  #   village.related_reports
+  # end
 
-  def self.related_to_village(village, only_ary: false)
-    raise 'ERROR. Must provide a village.' unless village.is_a? Village
+  # def self.related_to_cell(cell)
+  #   raise 'ERROR. Must provide a cell.' unless cell.is_a? Cell
 
-    village.related_reports
+  #   cell.related_reports
+  # end
 
-    # report_ids = related_to(village).pluck(:id)
-    # village.facilities.each { |facility| report_ids << related_to_facility(facility, only_ary: true) }
+  # def self.related_to_sector(sector)
+  #   raise 'ERROR. Must provide a sector.' unless sector.is_a? Sector
 
-    # return report_ids.flatten.uniq if only_ary
+  #   sector.related_reports
+  # end
 
-    # where(id: report_ids.flatten.uniq)
-  end
+  # def self.related_to_district(district)
+  #   raise 'ERROR. Must provide a district.' unless district.is_a? District
 
-  def self.related_to_cell(cell, only_ary: false)
-    raise 'ERROR. Must provide a cell.' unless cell.is_a? Cell
-
-    cell.related_reports
-
-    # report_ids = related_to(cell).pluck(:id)
-    # cell.villages.each { |village| report_ids << related_to_village(village, only_ary: true) }
-
-    # return report_ids.flatten.uniq if only_ary
-
-    # where(id: report_ids.flatten.uniq)
-  end
-
-  def self.related_to_sector(sector, only_ary: false)
-    raise 'ERROR. Must provide a sector.' unless sector.is_a? Sector
-
-    sector.related_reports
-
-    # report_ids = related_to(sector).pluck(:id)
-    # sector.cells.each { |cell| report_ids << related_to_cell(cell, only_ary: true) }
-
-    # return report_ids.flatten.uniq if only_ary
-
-    # where(id: report_ids.flatten.uniq)
-  end
-
-  def self.related_to_district(district)
-    raise 'ERROR. Must provide a district.' unless district.is_a? District
-
-    district.related_reports
-
-    # report_ids = related_to(district).pluck(:id)
-    # district.sectors.each { |sector| report_ids << Report.related_to_sector(sector, only_ary: true) }
-
-    # where(id: report_ids.flatten.uniq)
-  end
+  #   district.related_reports
+  # end
 
   def self.related_facilities
     # return a collection of Facilities from a collection of Reports
@@ -159,8 +121,6 @@ class Report < ApplicationRecord
     contract_id = batch_report_params[:contract_id].to_i
     fallback_date = batch_report_params[:master_date]
 
-    error_ary = []
-
     batch_report_params[:reports].each do |report_params|
       process(report_params, technology_id, contract_id, user_id, fallback_date)
     end
@@ -217,15 +177,6 @@ class Report < ApplicationRecord
     3 # if persisted?
   end
 
-  def people_served
-    return people if people&.positive?
-
-    reportable_type == 'Facility' && reportable.population&.positive? ? reportable.population : (technology.default_impact * distributed.to_i)
-  end
-
-  def impact
-    people_served
-  end
 
   def self.ary_of_village_ids_from_facilities
     related_facilities.pluck(:village_id)
@@ -241,5 +192,19 @@ class Report < ApplicationRecord
 
   def self.ary_of_district_ids_from_sectors
     related_sectors.pluck(:district_id)
+  end
+
+  private
+
+  def calculate_impact
+    return if distributed.nil? || distributed.zero?
+
+    if people&.positive?
+      self.impact = people
+    elsif reportable_type == 'Facility' && reportable.population&.positive?
+      self.impact = reportable.population
+    else
+      self.impact = technology.default_impact * distributed.to_i
+    end
   end
 end

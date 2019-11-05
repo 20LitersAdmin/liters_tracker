@@ -1,6 +1,6 @@
 -# frozen_string_literal: true
-- @report_sub = @reports.related_to_district(district)
-- @plan_sub = @plans.related_to_district(district)
+- @report_sub = district.related_reports.between(@from, @to)
+- @plan_sub = district.related_plans.between(@from, @to)
 %tr
   %td= link_to district.name, district_path(district)
   %td.text-right= human_number @report_sub.map(&:impact).sum

@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 require 'cache/cortex.rb'
 
 # TODO Add after_save for create that calls self.reset_cache
@@ -26,9 +27,11 @@ class Facility < ApplicationRecord
   scope :for_village,  ->(ids) { where(village_id: ids) }
 
   after_initialize :cortex
+  after_save :reset_cache
 
   def cortex
     return @dalli if @dalli
+
     @dalli = Cache::Cortex.new
   end
 
