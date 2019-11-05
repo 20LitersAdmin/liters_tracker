@@ -31,4 +31,4 @@
             %td= sector.name
             %td= sector.district.name
             - @technologies.each do |tech|
-              %td= link_to tech.short_name, report_sector_path(sector, tech: tech.id, date: @date), class: 'btn btn-primary', data: { finder: 'tech-report-btn' }
+              %td= link_to tech.short_name, report_sector_path(sector, tech: tech.id, date: @date), class: 'btn yellow', data: { finder: 'tech-report-btn' }

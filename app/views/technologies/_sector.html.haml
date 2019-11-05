@@ -1,15 +1,15 @@
 -# frozen_string_literal: true
-- @plan_sub = @plans.related_to_sector(sector)
-- @report_sub = @reports.related_to_sector(sector)
+- @plan_sub = sector.related_plans.where(technology: @technology).between(@from, @to)
+- @report_sub = sector.related_reports.where(technology: @technology).between(@from, @to)
 - return if @plan_sub.blank? && @report_sub.blank? && @skip_blanks
 %tr
   %td.text-left
     - if @plan_sub.empty?
       %span.float-left= link_to sector.name, sector_path(sector)
-      %span.float-right= link_to 'Add plan', '#', class: 'btn btn-outline-primary'
+      %span.float-right= link_to 'Add plan', '#', class: 'btn empty'
     - elsif @report_sub.empty?
       %span.float-left= link_to sector.name, sector_path(sector)
-      %span.float-right= link_to 'Add report', '#', class: 'btn btn-outline-primary'
+      %span.float-right= link_to 'Add report', '#', class: 'btn empty'
     -else
       = link_to sector.name, sector_path(sector)
   - if @plan_sub.any? || @report_sub.any?
@@ -20,4 +20,4 @@
     %td.text-right= human_number @report_sub.map(&:impact).sum
   - else
     %td{'colspan': '4'}= "No plans or reports related to #{@technology.short_name} for this sector and time period"
-    %td= link_to 'Add report', '#', class: 'btn btn-outline-primary'
+    %td= link_to 'Add report', '#', class: 'btn empty'

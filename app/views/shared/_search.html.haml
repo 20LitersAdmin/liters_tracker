@@ -18,7 +18,7 @@
         .col-sm-2
           - @searchbar_hidden_fields&.each do |field|
             = hidden_field_tag field[:name], field[:value]
-          = submit_tag 'Filter', class: 'btn btn-primary', name: nil
+          = submit_tag 'Filter', class: 'btn yellow', name: nil
 
 .row.align-items-center.mt-3.mb-5
   .col-2.align-items-center

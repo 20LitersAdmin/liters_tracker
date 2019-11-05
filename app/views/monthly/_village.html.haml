@@ -1,7 +1,9 @@
 -# frozen_string_literal: true
-- village_report = reports.related_to_village(village).first
-- story = @stories.select{ |story| story.report_id == village_report.id}.first
+
+- village_report = village.related_reports.where(technology: technology, date: @date).last
+- story = village_report.story
 - #facilities = village_report.related_facilities
+
 %tr
   %td{colspan: 3}
   %td= "#{village.name}"
@@ -10,6 +12,6 @@
   %td.text-right= human_number village_report.impact
   %td.text-right
     - if story.nil?
-      =button_to 'Add', new_story_path, { method: :get, params: { report_id: village_report.id, year: params[:year], month: params[:month] } }
+      =link_to 'Add', new_story_path(year: params[:year], month: params[:month], report_id: village_report.id), class: 'btn yellow'
     - else
-      =button_to 'Edit', edit_story_path(story.id), { method: :get, params: { year: params[:year], month: params[:month] } }
+      =link_to 'Edit', edit_story_path(story.id, year: params[:year], month: params[:month]), class: 'btn blue'

@@ -6,10 +6,10 @@
   %td.text-left
     - if @plan_sub.empty? && (current_user.can_manage_contracts? || current_user.admin?)
       %span.float-left= link_to village.name, village_path(village)
-      %span.float-right= link_to 'Add plan', '#', class: 'btn btn-outline-primary'
+      %span.float-right= link_to 'Add plan', '#', class: 'btn empty'
     - elsif @report_sub.empty? && (current_user.can_manage_reports? || current_user.admin?)
       %span.float-left= link_to village.name, village_path(village)
-      %span.float-right= link_to 'Add report', '#', class: 'btn btn-outline-primary'
+      %span.float-right= link_to 'Add report', '#', class: 'btn empty'
     -else
       = link_to village.name, village_path(village)
   - if @plan_sub.any? || @report_sub.any?
@@ -22,6 +22,6 @@
   - else
     %td= "No plans or reports related to #{@cell.name} for this village and time period"
     - if current_user.can_manage_reports? || current_user.admin?
-      %td= link_to 'Add report', '#', class: 'btn btn-outline-primary'
+      %td= link_to 'Add report', '#', class: 'btn empty'
     - else
       %td

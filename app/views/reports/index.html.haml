@@ -22,12 +22,12 @@
           %td= report.distributed
           %td= report.checked
           %td= report.user.fname
-          %td= link_to 'Show', report, :class => "badge badge-info"
-          %td= link_to 'Edit', edit_report_path(report), :class => "badge badge-warning"
-          %td= link_to 'Destroy', report, method: :delete, data: { confirm: 'Are you sure?' }, :class => "badge badge-danger"
+          %td= link_to 'Show', report, class: 'btn yellow'
+          %td= link_to 'Edit', edit_report_path(report), class: 'btn blue'
+          %td= link_to 'Delete', report, method: :delete, data: { confirm: 'Are you sure?' }, class: 'btn red'
 
   %div.row.justify-content-center.align-self-center
     %div.col-2
-      = link_to "\n + \n", new_report_path, class: "btn btn-outline-primary btn-sm float-left"
+      = link_to 'New Report', new_report_path, class: 'btn empty btn-sm float-left'
     %div.col-10
       = will_paginate @reports, class: "pagination-sm float-right", renderer: WillPaginate::ActionView::Bootstrap4LinkRenderer

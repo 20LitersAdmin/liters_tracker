@@ -3,7 +3,7 @@
   .col-8
     %h1 All Cells
   .col-4.text-right
-    = link_to 'New', new_cell_path, class: 'btn btn-primary'
+    = link_to 'New', new_cell_path, class: 'btn yellow'
 
 .row
   .col
@@ -28,5 +28,5 @@
             %td= cell.gis_code
             %td.text-right= human_number cell.population
             %td.text-right= human_number cell.households
-            %td= link_to 'Edit', edit_cell_path(cell), class: 'btn btn-outline-primary'
-            %td= link_to 'Delete', cell, method: :delete, data: { confirm: 'Are you sure?' }, class: 'btn btn-outline-danger'
+            %td= link_to 'Edit', edit_cell_path(cell), class: 'btn empty'
+            %td= link_to 'Delete', cell, method: :delete, data: { confirm: 'Are you sure?' }, class: 'btn red'

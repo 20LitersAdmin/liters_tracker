@@ -1,5 +1,5 @@
 -# frozen_string_literal: true
-- cell_reports = reports.related_to_cell(cell)
+- cell_reports = cell.related_reports.where(technology: technology, date: @date)
 - villages = cell_reports.related_villages
 %tr
   %td{colspan: 2} +/-
