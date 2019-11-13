@@ -22,44 +22,6 @@ class Plan < ApplicationRecord
     with_reports.having('plans.goal > SUM(reports.distributed)').group('plans.id, reports.id')
   end
 
-  # def self.related_to(record)
-  #   where(planable_type: record.class.to_s, planable_id: record.id)
-  # end
-
-  # def self.related_to_facility(facility, only_ary: false)
-  #   raise 'ERROR. Must provide a facility.' unless facility.is_a? Facility
-
-  #   plans = related_to(facility)
-
-  #   return plans.pluck(:id) if only_ary
-
-  #   plans
-  # end
-
-  # def self.related_to_village(village)
-  #   raise 'ERROR. Must provide a village.' unless village.is_a? Village
-
-  #   village.related_plans
-  # end
-
-  # def self.related_to_cell(cell)
-  #   raise 'ERROR. Must provide a cell.' unless cell.is_a? Cell
-
-  #   cell.related_plans
-  # end
-
-  # def self.related_to_sector(sector)
-  #   raise 'ERROR. Must provide a sector.' unless sector.is_a? Sector
-
-  #   sector.related_plans
-  # end
-
-  # def self.related_to_district(district)
-  #   raise 'ERROR. Must provide a district.' unless district.is_a? District
-
-  #   district.related_plans
-  # end
-
   def self.related_facilities
     # return a collection of Facilities from a collection of Plans
     return Facility.none if self.only_facilities.empty?

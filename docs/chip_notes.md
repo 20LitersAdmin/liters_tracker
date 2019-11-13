@@ -61,11 +61,6 @@
 + Facility form (also submits as partial from SectorsController#Reports)
   -- CHECK: Sector lookup is showing the record, not the record.name
 
-# SPEED THINGS UP
-- check which is faster: `@reports.related_to_village(village)` or `village.related_reports`
-  -- Affects cell and village reporting partials
-- use `.select()` to speed up queries by only pulling what you need e.g.: `@reports.#stuff.select(:distributed, :checked)`
-
 # Remind myself:
 * magic_frozen_string_literal . #get those frozen string benefits
 * production backup / development restore-from production (https://github.com/thoughtbot/parity)
