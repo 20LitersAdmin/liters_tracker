@@ -14,7 +14,7 @@
         = "#{@story.report.reportable.village.name}, #{@story.report.reportable.sector.name}"
     %div
       %span.date
-        = @story.report.date.strftime("%B %d, %Y")
+        = @story.report.date.strftime('%B %d, %Y')
   %div.story-text
     = @story.text.html_safe
 

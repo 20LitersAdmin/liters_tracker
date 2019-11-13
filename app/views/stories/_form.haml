@@ -4,36 +4,37 @@
   %p Something went wrong and the report_id wasn't properly associated to this new story. Please navigate back and try again!
 
 - else
-  = form_for @story do |f|
+  .row
+    .col-12
+      %h1 New Story
+      %h4= "For Report ##{@report.id}: #{@report.details} "
+    .col-12
+      = simple_form_for @story, { wrapper: :horizontal_form }  do |f|
+        = f.input :report_id, as: :hidden
+        = hidden_field_tag :year, @year
+        = hidden_field_tag :month, @month
+        .field
+          = f.input :title
+        .field
+          = f.input :prominent
+        .field.wysiwyg
+          = f.input :text, input_html: { class: "tinymce", style: "height: 300px;" }
+        .field
+          = f.label 'Photo'
+          = f.file_field :photo, id: "image_upload", accept: 'image/png,image/gif,image/jpeg'
+        .actions
+          = f.submit 'Save', class: 'btn yellow'
 
-    = f.hidden_field :report_id, value: @story.report_id
-    = hidden_field_tag :year, @year
-    = hidden_field_tag :month, @month
-    .field
-      = f.label 'Title'
-      = f.text_field :title, value: @story.title
-    .field
-      = f.label 'Prominent'
-      = f.check_box :prominent, value: @story.prominent
-    .field.wysiwyg
-      = f.label 'Story Text'
-      = f.text_area :text, value: @story.text, :class => "tinymce", style: "height: 500px;"
-    .field
-      = f.label 'Photo'
-      = f.file_field :photo, id: "image_upload"
-    .actions
-      = f.submit 'Save'
+        %div#image_preview_wrapper
+          %br
+          %div
+            %p Image Preview:
+            =image_tag(@story.image, id: "image_preview", width: '400') if @story.image.present?
 
-    %div{ id: "image_preview_wrapper", :class => ("hide" if @story.image.blank?) }
-      %br
-      %div
-        %p Image Preview:
-        =image_tag @story.image, id: "image_preview", width: '400'
+        %div#image_thumbnail_preview_wrapper
+          %br
+          %div
+            %p Thumbnail Preview:
+            =image_tag(@story.image_thumbnail, id: "image_thumbnail_preview", width: '200') if @story.image_thumbnail.present?
 
-    %div{ id: "image_thumbnail_preview_wrapper", :class => ("hide" if @story.image_thumbnail.blank?) }
-      %br
-      %div
-        %p Thumbnail Preview:
-        =image_tag @story.image_thumbnail, id: "image_thumbnail_preview", width: '200'
-
-  = tinymce
+      = tinymce

@@ -26,6 +26,24 @@ class Report < ApplicationRecord
 
   before_save :calculate_impact
 
+  def details
+    if distributed&.positive?
+      val = distributed
+      lang = 'distributed'
+    else
+      val = checked
+      lang = 'checked'
+    end
+
+    if technology.scale == 'Family'
+      phrase = "#{ActionController::Base.helpers.pluralize(val, technology.name)} #{lang} during #{date.strftime('%B, %Y')}"
+    else
+      phrase = "#{ActionController::Base.helpers.pluralize(val, technology.name)} installed on #{date.strftime('%B, %d, %Y')}"
+    end
+
+    phrase
+  end
+
   def self.related_facilities
     # return a collection of Facilities from a collection of Reports
     return Facility.none if self.only_facilities.empty?
@@ -141,7 +159,6 @@ class Report < ApplicationRecord
 
     3 # if persisted?
   end
-
 
   def self.ary_of_village_ids_from_facilities
     related_facilities.pluck(:village_id)

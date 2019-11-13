@@ -1,6 +1,3 @@
 toolbar:
-  - styleselect | bold italic | undo redo
-  - image | link
-plugins:
-  - image
-  - link
+  - bold italic underline | copy paste | undo redo
+menubar: false

@@ -1,17 +1,21 @@
+# frozen_string_literal: true
+
 class StoriesController < ApplicationController
   before_action :set_story, only: %i[show edit update destroy]
-  layout "dashboard", :only => [ :show ]
+  before_action :set_report_from_url, only: %i[new]
+  before_action :set_report, only: %i[show edit update create destroy]
+  layout 'dashboard', only: %i[show]
 
-	def index
+  def index
     @stories = Story.all.order(:title)
-	end
+  end
 
-	def show
-	end
+  def show
+  end
 
   def new
     @story = Story.new
-    @story.report_id = params[:report_id]
+    @story.report_id = @report.id
     @year = params[:year]
     @month = params[:month]
 
@@ -52,22 +56,20 @@ class StoriesController < ApplicationController
         format.json { render json: @story.errors, status: :unprocessable_entity }
       end
     end
-
   end
 
   # POST /stories
   # POST /stories.json
-	def create
-    # does this work wth our image saving stuff
-    #handle image
+  def create
+    # handle image
     authorize @story = Story.new(story_params.except(:photo))
-    if (!story_params[:photo].blank?)
+    if story_params[:photo].present?
       urls = @story.save_image(story_params[:photo])
       @story.image = urls[:raw]
       @story.image_thumbnail = urls[:thumbnail]
     else
-      @story.image = ""
-      @story.image_thumbnail = ""
+      @story.image = ''
+      @story.image_thumbnail = ''
     end
 
     respond_to do |format|
@@ -75,12 +77,13 @@ class StoriesController < ApplicationController
         if params[:month].blank? || params[:year].blank?
           format.html { redirect_to @story, notice: 'Report was successfully created.' }
         else
-          format.html { redirect_to monthly_w_date_url(:month => params[:month], :year => params[:year]), notice: 'Report was successfully created.' }
+          format.html { redirect_to monthly_w_date_url(month: params[:month], year: params[:year]), notice: 'Report was successfully created.' }
         end
 
         format.json { render :show, status: :created, location: @story }
       else
-        # todo can we keep the form elements on error?
+        # TODO: can we keep the form elements on error?
+
         @year = params[:year]
         @month = params[:month]
         format.html { render :new }
@@ -89,7 +92,7 @@ class StoriesController < ApplicationController
     end
   end
 
-	private
+  private
 
   def story_params
     params.require(:story).permit(:title, :prominent, :text, :photo, :report_id)
@@ -100,4 +103,11 @@ class StoriesController < ApplicationController
     authorize @story
   end
 
+  def set_report_from_param
+    @report = Report.find(params[:report_id])
+  end
+
+  def set_report
+    @report = @story.report
+  end
 end

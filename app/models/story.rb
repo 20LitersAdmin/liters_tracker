@@ -7,7 +7,7 @@ class Story < ApplicationRecord
   validates_presence_of :title, :text
 
   def save_image(image_io)
-    if Rails.env.production? == false
+    unless Rails.env.production?
       return {
         raw: '',
         thumbnail: ''
@@ -57,8 +57,9 @@ class Story < ApplicationRecord
     thumb_ver = img.version_id
 
     # cleanup temporary image to keep filespace safe
-    # File.delete(image_path) if File.exist?(image_path)
-    # TODO: - should image be separated from cdn url?
+    File.delete(image_path) if File.exist?(image_path)
+
+    # TODO: should image be separated from cdn url?
     {
       raw: "https://d5t73r6km0hzm.cloudfront.net/images/#{image_name}?ver=#{img_ver}",
       thumbnail: "https://d5t73r6km0hzm.cloudfront.net/thumbnails/#{image_name}?ver=#{thumb_ver}"
@@ -66,21 +67,8 @@ class Story < ApplicationRecord
   end
 
   def related
-    # TODO: - add a query to get related stories
-    # similar technology id
-    # similar geography (reportable)
-    related = []
-    # grab a random offset to start grabing stories at
-    offset = rand(Story.all.size - 4)
-    # rand of a negative is zero, but we should be explicit
-    offset = 0 if offset.negative?
-    # grab 4 stories (this story could be one of them)
-    random_stories = Story.offset(offset).first(4)
-    # limit down to the stories that are not us
-    # random_stories.select { |story| story.id != id }
-    random_stories.reject { |story| story.id == id }
-    # grab the first 3 stories, prioritizing the related stories
-    (related + random_stories).first(3)
+    # TODO: add a query to get related stories
+    []
   end
 
   def self.array_of_unique_dates
