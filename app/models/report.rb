@@ -21,6 +21,9 @@ class Report < ApplicationRecord
   scope :between,         ->(from, to) { where(date: from..to) }
   scope :with_plans,      -> { joins('LEFT JOIN plans ON reports.contract_id = plans.contract_id AND reports.technology_id = plans.technology_id AND reports.reportable_id = plans.planable_id AND reports.reportable_type = plans.planable_type') }
 
+  scope :distributions,   -> { where.not(distributed: nil) }
+  scope :checks,          -> { where.not(checked: nil) }
+
   before_save :calculate_impact
 
   # def self.related_to(record)

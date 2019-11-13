@@ -1,10 +1,5 @@
 # frozen_string_literal: true
 
-require 'cache/cortex.rb'
-
-# TODO Add after_save for create that calls self.reset_cache
-#      https://apidock.com/rails/ActiveRecord/Callbacks/after_save
-
 class Cell < ApplicationRecord
   include GeographyType
 
@@ -22,73 +17,15 @@ class Cell < ApplicationRecord
   validates_presence_of :name, :sector_id
   validates_uniqueness_of :gis_code, allow_blank: true
 
-  scope :for_sector, ->(ids) { where(sector_id: ids) }
-
-  after_initialize :cortex
-  after_save :reset_cache
-
-  GEO_CHILDREN = %w[Village Facility].freeze
-
-  def cortex
-    return @dalli if @dalli
-
-    @dalli = Cache::Cortex.new
-  end
-
-  def recall(key)
-    cortex.get(key)
-  end
-
-  def reset_cache
-    geographies = [self, sector, district]
-    geographies.each do |geo|
-      ids = geo.class.all.pluck(:id)
-      ids.each do |id|
-        geo.class::GEO_CHILDREN.each do |child|
-          cortex.delete("#{id}_#{child}")
-        end
-      end
-    end
-  end
-
-  def key(method_name)
-    geo_name = method_name.to_s.split('_').first.capitalize
-    "#{id}_#{geo_name}"
-  end
-
   def related_plans
     Plan.where(planable_type: 'Cell', planable_id: id)
-        .or(Plan.where(planable_type: 'Village', planable_id: village_ids))
-        .or(Plan.where(planable_type: 'Facility', planable_id: facility_ids))
+        .or(Plan.where(planable_type: 'Village', planable_id: villages.pluck(:id)))
+        .or(Plan.where(planable_type: 'Facility', planable_id: facilities.pluck(:id)))
   end
 
   def related_reports
-    Report.where(reportable_type: 'Cell', reportable_id: self.id)
-          .or(Report.where(reportable_type: 'Village', reportable_id: village_ids))
-          .or(Report.where(reportable_type: 'Facility', reportable_id: facility_ids))
-  end
-
-  def village_ids
-    return @villages if @villages
-
-    key = key(__method__)
-    ids = recall(key)
-    unless ids
-      ids = Village.where(cell_id: self.id).pluck(:id)
-      cortex.set(key, ids)
-    end
-    @villages = ids
-  end
-
-  def facility_ids
-    return @facilities if @facilities
-
-    key = key(__method__)
-    ids = recall(key)
-    unless ids
-      ids = Facility.where(village_id: village_ids).pluck(:id)
-      cortex.set(key, ids)
-    end
-    @facilities = ids
+    Report.where(reportable_type: 'Cell', reportable_id: id)
+          .or(Report.where(reportable_type: 'Village', reportable_id: villages.pluck(:id)))
+          .or(Report.where(reportable_type: 'Facility', reportable_id: facilities.pluck(:id)))
   end
 end
