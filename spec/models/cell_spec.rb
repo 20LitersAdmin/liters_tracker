@@ -5,7 +5,7 @@ require 'rails_helper'
 RSpec.describe Cell, type: :model do
   let(:cell) { build :cell }
 
-  context 'has validations on' do
+  describe 'has validations on' do
     let(:no_name) { build :cell, name: nil }
     let(:no_sector) { build :cell, sector_id: nil }
 
@@ -52,6 +52,88 @@ RSpec.describe Cell, type: :model do
 
         expect(duplicate_gis.errors[:gis_code]).to match_array('has already been taken')
       end
+    end
+  end
+
+  describe '#related_plans' do
+    let(:cell) { create :cell }
+
+    context 'when no plans exist' do
+      it 'returns an empty activerecord object' do
+        expect(cell.related_plans.is_a?(ActiveRecord::Relation)).to eq true
+      end
+    end
+
+    context 'when plans exist' do
+      let(:village) { create :village, cell: cell }
+      let(:facility) { create :facility, village: village }
+      let(:unrelated_village) { create :village }
+      let(:unrelated_facility) { create :facility }
+
+      let(:plan_village) { create :plan_village, planable_id: village.id, planable_type: 'Village' }
+      let(:plan_facility) { create :plan_facility, planable_id: facility.id, planable_type: 'Facility' }
+
+      let(:unrelated_plan_village) { create :plan_village, planable_id: unrelated_village.id, planable_type: 'Village' }
+      let(:unrelated_plan_facility) { create :plan_facility, planable_id: unrelated_facility.id, planable_type: 'Facility' }
+
+      it 'returns an activerecord object' do
+        plan_village
+        plan_facility
+        unrelated_plan_village
+        unrelated_plan_facility
+
+        expect(cell.related_plans.is_a?(ActiveRecord::Relation)).to eq true
+        expect(cell.related_plans.size).to eq(2)
+
+        expect(cell.related_plans).to include(plan_village)
+        expect(cell.related_plans).to include(plan_facility)
+        expect(cell.related_plans).not_to include(unrelated_plan_village)
+        expect(cell.related_plans).not_to include(unrelated_plan_facility)
+      end
+    end
+  end
+
+  describe '#related_reports' do
+    let(:cell) { create :cell }
+
+    context 'when no reports exist' do
+      it 'returns an empty activerecord object' do
+        expect(cell.related_reports.is_a?(ActiveRecord::Relation)).to eq true
+      end
+    end
+
+    context 'when reports exist' do
+      let(:village) { create :village, cell: cell }
+      let(:facility) { create :facility, village: village }
+      let(:unrelated_village) { create :village }
+      let(:unrelated_facility) { create :facility }
+
+      let(:report_village) { create :report_village, reportable_id: village.id, reportable_type: 'Village' }
+      let(:report_facility) { create :report_facility, reportable_id: facility.id, reportable_type: 'Facility' }
+
+      let(:unrelated_report_village) { create :report_village, reportable_id: unrelated_village.id, reportable_type: 'Village' }
+      let(:unrelated_report_facility) { create :report_facility, reportable_id: unrelated_facility.id, reportable_type: 'Facility' }
+
+      it 'returns an activerecord object' do
+        report_village
+        report_facility
+        unrelated_report_village
+        unrelated_report_facility
+
+        expect(cell.related_reports.is_a?(ActiveRecord::Relation)).to eq true
+        expect(cell.related_reports.size).to eq(2)
+
+        expect(cell.related_reports).to include(report_village)
+        expect(cell.related_reports).to include(report_facility)
+        expect(cell.related_reports).not_to include(unrelated_report_village)
+        expect(cell.related_reports).not_to include(unrelated_report_facility)
+      end
+    end
+  end
+
+  describe '#cell' do
+    it 'returns itself, because I need all Geography models to respond to record.cell' do
+      expect(cell.cell).to eq cell
     end
   end
 end

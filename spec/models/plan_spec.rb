@@ -5,7 +5,7 @@ require 'rails_helper'
 RSpec.describe Plan, type: :model do
   let(:plan) { build :plan_village }
 
-  context 'has validations on' do
+  describe 'has validations on' do
     let(:no_contract) { build :plan_village, contract: nil }
     let(:no_technology) { build :plan_village, technology: nil }
     let(:no_goal) { build :plan_village, goal: nil }
@@ -36,7 +36,7 @@ RSpec.describe Plan, type: :model do
     end
   end
 
-  context 'has scopes for dates' do
+  describe 'has scopes for dates' do
     let(:oldest_contract) { create :contract, start_date: Date.today - 6.years, end_date: Date.today - 5.years }
     let(:oldest_plan) { create :plan_village, contract: oldest_contract }
     let(:old_contract) { create :contract, start_date: Date.today - 4.years, end_date: Date.today - 3.years }
@@ -85,7 +85,7 @@ RSpec.describe Plan, type: :model do
     end
   end
 
-  context 'has scopes for types' do
+  describe 'has scopes for types' do
     let(:facility) { create :plan_facility }
     let(:village) { create :plan_village }
     let(:cell) { create :plan_cell }
@@ -135,6 +135,179 @@ RSpec.describe Plan, type: :model do
       expect(Plan.only_facilities).not_to include(cell)
       expect(Plan.only_facilities).not_to include(sector)
       expect(Plan.only_facilities).not_to include(district)
+    end
+  end
+
+  describe 'has scopes that joins reports' do
+    let(:plan1) { create :plan_village, goal: 5 }
+    let(:plan2) { create :plan_village, goal: 20 }
+    let(:plan3) { create :plan_village, goal: 10 }
+
+    let(:rep1) do
+      create :report_village, contract: plan1.contract, technology: plan1.technology,
+      reportable_id: plan1.planable_id, reportable_type: plan1.planable_type, distributed: 3
+    end
+
+    let(:rep2) do
+      create :report_village, contract: plan1.contract, technology: plan1.technology,
+      reportable_id: plan1.planable_id, reportable_type: plan1.planable_type, distributed: 2
+    end
+
+    let(:rep3) do
+      create :report_village, contract: plan2.contract, technology: plan2.technology,
+      reportable_id: plan2.planable_id, reportable_type: plan2.planable_type, distributed: 10
+    end
+
+    describe '.without_reports' do
+      it 'returns plans with no associated reports' do
+        plan1
+        plan2
+        plan3
+
+        rep1
+        rep2
+        rep3
+
+        expect(Plan.all.size).to eq 3
+        expect(Plan.without_reports.size).to eq 1
+        expect(Plan.without_reports).to include plan3
+        expect(Plan.without_reports).not_to include plan1
+        expect(Plan.without_reports).not_to include plan2
+      end
+    end
+
+    describe '.with_reports_incomplete' do
+      it 'returns plans where the associated reports don\'t complete the goal' do
+        plan1
+        plan2
+        plan3
+
+        rep1
+        rep2
+        rep3
+
+        expect(Plan.all.size).to eq 3
+
+        expect(Plan.with_reports_incomplete.length).to eq 1
+
+        expect(Plan.with_reports_incomplete).to include plan2
+        expect(Plan.with_reports_incomplete).not_to include plan1
+        expect(Plan.with_reports_incomplete).not_to include plan3
+      end
+    end
+
+    describe '.incomplete' do
+      it 'returns plans with no associated reports' do
+        plan1
+        plan2
+        plan3
+
+        rep1
+        rep2
+        rep3
+
+        expect(Plan.incomplete).to include plan3
+        expect(Plan.incomplete).to include plan2
+        expect(Plan.incomplete).not_to include plan1
+      end
+    end
+  end
+
+  describe '#picture' do
+    let(:plan_facility) { create :plan_facility }
+    let(:plan_village) { create :plan_village }
+    let(:plan_sector) { create :plan_sector }
+
+    it "returns 'plan_facility.jpg when planable_type == 'Facility" do
+      expect(plan_facility.picture).to eq 'plan_facility.jpg'
+    end
+
+    it "returns 'plan_village.jpg when planable_type != 'Facility" do
+      expect(plan_village.picture).to eq 'plan_village.jpg'
+      expect(plan_sector.picture).to eq 'plan_village.jpg'
+    end
+  end
+
+  describe '#title' do
+    let(:plan) { create :plan_village }
+
+    it 'includes the goal' do
+      expect(plan.title).to include(plan.goal.to_s)
+    end
+
+    it 'includes the technology name' do
+      expect(plan.title).to include(plan.technology.name)
+    end
+
+    it 'includes the people_goal' do
+      expect(plan.title).to include("for #{plan.people_goal} people")
+    end
+
+    it 'inlcudes the date' do
+      expect(plan.title).to include("by #{plan.date.strftime('%m/%d/%Y')}")
+    end
+  end
+
+  describe '#complete?' do
+    let(:plan1) { create :plan_village, goal: 5 }
+    let(:plan2) { create :plan_village, goal: 20 }
+    let(:plan3) { create :plan_village, goal: 10 }
+
+    let(:rep1) do
+      create :report_village, contract: plan1.contract, technology: plan1.technology,
+      reportable_id: plan1.planable_id, reportable_type: plan1.planable_type, distributed: 3
+    end
+
+    let(:rep2) do
+      create :report_village, contract: plan1.contract, technology: plan1.technology,
+      reportable_id: plan1.planable_id, reportable_type: plan1.planable_type, distributed: 3
+    end
+
+    let(:rep3) do
+      create :report_village, contract: plan2.contract, technology: plan2.technology,
+      reportable_id: plan2.planable_id, reportable_type: plan2.planable_type, distributed: 10
+    end
+
+    it 'returns true if the sum of reports.distributed is greater than the goal' do
+      plan1
+      plan2
+      plan3
+
+      rep1
+      rep2
+      rep3
+
+      expect(plan1.complete?).to eq true
+    end
+
+    it 'returns false if the sum of reports.distributed is less than the goal' do
+      plan1
+      plan2
+      plan3
+
+      rep1
+      rep2
+      rep3
+
+      expect(plan2.complete?).to eq false
+      expect(plan3.complete?).to eq false
+    end
+  end
+
+  describe '#date' do
+    context 'when plan has no date' do
+      it 'returns the end_date of the related contract' do
+        expect(plan.read_attribute(:date)).to eq nil
+        expect(plan.date).to eq plan.contract.end_date
+      end
+    end
+
+    context 'when plan has a date' do
+      it 'returns the date, not the contract end_date' do
+        plan.date = Date.today
+        expect(plan.date).to eq plan.date
+        expect(plan.date).not_to eq plan.contract.end_date
+      end
     end
   end
 
@@ -428,12 +601,6 @@ RSpec.describe Plan, type: :model do
       end
     end
 
-    context '#date' do
-      it 'returns the end_date of the related contract' do
-        expect(plan.date).to eq plan.contract.end_date
-      end
-    end
-
     context '#ary_of_village_ids_from_facilities' do
       let(:related_facility1) { create :facility }
       let(:related_facility2) { create :facility }
@@ -617,13 +784,6 @@ RSpec.describe Plan, type: :model do
         collection = contract.plans
         expect(collection.send(:ary_of_district_ids_from_sectors).is_a?(Array)).to eq true
       end
-    end
-  end
-
-  context '.date' do
-    it 'returns the end_date of the associated contract' do
-      plan.save
-      expect(plan.date).to eq plan.contract.end_date
     end
   end
 end

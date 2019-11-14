@@ -7,6 +7,8 @@ class Report < ApplicationRecord
   belongs_to :reportable, polymorphic: true
   has_one    :story, inverse_of: :report
 
+  belongs_to :plan, inverse_of: :reports, required: false
+
   validates_presence_of :date, :user_id, :contract_id, :technology_id, :reportable_type, :reportable_id
 
   scope :only_districts,  -> { where(reportable_type: 'District') }
@@ -26,6 +28,7 @@ class Report < ApplicationRecord
   scope :checks,          -> { where.not(checked: nil) }
 
   before_save :calculate_impact
+  after_save :find_plan
 
   def details
     if distributed&.positive?
@@ -187,5 +190,13 @@ class Report < ApplicationRecord
     else
       self.impact = technology.default_impact * distributed.to_i
     end
+  end
+
+  def find_plan
+    id = Plan.where(contract_id: contract_id,
+                    technology_id: technology_id,
+                    planable_id: reportable_id,
+                    planable_type: reportable_type).limit(1).pluck(:id)[0].to_i
+    update_columns(plan_id: id) unless id.zero?
   end
 end

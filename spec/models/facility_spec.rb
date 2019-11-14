@@ -63,7 +63,7 @@ RSpec.describe Facility, type: :model do
     end
   end
 
-  context '.impact' do
+  context '#impact' do
     it 'returns an integer' do
       expect(facility.impact.is_a?(Integer)).to eq true
     end

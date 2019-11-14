@@ -63,7 +63,7 @@ RSpec.describe Contract, type: :model do
     end
   end
 
-  context 'name' do
+  describe 'name' do
     it 'returns a string containing the ID and dates' do
       contract.save
 
@@ -73,7 +73,7 @@ RSpec.describe Contract, type: :model do
     end
   end
 
-  context 'url_params' do
+  describe 'url_params' do
     it 'returns a string formatted as a URL search parameter with the dates' do
       contract.save
 
