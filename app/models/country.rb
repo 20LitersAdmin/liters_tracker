@@ -14,6 +14,11 @@ class Country < ApplicationRecord
   validates_presence_of :name
   validates_uniqueness_of :gis_code, allow_nil: true
 
+  def country
+    # see config/initializers/geography_type.rb
+    self
+  end
+
   def related_plans
     Plan.where(planable_type: 'Country', planable_id: id)
         .or(Plan.where(planable_type: 'District', planable_id: districts.pluck(:id)))
@@ -30,10 +35,5 @@ class Country < ApplicationRecord
           .or(Report.where(reportable_type: 'Cell', reportable_id: cells.pluck(:id)))
           .or(Report.where(reportable_type: 'Village', reportable_id: villages.pluck(:id)))
           .or(Report.where(reportable_type: 'Facility', reportable_id: facilities.pluck(:id)))
-  end
-
-  def country
-    # see config/initializers/geography_type.rb
-    self
   end
 end
