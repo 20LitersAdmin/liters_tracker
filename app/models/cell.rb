@@ -28,4 +28,8 @@ class Cell < ApplicationRecord
           .or(Report.where(reportable_type: 'Village', reportable_id: villages.pluck(:id)))
           .or(Report.where(reportable_type: 'Facility', reportable_id: facilities.pluck(:id)))
   end
+
+  def cell
+    self
+  end
 end

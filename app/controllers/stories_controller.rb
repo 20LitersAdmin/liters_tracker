@@ -11,6 +11,7 @@ class StoriesController < ApplicationController
   end
 
   def show
+    @related_stories = @story.related(3)
   end
 
   def new

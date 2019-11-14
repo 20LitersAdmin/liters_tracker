@@ -33,6 +33,7 @@ module Constants
   end
 
   class Story
+    # https://developer.mozilla.org/en-US/docs/Web/HTML/Element/img
     IMAGE_FORMATS = %w[apng bmp ico svg tiff webp png jpeg jpg gif].freeze
   end
 end

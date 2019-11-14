@@ -21,7 +21,7 @@
           = f.input :text, input_html: { class: "tinymce", style: "height: 300px;" }
         .field
           = f.label 'Photo'
-          = f.file_field :photo, id: "image_upload", accept: 'image/png,image/gif,image/jpeg'
+          = f.file_field :photo, id: "image_upload", accept: 'image/*'
         .actions
           = f.submit 'Save', class: 'btn yellow'
 

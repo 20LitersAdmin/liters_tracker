@@ -6,18 +6,35 @@ class Story < ApplicationRecord
 
   validates_presence_of :title, :text
 
-  def save_image(image_io)
-    unless Rails.env.production?
-      return {
-        raw: '',
-        thumbnail: ''
-      }
-    end
+  def related(limit = nil)
+    ilimit = limit.to_i
 
-    # do not upload the file to s3 if the extension is not an image
-    # https://developer.mozilla.org/en-US/docs/Web/HTML/Element/img
+    id_ary = []
+    # related by technology
+    id_ary << Story.joins(:report).where.not(id: id).where('reports.technology_id = ?', report.technology_id).pluck(:id)
+    # related by sector
+    id_ary << report.reportable.sector.related_stories.where.not(id: id).pluck(:id)
+    # related by date
+    id_ary << Story.joins(:report).where.not(id: id).where('reports.date = ?', report.date).pluck(:id)
+
+    if id_ary.flatten.uniq.size >= ilimit
+      # we have enough related stories!
+      Story.where(id: id_ary.flatten.uniq).limit(limit)
+    else
+      # we need to inject some random stories
+
+      remainder = ilimit - id_ary.flatten.uniq.size
+      rem_ids_ary = Story.where.not(id: id_ary.flatten.uniq).limit(remainder).order('RANDOM()').pluck(:id)
+      id_ary << rem_ids_ary
+      Story.where(id: id_ary.flatten.uniq)
+    end
+  end
+
+  def save_image(image_io)
     image_extension = image_io.original_filename.split(/\./).last
-    unless Constants::Story::IMAGE_FORMATS.include? image_extension.downcase
+    # do not upload unless in production
+    # do not upload the file to s3 if the extension is not an image,also restricted in the form field
+    unless Rails.env.production? && Constants::Story::IMAGE_FORMATS.include?(image_extension.downcase)
       return {
         raw: '',
         thumbnail: ''
@@ -64,11 +81,6 @@ class Story < ApplicationRecord
       raw: "https://d5t73r6km0hzm.cloudfront.net/images/#{image_name}?ver=#{img_ver}",
       thumbnail: "https://d5t73r6km0hzm.cloudfront.net/thumbnails/#{image_name}?ver=#{thumb_ver}"
     }
-  end
-
-  def related
-    # TODO: add a query to get related stories
-    []
   end
 
   def self.array_of_unique_dates
