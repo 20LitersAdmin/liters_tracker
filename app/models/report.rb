@@ -16,6 +16,7 @@ class Report < ApplicationRecord
   scope :only_cells,      -> { where(reportable_type: 'Cell') }
   scope :only_villages,   -> { where(reportable_type: 'Village') }
   scope :only_facilities, -> { where(reportable_type: 'Facility') }
+
   scope :within_month,    ->(date) { where(date: date.beginning_of_month..date.end_of_month) }
   scope :earliest_date,   -> { order(date: :asc).first.date }
   scope :latest_date,     -> { order(date: :asc).last.date }
@@ -74,6 +75,7 @@ class Report < ApplicationRecord
     ).first_or_initialize
 
     action = report.determine_action(report_params, contract_id, user_id)
+
     return if action.zero?
 
     return report.destroy if action == 1
@@ -112,22 +114,6 @@ class Report < ApplicationRecord
     return 2 if new_record?
 
     3 # if persisted?
-  end
-
-  def self.ary_of_village_ids_from_facilities
-    related_facilities.pluck(:village_id)
-  end
-
-  def self.ary_of_cell_ids_from_villages
-    related_villages.pluck(:cell_id)
-  end
-
-  def self.ary_of_sector_ids_from_cells
-    related_cells.pluck(:sector_id)
-  end
-
-  def self.ary_of_district_ids_from_sectors
-    related_sectors.pluck(:district_id)
   end
 
   def self.related_facilities
@@ -178,6 +164,22 @@ class Report < ApplicationRecord
     District.all.where(id: ary_of_ids.uniq)
   end
 
+  def self.ary_of_village_ids_from_facilities
+    related_facilities.pluck(:village_id)
+  end
+
+  def self.ary_of_cell_ids_from_villages
+    related_villages.pluck(:cell_id)
+  end
+
+  def self.ary_of_sector_ids_from_cells
+    related_cells.pluck(:sector_id)
+  end
+
+  def self.ary_of_district_ids_from_sectors
+    related_sectors.pluck(:district_id)
+  end
+
   private
 
   def calculate_impact
@@ -197,6 +199,13 @@ class Report < ApplicationRecord
                     technology_id: technology_id,
                     planable_id: reportable_id,
                     planable_type: reportable_type).limit(1).pluck(:id)[0].to_i
-    update_columns(plan_id: id) unless id.zero?
+
+    return if id.zero?
+
+    if new_record?
+      self.plan_id = id
+    else
+      update_columns(plan_id: id)
+    end
   end
 end
