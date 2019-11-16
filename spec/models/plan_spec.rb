@@ -145,17 +145,17 @@ RSpec.describe Plan, type: :model do
 
     let(:rep1) do
       create :report_village, contract: plan1.contract, technology: plan1.technology,
-      reportable_id: plan1.planable_id, reportable_type: plan1.planable_type, distributed: 3
+                              reportable_id: plan1.planable_id, reportable_type: plan1.planable_type, distributed: 3
     end
 
     let(:rep2) do
       create :report_village, contract: plan1.contract, technology: plan1.technology,
-      reportable_id: plan1.planable_id, reportable_type: plan1.planable_type, distributed: 2
+                              reportable_id: plan1.planable_id, reportable_type: plan1.planable_type, distributed: 2
     end
 
     let(:rep3) do
       create :report_village, contract: plan2.contract, technology: plan2.technology,
-      reportable_id: plan2.planable_id, reportable_type: plan2.planable_type, distributed: 10
+                              reportable_id: plan2.planable_id, reportable_type: plan2.planable_type, distributed: 10
     end
 
     describe '.without_reports' do
@@ -196,7 +196,7 @@ RSpec.describe Plan, type: :model do
       end
     end
 
-    describe '.incomplete' do
+    describe 'self.incomplete' do
       it 'returns plans with no associated reports' do
         plan1
         plan2
@@ -255,17 +255,17 @@ RSpec.describe Plan, type: :model do
 
     let(:rep1) do
       create :report_village, contract: plan1.contract, technology: plan1.technology,
-      reportable_id: plan1.planable_id, reportable_type: plan1.planable_type, distributed: 3
+                              reportable_id: plan1.planable_id, reportable_type: plan1.planable_type, distributed: 3
     end
 
     let(:rep2) do
       create :report_village, contract: plan1.contract, technology: plan1.technology,
-      reportable_id: plan1.planable_id, reportable_type: plan1.planable_type, distributed: 3
+                              reportable_id: plan1.planable_id, reportable_type: plan1.planable_type, distributed: 3
     end
 
     let(:rep3) do
       create :report_village, contract: plan2.contract, technology: plan2.technology,
-      reportable_id: plan2.planable_id, reportable_type: plan2.planable_type, distributed: 10
+                              reportable_id: plan2.planable_id, reportable_type: plan2.planable_type, distributed: 10
     end
 
     it 'returns true if the sum of reports.distributed is greater than the goal' do

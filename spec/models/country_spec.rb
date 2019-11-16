@@ -87,7 +87,7 @@ RSpec.describe Country, type: :model do
     end
   end
 
-  describe 'self#related_reports' do
+  describe 'related_reports' do
     let!(:country2) { create :country }
 
     context 'when no reports exist' do
@@ -124,6 +124,70 @@ RSpec.describe Country, type: :model do
 
         expect(country2.related_reports.size).to eq 4
       end
+    end
+  end
+
+  describe '#related_stories' do
+    before :each do
+      country.save
+    end
+
+    it 'returns stories directly related to the record' do
+      report = FactoryBot.create(:report_sector, reportable: country)
+      story = FactoryBot.create(:story, report: report)
+
+      expect(country.related_stories).to include story
+    end
+
+    it 'returns stories related to child districts' do
+      district = FactoryBot.create(:district, country: country)
+      sector = FactoryBot.create(:sector, district: district)
+      report = FactoryBot.create(:report_sector, reportable: sector)
+      story = FactoryBot.create(:story, report: report)
+
+      expect(country.related_stories).to include story
+    end
+
+    it 'returns stories related to child sectors' do
+      district = FactoryBot.create(:district, country: country)
+      sector = FactoryBot.create(:sector, district: district)
+      report = FactoryBot.create(:report_sector, reportable: sector)
+      story = FactoryBot.create(:story, report: report)
+
+      expect(country.related_stories).to include story
+    end
+
+    it 'returns stories related to child cells' do
+      district = FactoryBot.create(:district, country: country)
+      sector = FactoryBot.create(:sector, district: district)
+      cell = FactoryBot.create(:cell, sector: sector)
+      report = FactoryBot.create(:report_cell, reportable: cell)
+      story = FactoryBot.create(:story, report: report)
+
+      expect(country.related_stories).to include story
+    end
+
+    it 'returns stories related to child villages' do
+      district = FactoryBot.create(:district, country: country)
+      sector = FactoryBot.create(:sector, district: district)
+      cell = FactoryBot.create(:cell, sector: sector)
+      village = FactoryBot.create(:village, cell: cell)
+      report = FactoryBot.create(:report_village, reportable: village)
+      story = FactoryBot.create(:story, report: report)
+
+      expect(country.related_stories).to include story
+    end
+
+    it 'returns stories related to child facilities' do
+      district = FactoryBot.create(:district, country: country)
+      sector = FactoryBot.create(:sector, district: district)
+      cell = FactoryBot.create(:cell, sector: sector)
+      village = FactoryBot.create(:village, cell: cell)
+      facility = FactoryBot.create(:facility, village: village)
+      report = FactoryBot.create(:report_facility, reportable: facility)
+      story = FactoryBot.create(:story, report: report)
+
+      expect(country.related_stories).to include story
     end
   end
 end

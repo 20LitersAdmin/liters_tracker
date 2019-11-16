@@ -63,7 +63,7 @@ RSpec.describe Facility, type: :model do
     end
   end
 
-  context '#impact' do
+  describe '#impact' do
     it 'returns an integer' do
       expect(facility.impact.is_a?(Integer)).to eq true
     end
@@ -73,6 +73,16 @@ RSpec.describe Facility, type: :model do
       # HOUSEHOLD_SIZE = 5
 
       expect(facility.impact).to eq 14
+    end
+  end
+
+  describe '#related_stories' do
+    it 'returns stories related to the given record' do
+      facility.save
+      report = FactoryBot.create(:report_facility, reportable: facility)
+      story = FactoryBot.create(:story, report: report)
+
+      expect(facility.related_stories).to include story
     end
   end
 end

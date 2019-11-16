@@ -2,9 +2,10 @@
 
 class Story < ApplicationRecord
   belongs_to :report, inverse_of: :story
-  scope :between_dates, ->(start_date, end_date) { joins(:report).where('reports.date BETWEEN ? AND ?', start_date, end_date) }
 
   validates_presence_of :title, :text
+
+  scope :between_dates, ->(start_date, end_date) { joins(:report).where('reports.date BETWEEN ? AND ?', start_date, end_date) }
 
   def related(limit = nil)
     ilimit = limit.to_i
@@ -23,6 +24,7 @@ class Story < ApplicationRecord
     else
       # we need to inject some random stories
 
+      # TODO: What if ilimit is zero && no related stories are found?
       remainder = ilimit - id_ary.flatten.uniq.size
       rem_ids_ary = Story.where.not(id: id_ary.flatten.uniq).limit(remainder).order('RANDOM()').pluck(:id)
       id_ary << rem_ids_ary

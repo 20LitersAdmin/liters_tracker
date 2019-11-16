@@ -31,7 +31,7 @@ class Sector < ApplicationRecord
   end
 
   def related_stories
-    Story.joins(:report).where('reports.reportable_type = ? AND reports.reportable_id = ?', 'Sector', id)
+    Story.joins(:report).where("reports.reportable_type = 'Sector' AND reports.reportable_id = ?", id)
          .or(Story.joins(:report).where("reports.reportable_type = 'Cell' AND reports.reportable_id IN (?)", cells.pluck(:id)))
          .or(Story.joins(:report).where("reports.reportable_type = 'Village' AND reports.reportable_id IN (?)", villages.pluck(:id)))
          .or(Story.joins(:report).where("reports.reportable_type = 'Facility' AND reports.reportable_id IN (?)", facilities.pluck(:id)))

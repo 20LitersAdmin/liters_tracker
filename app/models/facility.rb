@@ -22,4 +22,8 @@ class Facility < ApplicationRecord
   def impact
     population.to_i + (households.to_i * Constants::Population::HOUSEHOLD_SIZE)
   end
+
+  def related_stories
+    Story.joins(:report).where("reports.reportable_type = 'Facility' AND reports.reportable_id = ?", id)
+  end
 end

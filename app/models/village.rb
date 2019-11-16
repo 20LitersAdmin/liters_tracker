@@ -27,6 +27,11 @@ class Village < ApplicationRecord
           .or(Report.where(reportable_type: 'Facility', reportable_id: facilities.pluck(:id)))
   end
 
+  def related_stories
+    Story.joins(:report).where("reports.reportable_type = 'Village' AND reports.reportable_id = ?", id)
+         .or(Story.joins(:report).where("reports.reportable_type = 'Facility' AND reports.reportable_id IN (?)", facilities.pluck(:id)))
+  end
+
   def pop_hh
     pop = population.present? ? ActiveSupport::NumberHelper.number_to_delimited(population, delimiter: ',') : '-'
     hh = households.present? ? ActiveSupport::NumberHelper.number_to_delimited(households, delimiter: ',') : '-'
