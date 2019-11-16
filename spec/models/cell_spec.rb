@@ -131,6 +131,36 @@ RSpec.describe Cell, type: :model do
     end
   end
 
+  describe '#related_stories' do
+    before :each do
+      cell.save
+    end
+
+    it 'returns stories directly related to the record' do
+      report = FactoryBot.create(:report_cell, reportable: cell)
+      story = FactoryBot.create(:story, report: report)
+
+      expect(cell.related_stories).to include story
+    end
+
+    it 'returns stories related to child villages' do
+      village = FactoryBot.create(:village, cell: cell)
+      report = FactoryBot.create(:report_village, reportable: village)
+      story = FactoryBot.create(:story, report: report)
+
+      expect(cell.related_stories).to include story
+    end
+
+    it 'returns stories related to child facilities' do
+      village = FactoryBot.create(:village, cell: cell)
+      facility = FactoryBot.create(:facility, village: village)
+      report = FactoryBot.create(:report_facility, reportable: facility)
+      story = FactoryBot.create(:story, report: report)
+
+      expect(cell.related_stories).to include story
+    end
+  end
+
   describe '#cell' do
     it 'returns itself, because I need all Geography models to respond to record.cell' do
       expect(cell.cell).to eq cell

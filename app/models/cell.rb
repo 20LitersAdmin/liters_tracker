@@ -29,6 +29,12 @@ class Cell < ApplicationRecord
           .or(Report.where(reportable_type: 'Facility', reportable_id: facilities.pluck(:id)))
   end
 
+  def related_stories
+    Story.joins(:report).where("reports.reportable_type = 'Cell' AND reports.reportable_id IN (?)", id)
+         .or(Story.joins(:report).where("reports.reportable_type = 'Village' AND reports.reportable_id IN (?)", villages.pluck(:id)))
+         .or(Story.joins(:report).where("reports.reportable_type = 'Facility' AND reports.reportable_id IN (?)", facilities.pluck(:id)))
+  end
+
   def cell
     self
   end
