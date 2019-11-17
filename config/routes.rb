@@ -2,7 +2,6 @@
 
 Rails.application.routes.draw do
   root to: 'dashboard#index'
-  get 'data', to: 'users#data'
 
   resources :dashboard, only: %i[index]
 
@@ -40,7 +39,9 @@ Rails.application.routes.draw do
     get 'homepage', on: :member
   end
 
+  get 'data', to: 'users#data'
+
   get 'monthly', to: 'monthly#index'
   post 'monthly/redirector', to: 'monthly#redirector', as: 'monthly_redirector'
-  get ':year/:month', to: 'monthly#show', as: 'monthly_w_date'
+  get ':year/:month', to: 'monthly#show', as: 'monthly_w_date', contstraints: { year: /[0-9]{4}/, month: /[0-9]{2}/ }
 end

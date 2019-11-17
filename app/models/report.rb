@@ -5,7 +5,7 @@ class Report < ApplicationRecord
   belongs_to :user,       inverse_of: :reports
   belongs_to :contract,   inverse_of: :reports
   belongs_to :reportable, polymorphic: true
-  has_one    :story, inverse_of: :report
+  has_one    :story, inverse_of: :report, dependent: :destroy
 
   belongs_to :plan, inverse_of: :reports, required: false
 
@@ -28,7 +28,9 @@ class Report < ApplicationRecord
   scope :distributions,   -> { where.not(distributed: nil) }
   scope :checks,          -> { where.not(checked: nil) }
 
+  before_validation :prevent_meaningless_reports, if: -> { (distributed.nil? || distributed.zero?) && (checked.nil? || checked.zero?) }
   before_save :calculate_impact
+  before_save :set_year_and_month_from_date, if: -> { year.blank? || month.blank? }
   after_save :find_plan
 
   def details
@@ -182,6 +184,14 @@ class Report < ApplicationRecord
 
   private
 
+  def prevent_meaningless_reports
+    if new_record?
+      throw :abort
+    else
+      self.destroy
+    end
+  end
+
   def calculate_impact
     return if distributed.nil? || distributed.zero?
 
@@ -192,6 +202,11 @@ class Report < ApplicationRecord
     else
       self.impact = technology.default_impact * distributed.to_i
     end
+  end
+
+  def set_year_and_month_from_date
+    self.year = date.year
+    self.month = date.month
   end
 
   def find_plan

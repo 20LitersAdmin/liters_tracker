@@ -14,6 +14,7 @@ module Constants
 
   class Geography
     US_NAMES = { 'Country' => 'Country', 'District' => 'Region', 'Sector' => 'State', 'Cell' => 'County', 'Village' => 'City', 'Facility' => 'Facility' }.freeze
+    DISTRICT_CHILDREN = %w[Sector Cell Village Facility].freeze
   end
 
   class Technology

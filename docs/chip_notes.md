@@ -1,8 +1,12 @@
 # POST C4G:
-* Things are bad here (cell math is bad): `http://localhost:3000/sectors/2/report?date=2019-09-01&tech=1`
-* Clean up Michael's dashboard_controller binning
+* Clean up Michael's dashboard_controller.rb && story.rb binning
 * Handle thumbnails or disregard them (they are duplicates of images at this point)
-* Footer needs to actually match
+* report_spec needs tests for #prevent_meaningless_reports and #set_year_and_mont_from_date (as long as I stick with that approach)
+
+# NEXT MERGE:
+* Need to re-save every report for AddPlanIDToReports && AddYearAndMonthToReports
+* There are 7 meaningless distribution reports: `Report.distributions.where(impact: 0)`
+* There are 17 meaningless check reports: `Report.checks.where(checked: 0)`
 
 # from amanda
 * Try to make it feel like we're on 20L/blog/updates to some extent.

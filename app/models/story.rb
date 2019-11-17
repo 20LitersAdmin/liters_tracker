@@ -14,28 +14,33 @@ class Story < ApplicationRecord
     # related by technology
     id_ary << Story.joins(:report).where.not(id: id).where('reports.technology_id = ?', report.technology_id).pluck(:id)
     # related by sector
-    id_ary << report.reportable.sector.related_stories.where.not(id: id).pluck(:id)
+    # only if report.reportable is a sector or below
+    id_ary << report.reportable.sector.related_stories.where.not(id: id).pluck(:id) if Constants::Geography::DISTRICT_CHILDREN.include?(report.reportable_type)
     # related by date
     id_ary << Story.joins(:report).where.not(id: id).where('reports.date = ?', report.date).pluck(:id)
 
-    if id_ary.flatten.uniq.size >= ilimit
-      # we have enough related stories!
+    if (id_ary.flatten.uniq.size + ilimit).zero?
+      # Return an empty set if limit is nil && no related stories are found
+      Story.none
+    elsif id_ary.flatten.uniq.size >= ilimit
+      # We have enough related stories!
+      # if limit is nil, return all related stories
       Story.where(id: id_ary.flatten.uniq).limit(limit)
     else
       # we need to inject some random stories
-
-      # TODO: What if ilimit is zero && no related stories are found?
+      # if limit is nil, this clause is not reached.
       remainder = ilimit - id_ary.flatten.uniq.size
+
       rem_ids_ary = Story.where.not(id: id_ary.flatten.uniq).limit(remainder).order('RANDOM()').pluck(:id)
       id_ary << rem_ids_ary
       Story.where(id: id_ary.flatten.uniq)
     end
   end
 
-  def save_image(image_io)
+  def upload_image(image_io)
     image_extension = image_io.original_filename.split(/\./).last
     # do not upload unless in production
-    # do not upload the file to s3 if the extension is not an image,also restricted in the form field
+    # do not upload the file to s3 if the extension is not an image, also restricted in the form field
     unless Rails.env.production? && Constants::Story::IMAGE_FORMATS.include?(image_extension.downcase)
       return {
         raw: '',
@@ -53,13 +58,8 @@ class Story < ApplicationRecord
     end
 
     # get aws creds
-    if Rails.env.production?
-      aws_id = ENV['AWS_ACCESS_KEY']
-      aws_key = ENV['AWS_SECRET_KEY']
-    else
-      aws_id = Rails.application.credentials.aws[:access_key]
-      aws_key = Rails.application.credentials.aws[:secret_key]
-    end
+    aws_id = ENV['AWS_ACCESS_KEY']
+    aws_key = ENV['AWS_SECRET_KEY']
 
     s3 = Aws::S3::Resource.new(
       region: 'us-east-2',
@@ -67,6 +67,7 @@ class Story < ApplicationRecord
     )
 
     img = s3.bucket('20litres-images').object("images/#{image_name}")
+
     img.upload_file(image_path)
     img_ver = img.version_id
 
@@ -78,12 +79,18 @@ class Story < ApplicationRecord
     # cleanup temporary image to keep filespace safe
     File.delete(image_path) if File.exist?(image_path)
 
-    # TODO: should image be separated from cdn url?
     {
       raw: "https://d5t73r6km0hzm.cloudfront.net/images/#{image_name}?ver=#{img_ver}",
       thumbnail: "https://d5t73r6km0hzm.cloudfront.net/thumbnails/#{image_name}?ver=#{thumb_ver}"
     }
   end
+
+  # ALL THIS IS REALLY SLOW.
+  # There must be a better way to create this collection:
+  # { 2019: { "Jan": [story, story, story], "Feb": [story, story] } }
+  # currently working on adding year and month to Report as separate values in the dB.
+  # could consider doing a separate database table: | year | month | [story_ids] |
+  # (touched when stories are created or deleted)
 
   def self.array_of_unique_dates
     joins(:report).order('reports.date ASC').pluck('reports.date').uniq
@@ -98,14 +105,14 @@ class Story < ApplicationRecord
   # all_stories =
   #  {
   #
-  #     "2019": {"Jac" .. "Dec"} .. "XXX": {"Jac" .. "Dec"}
+  #     "2019": {"Jan" .. "Dec"} .. "XXX": {"Jan" .. "Dec"}
   #  }
   #
   #
   def self.bin_all_stories
     binned_stories = {} # variable for the final return of stories that are binned by month
     months = Date.const_get(:ABBR_MONTHNAMES).compact # returns nil as the first entry, so use compact to remove it
-    years = self.get_story_years
+    years = self.story_years
     years.each do |y|
       tmp_hash = {}
       (1..12).step(1) do |m|
@@ -119,7 +126,6 @@ class Story < ApplicationRecord
     binned_stories
   end
 
-
   def self.bin_stories_by_year(year)
     month_list = []
     story_collection = nil
@@ -127,7 +133,7 @@ class Story < ApplicationRecord
       tmp_date = Date.new(year, m)
       # start with the first month and build a hash of all stories that are binned by a month
       tmp_stories = self.between_dates(tmp_date.beginning_of_month, tmp_date.end_of_month)
-      if tmp_stories.size > 0 # check if there are stories for this month
+      if tmp_stories.size.positive? # check if there are stories for this month
         month_list << Date.const_get(:ABBR_MONTHNAMES)[m]
         if story_collection.nil?
           story_collection = tmp_stories
@@ -136,10 +142,12 @@ class Story < ApplicationRecord
         end
       end
     end
+
     return month_list, story_collection
+
   end
 
-  def self.get_story_years
+  def self.story_years
     self.array_of_unique_dates.map(&:year).uniq.sort.reverse
   end
 

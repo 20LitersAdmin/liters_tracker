@@ -1030,6 +1030,27 @@ RSpec.describe Report, type: :model do
     end
   end
 
+  describe '#set_year_and_month_from_date' do
+    context 'with new records' do
+      it 'fires on before_save' do
+      end
+    end
+
+    context 'with existing records' do
+      it 'fires on before_save' do
+      end
+    end
+
+    it 'only fires if year or month is blank' do
+    end
+
+    it 'doesn\'t fire if year and month are present' do
+    end
+
+    it 'updates the record with the year and month from the date' do
+    end
+  end
+
   describe '#find_plan' do
     context 'on new records' do
       let(:report) { build :report_village }

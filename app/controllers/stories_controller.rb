@@ -33,7 +33,7 @@ class StoriesController < ApplicationController
   def update
     updated_params = story_params.except(:photo)
     if story_params[:photo]
-      new_urls = @story.save_image(story_params[:photo])
+      new_urls = @story.upload_image(story_params[:photo])
       updated_params[:image] = new_urls[:raw]
       updated_params[:image_thumbnail] = new_urls[:thumbnail]
     else
@@ -65,7 +65,7 @@ class StoriesController < ApplicationController
     # handle image
     authorize @story = Story.new(story_params.except(:photo))
     if story_params[:photo].present?
-      urls = @story.save_image(story_params[:photo])
+      urls = @story.upload_image(story_params[:photo])
       @story.image = urls[:raw]
       @story.image_thumbnail = urls[:thumbnail]
     else
