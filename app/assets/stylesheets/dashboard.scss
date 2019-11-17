@@ -22,9 +22,34 @@
   width: 80% !important;
 }
 
-
 .center-header{
   position: absolute;
   top: 50%;
   transform: translateY(-50%);
 }
+
+#basic-stat-block {
+  .card {
+    border-radius: 0 !important;
+  }
+
+  .card-body {
+    color: white;
+  }
+}
+
+#date_navs {
+  .nav {
+    border-radius: 0 !important;
+
+    .highlight {
+      border-bottom: 0.5rem solid $yellow
+    }
+  }
+
+  #month_nav .nav-item {
+    text-align: center;
+    width: 8%;
+  }
+}
+

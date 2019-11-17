@@ -22,13 +22,16 @@ class Report < ApplicationRecord
   scope :latest_date,     -> { order(date: :asc).last.date }
   scope :sorted,          -> { order(date: :desc) }
   scope :between,         ->(from, to) { where(date: from..to) }
+  scope :by_year,         ->(year) { where(year: year) }
+  scope :by_month,        ->(month) { where(month: month) }
+
   scope :with_plans,      -> { joins('LEFT JOIN plans ON reports.contract_id = plans.contract_id AND reports.technology_id = plans.technology_id AND reports.reportable_id = plans.planable_id AND reports.reportable_type = plans.planable_type') }
   scope :with_stories,    -> { joins(:story).where.not(stories: { id: nil }) }
 
   scope :distributions,   -> { where.not(distributed: nil) }
   scope :checks,          -> { where.not(checked: nil) }
 
-  before_validation :prevent_meaningless_reports, if: -> { (distributed.nil? || distributed.zero?) && (checked.nil? || checked.zero?) }
+  before_create :prevent_meaningless_reports, if: -> { (distributed.nil? || distributed.zero?) && (checked.nil? || checked.zero?) }
   before_save :calculate_impact
   before_save :set_year_and_month_from_date, if: -> { year.blank? || month.blank? }
   after_save :find_plan
@@ -185,11 +188,9 @@ class Report < ApplicationRecord
   private
 
   def prevent_meaningless_reports
-    if new_record?
-      throw :abort
-    else
-      self.destroy
-    end
+    # this should already be handled by #determine_action
+    # so this is just a fail-safe
+    throw :abort
   end
 
   def calculate_impact

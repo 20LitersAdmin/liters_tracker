@@ -1,2 +1,4 @@
 $("#story_column").html("<%= escape_javascript(render partial: 'plan', collection: @plans ) %>");
 $("#month_nav").html("");
+$('#year_nav a').removeClass('highlight');
+$('#future_link').addClass('highlight');

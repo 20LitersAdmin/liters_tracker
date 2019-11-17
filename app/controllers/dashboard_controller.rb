@@ -9,30 +9,33 @@ class DashboardController < ApplicationController
 
       { stat: technology.lifetime_distributed, title: "#{technology.name}s" }
     end
-
-    @dates = Story.array_of_unique_dates
-
-    @years = @dates.map(&:year).uniq.sort.reverse
-
-    @year = Date.today.year
-    if @year
-      @months, @stories = Story.bin_stories_by_year(@year)
-    else
-      @months = []
-    end
-
     @global_impact = Report.sum(:impact)
 
-    @story_month_hash = Story.bin_stories_by_year(Date.today.year)
+    # collect years for #year_nav
+    @years = Report.with_stories.pluck(:year).uniq.sort.reverse
+
+    # set default year and month
+    @year = Date.today.year
+    @month = Date.today.month
+
+    # collect months for #month_nav based on @year
+    @months = Report.with_stories.where(year: @year).pluck(:month).uniq.sort
+
+    @stories = Story.joins(:report).where('reports.year = ?', @year)
   end
 
   def handler
     @year = params[:year].to_i
-    @months, @stories = Story.bin_stories_by_year(@year)
 
-    month = Date.const_get(:ABBR_MONTHNAMES).index(params[:month])
+    @years = Report.with_stories.pluck(:year).uniq.sort.reverse
+    @months = Report.with_stories.where(year: @year).pluck(:month).uniq.sort
 
-    @stories = @stories.select { |story| story.report.date.month == month } if params[:month]
+    @stories = if params[:month].present?
+                 @month = params[:month].to_i
+                 Story.joins(:report).where('reports.year = ? AND reports.month = ?', @year, @month)
+               else
+                 Story.joins(:report).where('reports.year = ?', @year)
+               end
 
     respond_to do |format|
       format.js

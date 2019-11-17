@@ -1,1 +1,1 @@
-= link_to month.to_s, dashboard_handler_path(year: @year, month: month), remote: true, class: "nav-item nav-link"
+= link_to Date.const_get(:ABBR_MONTHNAMES)[month], dashboard_handler_path(year: @year, month: month), remote: true, class: "nav-item nav-link #{'highlight' if month == @month }"
