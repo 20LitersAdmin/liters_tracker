@@ -171,7 +171,7 @@ class Story < ApplicationRecord
   def migrate_image_name
     return if image_name == read_attribute(:image).gsub(Constants::Story::IMAGE_URL, '')
 
-    self.image_name = image.gsub(Constants::Story::IMAGE_URL, '')
+    self.image_name = read_attribute(:image).gsub(Constants::Story::IMAGE_URL, '')
     begin
       self.image_version = s3_image.version_id
     rescue Aws::S3::Errors::NotFound

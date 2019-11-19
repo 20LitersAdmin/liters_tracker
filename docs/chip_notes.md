@@ -1,4 +1,5 @@
 # POST C4G:
+* Upgrade to Ruby 2.5.7
 * Story:
   - Handle rotate_image()
   - live test the image processes: In the controller, call localize_image!(image_io), which calls resize_image. Then save the image to use the callbacks.
@@ -7,9 +8,6 @@
   - Handle rotating images (on edit, then on new)
 
 # NEXT MERGE:
-* Need to re-save every report for AddPlanIDToReports && AddYearAndMonthToReports
-* There are 7 meaningless distribution reports: `Report.distributions.where(impact: 0)`
-* There are 17 meaningless check reports: `Report.checks.where(checked: 0)`
 * Run `Story.where.not(image: nil).each { |story| story.migrate_image_name }`, then create a migration to drop `Story#image` column
 
 # from amanda
