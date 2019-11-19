@@ -40,7 +40,8 @@ Rails.application.routes.draw do
   devise_for :users
 
   resources :users
-  get 'data', to: 'users#data', as: 'data_user'
+  get 'data', to: 'users#data', as: 'data'
+  get 'data_filter', to: 'users#data_filter', as: 'data_filter'
 
   get 'monthly', to: 'monthly#index'
   post 'monthly/redirector', to: 'monthly#redirector', as: 'monthly_redirector'

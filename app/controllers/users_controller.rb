@@ -13,6 +13,8 @@ class UsersController < ApplicationController
     @admins = User.admins
   end
 
+  def
+
   def index
     authorize @users = User.all.order(:lname)
   end

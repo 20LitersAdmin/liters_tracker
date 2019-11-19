@@ -12,7 +12,7 @@
   .col-sm-2.text-right
     - if current_user.can_manage_geography? || current_user.admin?
       = link_to 'New', new_village_path, class: 'btn yellow'
-    = link_to 'Back', data_path, class: 'btn blue'
+    = link_to 'Back', data_filter_path, class: 'btn blue'
 
 = render partial: 'shared/search', locals: { from: @from, to: @to, earliest: @earliest, latest: @latest }
 
