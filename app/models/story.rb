@@ -12,8 +12,10 @@ class Story < ApplicationRecord
   scope :ordered_by_date, -> { joins(:report).order('reports.date DESC') }
   scope :with_images, -> { where.not(image_name: nil) }
 
-  #before_save :upload_image!, if: -> { image_localized? }
-  #after_save :delete_local_file, unless: -> { image_name.blank? }
+  # if the image is localized, it's probably because it's new, or a transform was called on it (resize or rotate).
+  # upload_image! needs to happen before_save so that #image_name and #image_version get written to the database.
+  before_save :upload_image!, if: -> { image_localized? }
+  after_save :delete_local_file, unless: -> { image_name.blank? }
 
   def date
     report.date
@@ -172,10 +174,7 @@ class Story < ApplicationRecord
   def find_or_download_image
     return false unless image_name.present?
 
-    if image_uploaded? && !image_localized?
-      download_image
-      return true
-    end
+    download_image if image_uploaded? && !image_localized?
 
     File.exist?(image_path)
   end

@@ -1,8 +1,10 @@
 # POST C4G:
-* Story _form:
-  - Handle eager-loading stories
 * Story:
   - Handle rotate_image()
+  - live test the image processes: In the controller, call localize_image!(image_io), which calls resize_image. Then save the image to use the callbacks.
+* Story _form:
+  - Handle eager-loading stories
+  - Handle rotating images (on new and edit)
 
 # NEXT MERGE:
 * Need to re-save every report for AddPlanIDToReports && AddYearAndMonthToReports
