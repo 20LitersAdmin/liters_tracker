@@ -1,7 +1,7 @@
 -# frozen_string_literal: true
 - if current_user
   %nav.navbar.navbar-expand-lg.navbar-dark.bg-dark
-    = link_to '20 Liters Data Tracker', data_user_path(current_user), class: 'navbar-brand'
+    = link_to '20 Liters Data Tracker', data_path, class: 'navbar-brand'
     %button{ class: 'navbar-toggler', type: 'button', data: { toggle: 'collapse', target: '#navbarNav' }, aria: { controls: 'navbarNav', expanded: 'false', label: 'Toggle navigation' }}
       %span.navbar-toggler-icon
     #navbarNav.collapse.navbar-collapse
@@ -9,7 +9,8 @@
         %li.nav-item.mr-3
           = link_to 'View Dashboard', root_path, class: 'btn sm yellow'
         %li.nav-item.mr-3
-          = link_to 'Data Entry/Reports', data_user_path(current_user), class: 'btn yellow'
+          - unless controller.controller_name == 'users' && controller.action_name == 'data'
+            = link_to 'Data Entry/Reports', data_path, class: 'btn yellow'
         %li.nav-item.mr-3
           = link_to 'Your Profile', edit_user_path(current_user), class: 'btn blue'
         %li.nav-item.mr-3

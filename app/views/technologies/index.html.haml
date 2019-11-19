@@ -4,7 +4,7 @@
     %h4 Data: All Technologies
   .col-sm-2.text-right
     = link_to 'New', new_technology_path, class: 'btn yellow'
-    = link_to 'Back', data_path, class: 'btn blue'
+    = link_to 'Back', data_filter_path, class: 'btn blue'
 
 = render partial: 'shared/search', locals: { from: @from, to: @to, earliest: @earliest, latest: @latest }
 

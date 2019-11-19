@@ -1,30 +1,70 @@
 -# frozen_string_literal: true
 .row
-  .col.text-center
-    %h2 Read the data
-    %p Select a report:
+  .col
+    %h2= 'Hey ' + @user.fname
+.row.justify-content-center.mb-3
+  .col
+    %h3.text-center Things you can do:
 
-.row.justify-content-center.deck
+.row.deck.justify-content-center
   .col-sm-12.col-md-6.col-lg-3
     .card.my-2
-      .card-body.text-center
-        %h5.card-title By Geography
-        = link_to 'Go', sectors_path, class: 'btn yellow'
+      .card-body
+        %h5.card-title View the data
+        %p.card-text Get information on progress
+        = link_to 'View', data_filter_path, class: 'btn yellow'
 
-  .col-sm-12.col-md-6.col-lg-3
-    .card.my-2
-      .card-body.text-center
-        %h5.card-title By MOU
-        = link_to 'Go', contracts_path, class: 'btn yellow'
+  - if @user.can_manage_reports? || @user.admin?
+    .col-sm-12.col-md-6.col-lg-3
+      .card.my-2
+        .card-body
+          %h5.card-title Submit a report
+          %p.card-text Monthly report from the field
+          = link_to 'Submit', select_sectors_path, class: 'btn yellow'
 
-  .col-sm-12.col-md-6.col-lg-3
-    .card.my-2
-      .card-body.text-center
-        %h5.card-title By Technology
-        = link_to 'Go', technologies_path, class: 'btn yellow'
+    .col-sm-12.col-md-6.col-lg-3
+      .card.my-2
+        .card-body
+          %h5.card-title Manage reports
+          %p.card-text Change or remove monthly reports
+          = link_to 'Go', reports_path, class: 'btn yellow'
 
-  .col-sm-12.col-md-6.col-lg-3
-    .card.my-2
-      .card-body.text-center
-        %h5.card-title By Month
-        = link_to 'Go', monthly_path, class: 'btn yellow'
+  - if @user.can_manage_geography? || @user.admin?
+    .col-sm-12.col-md-6.col-lg-3
+      .card.my-2
+        .card-body
+          %h5.card-title Manage facilities
+          %p.card-text Churches, schools, health clinics
+          = link_to 'Go', facilities_path, class: 'btn yellow'
+
+    .col-sm-12.col-md-6.col-lg-3
+      .card.my-2
+        .card-body
+          %h5.card-title Manage geography
+          %p.card-text Districts, sectors, cells, villages
+          = link_to 'Go', districts_path, class: 'btn yellow'
+
+  - if @user.can_manage_contracts? || @user.admin?
+    .col-sm-12.col-md-6.col-lg-3
+      .card.my-2
+        .card-body
+          %h5.card-title Manage MOUs
+          %p.card-text Contracts, targets, plans
+          = link_to 'Go', contracts_path, class: 'btn yellow'
+
+  - if @user.admin?
+    .col-sm-12.col-md-6.col-lg-3
+      .card.my-2
+        .card-body
+          %h5.card-title Manage users
+          %p.card-text passwords, permissions, etc.
+          = link_to 'Go', users_path, class: 'btn yellow'
+
+  - unless @user.admin?
+    .col-sm-12.col-md-6.col-lg-3
+      .card.my-2
+        .card-body
+          %h5.card-title Need access to more?
+          %p.card-text Talk to an administrator
+          - @admins.each do |admin|
+            = link_to 'Email ' + admin.fname, 'mailto:' + admin.email, class: 'btn yellow', target: '_blank'
