@@ -6,7 +6,7 @@ class Story < ApplicationRecord
 
   belongs_to :report, inverse_of: :story
 
-  validates_presence_of :title, :text
+  validates_presence_of :title, :text, :report_id
 
   scope :between_dates, ->(start_date, end_date) { joins(:report).where('reports.date BETWEEN ? AND ?', start_date, end_date) }
   scope :ordered_by_date, -> { joins(:report).order('reports.date DESC') }
@@ -24,9 +24,21 @@ class Story < ApplicationRecord
   def download_image
     return false unless image_uploaded?
 
+    # this would potentially allow an image that breaks naming convention to be downloaded
+    # but should prevent duplicates in s3
     s3_image.get(response_target: image_path)
 
+    # this would potentially create duplicates in s3 if localize_image transforms the name
+    # and then re-uploads it under a new name
+    # image_io = s3_image.get() # image written to memory
+    # localize_image(image_io)
+
     image_localized?
+  end
+
+  # TODO: delete this after deleting the database column
+  def image
+    raise ">>> Don't use `.image`, use `.picture`.<<< (if you really need the database value of `.image`, use `.read_attribute(:image)`)"
   end
 
   def image_localized?
@@ -157,7 +169,7 @@ class Story < ApplicationRecord
 
   # TODO: run on all Stories after next push
   def migrate_image_name
-    return if image_name == image.gsub(Constants::Story::IMAGE_URL, '')
+    return if image_name == read_attribute(:image).gsub(Constants::Story::IMAGE_URL, '')
 
     self.image_name = image.gsub(Constants::Story::IMAGE_URL, '')
     begin
@@ -180,8 +192,6 @@ class Story < ApplicationRecord
   end
 
   def delete_local_file
-    return false unless image_name.present?
-
     File.delete(image_path) if File.exist?(image_path)
   end
 end

@@ -21,13 +21,12 @@ class StoriesController < ApplicationController
     @month = params[:month]
 
     authorize @story
+    flash[:error] = 'Something went wrong and the report_id wasn\'t properly associated to this new story. Please navigate back and try again!' if @story.report_id.blank?
   end
 
   def edit
     @year = params[:year]
     @month = params[:month]
-
-    flash[:error] = 'Something went wrong and the report_id wasn\'t properly associated to this new story. Please navigate back and try again!' if @story.report_id.blank?
   end
 
   # PATCH /stories
