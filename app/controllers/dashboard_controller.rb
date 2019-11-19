@@ -5,11 +5,11 @@ class DashboardController < ApplicationController
 
   def index
     @lifetime_stats = Technology.report_worthy.map do |technology|
-      next if technology.lifetime_impact.zero?
+      next if technology.reports.distributions.empty?
 
       { stat: technology.lifetime_distributed, title: "#{technology.name}s" }
     end
-    @global_impact = Report.sum(:impact)
+    @global_impact = Report.distributions.sum(:impact)
 
     # collect years for #year_nav
     @years = Report.with_stories.pluck(:year).uniq.sort.reverse

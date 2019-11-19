@@ -7,7 +7,7 @@
   .row
     .col-12
       %h1 New Story
-      %h4= "For Report ##{@report.id}: #{@report.details} "
+      %h4= 'For Report #' + link_to(@report.id, @report).html_safe + @report.details
     .col-12
       = simple_form_for @story, { wrapper: :horizontal_form }  do |f|
         = f.input :report_id, as: :hidden
@@ -20,21 +20,25 @@
         .field.wysiwyg
           = f.input :text, input_html: { class: "tinymce", style: "height: 300px;" }
         .field
-          = f.label 'Photo'
+          = f.label @story.image.present? ? 'Replace Picture:' : 'Choose Picture:'
           = f.file_field :photo, id: "image_upload", accept: 'image/*'
         .actions
           = f.submit 'Save', class: 'btn yellow'
 
-        %div#image_preview_wrapper
-          %br
-          %div
-            %p Image Preview:
-            =image_tag(@story.image, id: "image_preview", width: '400') if @story.image.present?
+  .row
+    #image_preview_wrapper.col-6
+      %br
+      %div
+        %p Image Preview:
+        =image_tag(@story.picture, id: "image_preview", width: '400')
+    #rotations.col-6
+      .row
+        .col-12
+          .row
+            .col-6
+              Rotate left
+            .col-6
+              Rotate right
+        .col-12 Delete Picture
 
-        %div#image_thumbnail_preview_wrapper
-          %br
-          %div
-            %p Thumbnail Preview:
-            =image_tag(@story.image_thumbnail, id: "image_thumbnail_preview", width: '200') if @story.image_thumbnail.present?
-
-      = tinymce
+= tinymce

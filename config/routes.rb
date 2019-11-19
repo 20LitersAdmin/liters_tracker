@@ -31,7 +31,11 @@ Rails.application.routes.draw do
     get 'facility_error', on: :member
   end
 
-  resources :stories
+  resources :stories do
+    get 'eager_image', on: :member
+    get 'rotate_img', on: :member
+    get 'destroy_img', on: :member
+  end
 
   devise_for :users
 

@@ -20,16 +20,17 @@ class Report < ApplicationRecord
   scope :within_month,    ->(date) { where(date: date.beginning_of_month..date.end_of_month) }
   scope :earliest_date,   -> { order(date: :asc).first.date }
   scope :latest_date,     -> { order(date: :asc).last.date }
-  scope :sorted,          -> { order(date: :desc) }
+  # even though this is simple, it matches Plan.between(), so it's nice.
   scope :between,         ->(from, to) { where(date: from..to) }
-  scope :by_year,         ->(year) { where(year: year) }
-  scope :by_month,        ->(month) { where(month: month) }
 
-  scope :with_plans,      -> { joins('LEFT JOIN plans ON reports.contract_id = plans.contract_id AND reports.technology_id = plans.technology_id AND reports.reportable_id = plans.planable_id AND reports.reportable_type = plans.planable_type') }
+  # currently unused
+  # scope :with_plans,      -> { joins('LEFT JOIN plans ON reports.contract_id = plans.contract_id AND reports.technology_id = plans.technology_id AND reports.reportable_id = plans.planable_id AND reports.reportable_type = plans.planable_type') }
   scope :with_stories,    -> { joins(:story).where.not(stories: { id: nil }) }
 
   scope :distributions,   -> { where.not(distributed: nil) }
-  scope :checks,          -> { where.not(checked: nil) }
+
+  # currently unused
+  # scope :checks,          -> { where.not(checked: nil) }
 
   before_create :prevent_meaningless_reports, if: -> { (distributed.nil? || distributed.zero?) && (checked.nil? || checked.zero?) }
   before_save :calculate_impact

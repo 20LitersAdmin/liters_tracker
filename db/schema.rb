@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_11_17_033609) do
+ActiveRecord::Schema.define(version: 2019_11_19_043301) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -142,11 +142,12 @@ ActiveRecord::Schema.define(version: 2019_11_17_033609) do
     t.string "title"
     t.text "text"
     t.string "image"
-    t.string "image_thumbnail"
     t.bigint "report_id", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.boolean "prominent", default: false
+    t.string "image_name"
+    t.string "image_version"
     t.index ["report_id"], name: "index_stories_on_report_id"
   end
 

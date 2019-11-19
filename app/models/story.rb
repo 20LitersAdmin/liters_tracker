@@ -1,11 +1,95 @@
 # frozen_string_literal: true
 
 class Story < ApplicationRecord
+  require 'mini_magick'
+  require 'fileutils'
+
   belongs_to :report, inverse_of: :story
 
   validates_presence_of :title, :text
 
   scope :between_dates, ->(start_date, end_date) { joins(:report).where('reports.date BETWEEN ? AND ?', start_date, end_date) }
+  scope :ordered_by_date, -> { joins(:report).order('reports.date DESC') }
+  scope :with_images, -> { where.not(image_name: nil) }
+
+  #before_save :upload_image!, if: -> { image_localized? }
+  #after_save :delete_local_file, unless: -> { image_name.blank? }
+
+  def date
+    report.date
+  end
+
+  def download_image
+    return false unless image_uploaded?
+
+    s3_image.get(response_target: image_path)
+
+    image_localized?
+  end
+
+  def image_localized?
+    return false unless image_name.present?
+
+    File.exist?(image_path)
+  end
+
+  def image_path
+    return false unless image_name.present?
+
+    Rails.root.join(Constants::Story::IMAGE_DIR, image_name)
+  end
+
+  def image_right_sized?
+    return false unless image_localized?
+
+    image = MiniMagick::Image.open(image_path)
+    image.width == 355
+  end
+
+  def image_uploaded?
+    return false unless image_name.present?
+
+    s3_image.exists?
+  end
+
+  def localize_image!(image_io)
+    return false unless image_io.present?
+
+    image_extension = image_io.original_filename.split(/\./).last
+
+    # set the image_name on the record
+    self.image_name = "#{report_id}_#{report.date.year}-#{report.date.month}.#{image_extension}"
+
+    return false unless Constants::Story::IMAGE_FORMATS.include?(image_extension.downcase)
+
+    # save image locally
+    File.open(image_path, 'wb') do |file|
+      file.write(image_io.read)
+    end
+
+    # auto-resizing by default
+    resize_image
+
+    File.exist?(image_path)
+  end
+
+  def picture
+    return 'story_no_image.png' if image_name.blank?
+
+    url = "#{Constants::Story::IMAGE_URL}#{image_name}"
+
+    url += "?ver=#{image_version}" if image_version.present?
+
+    url
+  end
+
+  def resize_image
+    return false unless find_or_download_image
+
+    # resize the image to 355 wide, setting height by aspect ratio
+    image = MiniMagick::Image.new(image_path)
+    image.resize '355'
+  end
 
   def related(limit = nil)
     ilimit = limit.to_i
@@ -37,55 +121,68 @@ class Story < ApplicationRecord
     end
   end
 
-  def upload_image(image_io)
-    image_extension = image_io.original_filename.split(/\./).last
-    # do not upload unless in production
-    # do not upload the file to s3 if the extension is not an image, also restricted in the form field
-    unless Rails.env.production? && Constants::Story::IMAGE_FORMATS.include?(image_extension.downcase)
-      return {
-        raw: '',
-        thumbnail: ''
-      }
-    end
+  def rotate_image(direction)
+    return false unless find_or_download_image
 
-    # rename image to something consistent and safe
-    image_name = "#{report_id}_#{report.date.year}-#{report.date.month}.#{image_extension}"
-    image_path = Rails.root.join('tmp', image_name)
+    rotation = direction == 'left' ? '-90' : '90'
 
-    # save image temporarily to send to s3
-    File.open(image_path, 'wb') do |file|
-      file.write(image_io.read)
-    end
+    image = MiniMagick::Image.new(image_path)
+    image.rotate rotation
+  end
 
-    # get aws creds
-    aws_id = ENV['AWS_ACCESS_KEY']
-    aws_key = ENV['AWS_SECRET_KEY']
+  def s3_image
+    return false unless image_name.present?
+
+    aws_access = Rails.env.production? ? ENV['AWS_ACCESS_KEY'] : Rails.application.credentials.aws[:access_key]
+    aws_secret = Rails.env.production? ? ENV['AWS_SECRET_KEY'] : Rails.application.credentials.aws[:secret_key]
 
     s3 = Aws::S3::Resource.new(
       region: 'us-east-2',
-      credentials: Aws::Credentials.new(aws_id, aws_key)
+      credentials: Aws::Credentials.new(aws_access, aws_secret)
     )
 
-    img = s3.bucket('20litres-images').object("images/#{image_name}")
-
-    img.upload_file(image_path)
-    img_ver = img.version_id
-
-    # TODO: handle thumbnails, correct res
-    thumb = s3.bucket('20litres-images').object("thumbnails/#{image_name}")
-    thumb.upload_file(image_path)
-    thumb_ver = img.version_id
-
-    # cleanup temporary image to keep filespace safe
-    File.delete(image_path) if File.exist?(image_path)
-
-    {
-      raw: "https://d5t73r6km0hzm.cloudfront.net/images/#{image_name}?ver=#{img_ver}",
-      thumbnail: "https://d5t73r6km0hzm.cloudfront.net/thumbnails/#{image_name}?ver=#{thumb_ver}"
-    }
+    s3.bucket(Constants::Story::S3_BUCKET).object('images/' + image_name)
   end
 
-  def picture
-    image.blank? ? 'story_no_image.png' : image
+  def upload_image!
+    return false unless image_name.present? && image_localized? # && Rails.env.production?
+
+    resize_image unless image_right_sized?
+
+    s3_image.upload_file(image_path)
+    self.img_version = s3_image.version_id
+  end
+
+  # TODO: run on all Stories after next push
+  def migrate_image_name
+    return if image_name == image.gsub(Constants::Story::IMAGE_URL, '')
+
+    self.image_name = image.gsub(Constants::Story::IMAGE_URL, '')
+    begin
+      self.image_version = s3_image.version_id
+    rescue Aws::S3::Errors::NotFound
+      puts 'no version info found'
+    end
+
+    save
+  end
+
+  private
+
+  def find_or_download_image
+    return false unless image_name.present?
+
+    if image_uploaded? && !image_localized?
+      download_image
+      return true
+    end
+
+    File.exist?(image_path)
+  end
+
+  def delete_local_file
+    return false unless image_name.present?
+
+    File.delete(image_path) if File.exist?(image_path)
   end
 end

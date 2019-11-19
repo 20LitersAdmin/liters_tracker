@@ -37,4 +37,8 @@ class StoryPolicy
   def destroy?
     @user&.admin?
   end
+
+  def rotate_img
+    new?
+  end
 end

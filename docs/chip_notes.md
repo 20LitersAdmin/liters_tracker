@@ -1,12 +1,14 @@
 # POST C4G:
-* Clean up Michael's dashboard_controller.rb && story.rb binning
-* Handle thumbnails or disregard them (they are duplicates of images at this point)
-* report_spec needs tests for #prevent_meaningless_reports and #set_year_and_mont_from_date (as long as I stick with that approach)
+* Story _form:
+  - Handle eager-loading stories
+* Story:
+  - Handle rotate_image()
 
 # NEXT MERGE:
 * Need to re-save every report for AddPlanIDToReports && AddYearAndMonthToReports
 * There are 7 meaningless distribution reports: `Report.distributions.where(impact: 0)`
 * There are 17 meaningless check reports: `Report.checks.where(checked: 0)`
+* Run `Story.where.not(image: nil).each { |story| story.migrate_image_name }`, then create a migration to drop `Story#image` column
 
 # from amanda
 * Try to make it feel like we're on 20L/blog/updates to some extent.

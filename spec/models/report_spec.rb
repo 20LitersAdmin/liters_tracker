@@ -148,6 +148,34 @@ RSpec.describe Report, type: :model do
         expect(Report.latest_date).to eq latest.date
       end
     end
+
+    context '#between' do
+      pending 'limits results to records between two dates'
+    end
+  end
+
+  describe 'has scopes for joins' do
+    context '#with_plans' do
+      it 'is currently unused' do
+        expect(true).to eq true
+      end
+    end
+
+    context '#with_stories' do
+      pending 'it only returns reports that have a story'
+    end
+  end
+
+  describe 'has general scopes' do
+    context '#distributions' do
+      pending 'returns only reports where distributed is not nil'
+    end
+
+    context '#checks' do
+      it 'is currently unused' do
+        expect(true).to eq true
+      end
+    end
   end
 
   describe '#details' do
@@ -245,7 +273,7 @@ RSpec.describe Report, type: :model do
       @batch_params = ActionController::Parameters.new(@data)
     end
 
-    context '#key_params_are_missing?' do
+    describe '#key_params_are_missing?' do
       it 'returns false if #technology_id, #contract_id, #master_date are present and #reports.count is not zero' do
         expect(Report.key_params_are_missing?(@batch_params)).to eq false
       end
@@ -269,7 +297,7 @@ RSpec.describe Report, type: :model do
       end
     end
 
-    context '#batch_process' do
+    describe '#batch_process' do
       it 'calls #process for each report in the param' do
         expect(Report).to receive(:process).exactly(@batch_params['reports'].count).times
 
@@ -294,7 +322,7 @@ RSpec.describe Report, type: :model do
       end
     end
 
-    context '#process' do
+    describe '#process' do
       let(:user) { create :user_reports, id: 1 }
 
       it 'calls #determine_action' do
@@ -374,7 +402,7 @@ RSpec.describe Report, type: :model do
       end
     end
 
-    context '#determine_action' do
+    describe '#determine_action' do
       before :each do
         @report_params = @batch_params[:reports][0]
         @user = FactoryBot.create(:user_reports, id: 1)
@@ -503,7 +531,7 @@ RSpec.describe Report, type: :model do
   describe 'geography collection methods' do
     let(:contract) { create :contract }
 
-    context '#related_facilities' do
+    describe '#related_facilities' do
       let(:related_facility1) { create :facility }
       let(:related_facility2) { create :facility }
       let(:related_facility3) { create :facility }
@@ -551,7 +579,7 @@ RSpec.describe Report, type: :model do
       end
     end
 
-    context '#related_villages' do
+    describe '#related_villages' do
       let(:related_village) { create :village }
       let(:related_facility1) { create :facility, village: related_village }
       let(:related_facility2) { create :facility, village: related_village }
@@ -613,7 +641,7 @@ RSpec.describe Report, type: :model do
       end
     end
 
-    context '#related_cells' do
+    describe '#related_cells' do
       let(:related_cell) { create :cell }
       let(:related_cell1) { create :cell }
       let(:related_cell2) { create :cell }
@@ -668,7 +696,7 @@ RSpec.describe Report, type: :model do
       end
     end
 
-    context '#related_sectors' do
+    describe '#related_sectors' do
       let(:related_sector) { create :sector }
       let(:related_sector1) { create :sector }
       let(:related_sector2) { create :sector }
@@ -727,7 +755,7 @@ RSpec.describe Report, type: :model do
       end
     end
 
-    context '#related_districts' do
+    describe '#related_districts' do
       let(:related_district) { create :district }
       let(:related_district1) { create :district }
       let(:related_district2) { create :district }
@@ -790,7 +818,7 @@ RSpec.describe Report, type: :model do
       end
     end
 
-    context '#ary_of_village_ids_from_facilities' do
+    describe '#ary_of_village_ids_from_facilities' do
       let(:related_facility1) { create :facility }
       let(:related_facility2) { create :facility }
       let(:related_facility3) { create :facility }
@@ -828,7 +856,7 @@ RSpec.describe Report, type: :model do
       end
     end
 
-    context '#ary_of_cell_ids_from_villages' do
+    describe '#ary_of_cell_ids_from_villages' do
       let(:related_village) { create :village }
       let(:related_facility1) { create :facility, village: related_village }
       let(:related_facility2) { create :facility, village: related_village }
@@ -880,7 +908,7 @@ RSpec.describe Report, type: :model do
       end
     end
 
-    context '#ary_of_sector_ids_from_cells' do
+    describe '#ary_of_sector_ids_from_cells' do
       let(:related_cell) { create :cell }
       let(:related_cell1) { create :cell }
       let(:related_cell2) { create :cell }
@@ -926,7 +954,7 @@ RSpec.describe Report, type: :model do
       end
     end
 
-    context '#ary_of_district_ids_from_sectors' do
+    describe '#ary_of_district_ids_from_sectors' do
       let(:related_sector) { create :sector }
       let(:related_sector1) { create :sector }
       let(:related_sector2) { create :sector }
@@ -975,6 +1003,15 @@ RSpec.describe Report, type: :model do
         expect(collection.send(:ary_of_district_ids_from_sectors).is_a?(Array)).to eq true
       end
     end
+  end
+
+  describe '#prevent_meaningless_reports' do
+    pending 'is called on before_create'
+    pending 'is called if distributed is nil'
+    pending 'is called if distributed is zero'
+    pending 'is called if checked is nil'
+    pending 'is called if checked is zero'
+    pending 'prevents a record from being created'
   end
 
   describe '#calculate_impact' do
@@ -1032,23 +1069,20 @@ RSpec.describe Report, type: :model do
 
   describe '#set_year_and_month_from_date' do
     context 'with new records' do
-      it 'fires on before_save' do
-      end
+      pending 'fires on before_save'
     end
 
     context 'with existing records' do
-      it 'fires on before_save' do
-      end
+      pending 'fires on before_save'
     end
 
-    it 'only fires if year or month is blank' do
-    end
+    pending 'fires if year is blank'
 
-    it 'doesn\'t fire if year and month are present' do
-    end
+    pending 'fires if month is blank'
 
-    it 'updates the record with the year and month from the date' do
-    end
+    pending 'doesn\'t fire if year and month are both present'
+
+    pending 'updates the record with the year and month from the date'
   end
 
   describe '#find_plan' do
@@ -1094,7 +1128,7 @@ RSpec.describe Report, type: :model do
       let(:new_report) { build :report_village }
       let(:existing_report) { create :report_village }
 
-      fit 'does not set the plan_id' do
+      it 'does not set the plan_id' do
         expect { new_report.send(:find_plan) }.not_to change { new_report.plan_id }
         expect { existing_report.send(:find_plan) }.not_to change { existing_report.plan_id }
       end

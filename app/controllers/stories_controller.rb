@@ -1,13 +1,13 @@
 # frozen_string_literal: true
 
 class StoriesController < ApplicationController
-  before_action :set_story, only: %i[show edit update destroy]
+  before_action :set_story, only: %i[show edit update destroy rotate_img destroy_img]
   before_action :set_report_from_url, only: %i[new]
   before_action :set_report, only: %i[show edit update create destroy]
   layout 'dashboard', only: %i[show]
 
   def index
-    @stories = Story.all.order(:title)
+    @stories = Story.ordered_by_date
   end
 
   def show
@@ -15,7 +15,7 @@ class StoriesController < ApplicationController
   end
 
   def new
-    @story = Story.new
+    @story ||= Story.new
     @story.report_id = @report.id
     @year = params[:year]
     @month = params[:month]
@@ -26,25 +26,20 @@ class StoriesController < ApplicationController
   def edit
     @year = params[:year]
     @month = params[:month]
+
+    flash[:error] = 'Something went wrong and the report_id wasn\'t properly associated to this new story. Please navigate back and try again!' if @story.report_id.blank?
   end
 
   # PATCH /stories
   # PATCH /stories.json
   def update
     updated_params = story_params.except(:photo)
-    if story_params[:photo]
-      new_urls = @story.upload_image(story_params[:photo])
-      updated_params[:image] = new_urls[:raw]
-      updated_params[:image_thumbnail] = new_urls[:thumbnail]
-    else
-      updated_params[:image] = @story.image
-      updated_params[:image_thumbnail] = @story.image_thumbnail
-    end
+    @story.localize_image(story_params[:photo]) if story_params[:photo].present?
 
     respond_to do |format|
       if @story.update(updated_params)
         if params[:month].blank? || params[:year].blank?
-          format.html { redirect_to stories_path, notice: 'Report was successfully edited.' }
+          format.html { redirect_to stories_path, notice: 'Story was successfully edited.' }
         else
           format.html { redirect_to monthly_w_date_url(:month => params[:month], :year => params[:year]), notice: 'Report was successfully edited.' }
         end
@@ -64,19 +59,12 @@ class StoriesController < ApplicationController
   def create
     # handle image
     authorize @story = Story.new(story_params.except(:photo))
-    if story_params[:photo].present?
-      urls = @story.upload_image(story_params[:photo])
-      @story.image = urls[:raw]
-      @story.image_thumbnail = urls[:thumbnail]
-    else
-      @story.image = ''
-      @story.image_thumbnail = ''
-    end
+    @story.localize_image(story_params[:photo]) unless @story.image_localized? || story_params[:photo].blank?
 
     respond_to do |format|
       if @story.save
         if params[:month].blank? || params[:year].blank?
-          format.html { redirect_to @story, notice: 'Report was successfully created.' }
+          format.html { redirect_to @story, notice: 'Story was successfully created.' }
         else
           format.html { redirect_to monthly_w_date_url(month: params[:month], year: params[:year]), notice: 'Report was successfully created.' }
         end
@@ -93,6 +81,22 @@ class StoriesController < ApplicationController
     end
   end
 
+  def rotate_img
+    unless params[:direction].present?
+      redirect_to edit_story_path(@story)
+      flash[:error] = 'No direction set'
+    end
+  end
+
+  def destroy_img
+  end
+
+  def eager_img
+    # js call to take the image_io
+    # call @story.localize_image()
+    # get a temp location
+  end
+
   private
 
   def story_params
@@ -105,7 +109,12 @@ class StoriesController < ApplicationController
   end
 
   def set_report_from_param
-    @report = Report.find(params[:report_id])
+    if params[:report_id].blank
+      redirect_back
+      flash[:error] = 'Something went wrong and the report_id wasn\'t properly associated to this new story. Please navigate back and try again!'
+    else
+      @report = Report.find(params[:report_id])
+    end
   end
 
   def set_report
