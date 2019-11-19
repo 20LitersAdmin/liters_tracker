@@ -3,7 +3,7 @@
   .col-10
     %h1 Select your date
   .col-2
-    = link_to 'Back', root_path, class: 'btn btn-outline-secondary'
+    = link_to 'Back', data_path, class: 'btn btn-outline-secondary'
 
 = simple_form_for @monthly, url: monthly_redirector_path do |m|
   .row.align-items-center
