@@ -25,7 +25,7 @@ RSpec.describe Story, type: :model do
   end
 
   describe 'has scopes for' do
-    context '#between_dates' do
+    context '.between_dates' do
       let(:report_a) { create :report_facility, date: '2019-01-01' }
       let(:report_b) { create :report_facility, date: '2019-02-01' }
       let(:report_c) { create :report_facility, date: '2019-03-01' }
@@ -55,6 +55,50 @@ RSpec.describe Story, type: :model do
         expect(Story.between_dates(dtstart, dtend)).not_to include story_d
       end
     end
+
+    context '.ordered_by_date' do
+      pending 'needs to be tested'
+    end
+
+    context 'with_images' do
+      pending 'needs to be tested'
+    end
+  end
+
+  describe '#date' do
+    pending 'needs to be tested'
+  end
+
+  describe '#download_image' do
+    pending 'needs to be tested'
+  end
+
+  describe '#image_localized?' do
+    pending 'needs to be tested'
+  end
+
+  describe '#image_path' do
+    pending 'needs to be tested'
+  end
+
+  describe '#image_right_sized?' do
+    pending 'needs to be tested'
+  end
+
+  describe '#image_uploaded?' do
+    pending 'needs to be tested'
+  end
+
+  describe '#localize_image!' do
+    pending 'needs to be tested'
+  end
+
+  describe '#picture' do
+    pending 'needs to be tested'
+  end
+
+  describe '#resize_image' do
+    pending 'needs to be tested'
   end
 
   describe '#related' do
@@ -101,36 +145,25 @@ RSpec.describe Story, type: :model do
     end
   end
 
-  describe '#upload_image' do
-    before :each do
-      @image_io = fixture_file_upload('files/story_no_image.png', 'image/png')
-    end
+  describe '#rotate_image' do
+    pending 'needs to be tested'
+  end
 
-    it 'returns an empty hash in development' do
-      allow(Rails).to receive(:env).and_return(ActiveSupport::StringInquirer.new('development'))
+  describe '#s3_image' do
+    pending 'needs to be tested'
+  end
 
-      expect(story.upload_image(@image_io)[:raw]).to eq ''
-      expect(story.upload_image(@image_io)[:thumbnail]).to eq ''
-    end
+  describe '#upload_image!' do
+    pending 'needs to be tested'
+  end
 
-    it 'returns a hash in production' do
-      allow(Rails).to receive(:env).and_return(ActiveSupport::StringInquirer.new('production'))
-      allow_any_instance_of(Aws::S3::Object).to receive(:upload_file).and_return(true)
-      allow_any_instance_of(Aws::S3::Object).to receive(:version_id).and_return(1)
+  private
 
-      image_name = "#{story.report_id}_#{story.report.date.year}-#{story.report.date.month}.png"
+  describe '#find_or_download_image' do
+    pending 'needs to be tested'
+  end
 
-      expect(story.upload_image(@image_io)[:raw]).to eq "https://d5t73r6km0hzm.cloudfront.net/images/#{image_name}?ver=1"
-      expect(story.upload_image(@image_io)[:thumbnail]).to eq "https://d5t73r6km0hzm.cloudfront.net/thumbnails/#{image_name}?ver=1"
-    end
-
-    fit 'returns an empty hash if the image is not a valid format' do
-      allow(Rails).to receive(:env).and_return(ActiveSupport::StringInquirer.new('production'))
-
-      allow_any_instance_of(Rack::Test::UploadedFile).to receive_message_chain('original_filename.split.last').and_return('pdf')
-
-      expect(story.upload_image(@image_io)[:raw]).to eq ''
-      expect(story.upload_image(@image_io)[:thumbnail]).to eq ''
-    end
+  describe '#delete_local_file' do
+    pending 'needs to be tested'
   end
 end
