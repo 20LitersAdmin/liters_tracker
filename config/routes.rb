@@ -2,7 +2,6 @@
 
 Rails.application.routes.draw do
   root to: 'dashboard#index'
-  get 'data', to: 'users#data'
 
   resources :dashboard, only: %i[index]
 
@@ -32,15 +31,18 @@ Rails.application.routes.draw do
     get 'facility_error', on: :member
   end
 
-  resources :stories
+  resources :stories do
+    get 'eager_image', on: :member
+    get 'rotate_img', on: :member
+    get 'destroy_img', on: :member
+  end
 
   devise_for :users
 
-  resources :users do
-    get 'homepage', on: :member
-  end
+  resources :users
+  get 'data', to: 'users#data', as: 'data_user'
 
   get 'monthly', to: 'monthly#index'
   post 'monthly/redirector', to: 'monthly#redirector', as: 'monthly_redirector'
-  get ':year/:month', to: 'monthly#show', as: 'monthly_w_date'
+  get ':year/:month', to: 'monthly#show', as: 'monthly_w_date', contstraints: { year: /[0-9]{4}/, month: /[0-9]{2}/ }
 end

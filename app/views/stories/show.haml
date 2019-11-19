@@ -1,6 +1,6 @@
-%div.hero{ :style => "background-image: url(#{@story.image})" }
+%div.hero{ :style => "background-image: url(#{@story.picture})" }
   %div.breadcrumbs.container
-    = link_to "Dashboard", dashboard_index_path, {class: 'liters-btn'}
+    = link_to "Dashboard", dashboard_index_path, {class: 'btn yellow'}
 
 %div.container.mt-5
   %h1
@@ -14,14 +14,14 @@
         = "#{@story.report.reportable.village.name}, #{@story.report.reportable.sector.name}"
     %div
       %span.date
-        = @story.report.date.strftime("%B %d, %Y")
+        = @story.report.date.strftime('%B %d, %Y')
   %div.story-text
     = @story.text.html_safe
 
-  - if @story.related.length > 0
+  - if @related_stories
     %div.related-stories
       %div.heading
         %h2
           = "Related Stories"
       %div.story-list.card-columns#story_column
-        = render partial: 'dashboard/story', collection: @story.related
+        = render partial: 'dashboard/story', collection: @related_stories

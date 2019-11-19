@@ -5,7 +5,7 @@ require 'rails_helper'
 RSpec.describe Plan, type: :model do
   let(:plan) { build :plan_village }
 
-  context 'has validations on' do
+  describe 'has validations on' do
     let(:no_contract) { build :plan_village, contract: nil }
     let(:no_technology) { build :plan_village, technology: nil }
     let(:no_goal) { build :plan_village, goal: nil }
@@ -36,7 +36,7 @@ RSpec.describe Plan, type: :model do
     end
   end
 
-  context 'has scopes for dates' do
+  describe 'has scopes for dates' do
     let(:oldest_contract) { create :contract, start_date: Date.today - 6.years, end_date: Date.today - 5.years }
     let(:oldest_plan) { create :plan_village, contract: oldest_contract }
     let(:old_contract) { create :contract, start_date: Date.today - 4.years, end_date: Date.today - 3.years }
@@ -85,7 +85,7 @@ RSpec.describe Plan, type: :model do
     end
   end
 
-  context 'has scopes for types' do
+  describe 'has scopes for types' do
     let(:facility) { create :plan_facility }
     let(:village) { create :plan_village }
     let(:cell) { create :plan_cell }
@@ -138,237 +138,175 @@ RSpec.describe Plan, type: :model do
     end
   end
 
-  context 'single geography methods' do
-    let(:district) { create :district }
-    let(:sector) { create :sector, district: district }
-    let(:cell) { create :cell, sector: sector }
-    let(:village) { create :village, cell: cell }
-    let(:facility) { create :facility, village: village }
+  describe 'has scopes that joins reports' do
+    let(:plan1) { create :plan_village, goal: 5 }
+    let(:plan2) { create :plan_village, goal: 20 }
+    let(:plan3) { create :plan_village, goal: 10 }
 
-    let(:other_district) { create :district }
-    let(:other_sector) { create :sector }
-    let(:other_cell) { create :cell }
-    let(:other_village) { create :village }
-    let(:other_facility) { create :facility }
+    let(:rep1) do
+      create :report_village, contract: plan1.contract, technology: plan1.technology,
+                              reportable_id: plan1.planable_id, reportable_type: plan1.planable_type, distributed: 3
+    end
 
-    context '#related_to' do
-      let(:related_plan1) { create :plan_village, planable: village }
-      let(:related_plan2) { create :plan_village, planable: village }
-      let(:unrelated_plan) { create :plan_village, planable: other_village }
+    let(:rep2) do
+      create :report_village, contract: plan1.contract, technology: plan1.technology,
+                              reportable_id: plan1.planable_id, reportable_type: plan1.planable_type, distributed: 2
+    end
 
-      it 'returns a collection of plans directly related to the given geography' do
-        related_plan1
-        related_plan2
-        collection = Plan.related_to(village)
+    let(:rep3) do
+      create :report_village, contract: plan2.contract, technology: plan2.technology,
+                              reportable_id: plan2.planable_id, reportable_type: plan2.planable_type, distributed: 10
+    end
 
-        expect(collection).to include related_plan1
-        expect(collection).to include related_plan2
-        expect(collection).not_to include unrelated_plan
-      end
+    describe '.without_reports' do
+      it 'returns plans with no associated reports' do
+        plan1
+        plan2
+        plan3
 
-      it 'returns an empty ActiveRecord collection if no records are found' do
-        related_plan1.delete
-        related_plan2.delete
+        rep1
+        rep2
+        rep3
 
-        collection = Plan.related_to(village)
-        expect(collection.is_a?(ActiveRecord::Relation)).to eq true
-        expect(collection.empty?).to eq true
+        expect(Plan.all.size).to eq 3
+        expect(Plan.without_reports.size).to eq 1
+        expect(Plan.without_reports).to include plan3
+        expect(Plan.without_reports).not_to include plan1
+        expect(Plan.without_reports).not_to include plan2
       end
     end
 
-    context '#related_to_facility' do
-      let(:related_plan1) { create :plan_facility, planable: facility }
-      let(:related_plan2) { create :plan_facility, planable: facility }
-      let(:unrelated_plan) { create :plan_facility, planable: other_facility }
+    describe '.with_reports_incomplete' do
+      it 'returns plans where the associated reports don\'t complete the goal' do
+        plan1
+        plan2
+        plan3
 
-      it 'returns a collection of plans directly related to the given facility' do
-        related_plan1
-        related_plan2
-        collection = Plan.related_to_facility(facility)
+        rep1
+        rep2
+        rep3
 
-        expect(collection).to include related_plan1
-        expect(collection).to include related_plan2
-        expect(collection).not_to include unrelated_plan
-      end
+        expect(Plan.all.size).to eq 3
 
-      it 'returns an empty ActiveRecord collection if no records are found' do
-        unrelated_plan.delete
+        expect(Plan.with_reports_incomplete.length).to eq 1
 
-        collection = Plan.related_to_facility(other_facility)
-        expect(collection.is_a?(ActiveRecord::Relation)).to eq true
-        expect(collection.empty?).to eq true
-      end
-
-      it 'returns an error if facility is not provided' do
-        expect { Plan.related_to_facility(village) }.to raise_error RuntimeError
+        expect(Plan.with_reports_incomplete).to include plan2
+        expect(Plan.with_reports_incomplete).not_to include plan1
+        expect(Plan.with_reports_incomplete).not_to include plan3
       end
     end
 
-    context '#related_to_village' do
-      let(:related_plan1) { create :plan_village, planable: village }
-      let(:related_plan2) { create :plan_village, planable: village }
-      let(:unrelated_plan) { create :plan_village, planable: other_village }
-      let(:child_plan1) { create :plan_facility, planable: facility }
-      let(:child_plan2) { create :plan_facility, planable: facility }
-      let(:unrelated_plan2) { create :plan_facility, planable: other_facility }
+    describe 'self.incomplete' do
+      it 'returns plans with no associated reports' do
+        plan1
+        plan2
+        plan3
 
-      it 'returns a collection of plans related to the given village and its children' do
-        related_plan1
-        related_plan2
-        child_plan1
-        child_plan2
-        collection = Plan.related_to_village(village)
+        rep1
+        rep2
+        rep3
 
-        expect(collection).to include related_plan1
-        expect(collection).to include related_plan2
-        expect(collection).to include child_plan1
-        expect(collection).to include child_plan2
-        expect(collection).not_to include unrelated_plan
-        expect(collection).not_to include unrelated_plan2
+        expect(Plan.incomplete).to include plan3
+        expect(Plan.incomplete).to include plan2
+        expect(Plan.incomplete).not_to include plan1
       end
+    end
+  end
 
-      it 'returns an empty ActiveRecord collection if no records are found' do
-        unrelated_plan.delete
+  describe '#picture' do
+    let(:plan_facility) { create :plan_facility }
+    let(:plan_village) { create :plan_village }
+    let(:plan_sector) { create :plan_sector }
 
-        collection = Plan.related_to_village(other_village)
-        expect(collection.is_a?(ActiveRecord::Relation)).to eq true
-        expect(collection.empty?).to eq true
-      end
+    it "returns 'plan_facility.jpg when planable_type == 'Facility" do
+      expect(plan_facility.picture).to eq 'plan_facility.jpg'
+    end
 
-      it 'returns an error if village is not provided' do
-        expect { Plan.related_to_village(district) }.to raise_error RuntimeError
+    it "returns 'plan_village.jpg when planable_type != 'Facility" do
+      expect(plan_village.picture).to eq 'plan_village.jpg'
+      expect(plan_sector.picture).to eq 'plan_village.jpg'
+    end
+  end
+
+  describe '#title' do
+    let(:plan) { create :plan_village }
+
+    it 'includes the goal' do
+      expect(plan.title).to include(plan.goal.to_s)
+    end
+
+    it 'includes the technology name' do
+      expect(plan.title).to include(plan.technology.name)
+    end
+
+    it 'includes the people_goal' do
+      expect(plan.title).to include("for #{plan.people_goal} people")
+    end
+
+    it 'inlcudes the date' do
+      expect(plan.title).to include("by #{plan.date.strftime('%m/%d/%Y')}")
+    end
+  end
+
+  describe '#complete?' do
+    let(:plan1) { create :plan_village, goal: 5 }
+    let(:plan2) { create :plan_village, goal: 20 }
+    let(:plan3) { create :plan_village, goal: 10 }
+
+    let(:rep1) do
+      create :report_village, contract: plan1.contract, technology: plan1.technology,
+                              reportable_id: plan1.planable_id, reportable_type: plan1.planable_type, distributed: 3
+    end
+
+    let(:rep2) do
+      create :report_village, contract: plan1.contract, technology: plan1.technology,
+                              reportable_id: plan1.planable_id, reportable_type: plan1.planable_type, distributed: 3
+    end
+
+    let(:rep3) do
+      create :report_village, contract: plan2.contract, technology: plan2.technology,
+                              reportable_id: plan2.planable_id, reportable_type: plan2.planable_type, distributed: 10
+    end
+
+    it 'returns true if the sum of reports.distributed is greater than the goal' do
+      plan1
+      plan2
+      plan3
+
+      rep1
+      rep2
+      rep3
+
+      expect(plan1.complete?).to eq true
+    end
+
+    it 'returns false if the sum of reports.distributed is less than the goal' do
+      plan1
+      plan2
+      plan3
+
+      rep1
+      rep2
+      rep3
+
+      expect(plan2.complete?).to eq false
+      expect(plan3.complete?).to eq false
+    end
+  end
+
+  describe '#date' do
+    context 'when plan has no date' do
+      it 'returns the end_date of the related contract' do
+        expect(plan.read_attribute(:date)).to eq nil
+        expect(plan.date).to eq plan.contract.end_date
       end
     end
 
-    context '#related_to_cell' do
-      let(:related_plan1) { create :plan_village, planable: village }
-      let(:related_plan2) { create :plan_village, planable: village }
-      let(:related_plan3) { create :plan_facility, planable: facility }
-      let(:related_plan4) { create :plan_facility, planable: facility }
-      let(:related_plan5) { create :plan_cell, planable: cell }
-      let(:unrelated_plan1) { create :plan_facility, planable: other_facility }
-      let(:unrelated_plan2) { create :plan_village, planable: other_village }
-      let(:unrelated_plan3) { create :plan_cell, planable: other_cell }
-
-      it 'returns a collection of plans related to the given cell and its children' do
-        related_plan1
-        related_plan2
-        related_plan3
-        related_plan4
-        related_plan5
-        collection = Plan.related_to_cell(cell)
-
-        expect(collection).to include related_plan1
-        expect(collection).to include related_plan2
-        expect(collection).to include related_plan3
-        expect(collection).to include related_plan4
-        expect(collection).to include related_plan5
-        expect(collection).not_to include unrelated_plan1
-        expect(collection).not_to include unrelated_plan2
-        expect(collection).not_to include unrelated_plan3
-      end
-
-      it 'returns an empty ActiveRecord collection if no records are found' do
-        unrelated_plan3.delete
-
-        collection = Plan.related_to_cell(other_cell)
-        expect(collection.is_a?(ActiveRecord::Relation)).to eq true
-        expect(collection.empty?).to eq true
-      end
-
-      it 'returns an error if cell is not provided' do
-        expect { Plan.related_to_cell(district) }.to raise_error RuntimeError
-      end
-    end
-
-    context '#related_to_sector' do
-      let(:related_plan1) { create :plan_village, planable: village }
-      let(:related_plan2) { create :plan_village, planable: village }
-      let(:related_plan3) { create :plan_facility, planable: facility }
-      let(:related_plan4) { create :plan_facility, planable: facility }
-      let(:related_plan5) { create :plan_cell, planable: cell }
-      let(:related_plan6) { create :plan_sector, planable: sector }
-      let(:unrelated_plan1) { create :plan_facility, planable: other_facility }
-      let(:unrelated_plan2) { create :plan_village, planable: other_village }
-      let(:unrelated_plan3) { create :plan_cell, planable: other_cell }
-      let(:unrelated_plan4) { create :plan_sector, planable: other_sector }
-
-      it 'returns a collection of plans related to the given sector and its children' do
-        related_plan1
-        related_plan2
-        related_plan3
-        related_plan4
-        related_plan5
-        related_plan6
-        collection = Plan.related_to_sector(sector)
-
-        expect(collection).to include related_plan1
-        expect(collection).to include related_plan2
-        expect(collection).to include related_plan3
-        expect(collection).to include related_plan4
-        expect(collection).to include related_plan5
-        expect(collection).to include related_plan6
-        expect(collection).not_to include unrelated_plan1
-        expect(collection).not_to include unrelated_plan2
-        expect(collection).not_to include unrelated_plan3
-        expect(collection).not_to include unrelated_plan4
-      end
-
-      it 'returns an empty ActiveRecord collection if no records are found' do
-        unrelated_plan4.delete
-
-        collection = Plan.related_to_sector(other_sector)
-        expect(collection.is_a?(ActiveRecord::Relation)).to eq true
-        expect(collection.empty?).to eq true
-      end
-
-      it 'returns an error if sector is not provided' do
-        expect { Plan.related_to_sector(district) }.to raise_error RuntimeError
-      end
-    end
-
-    context '#related_to_district' do
-      let(:related_plan1) { create :plan_village, planable: village }
-      let(:related_plan2) { create :plan_facility, planable: facility }
-      let(:related_plan3) { create :plan_cell, planable: cell }
-      let(:related_plan4) { create :plan_sector, planable: sector }
-      let(:related_plan5) { create :plan_district, planable: district }
-      let(:unrelated_plan1) { create :plan_facility, planable: other_facility }
-      let(:unrelated_plan2) { create :plan_village, planable: other_village }
-      let(:unrelated_plan3) { create :plan_cell, planable: other_cell }
-      let(:unrelated_plan4) { create :plan_sector, planable: other_sector }
-      let(:unrelated_plan5) { create :plan_district, planable: other_district }
-
-      it 'returns a collection of plans related to the given district and its children' do
-        related_plan1
-        related_plan2
-        related_plan3
-        related_plan4
-        related_plan5
-        collection = Plan.related_to_district(district)
-
-        expect(collection).to include related_plan1
-        expect(collection).to include related_plan2
-        expect(collection).to include related_plan3
-        expect(collection).to include related_plan4
-        expect(collection).to include related_plan5
-        expect(collection).not_to include unrelated_plan1
-        expect(collection).not_to include unrelated_plan2
-        expect(collection).not_to include unrelated_plan3
-        expect(collection).not_to include unrelated_plan4
-        expect(collection).not_to include unrelated_plan5
-      end
-
-      it 'returns an empty ActiveRecord collection if no records are found' do
-        unrelated_plan5.delete
-
-        collection = Plan.related_to_district(other_district)
-        expect(collection.is_a?(ActiveRecord::Relation)).to eq true
-        expect(collection.empty?).to eq true
-      end
-
-      it 'returns an error if district is not provided' do
-        expect { Plan.related_to_district(facility) }.to raise_error RuntimeError
+    context 'when plan has a date' do
+      it 'returns the date, not the contract end_date' do
+        plan.date = Date.today
+        expect(plan.date).to eq plan.date
+        expect(plan.date).not_to eq plan.contract.end_date
       end
     end
   end
@@ -663,12 +601,6 @@ RSpec.describe Plan, type: :model do
       end
     end
 
-    context '#date' do
-      it 'returns the end_date of the related contract' do
-        expect(plan.date).to eq plan.contract.end_date
-      end
-    end
-
     context '#ary_of_village_ids_from_facilities' do
       let(:related_facility1) { create :facility }
       let(:related_facility2) { create :facility }
@@ -852,13 +784,6 @@ RSpec.describe Plan, type: :model do
         collection = contract.plans
         expect(collection.send(:ary_of_district_ids_from_sectors).is_a?(Array)).to eq true
       end
-    end
-  end
-
-  context '.date' do
-    it 'returns the end_date of the associated contract' do
-      plan.save
-      expect(plan.date).to eq plan.contract.end_date
     end
   end
 end

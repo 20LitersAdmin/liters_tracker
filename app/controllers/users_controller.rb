@@ -5,7 +5,7 @@ class UsersController < ApplicationController
 
   before_action :set_user, only: %i[show edit update destroy]
 
-  def homepage
+  def data
     authorize User
 
     @user = current_user
@@ -13,16 +13,11 @@ class UsersController < ApplicationController
     @admins = User.admins
   end
 
-  def data
-    authorize current_user
-  end
-
   def index
     authorize @users = User.all.order(:lname)
   end
 
-  def show
-  end
+  def show; end
 
   def new
     authorize @user = User.new

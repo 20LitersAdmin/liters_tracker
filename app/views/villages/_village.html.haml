@@ -1,6 +1,6 @@
 -# frozen_string_literal: true
-- @report_sub = @reports.related_to_village(village)
-- @plan_sub = @plans.related_to_village(village)
+- @report_sub = village.related_reports.between(@from, @to)
+- @plan_sub = village.related_plans.between(@from, @to)
 - @reps_dist_chk = @report_sub.pluck(:distributed, :checked)
 - @ttl_dist = @reps_dist_chk.map { |rep| rep[0] }.compact.sum
 - @ttl_chk = @reps_dist_chk.map { |rep| rep[1] }.compact.sum

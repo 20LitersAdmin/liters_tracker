@@ -1,4 +1,22 @@
+-# frozen_string_literal: true
+.container
+  %h1.left Stories:
 
-- @stories.each do |story|
-  = link_to "Has Image [#{!story.image.blank?}] - #{story.title}" , edit_story_path(story)
-  %br
+%table.table.table-dark.table-striped.table-hover.table-sm.table-responsive-sm#story_table
+  %thead.thead-dark
+    %tr
+      %th Img
+      %th Date
+      %th Title
+      %th
+      %th
+      %th
+  %tbody
+    - @stories.each do |story|
+      %tr
+        %td= image_tag story.picture, class: 'story-img-thumb'
+        %td= human_date story.date
+        %td= story.title
+        %td= link_to 'Show', story, class: 'btn yellow'
+        %td= link_to 'Edit', edit_story_path(story), class: 'btn blue'
+        %td= link_to 'Delete', story, method: :delete, data: { confirm: 'Are you sure?' }, class: 'btn red'

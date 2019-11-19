@@ -1,9 +1,16 @@
 # POST C4G:
-* I changed image naming conventions so the S3 bucket and the Story records are useless
-* Things are bad here (cell math is bad): `http://localhost:3000/sectors/2/report?date=2019-09-01&tech=1`
-* Clean up Michael's dashboard_controller binning
-* Handle thumbnails or disregard them (they are duplicates of images at this point)
-* Footer needs to actually match
+* Story:
+  - Handle rotate_image()
+  - live test the image processes: In the controller, call localize_image!(image_io), which calls resize_image. Then save the image to use the callbacks.
+* Story _form:
+  - Handle eager-loading stories
+  - Handle rotating images (on edit, then on new)
+
+# NEXT MERGE:
+* Need to re-save every report for AddPlanIDToReports && AddYearAndMonthToReports
+* There are 7 meaningless distribution reports: `Report.distributions.where(impact: 0)`
+* There are 17 meaningless check reports: `Report.checks.where(checked: 0)`
+* Run `Story.where.not(image: nil).each { |story| story.migrate_image_name }`, then create a migration to drop `Story#image` column
 
 # from amanda
 * Try to make it feel like we're on 20L/blog/updates to some extent.
@@ -60,11 +67,6 @@
 - Village form
 + Facility form (also submits as partial from SectorsController#Reports)
   -- CHECK: Sector lookup is showing the record, not the record.name
-
-# SPEED THINGS UP
-- check which is faster: `@reports.related_to_village(village)` or `village.related_reports`
-  -- Affects cell and village reporting partials
-- use `.select()` to speed up queries by only pulling what you need e.g.: `@reports.#stuff.select(:distributed, :checked)`
 
 # Remind myself:
 * magic_frozen_string_literal . #get those frozen string benefits

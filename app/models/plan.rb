@@ -1,13 +1,13 @@
 # frozen_string_literal: true
 
-require 'cache/cortex.rb'
-
 class Plan < ApplicationRecord
   belongs_to :contract,   inverse_of: :plans
   belongs_to :technology, inverse_of: :plans
   belongs_to :planable, polymorphic: true
 
   validates_presence_of :contract_id, :technology_id, :planable_type, :planable_id, :goal
+
+  has_many :reports, inverse_of: :plan
 
   scope :between,         ->(from, to) { joins(:contract).where('contracts.end_date >= ? AND contracts.start_date <= ?', from, to) }
   scope :current,         -> { where(contract_id: Contract.current) }
@@ -18,49 +18,32 @@ class Plan < ApplicationRecord
   scope :only_cells,      -> { where(planable_type: 'Cell') }
   scope :only_villages,   -> { where(planable_type: 'Village') }
   scope :only_facilities, -> { where(planable_type: 'Facility') }
-  scope :with_reports,    -> { joins('LEFT JOIN reports ON plans.contract_id = reports.contract_id AND plans.technology_id = reports.technology_id AND plans.planable_id = reports.reportable_id AND plans.planable_type = reports.reportable_type') }
+
+  scope :without_reports,         -> { left_outer_joins(:reports).where(reports: { id: nil }) }
+  scope :with_reports_incomplete, -> { joins(:reports).group('plans.id').having('plans.goal > SUM(reports.distributed)').select('plans.*') }
 
   def self.incomplete
-    with_reports.having('plans.goal > SUM(reports.distributed)').group('plans.id, reports.id')
+    ary = []
+    ary << Plan.without_reports.pluck(:id)
+    ary << Plan.with_reports_incomplete.pluck(:id)
+    Plan.where(id: ary.flatten)
   end
 
-  # def self.related_to(record)
-  #   where(planable_type: record.class.to_s, planable_id: record.id)
-  # end
+  def picture
+    planable_type == 'Facility' ? 'plan_facility.jpg' : 'plan_village.jpg'
+  end
 
-  # def self.related_to_facility(facility, only_ary: false)
-  #   raise 'ERROR. Must provide a facility.' unless facility.is_a? Facility
+  def title
+    "#{ActionController::Base.helpers.pluralize(goal, technology.name)} for #{people_goal} people by #{date.strftime('%m/%d/%Y')}"
+  end
 
-  #   plans = related_to(facility)
+  def complete?
+    (goal || 0) <= (reports.sum(:distributed) || 0)
+  end
 
-  #   return plans.pluck(:id) if only_ary
-
-  #   plans
-  # end
-
-  # def self.related_to_village(village)
-  #   raise 'ERROR. Must provide a village.' unless village.is_a? Village
-
-  #   village.related_plans
-  # end
-
-  # def self.related_to_cell(cell)
-  #   raise 'ERROR. Must provide a cell.' unless cell.is_a? Cell
-
-  #   cell.related_plans
-  # end
-
-  # def self.related_to_sector(sector)
-  #   raise 'ERROR. Must provide a sector.' unless sector.is_a? Sector
-
-  #   sector.related_plans
-  # end
-
-  # def self.related_to_district(district)
-  #   raise 'ERROR. Must provide a district.' unless district.is_a? District
-
-  #   district.related_plans
-  # end
+  def date
+    read_attribute(:date) || contract.end_date
+  end
 
   def self.related_facilities
     # return a collection of Facilities from a collection of Plans
@@ -110,10 +93,6 @@ class Plan < ApplicationRecord
     District.all.where(id: ary_of_ids.uniq)
   end
 
-  def date
-    read_attribute(:date) || contract.end_date
-  end
-
   def self.ary_of_village_ids_from_facilities
     related_facilities.pluck(:village_id)
   end
@@ -128,24 +107,5 @@ class Plan < ApplicationRecord
 
   def self.ary_of_district_ids_from_sectors
     related_sectors.pluck(:district_id)
-  end
-
-  def picture
-    planable_type == 'Facility' ? 'plan_facility.jpg' : 'plan_village.jpg'
-  end
-
-  def reports
-    Report.where(contract_id: self.contract_id,
-                 technology_id: self.technology_id,
-                 reportable_id: self.planable_id,
-                 reportable_type: self.planable_type)
-  end
-
-  def title
-    "#{goal} #{technology.name}s for #{people_goal} people by #{date.strftime('%m/%d/%Y')}"
-  end
-
-  def complete?
-    (self.goal || 0) < (reports.sum(:distributed) || 0)
   end
 end

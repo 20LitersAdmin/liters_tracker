@@ -17,17 +17,13 @@
         = render partial: "shared/basic_stat_block", locals: { stat: stat_block[:stat], title: stat_block[:title] }
     = render partial: "shared/basic_stat_block", locals: { stat: @global_impact, title: 'People served' }
 
-.container.mt-5
-  .row.justify-content-center
-  %nav.nav.nav-pills.nav-fill.liters-gray-bg.liters-text-white
-    = link_to 'FUTURE', dashboard_planner_path, remote: true, class: "nav-item nav-link"
-    - @years.each do |year|
-      = link_to year.to_s, dashboard_handler_path(year: year), remote: true, class: "nav-item nav-link"
-  .row.justify-content-center
-  %nav.nav.nav-pills.nav-fill.liters-gray-bg.liters-text-white#month_nav
-    - if @year.blank? == false
-      - @months.each do |month|
-        = link_to month.to_s, dashboard_handler_path(year: @year, month: month), remote: true, class: "nav-item nav-link"
+.mt-5#date_navs
+  %nav#year_nav.nav.nav-fill.liters-gray-bg.liters-text-white
+    = link_to 'FUTURE', dashboard_planner_path, remote: true, class: "nav-item nav-link", id: 'future_link'
+    = render partial: 'year', collection: @years
+
+  %nav#month_nav.nav.justify-content-center
+    = render partial: 'month', collection: @months
 
 .container.mt-5
   #story_column.card-columns

@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_11_04_214144) do
+ActiveRecord::Schema.define(version: 2019_11_19_043301) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -112,9 +112,13 @@ ActiveRecord::Schema.define(version: 2019_11_04_214144) do
     t.integer "reportable_id"
     t.string "reportable_type"
     t.integer "impact", default: 0
+    t.bigint "plan_id"
+    t.integer "year"
+    t.integer "month"
     t.index ["contract_id", "technology_id", "reportable_id", "reportable_type"], name: "idx_belongs_to_plan"
     t.index ["contract_id"], name: "index_reports_on_contract_id"
     t.index ["date"], name: "index_reports_on_date"
+    t.index ["plan_id"], name: "index_reports_on_plan_id"
     t.index ["reportable_type", "reportable_id"], name: "index_reports_on_reportable_type_and_reportable_id"
     t.index ["technology_id"], name: "index_reports_on_technology_id"
     t.index ["user_id"], name: "index_reports_on_user_id"
@@ -136,13 +140,14 @@ ActiveRecord::Schema.define(version: 2019_11_04_214144) do
 
   create_table "stories", force: :cascade do |t|
     t.string "title"
-    t.string "text"
+    t.text "text"
     t.string "image"
-    t.string "image_thumbnail"
     t.bigint "report_id", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.boolean "prominent", default: false
+    t.string "image_name"
+    t.string "image_version"
     t.index ["report_id"], name: "index_stories_on_report_id"
   end
 
@@ -226,6 +231,7 @@ ActiveRecord::Schema.define(version: 2019_11_04_214144) do
   add_foreign_key "plans", "contracts"
   add_foreign_key "plans", "technologies"
   add_foreign_key "reports", "contracts"
+  add_foreign_key "reports", "plans"
   add_foreign_key "reports", "technologies"
   add_foreign_key "reports", "users"
   add_foreign_key "stories", "reports"
