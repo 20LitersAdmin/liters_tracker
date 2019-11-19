@@ -38,7 +38,7 @@ class Story < ApplicationRecord
 
   # TODO: delete this after deleting the database column
   def image
-    raise ">>> Don't use `.image`, use `.picture`.<<< (if you really need the database value of `.image`, use `.read_attribute(:image)`)"
+    raise ">>>  Don't use `.image`, use `.picture`  <<< (if you really need the database value of `.image`, use `.read_attribute(:image)`)"
   end
 
   def image_localized?

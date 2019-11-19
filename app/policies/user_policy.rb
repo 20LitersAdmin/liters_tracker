@@ -8,10 +8,6 @@ class UserPolicy
     @record = record
   end
 
-  def homepage?
-    @user
-  end
-
   def data?
     @user
   end
