@@ -1,9 +1,13 @@
 # frozen_string_literal: true
 
 class StoriesController < ApplicationController
-  before_action :set_story, only: %i[show edit update destroy rotate_img destroy_img]
-  before_action :set_report_from_url, only: %i[new]
-  before_action :set_report, only: %i[show edit update create destroy]
+  require 'mini_magick'
+  require 'fileutils'
+
+  before_action :set_story, only: %i[show edit update destroy]
+  before_action :find_or_initialize_story, only: %i[localize_image rotate_image destroy_image]
+  before_action :set_report_from_param, only: %i[new create]
+  before_action :set_report, only: %i[show edit update destroy]
   layout 'dashboard', only: %i[show]
 
   def index
@@ -21,7 +25,7 @@ class StoriesController < ApplicationController
     @month = params[:month]
 
     authorize @story
-    flash[:error] = 'Something went wrong and the report_id wasn\'t properly associated to this new story. Please navigate back and try again!' if @story.report_id.blank?
+    # flash[:error] = 'Something went wrong and the report_id wasn\'t properly associated to this new story. Please navigate back and try again!' if @story.report_id.blank?
   end
 
   def edit
@@ -56,9 +60,8 @@ class StoriesController < ApplicationController
   # POST /stories
   # POST /stories.json
   def create
-    # handle image
     authorize @story = Story.new(story_params.except(:photo))
-    @story.localize_image(story_params[:photo]) unless @story.image_localized? || story_params[:photo].blank?
+    # @story.localize_image!(story_params[:photo]) unless @story.image_localized? || story_params[:photo].blank?
 
     respond_to do |format|
       if @story.save
@@ -80,20 +83,43 @@ class StoriesController < ApplicationController
     end
   end
 
-  def rotate_img
+  def localize_image
+    if @story.new_record?
+      return false unless params[:report_id].present? || story_params[:report_id].present?
+
+      report_id = story_params[:report_id] || params[:report_id]
+
+      @report = Report.find(report_id)
+      @story.report = @report
+    else
+      @report = @story.report
+    end
+
+    @result = @story.localize_image!(story_params[:photo])
+
+    byebug
+
+    respond_to do |format|
+      format.js
+    end
+  end
+
+  def rotate_image
     unless params[:direction].present?
       redirect_to edit_story_path(@story)
       flash[:error] = 'No direction set'
     end
+
+    respond_to do |format|
+      format.js
+    end
   end
 
-  def destroy_img
-  end
-
-  def eager_img
-    # js call to take the image_io
-    # call @story.localize_image()
-    # get a temp location
+  def destroy_image
+    # really do it.
+    respond_to do |format|
+      format.js
+    end
   end
 
   private
@@ -107,12 +133,19 @@ class StoriesController < ApplicationController
     authorize @story
   end
 
+  def find_or_initialize_story
+    authorize @story = Story.find_or_initialize_by(id: params[:id])
+  end
+
   def set_report_from_param
-    if params[:report_id].blank
-      redirect_back
+    report_id = params[:report_id].nil? ? story_params[:report_id] : params[:report_id]
+    if report_id.blank?
+      year = params[:year]
+      month = params[:month]
+      redirect_back(fallback_location: monthly_w_date_path(year: year, month: month))
       flash[:error] = 'Something went wrong and the report_id wasn\'t properly associated to this new story. Please navigate back and try again!'
     else
-      @report = Report.find(params[:report_id])
+      @report = Report.find(report_id)
     end
   end
 

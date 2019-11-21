@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class CountriesController < ApplicationController
   before_action :set_country, only: [:show, :edit, :update, :destroy]
 

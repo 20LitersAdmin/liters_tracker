@@ -1,6 +1,6 @@
 -# frozen_string_literal: true
-%div.container
-  %h1.left Listing reports
+.container
+  %h1.left All Reports
 
   %table.table.table-dark.table-striped.table-hover.table-sm.table-responsive-sm
     %thead.thead-dark
@@ -26,8 +26,8 @@
           %td= link_to 'Edit', edit_report_path(report), class: 'btn blue'
           %td= link_to 'Delete', report, method: :delete, data: { confirm: 'Are you sure?' }, class: 'btn red'
 
-  %div.row.justify-content-center.align-self-center
-    %div.col-2
+  .row.justify-content-center.align-self-center
+    .col-2
       = link_to 'New Report', new_report_path, class: 'btn empty btn-sm float-left'
-    %div.col-10
+    .col-10
       = will_paginate @reports, class: "pagination-sm float-right", renderer: WillPaginate::ActionView::Bootstrap4LinkRenderer

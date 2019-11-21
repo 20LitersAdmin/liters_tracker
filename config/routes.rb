@@ -32,10 +32,10 @@ Rails.application.routes.draw do
   end
 
   resources :stories do
-    get 'eager_image', on: :member
     get 'rotate_img', on: :member
     get 'destroy_img', on: :member
   end
+  post 'localize_image', to: 'stories#localize_image', as: 'localize_image'
 
   devise_for :users
 
@@ -45,5 +45,5 @@ Rails.application.routes.draw do
 
   get 'monthly', to: 'monthly#index'
   post 'monthly/redirector', to: 'monthly#redirector', as: 'monthly_redirector'
-  get ':year/:month', to: 'monthly#show', as: 'monthly_w_date', contstraints: { year: /[0-9]{4}/, month: /[0-9]{2}/ }
+  get ':year/:month', to: 'monthly#show', as: 'monthly_w_date', constraints: { year: /[0-9]{4}/, month: /[0-9]{1,2}/ }
 end

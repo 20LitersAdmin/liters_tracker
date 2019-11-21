@@ -58,11 +58,14 @@ Rails.application.configure do
   # Debug mode disables concatenation and preprocessing of assets.
   # This option may cause significant delays in view rendering with a large
   # number of complex assets.
+  # config.public_file_server.enabled = true
+  # config.assets.enabled = false
+  # config.assets.compile = false
   config.assets.debug = true
 
-  # config.require_master_key = true
+  config.require_master_key = true
   # Suppress logger output for asset requests.
-  config.assets.quiet = true
+  config.assets.quiet = false
 
   # Raises error for missing translations
   # config.action_view.raise_on_missing_translations = true

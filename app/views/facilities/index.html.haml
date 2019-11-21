@@ -1,32 +1,35 @@
 -# frozen_string_literal: true
-%h1 Listing facilities
+.container
+  %h1 All Facilities
 
-%table.table.table-striped
-  %thead
-    %tr
-      %th Name
-      %th Latitude
-      %th Longitude
-      %th Population
-      %th Households
-      %th Category
-      %th
-      %th
-      %th
-
-  %tbody
-    - @facilities.each do |facility|
+  %table.table.table-dark.table-striped.table-hover.table-sm.table-responsive-sm
+    %thead.thead-dark
       %tr
-        %td= facility.name
-        %td= facility.latitude
-        %td= facility.longitude
-        %td= facility.population
-        %td= facility.households
-        %td= facility.category
-        %td= link_to 'Show', facility
-        %td= link_to 'Edit', edit_facility_path(facility)
-        %td= link_to 'Destroy', facility, method: :delete, data: { confirm: 'Are you sure?' }
+        %th Name
+        %th Village
+        %th Sector
+        %th Population
+        %th Households
+        %th Category
+        %th
+        %th
+        %th
 
-%br
+    %tbody
+      - @facilities.each do |facility|
+        %tr
+          %td= facility.name
+          %td= facility.village.name
+          %td= facility.sector.name
+          %td= facility.population
+          %td= facility.households
+          %td= facility.category
+          %td= link_to 'Show', facility, class: 'btn yellow'
+          %td= link_to 'Edit', edit_facility_path(facility), class: 'btn blue'
+          %td= link_to 'Delete', facility, method: :delete, class: 'btn red', data: { confirm: 'Are you sure?' }
 
-= link_to 'New Facility', new_facility_path
+  .row.justify-content-center.align-self-center
+    .col-2
+      = link_to 'New Facility', new_facility_path, class: 'btn yellow'
+    .col-10
+      = will_paginate @facilities, class: "pagination-sm float-right", renderer: WillPaginate::ActionView::Bootstrap4LinkRenderer

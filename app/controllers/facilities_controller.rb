@@ -6,7 +6,7 @@ class FacilitiesController < ApplicationController
   # GET /facilities
   # GET /facilities.json
   def index
-    authorize @facilities = Facility.all
+    authorize @facilities = Facility.all.order(name: :asc).paginate(page: params[:page], per_page: params[:per_page] || 20)
   end
 
   # GET /facilities/1

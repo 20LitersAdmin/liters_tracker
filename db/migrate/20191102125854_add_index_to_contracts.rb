@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class AddIndexToContracts < ActiveRecord::Migration[6.0]
   def change
     add_index :contracts, :end_date
