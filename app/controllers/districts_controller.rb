@@ -13,7 +13,7 @@ class DistrictsController < ApplicationController
     @from = params[:from].present? ? Date.parse(params[:from]) : @earliest
     @to =   params[:to].present? ? Date.parse(params[:to]) : @latest
 
-    @reports = Report.between(@from..@to).order(date: :asc)
+    @reports = Report.between(@from, @to).order(date: :asc)
     @plans = Plan.between(@from, @to)
 
     contract_id = @plans.select(:contract_id).maximum(:contract_id)

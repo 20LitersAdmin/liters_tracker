@@ -24,14 +24,7 @@ class Story < ApplicationRecord
   def download_image
     return false unless image_uploaded?
 
-    # this would potentially allow an image that breaks naming convention to be downloaded
-    # but should prevent duplicates in s3
     s3_image.get(response_target: image_path)
-
-    # this would potentially create duplicates in s3 if localize_image transforms the name
-    # and then re-uploads it under a new name
-    # image_io = s3_image.get() # image written to memory
-    # localize_image(image_io)
 
     image_localized?
   end
@@ -71,10 +64,11 @@ class Story < ApplicationRecord
 
     image_extension = image_io.original_filename.split(/\./).last
 
+    # don't bother if the file is not an image
+    return false unless Constants::Story::IMAGE_FORMATS.include?(image_extension.downcase)
+
     # set the image_name on the record
     self.image_name = "#{report_id}_#{report.date.year}-#{report.date.month}.#{image_extension}"
-
-    return false unless Constants::Story::IMAGE_FORMATS.include?(image_extension.downcase)
 
     # save image locally
     File.open(image_path, 'wb') do |file|
@@ -88,8 +82,6 @@ class Story < ApplicationRecord
   end
 
   def picture
-    return 'story_no_image.png' if image_name.blank?
-
     url = "#{Constants::Story::IMAGE_URL}#{image_name}"
 
     url += "?ver=#{image_version}" if image_version.present?
@@ -155,7 +147,7 @@ class Story < ApplicationRecord
       credentials: Aws::Credentials.new(aws_access, aws_secret)
     )
 
-    s3.bucket(Constants::Story::S3_BUCKET).object('images/' + image_name)
+    s3.bucket(Constants::Story::S3_BUCKET).object(image_name)
   end
 
   def upload_image!
@@ -165,20 +157,6 @@ class Story < ApplicationRecord
 
     s3_image.upload_file(image_path)
     self.img_version = s3_image.version_id
-  end
-
-  # TODO: run on all Stories after next push
-  def migrate_image_name
-    return if image_name == read_attribute(:image).gsub(Constants::Story::IMAGE_URL, '')
-
-    self.image_name = read_attribute(:image).gsub(Constants::Story::IMAGE_URL, '')
-    begin
-      self.image_version = s3_image.version_id
-    rescue Aws::S3::Errors::NotFound
-      puts 'no version info found'
-    end
-
-    save
   end
 
   private

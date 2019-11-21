@@ -38,7 +38,15 @@ class StoryPolicy
     @user&.admin?
   end
 
-  def rotate_img
+  def localize_image?
+    new?
+  end
+
+  def rotate_image?
+    new?
+  end
+
+  def destroy_image?
     new?
   end
 end

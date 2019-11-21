@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 a = Report.where.not(distributed: nil).where('date BETWEEN ? AND ?', '2019-01-01', '2019-12-31').limit(8).order('RANDOM()').pluck(:id)
 b = Report.where.not(distributed: nil).where('date BETWEEN ? AND ?', '2018-01-01', '2018-12-31').limit(10).order('RANDOM()').pluck(:id)
 c = Report.where.not(distributed: nil).where('date BETWEEN ? AND ?', '2017-01-01', '2017-12-31').limit(6).order('RANDOM()').pluck(:id)

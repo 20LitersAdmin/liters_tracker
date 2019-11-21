@@ -1,1 +1,2 @@
+-# frozen_string_literal: true
 = link_to Date.const_get(:ABBR_MONTHNAMES)[month], dashboard_handler_path(year: @year, month: month), remote: true, class: "nav-item nav-link #{'highlight' if month == @month }"

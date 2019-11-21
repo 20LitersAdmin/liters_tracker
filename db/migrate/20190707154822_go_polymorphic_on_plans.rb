@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class GoPolymorphicOnPlans < ActiveRecord::Migration[5.2]
   def change
     add_column :plans, :planable_id, :integer

@@ -25,6 +25,13 @@
     .col-sm-12.col-md-6.col-lg-3
       .card.my-2
         .card-body
+          %h5.card-title Write a story
+          %p.card-text Find a recent report and write a story
+          = link_to 'Submit', monthly_path, class: 'btn yellow'
+
+    .col-sm-12.col-md-6.col-lg-3
+      .card.my-2
+        .card-body
           %h5.card-title Manage reports
           %p.card-text Change or remove monthly reports
           = link_to 'Go', reports_path, class: 'btn yellow'

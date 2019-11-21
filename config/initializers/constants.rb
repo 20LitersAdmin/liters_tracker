@@ -36,11 +36,8 @@ module Constants
   class Story
     # https://developer.mozilla.org/en-US/docs/Web/HTML/Element/img
     IMAGE_FORMATS = %w[apng bmp ico svg tiff webp png jpeg jpg gif].freeze
-    IMAGE_DIR = './tmp/s3-storage'
-    IMAGE_URL = 'https://d5t73r6km0hzm.cloudfront.net/images/'
-    S3_BUCKET = '20litres-images'
-    # TODO: Change buckets when ready to use real images:
-    # and change Story#s3_image: `.bucket('images/' + image_name)` to `.bucket(image_name)`
-    # S3_BUCKET = '20liters-images'
+    IMAGE_DIR = './public/assets/images/staging'
+    IMAGE_URL = 'https://d5t73r6km0hzm.cloudfront.net/'
+    S3_BUCKET = '20liters'
   end
 end

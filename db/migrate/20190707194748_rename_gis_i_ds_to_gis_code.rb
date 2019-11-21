@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class RenameGisIDsToGisCode < ActiveRecord::Migration[5.2]
   def change
     rename_column :cells, :gis_id, :gis_code
