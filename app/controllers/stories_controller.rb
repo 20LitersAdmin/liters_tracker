@@ -1,11 +1,7 @@
 # frozen_string_literal: true
 
 class StoriesController < ApplicationController
-  require 'mini_magick'
-  require 'fileutils'
-
-  before_action :set_story, only: %i[show edit update destroy]
-  before_action :find_or_initialize_story, only: %i[localize_image rotate_image destroy_image]
+  before_action :set_story, only: %i[show edit update destroy image upload_image rotate_image destroy_image]
   before_action :set_report_from_param, only: %i[new create]
   before_action :set_report, only: %i[show edit update destroy]
   layout 'dashboard', only: %i[show]
@@ -15,7 +11,8 @@ class StoriesController < ApplicationController
   end
 
   def show
-    @related_stories = @story.related(3)
+    @title = @story.title
+    # @related_stories = @story.related(3)
   end
 
   def new
@@ -25,7 +22,26 @@ class StoriesController < ApplicationController
     @month = params[:month]
 
     authorize @story
-    # flash[:error] = 'Something went wrong and the report_id wasn\'t properly associated to this new story. Please navigate back and try again!' if @story.report_id.blank?
+  end
+
+  # POST /stories
+  # POST /stories.json
+  def create
+    authorize @story = Story.new(story_params)
+
+    if @story.save
+      flash[:success] = 'Story was successfully created.'
+
+      if params[:month].blank? || params[:year].blank?
+        redirect_to image_story_path(@story)
+      else
+        redirect_to image_story_path(@story, month: params[:month], year: params[:year])
+      end
+    else
+      @year = params[:year]
+      @month = params[:month]
+      render :new
+    end
   end
 
   def edit
@@ -33,108 +49,86 @@ class StoriesController < ApplicationController
     @month = params[:month]
   end
 
-  # PATCH /stories
-  # PATCH /stories.json
   def update
-    updated_params = story_params.except(:photo)
-    @story.localize_image(story_params[:photo]) if story_params[:photo].present?
+    if @story.update(story_params)
+      flash[:success] = 'Story was successfully edited.'
 
-    respond_to do |format|
-      if @story.update(updated_params)
-        if params[:month].blank? || params[:year].blank?
-          format.html { redirect_to stories_path, notice: 'Story was successfully edited.' }
-        else
-          format.html { redirect_to monthly_w_date_url(:month => params[:month], :year => params[:year]), notice: 'Report was successfully edited.' }
-        end
-
-        format.json { render :show, status: :ok, location: @story }
+      if params[:month].blank? || params[:year].blank?
+        redirect_to image_story_path(@story)
       else
-        @year = params[:year]
-        @month = params[:month]
-        format.html { render :edit }
-        format.json { render json: @story.errors, status: :unprocessable_entity }
+        redirect_to image_story_path(@story, month: params[:month], year: params[:year])
       end
-    end
-  end
-
-  # POST /stories
-  # POST /stories.json
-  def create
-    authorize @story = Story.new(story_params.except(:photo))
-    # @story.localize_image!(story_params[:photo]) unless @story.image_localized? || story_params[:photo].blank?
-
-    respond_to do |format|
-      if @story.save
-        if params[:month].blank? || params[:year].blank?
-          format.html { redirect_to @story, notice: 'Story was successfully created.' }
-        else
-          format.html { redirect_to monthly_w_date_url(month: params[:month], year: params[:year]), notice: 'Report was successfully created.' }
-        end
-
-        format.json { render :show, status: :created, location: @story }
-      else
-        # TODO: can we keep the form elements on error?
-
-        @year = params[:year]
-        @month = params[:month]
-        format.html { render :new }
-        format.json { render json: @story.errors, status: :unprocessable_entity }
-      end
-    end
-  end
-
-  def localize_image
-    if @story.new_record?
-      return false unless params[:report_id].present? || story_params[:report_id].present?
-
-      report_id = story_params[:report_id] || params[:report_id]
-
-      @report = Report.find(report_id)
-      @story.report = @report
     else
-      @report = @story.report
+      @year = params[:year]
+      @month = params[:month]
+      render :edit
+    end
+  end
+
+  def image
+    @report = @story.report
+    @year = params[:year]
+    @month = params[:month]
+
+    if @story.image.attached?
+      render :image_edit
+    else
+      render :image_new
+    end
+  end
+
+  def upload_image
+    unless params.include? :story
+      flash[:error] = 'Oops, no image selected.'
+      redirect_to image_story_path(@story, month: params[:month], year: params[:year])
+      return
     end
 
-    @result = @story.localize_image!(story_params[:photo])
+    if @story.process_image!(image_params[:image])
+      flash[:success] = 'Image was successfully saved.'
 
-    byebug
+      redirect_to image_story_path(@story, month: params[:month], year: params[:year])
 
-    respond_to do |format|
-      format.js
+      # if params[:month].blank? || params[:year].blank?
+      #   redirect_to @story
+      # else
+      #   redirect_to monthly_w_date_url(month: params[:month], year: params[:year])
+      # end
+    else
+      @year = params[:year]
+      @month = params[:month]
+      render :image
     end
   end
 
   def rotate_image
-    unless params[:direction].present?
-      redirect_to edit_story_path(@story)
-      flash[:error] = 'No direction set'
+    if @story.rotate_image!(params[:direction])
+      flash[:success] = "Image rotated #{params[:direction]}."
+    else
+      flash[:error] = 'Something went wrong.'
     end
-
-    respond_to do |format|
-      format.js
-    end
+    redirect_to image_story_path(@story)
   end
 
   def destroy_image
-    # really do it.
-    respond_to do |format|
-      format.js
-    end
+    @story.image.purge
+    flash[:success] = 'Image successfully deleted.'
+    redirect_to image_story_path(@story)
   end
 
   private
 
   def story_params
-    params.require(:story).permit(:title, :prominent, :text, :photo, :report_id)
+    params.require(:story).permit(:title, :prominent, :text, :report_id)
+  end
+
+  def image_params
+    params.require(:story).permit(:image)
   end
 
   def set_story
     @story = Story.find(params[:id])
     authorize @story
-  end
-
-  def find_or_initialize_story
-    authorize @story = Story.find_or_initialize_by(id: params[:id])
   end
 
   def set_report_from_param

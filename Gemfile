@@ -48,11 +48,8 @@ group :development, :test do
 end
 
 group :development do
-  gem 'flamegraph'
-  gem 'memory_profiler'
   gem 'pry-rails'
-  gem 'rack-mini-profiler'
-  gem 'stackprof'
+  gem 'rack-mini-profiler', require: false
   gem 'web-console', '>= 3.3.0'
 end
 

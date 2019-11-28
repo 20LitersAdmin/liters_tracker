@@ -2,11 +2,11 @@
 .container
   .col-12
     %h1 New Story
-    %h4= "For Report ##{link_to(@report.id, @report)} #{@report.details}".html_safe
+    %h4= "For Report ##{link_to(@report.id, @report)}: #{@report.details}".html_safe
     %h4= "#{@report.reportable.village.name}, #{@report.reportable.sector.name}"
   .col-12
     = simple_form_for @story, wrapper: :horizontal_form, html: { id: 'story_form' }  do |f|
-      = f.input :report_id #, as: :hidden
+      = f.input :report_id, as: :hidden
       = hidden_field_tag :year, @year
       = hidden_field_tag :month, @month
       .field
@@ -15,28 +15,10 @@
         = f.input :prominent
       .field.wysiwyg
         = f.input :text, input_html: { class: "tinymce", style: "height: 300px;" }
-      .field
-        = f.label @story.image_name.present? ? 'Replace Picture:' : 'Choose Picture:'
-        = f.file_field :photo, id: "image_upload", accept: 'image/*'
-      .actions
-        = f.submit 'Save', class: 'btn yellow'
-
-.row.mt-5
-  .col-12
-    %h5 Image Preview:
-  #image_preview_wrapper.col-6
-    - if @story.image_name.present?
-      =image_tag(@story.picture, id: "image_preview")
-    - else
-      %img#image_preview
-  #rotations.col-6.text-center
-    .row
-      .col-12
-        .row
-          .col-6
-            Rotate left
-          .col-6
-            Rotate right
-      .col-12 Delete Picture
-
+      .row.actions.text-center
+        .col
+          = f.submit 'Save Story', class: 'btn yellow'
+        -if @story.image.attached?
+          .col
+            = link_to 'Go to image', image_story_path(@story, year: params[:year], month: params[:month]), class: 'btn blue'
 = tinymce

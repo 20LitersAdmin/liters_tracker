@@ -22,7 +22,7 @@ Rails.application.configure do
 
   # Disable serving static files from the `/public` folder by default since
   # Apache or NGINX already handles this.
-  config.public_file_server.enabled = ENV['RAILS_SERVE_STATIC_FILES'].present?
+  # config.public_file_server.enabled = ENV['RAILS_SERVE_STATIC_FILES'].present?
 
   # Compress JavaScripts and CSS.
   config.assets.js_compressor = :uglifier
@@ -40,7 +40,7 @@ Rails.application.configure do
   # config.action_dispatch.x_sendfile_header = 'X-Accel-Redirect' # for NGINX
 
   # Store uploaded files on the local file system (see config/storage.yml for options)
-  # config.active_storage.service = :local
+  config.active_storage.service = :amazon
 
   # Mount Action Cable outside main process or domain
   # config.action_cable.mount_path = nil
@@ -77,8 +77,8 @@ Rails.application.configure do
     address: 'smtp.mailgun.org',
     port: 587,
     domain: 'mg.20liters.org',
-    user_name: ENV['SMTP_USER'],
-    password: ENV['SMTP_PASS']
+    user_name: Rails.application.credentials.mailgun[:smtp_user],
+    password: Rails.application.credentials.mailgun[:smtp_password]
   }
 
   # Enable locale fallbacks for I18n (makes lookups for any locale fall back to

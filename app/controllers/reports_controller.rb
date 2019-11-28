@@ -11,8 +11,7 @@ class ReportsController < ApplicationController
 
   # GET /reports/1
   # GET /reports/1.json
-  def show
-  end
+  def show; end
 
   # GET /reports/new
   def new
@@ -20,8 +19,7 @@ class ReportsController < ApplicationController
   end
 
   # GET /reports/1/edit
-  def edit
-  end
+  def edit; end
 
   # POST /reports
   # POST /reports.json
@@ -83,7 +81,7 @@ class ReportsController < ApplicationController
   end
 
   def report_params
-    params.require(:report).permit(:date, :technology_id, :distributed, :checked, :user_id, :distribute, :checked, :people, :reportable_id, :reportable_type)
+    params.require(:report).permit(:date, :technology_id, :distributed, :checked, :user_id, :distribute, :checked, :people, :reportable_id, :reportable_type, :eager_image)
   end
 
   def batch_report_params

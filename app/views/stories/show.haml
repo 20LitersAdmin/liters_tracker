@@ -1,5 +1,5 @@
 -# frozen_string_literal: true
-%div.hero{ :style => "background-image: url(#{@story.picture})" }
+%div
   %div.breadcrumbs.container
     = link_to "Dashboard", dashboard_index_path, {class: 'btn yellow'}
 
@@ -25,4 +25,4 @@
         %h2
           = "Related Stories"
       %div.story-list.card-columns#story_column
-        = render partial: 'dashboard/story', collection: @related_stories
+        / = render partial: 'dashboard/story', collection: @related_stories

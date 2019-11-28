@@ -1,0 +1,22 @@
+-# frozen_string_literal: true
+.row
+  .col-sm-6
+    %h4= "Image for: #{@story.title}"
+    %p= @story.text.html_safe
+  .col-sm-6
+    %p= "For Report ##{link_to(@report.id, @report)}: #{@report.details}".html_safe
+    %p= "#{@report.reportable.village.name}, #{@report.reportable.sector.name}"
+.row.mt-4.align-items-end
+  .col.text-right
+    =link_to rotate_image_story_path(@story, direction: 'left'), class: 'rotate-btn' do
+      = fa_icon 'rotate-left 3x'
+  .col.col-sm-auto
+    =image_tag(@story.picture, id: "image_preview")
+  .col
+    =link_to rotate_image_story_path(@story, direction: 'right'), class: 'rotate-btn' do
+      = fa_icon 'rotate-right 3x'
+.row.mt-5
+  .col.text-right
+    =link_to 'Delete image', destroy_image_story_path(@story), class: 'btn red'
+  .col
+    =link_to 'View Story', story_path(@story), class: 'btn yellow'

@@ -1,0 +1,19 @@
+-# frozen_string_literal: true
+= simple_form_for @story, url: upload_image_story_path(@story, year: @year, month: @month) do |f|
+  = hidden_field_tag :year, @year
+  = hidden_field_tag :month, @month
+  .row
+    .col-12
+      %h1 Add Image to Story
+  .row
+    .col-6
+      %h4= "#{@story.title}"
+      %p= @story.text.html_safe
+    .col-6
+      %p= "For Report ##{link_to(@report.id, @report)}: #{@report.details}".html_safe
+      %p= "#{@report.reportable.village.name}, #{@report.reportable.sector.name}"
+  .row
+    .col-6.field
+      = f.file_field :image, id: "image_upload", accept: 'image/*'
+    .col-6.actions
+      = f.submit 'Save Image', class: 'btn yellow', disabled: true, id: 'submit'

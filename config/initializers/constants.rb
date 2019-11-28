@@ -36,8 +36,7 @@ module Constants
   class Story
     # https://developer.mozilla.org/en-US/docs/Web/HTML/Element/img
     IMAGE_FORMATS = %w[apng bmp ico svg tiff webp png jpeg jpg gif].freeze
-    IMAGE_DIR = './public/assets/images/staging'
-    IMAGE_URL = 'https://d5t73r6km0hzm.cloudfront.net/'
-    S3_BUCKET = '20liters'
+    # IMAGE_URL = 'https://d5t73r6km0hzm.cloudfront.net/'
+    # S3_BUCKET = '20liters'
   end
 end

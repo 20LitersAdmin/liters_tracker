@@ -22,6 +22,9 @@ class DashboardController < ApplicationController
     @months = Report.with_stories.where(year: @year).pluck(:month).uniq.sort
 
     @stories = Story.joins(:report).where('reports.year = ?', @year)
+
+    @title = 'See Our Progress'
+    @subtitle = 'Access to clean water is a fundamental human need that must be met if we expect to sustain progress toward ending poverty, ensuring access to education, and improving global health standards.'
   end
 
   def handler

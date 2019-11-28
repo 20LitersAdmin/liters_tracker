@@ -9,13 +9,12 @@
 
 # CURRENT:
 - Story#form #image_preview error:
-```
-ActionView::Template::Error (Asset `s3-storage/1615_2019-8.JPG` was not declared to be precompiled in production.
-Declare links to your assets in `app/assets/config/manifest.js`.
-
-  //= link s3-storage/1615_2019-8.JPG
-```
-- TODO: Stop storing things locally, use a separate S3 bucket
+New strategy:
+1. Create the story first (no image)
+2. Redirect to `stories/:id/image` to upload the photo
+3. After photo is uploaded (can try to hook: https://stackoverflow.com/a/53226455/1880203)
+4. Reload the `stories/:id/image` page to edit the photo
+5. "Finalize" button takes you to `stories/:id`
 
 # from amanda
 * Try to make it feel like we're on 20L/blog/updates to some extent.

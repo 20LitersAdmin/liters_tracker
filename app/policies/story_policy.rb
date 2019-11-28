@@ -38,7 +38,11 @@ class StoryPolicy
     @user&.admin?
   end
 
-  def localize_image?
+  def image?
+    new?
+  end
+
+  def upload_image?
     new?
   end
 
