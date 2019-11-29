@@ -3,7 +3,6 @@
 class Story < ApplicationRecord
   require 'mini_magick'
   require 'fileutils'
-  # require 'url_helper'
 
   belongs_to :report, inverse_of: :story
   has_one_attached :image, dependent: :purge
@@ -14,6 +13,14 @@ class Story < ApplicationRecord
 
   scope :between_dates, ->(start_date, end_date) { joins(:report).where('reports.date BETWEEN ? AND ?', start_date, end_date) }
   scope :ordered_by_date, -> { joins(:report).order('reports.date DESC') }
+
+  def breadcrumb
+    report.breadcrumb
+  end
+
+  def breadcrumb_geo
+    report.breadcrumb_geo
+  end
 
   def date
     report.date

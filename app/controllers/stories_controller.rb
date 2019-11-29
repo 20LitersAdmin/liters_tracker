@@ -12,7 +12,10 @@ class StoriesController < ApplicationController
 
   def show
     @title = @story.title
+    @subtitle = "Reported by #{@story.report.user.name}"
     # @related_stories = @story.related(3)
+
+    @breadcrumb = @story.breadcrumb
   end
 
   def new

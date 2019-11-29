@@ -24,7 +24,7 @@ class DashboardController < ApplicationController
     @stories = Story.joins(:report).where('reports.year = ?', @year)
 
     @title = 'See Our Progress'
-    @subtitle = 'Access to clean water is a fundamental human need that must be met if we expect to sustain progress toward ending poverty, ensuring access to education, and improving global health standards.'
+    @subtitle = 'Our success stories are not rare. We\'re reaching communities, families, and individuals every day.<br />Every day we move more people towards water security and unleash the power that clean water brings.'.html_safe
   end
 
   def handler

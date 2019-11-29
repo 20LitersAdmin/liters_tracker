@@ -37,6 +37,20 @@ class Report < ApplicationRecord
   before_save :set_year_and_month_from_date, if: -> { year.blank? || month.blank? }
   after_save :find_plan
 
+  def breadcrumb
+    @hierarchy = Constants::Geography::HIERARCHY
+    position = @hierarchy.index(reportable_type)
+
+    hsh = {}
+    (position + 1).times do |idx|
+      sym = @hierarchy[idx].downcase.to_sym
+
+      hsh[@hierarchy[idx]] = reportable.send(sym).name
+    end
+
+    hsh
+  end
+
   def details
     if distributed&.positive?
       val = distributed

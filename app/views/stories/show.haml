@@ -1,28 +1,35 @@
 -# frozen_string_literal: true
-%div
-  %div.breadcrumbs.container
-    = link_to "Dashboard", dashboard_index_path, {class: 'btn yellow'}
+.d-flex.justify-content-center#dashboard_btn
+  = link_to 'Back to Dashboard', dashboard_index_path, {class: 'btn blue'}
 
-%div.container.mt-5
-  %h1
-    = @story.title
+.container.mt-5
+  .row
+    -if @story.image.attached?
+      = render partial: 'image_show'
+    .col
+      .meta
+        .location
+          = "#{@story.report.reportable.village.name}, #{@story.report.reportable.sector.name}"
+        %div
+          %span.date
+            = @story.report.date.strftime('%B %d, %Y')
+      .story-text
+        = @story.text.html_safe
+  .row.justify-content-center
+    .col-sm-auto
+      %h4 Location Details:
+  .row.justify-content-center
+    .col-sm-auto
+      %table.table.table-sm
+        -@breadcrumb.each do |geo, name|
+          %tr
+            %td="#{geo}:"
+            %td="#{name}"
 
-  %div.meta
-    %div
-      %span.author
-        = "#{@story.report.user.fname} #{@story.report.user.lname}"
-      %span.location
-        = "#{@story.report.reportable.village.name}, #{@story.report.reportable.sector.name}"
-    %div
-      %span.date
-        = @story.report.date.strftime('%B %d, %Y')
-  %div.story-text
-    = @story.text.html_safe
-
-  - if @related_stories
-    %div.related-stories
-      %div.heading
-        %h2
-          = "Related Stories"
-      %div.story-list.card-columns#story_column
-        / = render partial: 'dashboard/story', collection: @related_stories
+    - if @related_stories
+      .related-stories
+        .heading
+          %h2
+            = "Related Stories"
+        .story-list.card-columns#story_column
+          = render partial: 'dashboard/story', collection: @related_stories

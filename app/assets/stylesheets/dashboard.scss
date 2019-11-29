@@ -2,6 +2,11 @@
 @import "mixins/**/*";
 
 #brandbar_nav {
+  position: absolute;
+  width: 100%;
+  top: 30px;
+  padding: 0 1.2rem;
+
   a img {
     width: 199px;
   }
@@ -9,16 +14,35 @@
 
 #brandbar {
   .nav-item {
-    margin: 0 .5em;
+    margin: 0 8px;
 
     a {
       opacity: .8;
-      font-weight: bold;
-      font-size: 1em;
+      font-weight: 700;
+      font-size: 16px;
+      line-height: 24px;
       text-align: center;
-      padding: .5em .75em;
+      padding: 8px 12px;
       color: white;
-      min-width: 106px;
+    }
+
+    a:hover {
+      border-bottom: 2px solid $yellow;
+      opacity: 1;
+    }
+  }
+
+  .fix-width-106 {
+    min-width: 106px;
+    max-width: 112px;
+  }
+
+  .kindful-track a {
+    border: 2px solid $yellow;
+
+    &:hover {
+      color: $grey;
+      background-color: $yellow;
     }
   }
 }
@@ -30,21 +54,30 @@
   background-repeat: no-repeat;
   height: 300px;
   padding: 100px 0 50px;
+  text-align: center;
+  color: white;
+  text-rendering: optimizelegibility;
 
   h1 {
     font-weight: bold;
-    text-align: center;
-    margin-top: 20px;
-    color: white;
-    text-rendering: optimizelegibility;
+    max-width: 80%;
+    margin: 66px auto 0px;
   }
 
   h5 {
-    text-align: center;
-    color: white;
-    text-rendering: optimizelegibility;
     max-width: 80%;
     margin: 10px auto 0px;
+  }
+}
+
+#month_nav {
+  a {
+    color: $grey;
+    border-bottom: 2px solid transparent;
+
+    &:hover {
+      border-bottom: 2px solid $yellow;
+    }
   }
 }
 
@@ -52,10 +85,17 @@
 #basic-stat-block {
   .card {
     border-radius: 0 !important;
+    margin: 20px 0px;
+
+
   }
 
-  .card-body {
-    color: white;
+  .card-title {
+    margin-top: 20px;
+  }
+
+  .card-subtitle {
+    margin-bottom: -20px;
   }
 }
 
@@ -74,3 +114,11 @@
   }
 }
 
+#story_column {
+  .card:hover {
+    color: $grey;
+    background-color: #f8f8f8;
+    box-shadow: 0 0 18px #888;
+    text-decoration: none;
+  }
+}
