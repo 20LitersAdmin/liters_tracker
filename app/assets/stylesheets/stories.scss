@@ -22,15 +22,16 @@ $bottom-spacing: 16px;
   padding-left: 8px;
   padding-top: 8px;
   margin-bottom: 16px;
+  font-size: 1.5rem;
 }
 
-.story-text {
-  margin-bottom: $bottom-spacing;
+.image-show img {
+  width: 355px;
+}
 
-  &:only-child {
-      margin-bottom: 0;
-      padding-bottom: $bottom-spacing; // To handle the fixed position footer
-  }
+.location-details {
+  border-left: 4px $yellow solid;
+  padding-left: 8px;
 }
 
 .related-stories {

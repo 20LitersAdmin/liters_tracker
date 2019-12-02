@@ -4,32 +4,33 @@
 
 .container.mt-5
   .row
-    -if @story.image.attached?
-      = render partial: 'image_show'
+    = render partial: 'image_show'
     .col
-      .meta
-        .location
-          = "#{@story.report.reportable.village.name}, #{@story.report.reportable.sector.name}"
-        %div
-          %span.date
-            = @story.report.date.strftime('%B %d, %Y')
-      .story-text
-        = @story.text.html_safe
-  .row.justify-content-center
-    .col-sm-auto
-      %h4 Location Details:
-  .row.justify-content-center
-    .col-sm-auto
-      %table.table.table-sm
-        -@breadcrumb.each do |geo, name|
-          %tr
-            %td="#{geo}:"
-            %td="#{name}"
+      .row
+        .col.mb-5
+          .meta
+            .location
+              = "#{@story.report.reportable.village.name}, #{@story.report.reportable.sector.name}"
+            %div
+              %span.date
+                = @story.report.date.strftime('%B %d, %Y')
+          %h3= @story.title
+          .story-text= @story.text.html_safe
+      .row
+        .col-sm-auto
+          .location-details
+            %h5 Location Details:
+            %table.table.table-sm.small-text
+              -@breadcrumb.each do |geo, name|
+                %tr
+                  %td="#{geo}:"
+                  %td="#{name}"
 
-    - if @related_stories
-      .related-stories
-        .heading
-          %h2
-            = "Related Stories"
-        .story-list.card-columns#story_column
-          = render partial: 'dashboard/story', collection: @related_stories
+- if @related_stories
+  .container.mt-5
+    .related-stories
+      .heading
+        %h2
+          = "Related Stories"
+      .story-list.card-columns#story_column
+        = render partial: 'dashboard/story', collection: @related_stories
