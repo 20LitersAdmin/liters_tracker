@@ -3,6 +3,7 @@
 * Dasboard collection: banding on bottom of photo instead of card text (brand style banding).
 * Spell check story input?
 * Add technology to Story#show info section
+* Clean up tests
 
 # Creating/Updating Targets
 
