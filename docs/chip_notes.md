@@ -1,6 +1,5 @@
 # CURRENT:
-* Add technology to Story#show info section
-* Clean up tests
+* Show things to Amanda for feedback
 
 # Creating/Updating Targets
 
@@ -29,7 +28,7 @@
 - Facility: reports / plans
 
 # Remind myself:
-* magic_frozen_string_literal . #get those frozen string benefits
+* `magic_frozen_string_literal . #get those frozen string benefits`
 * production backup / development restore-from production (https://github.com/thoughtbot/parity)
   `User.first.update(password: 'password', password_confirmation: 'password')`
 * byebug commands

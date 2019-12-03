@@ -59,10 +59,6 @@ RSpec.describe Story, type: :model do
     context '.ordered_by_date' do
       pending 'needs to be tested'
     end
-
-    context 'with_images' do
-      pending 'needs to be tested'
-    end
   end
 
   describe '#date' do
