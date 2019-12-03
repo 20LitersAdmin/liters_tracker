@@ -8,18 +8,9 @@
     = csp_meta_tag
     = stylesheet_link_tag    'application', media: 'all', 'data-turbolinks-track': 'reload'
     = javascript_include_tag 'application', 'data-turbolinks-track': 'reload'
-  %body{'data-controller': controller.controller_name, 'data-action': controller.action_name }
-    -# %header
-      -# = render 'shared/navbar'
-    .fa-5x#loading_screen
-      %i.fa.fa-spinner.fa-pulse#loading_spinner
+  %body
+    =render 'shared/header', locals: { title: @title, subtitle: @subtitle }
     %main
-      = flash_messages
       = yield
-    %footer.footer{style: "background-color: #4a4a4a; text-align: center; color: white"}
+    %footer.footer
       = render 'shared/footer'
-
-:scss
-  body {
-    margin: 0;
-  }

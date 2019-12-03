@@ -8,7 +8,7 @@ require 'rails'
 require 'active_model/railtie'
 require 'active_job/railtie'
 require 'active_record/railtie'
-# require 'active_storage/engine'
+require 'active_storage/engine'
 require 'action_controller/railtie'
 require 'action_mailer/railtie'
 require 'action_view/railtie'
@@ -28,6 +28,10 @@ module LitersTracker
 
     config.public_file_server.enabled = true
 
+    # stop analyzing my story.image.attach() calls
+    config.active_storage.analyzers = []
+    config.active_storage.previewers = []
+
     # Settings in config/environments/* take precedence over those specified here.
     # Application configuration can go into files in config/initializers
     # -- all .rb files in that directory are automatically loaded after loading
@@ -38,3 +42,4 @@ module LitersTracker
     end
   end
 end
+

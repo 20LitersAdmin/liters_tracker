@@ -1,8 +1,10 @@
 -# frozen_string_literal: true
+- bg = highlight ? 'liters-yellow-bg' : 'liters-gray-bg'
+- text = highlight ? 'liters-text-gray' : 'liters-text-white'
 #basic-stat-block.col.px-1
   .card.text-center.match-height
-    .card-body.pb-0.liters-gray-bg
-      %h4.card-title
+    .card-body{class: "#{bg} #{text}"}
+      %h1.card-title
         = human_number(stat)
-      %h6.card-subtitle.mb-2
+      %h6.card-subtitle
         = title

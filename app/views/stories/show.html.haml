@@ -1,0 +1,44 @@
+-# frozen_string_literal: true
+.d-flex.justify-content-center#dashboard_btn
+  = link_to 'Back to Dashboard', dashboard_index_path, {class: 'btn blue'}
+
+.container.mt-5
+  .row
+    = render partial: 'image_show'
+    .col
+      .row
+        .col.mb-5
+          .meta
+            .location
+              = "#{@story.report.reportable.village.name}, #{@story.report.reportable.sector.name}"
+            %div
+              %span.date
+                = @story.report.date.strftime('%B %d, %Y')
+          %h3= @story.title
+          .story-text= @story.text.html_safe
+      .row
+        .col-sm-auto.mb-4
+          .location-details
+            %h5 Location:
+            %table.table.table-sm.small-text
+              -@breadcrumb.each do |geo, name|
+                %tr
+                  %td="#{geo}:"
+                  %td="#{name}"
+        .col
+          .technology-details
+            %h5 Technology:
+            .row
+              .col-auto
+                = image_tag @technology.image_name, class: 'tech-img'
+              .col
+                = @technology.description
+
+- if @related_stories
+  .container.mt-5
+    .related-stories
+      .heading
+        %h2
+          = "Related Stories"
+      .story-list.card-columns#story_column
+        = render partial: 'dashboard/story', collection: @related_stories

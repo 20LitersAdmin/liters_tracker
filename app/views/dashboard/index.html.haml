@@ -1,26 +1,16 @@
 -# frozen_string_literal: true
-%section.bgimage
-  .container-fluid.center-header
-    .row.w-100
-      %h1.col.w-50.text-center
-        See Our Progress
-    .row.w-100
-      .spacer
-      %h5.title-text.text-center
-        Access to clean water is a fundamental human need that must be met if we expect to sustain progress toward ending poverty, ensuring access to education, and improving global health standards.
-      .spacer
-
 .container.mt-5
   .row.justify-content-center
     - if @lifetime_stats.any?
       - @lifetime_stats.each do |stat_block|
         - next if stat_block.blank?
-        = render partial: "shared/basic_stat_block", locals: { stat: stat_block[:stat], title: stat_block[:title] }
-    = render partial: "shared/basic_stat_block", locals: { stat: @global_impact, title: 'People served' }
+        = render partial: "shared/basic_stat_block", locals: { stat: stat_block[:stat], title: stat_block[:title], highlight: false }
+    = render partial: "shared/basic_stat_block", locals: { stat: @global_impact, title: 'People served', highlight: true  }
 
 .mt-5#date_navs
   %nav#year_nav.nav.nav-fill.liters-gray-bg.liters-text-white
-    = link_to 'FUTURE', dashboard_planner_path, remote: true, class: "nav-item nav-link", id: 'future_link'
+    -if @future_plans
+      = link_to 'FUTURE', dashboard_planner_path, remote: true, class: "nav-item nav-link", id: 'future_link'
     = render partial: 'year', collection: @years
 
   %nav#month_nav.nav.justify-content-center

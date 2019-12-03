@@ -22,6 +22,20 @@ class Plan < ApplicationRecord
   scope :without_reports,         -> { left_outer_joins(:reports).where(reports: { id: nil }) }
   scope :with_reports_incomplete, -> { joins(:reports).group('plans.id').having('plans.goal > SUM(reports.distributed)').select('plans.*') }
 
+  def breadcrumb
+    hierarchy = Constants::Geography::HIERARCHY
+    position = hierarchy.index(planable_type)
+
+    hsh = {}
+    (position + 1).times do |idx|
+      sym = hierarchy[idx].downcase.to_sym
+
+      hsh[@hierarchy[idx]] = planable.send(sym).name
+    end
+
+    hsh
+  end
+
   def self.incomplete
     ary = []
     ary << Plan.without_reports.pluck(:id)

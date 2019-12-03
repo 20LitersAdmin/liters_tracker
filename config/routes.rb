@@ -11,6 +11,7 @@ Rails.application.routes.draw do
   resources :reports do
     post 'batch_process', on: :collection
   end
+
   resources :contracts
   resources :plans
   resources :targets
@@ -32,10 +33,11 @@ Rails.application.routes.draw do
   end
 
   resources :stories do
-    get 'rotate_img', on: :member
-    get 'destroy_img', on: :member
+    get  'image', on: :member
+    patch 'upload_image', on: :member
+    get  'rotate_image', on: :member
+    get  'destroy_image', on: :member
   end
-  post 'localize_image', to: 'stories#localize_image', as: 'localize_image'
 
   devise_for :users
 

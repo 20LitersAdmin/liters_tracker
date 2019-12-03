@@ -37,6 +37,20 @@ class Report < ApplicationRecord
   before_save :set_year_and_month_from_date, if: -> { year.blank? || month.blank? }
   after_save :find_plan
 
+  def breadcrumb
+    @hierarchy = Constants::Geography::HIERARCHY
+    position = @hierarchy.index(reportable_type)
+
+    hsh = {}
+    (position + 1).times do |idx|
+      sym = @hierarchy[idx].downcase.to_sym
+
+      hsh[@hierarchy[idx]] = reportable.send(sym).name
+    end
+
+    hsh
+  end
+
   def details
     if distributed&.positive?
       val = distributed
@@ -124,48 +138,48 @@ class Report < ApplicationRecord
 
   def self.related_facilities
     # return a collection of Facilities from a collection of Reports
-    return Facility.none if self.only_facilities.empty?
+    return Facility.none if only_facilities.empty?
 
-    ary = self.only_facilities.pluck(:reportable_id)
+    ary = only_facilities.pluck(:reportable_id)
     Facility.all.where(id: ary)
   end
 
   def self.related_villages
     # return a collection of Villages from a collection of Reports
-    return Village.none if self.only_facilities.empty? && self.only_villages.empty?
+    return Village.none if only_facilities.empty? && only_villages.empty?
 
-    ary_of_ids = self.only_villages.pluck(:reportable_id)
-    ary_of_ids += self.ary_of_village_ids_from_facilities if self.only_facilities.any?
+    ary_of_ids = only_villages.pluck(:reportable_id)
+    ary_of_ids += ary_of_village_ids_from_facilities if only_facilities.any?
 
     Village.all.where(id: ary_of_ids.uniq)
   end
 
   def self.related_cells
     # return a collection of Cells from a collection of Reports
-    return Cell.none if self.only_facilities.empty? && self.only_villages.empty? && self.only_cells.empty?
+    return Cell.none if only_facilities.empty? && only_villages.empty? && only_cells.empty?
 
-    ary_of_ids = self.only_cells.pluck(:reportable_id)
-    ary_of_ids += self.ary_of_cell_ids_from_villages if self.only_villages.any? || self.only_facilities.any?
+    ary_of_ids = only_cells.pluck(:reportable_id)
+    ary_of_ids += ary_of_cell_ids_from_villages if only_villages.any? || only_facilities.any?
 
     Cell.all.where(id: ary_of_ids.uniq)
   end
 
   def self.related_sectors
     # return a collection of Sectors from a collection of Reports
-    return Sector.none if self.only_facilities.empty? && self.only_villages.empty? && self.only_cells.empty? && self.only_sectors.empty?
+    return Sector.none if only_facilities.empty? && only_villages.empty? && only_cells.empty? && only_sectors.empty?
 
-    ary_of_ids = self.only_sectors.pluck(:reportable_id)
-    ary_of_ids += self.ary_of_sector_ids_from_cells if self.only_cells.any? || self.only_villages.any? || self.only_facilities.any?
+    ary_of_ids = only_sectors.pluck(:reportable_id)
+    ary_of_ids += ary_of_sector_ids_from_cells if only_cells.any? || only_villages.any? || only_facilities.any?
 
     Sector.all.where(id: ary_of_ids.uniq)
   end
 
   def self.related_districts
     # return a collection of Districts from a collection of Reports
-    return District.none if self.only_facilities.empty? && self.only_villages.empty? && self.only_cells.empty? && self.only_sectors.empty? && self.only_districts.empty?
+    return District.none if only_facilities.empty? && only_villages.empty? && only_cells.empty? && only_sectors.empty? && only_districts.empty?
 
-    ary_of_ids = self.only_districts.pluck(:reportable_id)
-    ary_of_ids += self.ary_of_district_ids_from_sectors if self.only_sectors.any? || self.only_cells.any? || self.only_villages.any? || self.only_facilities.any?
+    ary_of_ids = only_districts.pluck(:reportable_id)
+    ary_of_ids += ary_of_district_ids_from_sectors if only_sectors.any? || only_cells.any? || only_villages.any? || only_facilities.any?
 
     District.all.where(id: ary_of_ids.uniq)
   end
@@ -197,13 +211,13 @@ class Report < ApplicationRecord
   def calculate_impact
     return if distributed.nil? || distributed.zero?
 
-    if people&.positive?
-      self.impact = people
-    elsif reportable_type == 'Facility' && reportable.population&.positive?
-      self.impact = reportable.population
-    else
-      self.impact = technology.default_impact * distributed.to_i
-    end
+    self.impact = if people&.positive?
+                    people
+                  elsif reportable_type == 'Facility' && reportable.population&.positive?
+                    reportable.population
+                  else
+                    technology.default_impact * distributed.to_i
+                  end
   end
 
   def set_year_and_month_from_date

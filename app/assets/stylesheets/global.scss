@@ -42,9 +42,16 @@ body {
 }
 
 .liters-text-white {
-  color: #ffffff;
+  color: white;
   a, a:visited {
-    color: #ffffff;
+    color: white;
+  }
+}
+
+.liters-text-gray {
+  color: $grey;
+  a, a:visited {
+    color: $grey;
   }
 }
 

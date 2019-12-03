@@ -1,29 +1,5 @@
-# POST C4G:
-* Upgrade to Ruby 2.5.7
-* Story:
-  - Handle rotate_image()
-  - live test the image processes: In the controller, call localize_image!(image_io), which calls resize_image. Then save the image to use the callbacks.
-* Story _form:
-  - Handle eager-loading stories
-  - Handle rotating images (on edit, then on new)
-
 # CURRENT:
-- Story#form #image_preview error:
-```
-ActionView::Template::Error (Asset `s3-storage/1615_2019-8.JPG` was not declared to be precompiled in production.
-Declare links to your assets in `app/assets/config/manifest.js`.
-
-  //= link s3-storage/1615_2019-8.JPG
-```
-- TODO: Stop storing things locally, use a separate S3 bucket
-
-# from amanda
-* Try to make it feel like we're on 20L/blog/updates to some extent.
-* Dashboard stats: bigger #s, vertically center in box
-* Dasboard collection: banding on bottom of photo instead of card text (brand style banding).
-* Story#show: banner image universal (jerrycans), show image in body of page, next to story title and text. Then put "back" and "donate buttons over top of it".
-* Spell check story input?
-* Add technology to Story#show info section
+* Show things to Amanda for feedback
 
 # Creating/Updating Targets
 
@@ -52,7 +28,7 @@ Declare links to your assets in `app/assets/config/manifest.js`.
 - Facility: reports / plans
 
 # Remind myself:
-* magic_frozen_string_literal . #get those frozen string benefits
+* `magic_frozen_string_literal . #get those frozen string benefits`
 * production backup / development restore-from production (https://github.com/thoughtbot/parity)
   `User.first.update(password: 'password', password_confirmation: 'password')`
 * byebug commands
@@ -63,3 +39,28 @@ Declare links to your assets in `app/assets/config/manifest.js`.
     kill       -- Sends a signal to the current process
     quit       -- Exits byebug
     restart    -- Restarts the debugged program
+
+
+Technology.first.tap do |t|
+  t.description = "SAM3 (Sand And Membrane) filters are placed in households for a family and their neighbors. They meet WHO's standards and requires no electricity to function, making it ideal for rural communities. Each family receives extensive training and ongoing volnteer support to maintain the filter for it's 10-year-plus lifespan."
+  t.image_name = "SAM3.png"
+  t.save
+end
+
+Technology.find(3).tap do |t|
+  t.description = "SAM2 (Sand And Membrane) filters are large capacity solutions with a 10-year-plus lifespan. A SAM2 requires no electricity or fuel and has no moving parts, making it the ideal solution for rural areas. Schools and Health Clinics are trained how to use and maintain the filter, empowering them to be self-sufficient and address their own needs."
+  t.image_name = "SAM2.jpg"
+  t.save
+end
+
+Technology.find(5).tap do |t|
+  t.description = "We place these rainwater collection tanks at centrally-located churches, which shortens the walk for water and improves water quality. Churches sell the water at an affordable rate and use the income to maintain the system. Remaining funds are given to the poorest members of the community for school fees, health insurance, and other basic needs."
+  t.image_name = "RWHS.png"
+  t.save
+end
+
+Technology.find(6).tap do |t|
+  t.description = "Our 150-liter bio-sand filter generates enough clean water that two or three families can easily share them. We use these filters in places where the water is so muddy and foul that no other filter could handle it. Each family receives extensive training and ongoing volnteer support to maintain the filter, which can last indefinately."
+  t.image_name = "SSF.png"
+  t.save
+end
