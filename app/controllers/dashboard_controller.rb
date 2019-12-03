@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 class DashboardController < ApplicationController
-  layout 'dashboard'
+  layout 'dashboard', only: [:index]
 
   def index
     @lifetime_stats = Technology.report_worthy.map do |technology|
@@ -10,6 +10,8 @@ class DashboardController < ApplicationController
       { stat: technology.lifetime_distributed, title: "#{technology.name}s" }
     end
     @global_impact = Report.distributions.sum(:impact)
+
+    @future_plans = Plan.current.incomplete.any?
 
     # collect years for #year_nav
     @years = Report.with_stories.pluck(:year).uniq.sort.reverse
@@ -33,6 +35,8 @@ class DashboardController < ApplicationController
     @years = Report.with_stories.pluck(:year).uniq.sort.reverse
     @months = Report.with_stories.where(year: @year).pluck(:month).uniq.sort
 
+    @future_plans = Plan.current.incomplete.any?
+
     @stories = if params[:month].present?
                  @month = params[:month].to_i
                  Story.joins(:report).where('reports.year = ? AND reports.month = ?', @year, @month)
@@ -49,7 +53,7 @@ class DashboardController < ApplicationController
     @plans = Plan.current.incomplete.limit(20)
 
     respond_to do |format|
-      format.js
+      format.js { render 'index', layout: false }
     end
   end
 end

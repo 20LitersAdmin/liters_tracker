@@ -16,6 +16,7 @@ class StoriesController < ApplicationController
     @related_stories = @story.related(3)
 
     @breadcrumb = @story.breadcrumb
+    @technology = @story.technology
   end
 
   def new

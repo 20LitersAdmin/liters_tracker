@@ -26,4 +26,8 @@ class Facility < ApplicationRecord
   def related_stories
     Story.joins(:report).where("reports.reportable_type = 'Facility' AND reports.reportable_id = ?", id)
   end
+
+  def facility
+    self
+  end
 end

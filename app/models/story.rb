@@ -6,6 +6,7 @@ class Story < ApplicationRecord
 
   belongs_to :report, inverse_of: :story
   has_one_attached :image, dependent: :purge
+  has_one :technology, through: :report
 
   validates_presence_of :title, :text, :report_id
 

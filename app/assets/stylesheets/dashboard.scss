@@ -108,6 +108,16 @@
     }
   }
 
+  #year_nav .nav-item {
+    &.highlight:hover {
+      color: white;
+    }
+
+    &:hover {
+      color: $yellow;
+    }
+  }
+
   #month_nav .nav-item {
     text-align: center;
     width: 8%;
@@ -137,5 +147,17 @@
     color: white;
     font-weight: bolder;
     background-color: $transparent-grey;
+  }
+}
+
+@media (max-width: 768px) {
+  .card-caption h4 {
+    font-size: 1rem;
+  }
+}
+
+@media (max-width: 576px) {
+  .card-caption h4 {
+    font-size: 1.75rem;
   }
 }

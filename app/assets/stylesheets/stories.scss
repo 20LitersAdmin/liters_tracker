@@ -34,6 +34,12 @@ $bottom-spacing: 16px;
   padding-left: 8px;
 }
 
+.technology-details {
+  .tech-img {
+    max-height: 135px;
+  }
+}
+
 .related-stories {
     padding-bottom: $bottom-spacing; // To handle the fixed position footer
 
