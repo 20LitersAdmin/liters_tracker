@@ -1,5 +1,6 @@
 # CURRENT:
 * Show things to Amanda for feedback
+* Handle Prominence
 
 # Creating/Updating Targets
 
