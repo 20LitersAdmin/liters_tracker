@@ -18,6 +18,8 @@
       .row.actions.text-center
         .col
           = f.submit 'Save Story', class: 'btn yellow'
+        .col
+          = link_to 'Delete Story', story_path(@story), method: :delete, class: 'btn red'
         -if @story.image.attached?
           .col
             = link_to 'Go to image', image_story_path(@story, year: params[:year], month: params[:month]), class: 'btn blue'

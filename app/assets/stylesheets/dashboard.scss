@@ -114,11 +114,28 @@
   }
 }
 
-#story_column {
-  .card:hover {
-    color: $grey;
-    background-color: #f8f8f8;
-    box-shadow: 0 0 18px #888;
-    text-decoration: none;
+#story_column .card:hover {
+  color: $grey;
+  background-color: #f8f8f8;
+  box-shadow: 0 0 18px #888;
+  text-decoration: none;
+}
+
+.card-caption {
+  &:hover {
+    .title {
+      color: $grey;
+      background-color: $transparent-yellow;
+    }
+  }
+  .title {
+    position: absolute;
+    width: 100%;
+    min-height: 76px;
+    bottom: 0;
+    padding: 10% 4%;
+    color: white;
+    font-weight: bolder;
+    background-color: $transparent-grey;
   }
 }

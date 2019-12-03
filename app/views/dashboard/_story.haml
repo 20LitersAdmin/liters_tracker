@@ -1,5 +1,5 @@
 -# frozen_string_literal: true
 %a.card{href: url_for(story)}
+  .card-caption
+    %h4.title= story.title
     = image_tag story.picture, class: 'card-img-top img-fluid'
-    .card-body
-        %h4.card-title= story.title
