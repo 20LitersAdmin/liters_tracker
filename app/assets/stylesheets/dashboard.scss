@@ -140,6 +140,11 @@
     .title {
       color: $grey;
       background-color: $transparent-yellow;
+
+      &.prominent {
+        color: $yellow;
+        background-color: $transparent-grey;
+      }
     }
   }
   .title {
@@ -151,6 +156,11 @@
     color: white;
     font-weight: bolder;
     background-color: $transparent-grey;
+
+    &.prominent {
+      color: $grey;
+      background-color: $transparent-yellow;
+    }
   }
 }
 
