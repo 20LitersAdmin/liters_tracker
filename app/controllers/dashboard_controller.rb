@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 class DashboardController < ApplicationController
-  layout 'dashboard', only: [:index]
+  layout 'dashboard', only: %i[index]
 
   def index
     @lifetime_stats = Technology.report_worthy.map do |technology|

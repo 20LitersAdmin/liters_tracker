@@ -1,6 +1,5 @@
 # CURRENT:
-* Show things to Amanda for feedback
-* Handle Prominence
+1. Deal with titles taking up 2 lines in the fixed header.
 
 # Creating/Updating Targets
 

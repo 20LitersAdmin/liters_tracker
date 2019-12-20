@@ -23,8 +23,10 @@
           = fa_icon 'instagram'
       %li.nav-item.kindful-track.fix-width-106
         = link_to 'Give', '#!', class: 'nav-link'
-
 %section.internal-header
   %h1= @title
   %h5= @subtitle
+  - if controller.controller_name == 'stories' && controller.action_name == 'show'
+    .d-flex.justify-content-center#dashboard_btn
+      = link_to 'Back to Dashboard', dashboard_index_path, {class: 'btn blue'}
 
