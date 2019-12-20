@@ -52,21 +52,25 @@
   background-position: center bottom;
   background-size: cover;
   background-repeat: no-repeat;
-  height: 300px;
-  padding: 100px 0 50px;
+  min-height: 300px;
+  padding: 100px 0 12px;
   text-align: center;
   color: white;
   text-rendering: optimizelegibility;
 
+  #dashboard_btn {
+    margin-top: 20px;
+  }
+
   h1 {
     font-weight: bold;
     max-width: 80%;
-    margin: 66px auto 0px;
+    margin: 34px auto 0px;
   }
 
   h5 {
     max-width: 80%;
-    margin: 10px auto 0px;
+    margin: 6px auto 0px;
   }
 }
 
