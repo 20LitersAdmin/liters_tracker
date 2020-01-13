@@ -6,13 +6,13 @@
       = link_to facility_form.name, edit_facility_path(facility_form), target: '_blank'
     -else
       = facility_form.name
-    =hidden_field_tag "batch_reports[reports][][reportable_type]", facility_form.class.to_s
-    =hidden_field_tag "batch_reports[reports][][reportable_id]", facility_form.id
+    =hidden_field_tag "batch_reports[reports][][reportable_type]", facility_form.class.to_s, id: nil
+    =hidden_field_tag "batch_reports[reports][][reportable_id]", facility_form.id, id: nil
   %td.text-center= human_number facility_form.population
   %td= facility_form.category
   %td= facility_form.cell.name
   %td= facility_form.village.name
-  %td.text-center= number_field_tag "batch_reports[reports][][distributed]", report.distributed, min: 0, step: 1, class: 'form-control date-checker distributed'
+  %td.text-center= number_field_tag "batch_reports[reports][][distributed]", report.distributed, min: 0, step: 1, class: 'form-control date-checker distributed', id: nil
+  %td.text-center= number_field_tag "batch_reports[reports][][checked]", report.checked, min: 0, step: 1, class: 'form-control date-checker checked', id: nil
   %td= text_field_tag "batch_reports[reports][][date]", report.new_record? ? '' : report.date, class: 'form-control datetimepicker-input fixed', id: "report_form_date_#{report.object_id}", data: { toggle: 'datetimepicker', target: "#report_form_date_#{report.object_id}", record: "#{report.new_record? ? 'new' : 'existing'}" }
-  %td.text-center= number_field_tag "batch_reports[reports][][checked]", report.checked, min: 0, step: 1, class: 'form-control date-checker checked'
-  %td.text-center= number_field_tag "batch_reports[reports][][people]", report.people, min: 0, step: 1, class: 'form-control'
+  %td.text-center= number_field_tag "batch_reports[reports][][people]", report.people, min: 0, step: 1, class: 'form-control', id: nil

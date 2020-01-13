@@ -33,19 +33,39 @@ $(document).on 'turbolinks:load', ->
   # form error checking:
   $('div.warning-div').hide()
 
-  # when distributed or checked is changed, make sure a date is provided
-  $('tr.facility-row input.date-checker').on 'change', ->
-    dataFinder = $(this).parents('tr.facility-row').attr('data-finder')
-    reportDateFieldId = 'input#report_form_date_' + dataFinder
-    reportDateField = $(reportDateFieldId)
-    if Number($(this).val()) > 0
-      if reportDateField.val() == ''
-        reportDateField.css('border-color', '#dc3545')
-        $('input[type=submit').attr('disabled', true)
-        $('div.warning-div').show()
-        $('div.submit-div').hide()
+  checkRow = (row) ->
+    dist = row.find('input.distributed')
+    check = row.find('input.checked')
+    number = Number(dist.val()) + Number(check.val())
+    date = row.find('input.datetimepicker-input')
+
+    if number > 0 && date.val() == ''
+      dist.css('border-color', '#dc3545')
+      check.css('border-color', '#dc3545')
+      date.css('border-color', '#dc3545')
+      return 1
     else
-      reportDateField.css('border-color', '')
+      dist.css('border-color', '')
+      check.css('border-color', '')
+      date.css('border-color', '')
+      return 0
+
+  checkForm = () ->
+    errorCount = 0
+    $('tr.facility-row').each ()->
+      errorCount += checkRow($(this))
+
+    if errorCount > 0
+      $('input[type=submit').attr('disabled', true)
+      $('div.warning-div').show()
+      $('div.submit-div').hide()
+    else
       $('input[type=submit').attr('disabled', false)
       $('div.warning-div').hide()
       $('div.submit-div').show()
+
+  $('tr.facility-row input.date-checker').on 'change', ->
+    checkForm()
+
+  $('input.datetimepicker-input').on 'change.datetimepicker', ({date, oldDate})  ->
+    checkForm()
