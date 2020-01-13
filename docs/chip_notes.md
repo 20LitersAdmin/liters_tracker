@@ -1,5 +1,8 @@
 # CURRENT:
-1. Deal with titles taking up 2 lines in the fixed header.
+1. Kindful give button in navbar needs to work
+2. INTEGRATE with MAKE:
+- track has a json page with basic info.
+- make usese that json for the homepage && attendance sheet? Or separate printed page??
 
 # Creating/Updating Targets
 

@@ -19,6 +19,7 @@
       =hidden_field_tag 'batch_reports[technology_id]', @technology.id
       =hidden_field_tag 'batch_reports[contract_id]', @contract.id
       =hidden_field_tag 'batch_reports[master_date]', @date
+
       - if @technology.scale == 'Family'
         %table.table.table-sm.table-hover#villages_table
           %thead
@@ -38,7 +39,7 @@
                 %th.text-center Checked
           %tbody
             = render partial: 'cell_form', collection: @cells
-      - else
+      - else # @technology.scale == 'Community'
         %table.table.table-sm#facilities_table
           %thead
             %tr
@@ -48,8 +49,8 @@
               %th Cell
               %th Village
               %th.text-center= "#<br>Installed".html_safe
-              %th.text-center Install date
               %th.text-center= "#<br>Checked".html_safe
+              %th.text-center Date
               %th.text-center= "People<br>served".html_safe
             %tbody
               = render partial: 'facility_form', collection: @facilities, locals: { technology: @technology, date: @date, modal: false }
