@@ -98,8 +98,6 @@ class Report < ApplicationRecord
 
     action = report.determine_action(report_params, contract_id, user_id)
 
-    byebug
-
     return if action.zero?
 
     return report.destroy if action == 1
