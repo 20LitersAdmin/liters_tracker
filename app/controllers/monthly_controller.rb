@@ -5,6 +5,10 @@ class MonthlyController < ApplicationController
     authorize @monthly = Monthly.new
     @years = (Report.earliest_date.strftime('%Y').to_i..Report.latest_date.strftime('%Y').to_i).to_a
     @months = Date::MONTHNAMES.compact.each_with_index.collect { |m, i| [m, i + 1] }
+
+    date = Report.latest_date
+    @year = date.year
+    @month = date.month
   end
 
   def redirector

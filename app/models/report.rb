@@ -85,16 +85,20 @@ class Report < ApplicationRecord
   end
 
   def self.process(report_params, technology_id, contract_id, user_id, fallback_date)
-    date = report_params[:date].blank? ? fallback_date : report_params[:date]
+    date_string = report_params[:date].blank? ? fallback_date : report_params[:date]
+    date = Date.parse(date_string)
 
+    # date searching must be a range for reports where technology.scale == 'Community'
     report = Report.where(
-      date: date,
+      date: date.beginning_of_month..date.end_of_month,
       technology_id: technology_id,
       reportable_id: report_params[:reportable_id].to_i,
       reportable_type: report_params[:reportable_type]
     ).first_or_initialize
 
     action = report.determine_action(report_params, contract_id, user_id)
+
+    byebug
 
     return if action.zero?
 
@@ -106,6 +110,7 @@ class Report < ApplicationRecord
       rep.distributed = report_params[:distributed]
       rep.checked = report_params[:checked]
       rep.people = report_params[:people]
+      rep.date = date
     end
     report.save
   end
@@ -121,11 +126,14 @@ class Report < ApplicationRecord
                 !params[:checked].to_i.positive?
 
     # handles the "equality" of nil and 0 by forcing conversion to integers
-    return 0 if self.contract_id == contract_id &&
+    # ensures dates match exactly for reports where technology.scale == 'Community'
+    return 0 if persisted? &&
+                self.contract_id == contract_id &&
                 self.user_id == user_id &&
                 distributed.to_i == params[:distributed].to_i &&
                 checked.to_i == params[:checked].to_i &&
-                people.to_i == params[:people].to_i
+                people.to_i == params[:people].to_i &&
+                date == Date.parse(params[:date])
 
     return 1 if persisted? &&
                 !params[:distributed].to_i.positive? &&

@@ -8,8 +8,8 @@
 = simple_form_for @monthly, url: monthly_redirector_path do |m|
   .row.align-items-center
     .col-12.col-sm-5
-      = m.input :year, collection: @years
+      = m.input :year, collection: @years, selected: @year
     .col-12.col-sm-5
-      = m.input :month, collection: @months
+      = m.input :month, collection: @months, selected: @month
     .col-12.col-sm-2
       = m.submit 'Go', class: 'btn yellow'
