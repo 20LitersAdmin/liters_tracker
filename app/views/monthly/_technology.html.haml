@@ -1,31 +1,37 @@
 -# frozen_string_literal: true
 - tech_reports = @reports.where(technology: technology)
-- sectors = tech_reports.related_sectors.order(name: :asc)
+- tech_scale = technology.scale
 .row
-  .col-10
+  .col-auto
     %h4= "#{technology.name}:"
-  .col-2
-    +/-
-  .col-12
+  - if tech_reports.any?
+    .col-auto.sort-div
+      = link_to fa_icon("sort-up"), "#", class: 'sort btn blue prevent-default', data: { sort: 'up', tech: technology.id }
+      = link_to fa_icon("sort-down"), "#", class: 'sort btn blue prevent-default', id: technology.id, data: { sort: 'down', tech: technology.id }
+  .col-12.tech-table-div
     - if tech_reports.any?
-      %table.table.table-striped
+
+      %table.table.table-striped.tech-table{id: "tech_#{technology.id}"}
         %thead
           %tr
-            %th
             %th Sector
             %th Cell
             %th Village
+            - if tech_scale == 'Community'
+              %th Facility
+              %th Date
             %th.text-right Distributed
             %th.text-right Checked
             %th.text-right People served
             %th.text-right Stories
         %tfoot
           %tr
-            %th{colspan: 4} Technology Total
+            %th{colspan: "#{tech_scale == 'Community' ? 5 : 3}"} Total:
             %th.text-right= human_number tech_reports.sum(:distributed)
             %th.text-right= human_number tech_reports.sum(:checked)
             %th.text-right= human_number tech_reports.map(&:impact).sum
+            %th
         %tbody
-          = render partial: 'sector', collection: sectors, locals: { technology: technology }
+          = render partial: 'report', collection: tech_reports, locals: { tech_scale: tech_scale }
     - else
-      %p No activity
+      %i No activity
