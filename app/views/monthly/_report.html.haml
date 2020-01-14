@@ -1,0 +1,16 @@
+- story = report.story
+%tr
+  %td= report.reportable.sector.name
+  %td= report.reportable.cell.name
+  %td= report.reportable.village.name
+  - if tech_scale == 'Community'
+    %td= report.reportable.facility.name
+    %td= human_date report.date
+  %td.text-right= human_number report.distributed
+  %td.text-right= human_number report.checked
+  %td.text-right= human_number report.impact
+  %td.text-right
+    - if story.nil?
+      =link_to 'Add', new_story_path(year: params[:year], month: params[:month], report_id: report.id), class: 'btn yellow'
+    - else
+      =link_to 'Edit', edit_story_path(story.id, year: params[:year], month: params[:month]), class: 'btn blue'

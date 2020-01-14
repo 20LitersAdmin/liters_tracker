@@ -33,7 +33,7 @@ Rails.application.routes.draw do
   end
 
   resources :stories do
-    get  'image', on: :member
+    get 'image', on: :member
     patch 'upload_image', on: :member
     get  'rotate_image', on: :member
     get  'destroy_image', on: :member
