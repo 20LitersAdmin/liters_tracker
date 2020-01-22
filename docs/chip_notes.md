@@ -1,6 +1,5 @@
 # CURRENT:
-0. Monthly report totals for RWHS and SAM2 are off??
-- https://track.20liters.org/2018/7
+0. Create Facility within Monthly#report doesn't close or update DOM
 
 1. Kindful give button in navbar needs to work
 2. INTEGRATE with MAKE:

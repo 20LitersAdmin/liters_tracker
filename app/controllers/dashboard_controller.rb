@@ -13,15 +13,19 @@ class DashboardController < ApplicationController
 
     @future_plans = Plan.current.incomplete.any?
 
-    # collect years for #year_nav
-    @years = Report.with_stories.pluck(:year).uniq.sort.reverse
+    @dates = Report.with_stories.pluck(:year, :month).uniq.sort.reverse
 
-    # set default year and month
-    @year = Date.today.year
-    @month = Date.today.month
+    # collect years for #year_nav
+    @years = @dates.map { |ary| ary[0] }.uniq
+
+    # set default year
+    @year = @years.first
 
     # collect months for #month_nav based on @year
     @months = Report.with_stories.where(year: @year).pluck(:month).uniq.sort
+
+    # set default month
+    @month = @months.last
 
     @stories = Story.joins(:report).where('reports.year = ?', @year)
 
