@@ -42,4 +42,3 @@ module LitersTracker
     end
   end
 end
-

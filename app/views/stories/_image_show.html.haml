@@ -1,3 +1,5 @@
 -# frozen_string_literal: true
+- use_default_image = "this.onerror=null;this.src='" + asset_path('story_no_image.png') + "'"
+
 .col-sm-auto.image-show
-  = image_tag @story.picture
+  = image_tag @story.picture, onError: use_default_image
