@@ -60,4 +60,17 @@ class DashboardController < ApplicationController
       format.js { render 'index', layout: false }
     end
   end
+
+  def stats_json
+    lifetime_stats = Technology.report_worthy.map do |technology|
+      next if technology.reports.distributions.empty?
+
+      { stat: technology.lifetime_distributed, title: "#{technology.name}s" }
+    end
+
+    lifetime_stats << { stat: Report.distributions.sum(:impact), title: 'People served' }
+    lifetime_stats << { as_of_date: Report.order(date: :desc).first.date }
+
+    render json: lifetime_stats
+  end
 end

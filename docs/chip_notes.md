@@ -1,11 +1,6 @@
 # CURRENT:
 0. Create Facility within Monthly#report doesn't close or update DOM
 
-1. Kindful give button in navbar needs to work
-2. INTEGRATE with MAKE:
-- track has a json page with basic info.
-- make usese that json for the homepage && attendance sheet? Or separate printed page??
-
 # Creating/Updating Targets
 
 # Creating/Updating Plans
