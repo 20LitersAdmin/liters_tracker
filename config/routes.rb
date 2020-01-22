@@ -8,6 +8,8 @@ Rails.application.routes.draw do
   get 'dashboard/handler', to: 'dashboard#handler', as: 'dashboard_handler'
   get 'dashboard/planner', to: 'dashboard#planner', as: 'dashboard_planner'
 
+  get 'stats', to: 'dashboard#stats_json', as: 'stats'
+
   resources :reports do
     post 'batch_process', on: :collection
   end

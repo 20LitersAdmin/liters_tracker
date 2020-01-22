@@ -13,15 +13,19 @@ class DashboardController < ApplicationController
 
     @future_plans = Plan.current.incomplete.any?
 
-    # collect years for #year_nav
-    @years = Report.with_stories.pluck(:year).uniq.sort.reverse
+    @dates = Report.with_stories.pluck(:year, :month).uniq.sort.reverse
 
-    # set default year and month
-    @year = Date.today.year
-    @month = Date.today.month
+    # collect years for #year_nav
+    @years = @dates.map { |ary| ary[0] }.uniq
+
+    # set default year
+    @year = @years.first
 
     # collect months for #month_nav based on @year
     @months = Report.with_stories.where(year: @year).pluck(:month).uniq.sort
+
+    # set default month
+    @month = @months.last
 
     @stories = Story.joins(:report).where('reports.year = ?', @year)
 
@@ -55,5 +59,18 @@ class DashboardController < ApplicationController
     respond_to do |format|
       format.js { render 'index', layout: false }
     end
+  end
+
+  def stats_json
+    lifetime_stats = Technology.report_worthy.map do |technology|
+      next if technology.reports.distributions.empty?
+
+      { stat: technology.lifetime_distributed, title: "#{technology.name}s" }
+    end
+
+    lifetime_stats << { stat: Report.distributions.sum(:impact), title: 'People served' }
+    lifetime_stats << { as_of_date: Report.order(date: :desc).first.date }
+
+    render json: lifetime_stats
   end
 end
