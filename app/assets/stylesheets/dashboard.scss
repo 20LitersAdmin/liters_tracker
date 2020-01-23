@@ -48,7 +48,7 @@
 }
 
 .internal-header {
-  background-image: url("https://d5t73r6km0hzm.cloudfront.net/bgimage.jpg");
+  background-image: asset_url('bgimage.jpg');
   background-position: center bottom;
   background-size: cover;
   background-repeat: no-repeat;
@@ -56,7 +56,6 @@
   padding: 100px 0 12px;
   text-align: center;
   color: white;
-  text-rendering: optimizelegibility;
 
   #dashboard_btn {
     margin-top: 20px;
