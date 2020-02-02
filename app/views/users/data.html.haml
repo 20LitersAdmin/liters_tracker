@@ -2,6 +2,12 @@
 .row
   .col
     %h2= 'Hey ' + @user.fname
+.row.justify-content-center.mb-5
+  - if @lifetime_stats.any?
+    - @lifetime_stats.each do |stat_block|
+      - next if stat_block.blank?
+      = render partial: "shared/basic_stat_block", locals: { stat: stat_block[:stat], title: stat_block[:title], highlight: false }
+  = render partial: "shared/basic_stat_block", locals: { stat: @global_impact, title: 'People served', highlight: true  }
 .row.justify-content-center.mb-3
   .col
     %h3.text-center Things you can do:

@@ -29,4 +29,6 @@
   - if controller.controller_name == 'stories' && controller.action_name == 'show'
     .d-flex.justify-content-center#dashboard_btn
       = link_to 'Back to Dashboard', dashboard_index_path, {class: 'btn blue'}
+      - if current_user&.can_manage_reports? || current_user&.admin?
+        = link_to 'Edit story', edit_story_path(@story), {class: 'btn yellow'}
 

@@ -1,6 +1,16 @@
 # CURRENT:
 0. Create Facility within Monthly#report doesn't close or update DOM
 
+3. Re-write primary reporting flow
+- replace Sectors#select and onward
+- just use Reports#new
+- auto-adding rows for new reports
+- dynamic drop-downs && type-to-select for geography
+- Stories are added from Monthly#index --> Monthly#show
+
+4. Monthly#show should have previous && next buttons
+
+
 # Creating/Updating Targets
 
 # Creating/Updating Plans
