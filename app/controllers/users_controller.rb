@@ -11,6 +11,13 @@ class UsersController < ApplicationController
     @user = current_user
 
     @admins = User.admins
+
+    @lifetime_stats = Technology.report_worthy.map do |technology|
+      next if technology.reports.distributions.empty?
+
+      { stat: technology.lifetime_distributed, title: "#{technology.name}s" }
+    end
+    @global_impact = Report.distributions.sum(:impact)
   end
 
   def

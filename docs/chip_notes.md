@@ -1,8 +1,6 @@
 # CURRENT:
 0. Create Facility within Monthly#report doesn't close or update DOM
 
-2. Re-use basic_stat_block on Users#data
-
 3. Re-write primary reporting flow
 - replace Sectors#select and onward
 - just use Reports#new
