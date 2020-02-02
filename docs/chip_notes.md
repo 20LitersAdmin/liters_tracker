@@ -8,8 +8,8 @@
 - dynamic drop-downs && type-to-select for geography
 - Stories are added from Monthly#index --> Monthly#show
 
-4. Monthly#show should have previous && next buttons
-
+5. Deleting a Facility that has associated Reports:
+- Need to re-assign associated reports before deleting facility
 
 # Creating/Updating Targets
 

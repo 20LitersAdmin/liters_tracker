@@ -1,9 +1,12 @@
 -# frozen_string_literal: true
 .row.mb-3
-  .col-sm-10
+  .col-auto
     %h3= "Monthly Technology Report for #{@date.strftime('%B %Y')}"
-  .col-sm-2
+  .col-auto.ml-auto
     = link_to 'Back', monthly_path, class: 'btn blue'
+  .col-auto
+    = link_to(monthly_date(@previous), monthly_w_date_path(year: @previous.year, month: @previous.month), class: 'btn skinny') if @previous
+    = link_to(monthly_date(@next), monthly_w_date_path(year: @next.year, month: @next.month), class: 'btn skinny') if @next
 
 .row.mt-3#tech_section
   .col

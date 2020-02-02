@@ -44,4 +44,8 @@ module ApplicationHelper
     end
     nil
   end
+
+  def monthly_date(monthly)
+    Date.new(monthly.year, monthly.month, 1).strftime('%m/%Y')
+  end
 end
