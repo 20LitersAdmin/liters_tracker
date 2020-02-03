@@ -7,7 +7,7 @@
     #navbarNav.collapse.navbar-collapse
       %ul.navbar-nav.ml-auto
         %li.nav-item.mr-3
-          = link_to 'View Dashboard', root_path, class: 'btn sm yellow'
+          = link_to 'Public Dashboard', root_path, class: 'btn sm yellow'
         %li.nav-item.mr-3
           - unless controller.controller_name == 'users' && controller.action_name == 'data'
             = link_to 'Data Entry/Reports', data_path, class: 'btn yellow'

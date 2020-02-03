@@ -36,6 +36,8 @@ class SectorsController < ApplicationController
 
     @date = params[:date].present? ? Date.parse(params[:date]) : Date.today.beginning_of_month - 1.month
 
+    @earliest_year = form_date Report.earliest_date.year
+
     @plans = @sector.related_plans.where(technology: @technology).nearest_to_date(@date)
     @reports = @sector.related_reports.where(technology: @technology, date: @date)
     @contract = Contract.between(@date, @date).first
