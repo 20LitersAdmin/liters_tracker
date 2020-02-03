@@ -4,8 +4,8 @@ class Monthly
   include ActiveModel::Model
   include ActiveModel::Attributes
 
-  attribute :year, :integer, default: -> { Date.today.year }
-  attribute :month, :integer, default: -> { Date.today.month - 1 }
+  attribute :year, :integer, default: -> { Date.today.last_month.year }
+  attribute :month, :integer, default: -> { Date.today.last_month.month }
 
   validates_presence_of :year, :month
 end

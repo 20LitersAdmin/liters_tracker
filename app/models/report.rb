@@ -29,12 +29,12 @@ class Report < ApplicationRecord
 
   scope :distributions,   -> { where.not(distributed: nil) }
 
-  # currently unused
-  # scope :checks,          -> { where.not(checked: nil) }
+  before_validation :set_year_and_month_from_date,  if: -> { (year.blank? || month.blank?) && date.present? }
+  before_validation :set_date_from_year_and_month,  if: -> { date.blank? && year.present? && month.present? }
+  before_validation :set_contract_from_date,        if: -> { contract_id.blank? && date.present? }
 
   before_create :prevent_meaningless_reports, if: -> { (distributed.nil? || distributed.zero?) && (checked.nil? || checked.zero?) }
   before_save :calculate_impact
-  before_save :set_year_and_month_from_date, if: -> { year.blank? || month.blank? }
   after_save :find_plan
 
   def breadcrumb
@@ -226,9 +226,17 @@ class Report < ApplicationRecord
                   end
   end
 
+  def set_date_from_year_and_month
+    self.date = Date.new(year, month, 1)
+  end
+
   def set_year_and_month_from_date
     self.year = date.year
     self.month = date.month
+  end
+
+  def set_contract_from_date
+    self.contract = Contract.between(date, date).first
   end
 
   def find_plan

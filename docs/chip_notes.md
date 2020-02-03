@@ -3,7 +3,7 @@
 
 3. Re-write primary reporting flow
 - replace Sectors#select and onward
-- just use Reports#new
+- just use Report#new
 - auto-adding rows for new reports
 - dynamic drop-downs && type-to-select for geography
 - Stories are added from Monthly#index --> Monthly#show

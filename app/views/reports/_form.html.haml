@@ -1,22 +1,9 @@
 -# frozen_string_literal: true
-= form_for @report do |f|
-  - if @report.errors.any?
-    = render partial: 'shared/form_errors', locals: { object: @report }
-
-  .field
-    = f.label :date
-    = f.date_select :date, discard_day: true
-  .field
-    = f.label :technology
-    = f.text_field :technology
-  .field
-    = f.label :distributed
-    = f.number_field :distributed
-  .field
-    = f.label :checked
-    = f.number_field :checked
-  .field
-    = f.label :user
-    = f.text_field :user
-  .actions
-    = f.submit 'Save'
+= simple_form_for @report, wrapper: :horizontal_form do |f|
+  = f.input :reportable
+  = f.input :date, discard_day: true
+  = f.input :technology
+  = f.input :distributed
+  = f.input :checked
+  = f.input :user
+  = f.button :submit
