@@ -21,41 +21,9 @@
       =hidden_field_tag 'batch_reports[master_date]', @date
 
       - if @technology.scale == 'Family'
-        %table.table.table-sm.table-hover#villages_table
-          %thead
-            %tr
-              %th Villages
-              - if @plans.any?
-                %th.text-center= "Planned (by #{human_date(@plans.first&.date)})"
-              - else
-                %th.text-center Planned
-              - if @reports.any?
-                %th.text-center= human_number(@reports.sum(:distributed)) + ' Distributed'
-                %th.text-center= human_number(@reports.sum(:people)) + ' People served'
-                %th.text-center= human_number(@reports.sum(:checked)) + ' Checked'
-              - else
-                %th.text-center Distributed
-                %th.text-center People served
-                %th.text-center Checked
-          %tbody
-            = render partial: 'cell_form', collection: @cells
+        = render partial: 'villages'
       - else # @technology.scale == 'Community'
-        %table.table.table-sm#facilities_table
-          %thead
-            %tr
-              %th Facilities
-              %th.text-center Population
-              %th Type
-              %th Cell
-              %th Village
-              %th.text-center= "#<br>Installed".html_safe
-              %th.text-center= "#<br>Checked".html_safe
-              %th.text-center Date
-              %th.text-center= "People<br>served".html_safe
-            %tbody
-              = render partial: 'facility_form', collection: @facilities, locals: { technology: @technology, date: @date, modal: false }
-        .row
-          .col-12.text-right= link_to 'Add Facility', '#', id: 'facility-trigger', class: 'btn yellow', data: { toggle:  "modal", target: '#new_facility_modal' }
+        = render partial: 'facilities'
       .row
         .col-12.text-center.submit-div
           = submit_tag 'Submit report', class: 'btn btn-success'
@@ -70,4 +38,5 @@
           %h5.modal-title#new_facility_title Add Facility
           %button.close{ type: 'button', 'data-dismiss': 'modal', 'aria-label': 'Close' }
             %span{ 'aria-hidden': true } &times;
-        .modal-body= render partial: 'facilities/form', locals: { facility: @facility, modal: true }
+        .modal-body
+          = render partial: 'facilities/modal_form', locals: { facility: @facility }

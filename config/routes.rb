@@ -25,13 +25,15 @@ Rails.application.routes.draw do
   resources :sectors do
     get 'select', on: :collection
     get 'report', on: :member
-    get 'new_facility', on: :member
+    # get 'new_facility', on: :member
   end
   resources :cells
   resources :villages
   resources :facilities do
     get 'village_finder', on: :collection
+    get 'cell_finder', on: :collection
     get 'facility_error', on: :member
+    get 'facility_created', on: :member
   end
 
   resources :stories do

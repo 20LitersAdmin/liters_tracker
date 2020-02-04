@@ -37,4 +37,9 @@ class VillagePolicy
   def destroy?
     @user&.admin?
   end
+
+  # facilities#village_finder
+  def village_finder?
+    @user&.admin? || @user&.can_manage_geography? || @user&.can_manage_reports?
+  end
 end

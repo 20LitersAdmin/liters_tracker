@@ -1,0 +1,38 @@
+-# frozen_string_literal: true
+
+= simple_form_for facility, remote: true do |f|
+  .row
+    .col.field
+      = f.input :name
+      .invalid-feedback-modal
+    .col.field
+      = f.input :category, collection: Constants::Facility::CATEGORY
+      .invalid-feedback-modal
+  .row
+    .col.field
+      = f.input :description, as: :text
+      .invalid-feedback-modal
+  .row
+    .col.field
+      = f.input :cell, collection: @cells, hint: 'Select to limit villages.'
+      .invalid-feedback-modal
+    .col.field
+      = f.input :village, collection: @villages, required: true
+      .invalid-feedback-modal
+  .row
+    .col.field
+      = f.input :population
+      .invalid-feedback-modal
+    .col.field
+      = f.input :households
+      .invalid-feedback-modal
+  .row
+    .col.field
+      = f.input :latitude, hint: 'like -2.054922'
+      .invalid-feedback-modal
+    .col.field
+      = f.input :longitude, hint: 'like 30.0912883'
+      .invalid-feedback-modal
+  .row.my-3.actions
+    .col.text-right
+      = f.button :submit, class: 'btn yellow'

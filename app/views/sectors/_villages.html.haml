@@ -1,0 +1,18 @@
+%table.table.table-sm.table-hover#villages_table
+  %thead
+    %tr
+      %th Villages
+      - if @plans.any?
+        %th.text-center= "Planned (by #{human_date(@plans.first&.date)})"
+      - else
+        %th.text-center Planned
+      - if @reports.any?
+        %th.text-center= human_number(@reports.sum(:distributed)) + ' Distributed'
+        %th.text-center= human_number(@reports.sum(:people)) + ' People served'
+        %th.text-center= human_number(@reports.sum(:checked)) + ' Checked'
+      - else
+        %th.text-center Distributed
+        %th.text-center People served
+        %th.text-center Checked
+  %tbody
+    = render partial: 'cell_form', collection: @cells

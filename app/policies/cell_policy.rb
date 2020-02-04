@@ -37,4 +37,9 @@ class CellPolicy
   def destroy?
     @user&.admin?
   end
+
+  # facilities#cell_finder
+  def cell_finder?
+    @user&.admin? || @user&.can_manage_geography? || @user&.can_manage_reports?
+  end
 end

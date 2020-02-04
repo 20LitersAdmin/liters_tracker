@@ -8,6 +8,8 @@
 - dynamic drop-downs && type-to-select for geography
 - Stories are added from Monthly#index --> Monthly#show
 
+- TODO: why is this?? sectors_controller#new_facility && sector_policy#new_facility? && routes#sectors#new_facility
+
 5. Deleting a Facility that has associated Reports:
 - Need to re-assign associated reports before deleting facility
 

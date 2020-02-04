@@ -46,11 +46,7 @@ class SectorPolicy
     @user&.admin?
   end
 
-  def new_facility?
-    @user&.admin? || @user&.can_manage_reports?
-  end
-
-  def village_finder?
-    @user&.admin? || @user&.can_manage_geography? || @user&.can_manage_reports?
-  end
+  # def new_facility?
+  #   @user&.admin? || @user&.can_manage_reports?
+  # end
 end

@@ -1,4 +1,6 @@
 -# frozen_string_literal: true
+
+-# when this partial is called from facilities#facilities_created (which happens from sectors#report new facility modal box) there are no technology or date variables to pass.
 - report = modal ? facility_form.reports.new : facility_form.reports.where(technology: technology).within_month(date).order(date: :desc).first_or_initialize
 %tr.facility-row{data: { finder: "#{report.object_id}" }}
   %td

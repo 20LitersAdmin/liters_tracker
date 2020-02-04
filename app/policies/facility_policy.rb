@@ -38,11 +38,11 @@ class FacilityPolicy
     @user&.admin?
   end
 
-  def facility_error
+  def facility_error?
     @user&.can_manage_reports?
   end
 
-  def facility_created
+  def facility_created?
     @user&.can_manage_reports?
   end
 end

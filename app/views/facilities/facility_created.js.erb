@@ -1,4 +1,5 @@
-$('#facilities_table').append("<%= j render partial: 'sectors/facility_report', locals: { facility_report: @facility, modal: true } %>");
+// append the new record
+$('#facilities_table').append("<%= j render partial: 'sectors/facility_form', locals: { facility_form: @facility, modal: true } %>");
 // hide the modal
 $('#new_facility_modal').modal('hide');
 // clear out the form fields

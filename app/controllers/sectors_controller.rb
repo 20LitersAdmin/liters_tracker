@@ -24,6 +24,7 @@ class SectorsController < ApplicationController
     @technologies = Technology.report_worthy.order(:short_name)
 
     @date = params[:date].present? ? Date.parse(params[:date]) : Date.today.beginning_of_month - 1.month
+    @earliest_year = Report.earliest_date.year
   end
 
   def report
@@ -35,8 +36,6 @@ class SectorsController < ApplicationController
     end
 
     @date = params[:date].present? ? Date.parse(params[:date]) : Date.today.beginning_of_month - 1.month
-
-    @earliest_year = form_date Report.earliest_date.year
 
     @plans = @sector.related_plans.where(technology: @technology).nearest_to_date(@date)
     @reports = @sector.related_reports.where(technology: @technology, date: @date)
@@ -50,10 +49,11 @@ class SectorsController < ApplicationController
       @facilities = @sector.facilities.churches.order(:name)
     end
 
-    if @technology.scale == 'Community'
-      @facility = Facility.new
-      @villages = @sector.villages.select(:id, :name).order(:name)
-    end
+    return unless @technology.scale == 'Community'
+
+    @facility = Facility.new
+    @cells = @sector.cells.select(:id, :name).order(:name)
+    @villages = @sector.villages.select(:id, :name).order(:name)
   end
 
   # GET /sectors/1
@@ -128,14 +128,15 @@ class SectorsController < ApplicationController
     end
   end
 
-  def new_facility
-    authorize @sector
+  # TODO: what is this for???
+  # def new_facility
+  #   authorize @sector
 
-    respond_to do |format|
-      format.html
-      format.js
-    end
-  end
+  #   respond_to do |format|
+  #     format.html
+  #     format.js
+  #   end
+  # end
 
   private
 
