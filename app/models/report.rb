@@ -3,13 +3,13 @@
 class Report < ApplicationRecord
   belongs_to :technology, inverse_of: :reports
   belongs_to :user,       inverse_of: :reports
-  belongs_to :contract,   inverse_of: :reports
+  belongs_to :contract,   inverse_of: :reports, optional: true
   belongs_to :reportable, polymorphic: true
   has_one    :story, inverse_of: :report, dependent: :destroy
 
   belongs_to :plan, inverse_of: :reports, required: false
 
-  validates_presence_of :date, :user_id, :contract_id, :technology_id, :reportable_type, :reportable_id
+  validates_presence_of :date, :user_id, :technology_id, :reportable_type, :reportable_id
 
   scope :only_districts,  -> { where(reportable_type: 'District') }
   scope :only_sectors,    -> { where(reportable_type: 'Sector') }
@@ -31,11 +31,12 @@ class Report < ApplicationRecord
 
   before_validation :set_year_and_month_from_date,  if: -> { (year.blank? || month.blank?) && date.present? }
   before_validation :set_date_from_year_and_month,  if: -> { date.blank? && year.present? && month.present? }
-  before_validation :set_contract_from_date,        if: -> { contract_id.blank? && date.present? }
 
   before_create :prevent_meaningless_reports, if: -> { (distributed.nil? || distributed.zero?) && (checked.nil? || checked.zero?) }
   before_save :calculate_impact
-  after_save :find_plan
+
+  before_save :find_contract_from_date, if: -> { contract_id.blank? && date.present? }
+  after_save :find_plan,                if: -> { contract_id.present? && plan_id.blank? }
 
   def breadcrumb
     @hierarchy = Constants::Geography::HIERARCHY
@@ -206,6 +207,10 @@ class Report < ApplicationRecord
     related_sectors.pluck(:district_id)
   end
 
+  def self.set_plans
+    all.each { |rep| rep.send(:find_plan) }
+  end
+
   private
 
   def prevent_meaningless_reports
@@ -236,6 +241,7 @@ class Report < ApplicationRecord
   end
 
   def set_contract_from_date
+    # edge case: report saved outside of an existing contract timeframe, allow contract_id to be null
     self.contract = Contract.between(date, date).first
   end
 

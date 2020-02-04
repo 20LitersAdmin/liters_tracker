@@ -1,11 +1,12 @@
 # CURRENT:
-0. Create Facility within Monthly#report doesn't close or update DOM
+0. Next deploy: `rails db:migrate` to make `Report#contract_id` optional
 
-3. Re-write primary reporting flow
-- replace Sectors#select and onward
-- just use Report#new
-- auto-adding rows for new reports
-- dynamic drop-downs && type-to-select for geography
+3. Tweak reporting workflow
+- sectors#select is fine
+- don't show every village and facility on sectors#report
+- show existing reports
+  - provide 1 new report row at a time
+  - dynamic drop-downs && type-to-select for geography
 - Stories are added from Monthly#index --> Monthly#show
 
 - TODO: why is this?? sectors_controller#new_facility && sector_policy#new_facility? && routes#sectors#new_facility

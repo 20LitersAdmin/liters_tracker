@@ -17,7 +17,7 @@
         .col-12.text-center.warning-div
           %p.warning-text Please check form for errors
       =hidden_field_tag 'batch_reports[technology_id]', @technology.id
-      =hidden_field_tag 'batch_reports[contract_id]', @contract.id
+      / =hidden_field_tag 'batch_reports[contract_id]', @contract.id
       =hidden_field_tag 'batch_reports[master_date]', @date
 
       - if @technology.scale == 'Family'

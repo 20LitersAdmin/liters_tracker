@@ -11,11 +11,23 @@ class Contract < ApplicationRecord
 
   scope :between, ->(from, to) { where('end_date >= ? AND start_date <= ?', from, to) }
 
+  after_create :find_reports
+
   def name
     "#{id}: #{start_date.strftime('%m/%Y')} - #{end_date.strftime('%m/%Y')}"
   end
 
   def url_params
     "?from=#{start_date.strftime('%Y-%m-%d')}&to=#{end_date.strftime('%Y-%m-%d')}"
+  end
+
+  private
+
+  def find_reports
+    # edge case: reports have been created without a contract_id
+    # add contract_id to these records once an applicable contract is created
+    reps = Report.where(contract_id: nil).between(start_date, end_date)
+
+    reps.update_all(contract_id: id) if reps.any?
   end
 end

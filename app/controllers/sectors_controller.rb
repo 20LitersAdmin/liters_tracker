@@ -39,7 +39,7 @@ class SectorsController < ApplicationController
 
     @plans = @sector.related_plans.where(technology: @technology).nearest_to_date(@date)
     @reports = @sector.related_reports.where(technology: @technology, date: @date)
-    @contract = Contract.between(@date, @date).first
+    # @contract = Contract.between(@date, @date).first
 
     if @technology.scale == 'Family' # %w[SAM3, SAM3-M, SS].include?(@technology.short_name)
       @cells = @sector.cells.order(:name)
@@ -145,6 +145,11 @@ class SectorsController < ApplicationController
   end
 
   def sector_params
-    params.require(:sector).permit(:name, :gis_code, :latitude, :longitude, :population, :households)
+    params.require(:sector).permit(:name,
+                                   :gis_code,
+                                   :latitude,
+                                   :longitude,
+                                   :population,
+                                   :households)
   end
 end
