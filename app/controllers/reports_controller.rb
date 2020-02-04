@@ -93,7 +93,6 @@ class ReportsController < ApplicationController
 
   def batch_report_params
     params.require(:batch_reports).permit(:technology_id,
-                                          :contract_id,
                                           :master_date,
                                           reports: %i[date technology_id distributed checked people reportable_id reportable_type])
   end

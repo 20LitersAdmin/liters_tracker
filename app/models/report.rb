@@ -35,8 +35,8 @@ class Report < ApplicationRecord
   before_create :prevent_meaningless_reports, if: -> { (distributed.nil? || distributed.zero?) && (checked.nil? || checked.zero?) }
   before_save :calculate_impact
 
-  before_save :find_contract_from_date, if: -> { contract_id.blank? && date.present? }
-  after_save :find_plan,                if: -> { contract_id.present? && plan_id.blank? }
+  before_save :set_contract_from_date, if: -> { contract_id.blank? && date.present? }
+  after_save :set_plan,                if: -> { contract_id.present? && plan_id.blank? }
 
   def breadcrumb
     @hierarchy = Constants::Geography::HIERARCHY
@@ -70,22 +70,20 @@ class Report < ApplicationRecord
 
   def self.key_params_are_missing?(batch_process_params)
     batch_process_params[:technology_id].blank? ||
-      batch_process_params[:contract_id].blank? ||
       batch_process_params[:master_date].blank? ||
       batch_process_params[:reports].count.zero?
   end
 
   def self.batch_process(batch_report_params, user_id)
     technology_id = batch_report_params[:technology_id].to_i
-    contract_id = batch_report_params[:contract_id].to_i
     fallback_date = batch_report_params[:master_date]
 
     batch_report_params[:reports].each do |report_params|
-      process(report_params, technology_id, contract_id, user_id, fallback_date)
+      process(report_params, technology_id, user_id, fallback_date)
     end
   end
 
-  def self.process(report_params, technology_id, contract_id, user_id, fallback_date)
+  def self.process(report_params, technology_id, user_id, fallback_date)
     date_string = report_params[:date].blank? ? fallback_date : report_params[:date]
     date = Date.parse(date_string)
 
@@ -97,14 +95,13 @@ class Report < ApplicationRecord
       reportable_type: report_params[:reportable_type]
     ).first_or_initialize
 
-    action = report.determine_action(report_params, contract_id, user_id)
+    action = report.determine_action(report_params, user_id)
 
     return if action.zero?
 
     return report.destroy if action == 1
 
     report.tap do |rep|
-      rep.contract_id = contract_id
       rep.user_id = user_id
       rep.distributed = report_params[:distributed]
       rep.checked = report_params[:checked]
@@ -114,7 +111,7 @@ class Report < ApplicationRecord
     report.save
   end
 
-  def determine_action(params, contract_id, user_id)
+  def determine_action(params, user_id)
     # 0 = Skip (record is new and meaningful params are nil OR record persists and attributes match)
     # 1 = Destroy (record persists and meaningful params are nil)
     # 2 = Create (meaningful params are not nil)
@@ -127,7 +124,6 @@ class Report < ApplicationRecord
     # handles the "equality" of nil and 0 by forcing conversion to integers
     # ensures dates match exactly for reports where technology.scale == 'Community'
     return 0 if persisted? &&
-                self.contract_id == contract_id &&
                 self.user_id == user_id &&
                 distributed.to_i == params[:distributed].to_i &&
                 checked.to_i == params[:checked].to_i &&
@@ -245,7 +241,7 @@ class Report < ApplicationRecord
     self.contract = Contract.between(date, date).first
   end
 
-  def find_plan
+  def set_plan
     id = Plan.where(contract_id: contract_id,
                     technology_id: technology_id,
                     planable_id: reportable_id,

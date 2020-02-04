@@ -1,5 +1,6 @@
 # CURRENT:
-0. Next deploy: `rails db:migrate` to make `Report#contract_id` optional
+0. Next deploy:
+- `rails db:migrate` to make `Report#contract_id` optional
 
 3. Tweak reporting workflow
 - sectors#select is fine
