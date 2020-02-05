@@ -38,8 +38,7 @@ class VillagePolicy
     @user&.admin?
   end
 
-  # facilities#village_finder
-  def village_finder?
+  def children?
     @user&.admin? || @user&.can_manage_geography? || @user&.can_manage_reports?
   end
 end

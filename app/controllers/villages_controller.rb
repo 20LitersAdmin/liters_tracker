@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 class VillagesController < ApplicationController
-  before_action :set_village, only: %w[show edit update destroy]
+  before_action :set_village, only: %w[show edit update destroy children]
 
   # GET /villages
   def index
@@ -83,6 +83,11 @@ class VillagesController < ApplicationController
       format.html { redirect_to villages_url, notice: 'Village was successfully destroyed.' }
       format.json { head :no_content }
     end
+  end
+
+  ## sectors#reports ajax
+  def children
+    render json: @village.facilities.select(:id, :name).order(:name)
   end
 
   private

@@ -25,11 +25,24 @@ class ReportsController < ApplicationController
   # POST /reports.json
   def create
     authorize @report = Report.new(report_params)
+    @report.user = current_user
+
+    # check for duplicates first
+    # destroy the original and replace with this record if duplicate exists
+    # does Report.where(report_params).first_or_initialize work?
 
     respond_to do |format|
       if @report.save
         format.html { redirect_to @report, notice: 'Report was successfully created.' }
         format.json { render :show, status: :created, location: @report }
+        format.js do
+          @reports = @report.reportable.sector.related_reports.where(technology: @report.technology, date: @report.date)
+          if @report.technology.scale == 'Family'
+            render :village_report_created
+          else
+            render :facility_report_created
+          end
+        end
       else
         format.html { render :new }
         format.json { render json: @report.errors, status: :unprocessable_entity }
@@ -58,20 +71,9 @@ class ReportsController < ApplicationController
     respond_to do |format|
       format.html { redirect_to reports_url, notice: 'Report was successfully destroyed.' }
       format.json { head :no_content }
+      # TODO: flash[:notice] = 'Report was successfully destroyed.'
+      format.js {}
     end
-  end
-
-  def batch_process
-    authorize current_user
-
-    if Report.key_params_are_missing?(batch_report_params)
-      flash[:error] = 'Oops, some data got lost. Please try again'
-    else
-      Report.batch_process(batch_report_params, current_user.id)
-      flash[:success] = 'The report was successfully submitted.'
-    end
-
-    redirect_to select_sectors_path
   end
 
   private
@@ -91,9 +93,9 @@ class ReportsController < ApplicationController
                                    :reportable_type)
   end
 
-  def batch_report_params
-    params.require(:batch_reports).permit(:technology_id,
-                                          :master_date,
-                                          reports: %i[date technology_id distributed checked people reportable_id reportable_type])
-  end
+  # def batch_report_params
+  #   params.require(:batch_reports).permit(:technology_id,
+  #                                         :master_date,
+  #                                         reports: %i[date technology_id distributed checked people reportable_id reportable_type])
+  # end
 end

@@ -1,5 +1,8 @@
 -# frozen_string_literal: true
 .row
+  .col-12
+    #ajax_response
+.row
   .col-10
     %h1= "#{@sector.name} Sector report:"
   .col-2.text-right
@@ -8,27 +11,24 @@
   .col-12
     %h2= "#{@technology.short_name} achievements in #{@date.strftime("%B, %Y")}"
 
-.row#sector_report
-  .col-12.table-responsive
-    = form_tag batch_process_reports_path, autocomplete: 'off' do
-      .row
-        .col-12.text-center.submit-div
-          = submit_tag 'Submit report', class: 'btn btn-success'
-        .col-12.text-center.warning-div
-          %p.warning-text Please check form for errors
-      =hidden_field_tag 'batch_reports[technology_id]', @technology.id
-      / =hidden_field_tag 'batch_reports[contract_id]', @contract.id
-      =hidden_field_tag 'batch_reports[master_date]', @date
+.row#sector_form
+  .col-12
+    %h3 Create a new report:
+  .col-12
+    - if @technology.scale == 'Family'
+      = render partial: 'village_form', locals: { report: Report.new }
+    - else # @technology.scale == 'Community'
+      = render partial: 'facility_form', locals: { report: Report.new }
 
-      - if @technology.scale == 'Family'
-        = render partial: 'villages'
-      - else # @technology.scale == 'Community'
-        = render partial: 'facilities'
-      .row
-        .col-12.text-center.submit-div
-          = submit_tag 'Submit report', class: 'btn btn-success'
-        .col-12.text-center.warning-div
-          %p.warning-text Please check form for errors
+.row#sector_reports
+  .col-12
+    %h3 Existing reports:
+  .col-12
+    - if @technology.scale == 'Family'
+      = render partial: 'villages_reports'
+    - else # @technology.scale == 'Community'
+      = render partial: 'facilities_reports'
+
 
 - if @technology.scale == 'Community'
   .modal.fade#new_facility_modal{tabindex: '-1', role: 'dialog', 'aria-labelledby': 'newFacilityLabel', 'aria-hidden': 'true' }

@@ -1,18 +1,21 @@
-%table.table.table-sm.table-hover#villages_table
+%table.table.table-sm.table-hover#dttb_reports_villages
   %thead
     %tr
-      %th Villages
+      %th Cell
+      %th Village
       - if @plans.any?
-        %th.text-center= "Planned (by #{human_date(@plans.first&.date)})"
+        %th.text-center= "#{human_number(@plans.sum(:goal))} Planned (by #{human_date(@plans.first&.date)})"
       - else
         %th.text-center Planned
       - if @reports.any?
         %th.text-center= human_number(@reports.sum(:distributed)) + ' Distributed'
-        %th.text-center= human_number(@reports.sum(:people)) + ' People served'
+        %th.text-center= human_number(@reports.sum(:impact)) + ' People served'
         %th.text-center= human_number(@reports.sum(:checked)) + ' Checked'
       - else
         %th.text-center Distributed
         %th.text-center People served
         %th.text-center Checked
+      %th
+      %th
   %tbody
-    = render partial: 'cell_form', collection: @cells
+    = render partial: 'report', collection: @reports

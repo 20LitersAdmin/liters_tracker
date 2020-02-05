@@ -38,8 +38,7 @@ class CellPolicy
     @user&.admin?
   end
 
-  # facilities#cell_finder
-  def cell_finder?
+  def children?
     @user&.admin? || @user&.can_manage_geography? || @user&.can_manage_reports?
   end
 end

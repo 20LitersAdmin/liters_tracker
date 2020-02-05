@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 class FacilitiesController < ApplicationController
-  before_action :set_facility, only: %i[show edit update destroy facility_error]
+  before_action :set_facility, only: %i[show edit update destroy]
   before_action :set_sector_collection, only: %i[new edit update create]
 
   # GET /facilities
@@ -54,17 +54,6 @@ class FacilitiesController < ApplicationController
     end
   end
 
-  ## sectors#report facility#modal_form handling
-  def facility_error
-    authorize @facility
-  end
-
-  ## sectors#report facility#modal_form handling??
-  ## TODO: not working??
-  def facility_created
-    authorize @facility.reload
-  end
-
   # PATCH/PUT /facilities/1
   # PATCH/PUT /facilities/1.json
   def update
@@ -87,24 +76,6 @@ class FacilitiesController < ApplicationController
       format.html { redirect_to facilities_url, notice: 'Facility was successfully destroyed.' }
       format.json { head :no_content }
     end
-  end
-
-  ## facilities#form ajax
-  def cell_finder
-    parent = Sector.find(params[:sector])
-
-    authorize cells = parent.cells.select(:id, :name).order(:name)
-
-    render json: cells
-  end
-
-  ## facilities#form and facilities#modal_form ajax
-  def village_finder
-    parent = Cell.find(params[:cell])
-
-    authorize villages = parent.villages.select(:id, :name).order(:name)
-
-    render json: villages
   end
 
   private

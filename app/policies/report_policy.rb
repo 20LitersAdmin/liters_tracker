@@ -37,12 +37,4 @@ class ReportPolicy
   def destroy?
     @user&.admin?
   end
-
-  def upload_eager?
-    new?
-  end
-
-  def rotate_eager?
-    new?
-  end
 end

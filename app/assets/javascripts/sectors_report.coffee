@@ -6,6 +6,13 @@ $(document).on 'turbolinks:load', ->
   return unless controllerMatches(['sectors']) &&
     actionMatches(['report'])
 
+  # init datatables
+
+  # sort reports_villages by cell and village
+  $("table#dttb_reports_villages").DataTable
+    order: [[ 0, 'asc' ], [ 1, 'asc' ]]
+
+  # handle datepickers on sector#reports:_facility_form
   dateStr = getParameterByName('date')
   date = moment(dateStr, 'YYYY-MM-DD')
   first = date.startOf('month').format('YYYY-MM-DD')
@@ -30,7 +37,15 @@ $(document).on 'turbolinks:load', ->
       $(this).datetimepicker('date', val)
   )
 
-  # form error checking:
+  # existing reports delete button:
+  # remove the deleted row from the table views using DataTables API
+  $(document).on 'ajax:success', '.village-report-delete', ->
+    $('#dttb_reports_villages').DataTable()
+      .row( $(this).parents('tr') )
+      .remove()
+      .draw()
+
+  # form error checking for @technology.scale == 'Community':
   $('div.warning-div').hide()
 
   checkRow = (row) ->
@@ -69,3 +84,30 @@ $(document).on 'turbolinks:load', ->
 
   $('input.datetimepicker-input').on 'change.datetimepicker', ({date, oldDate})  ->
     checkForm()
+
+  # _village_form: setting polymorphic reportable_type and reportable_id
+  setPolymorphic = (type, id) ->
+    $('#report_reportable_type').val(type)
+    $('#report_reportable_id').val(id)
+
+  selectLogic = () ->
+    # don't forget: when #report_cell is un-set, #report_village gets reset by finders.coffee
+    cell_val = $('#report_cell').val()
+    vill_val = $('#report_village').val()
+
+    if vill_val != ''
+      # if #report_village has a value, always use that
+      setPolymorphic('Village', vill_val)
+    else if cell_val != ''
+      # if #report_village is blank, but #report_cell has a value, use that
+      setPolymorphic('Cell', cell_val)
+    else
+      # if they're both blank, clear the fields
+      setPolymorphic('','')
+
+
+  $('#report_cell').on 'change', ->
+    selectLogic()
+
+  $('#report_village').on 'change', ->
+    selectLogic()

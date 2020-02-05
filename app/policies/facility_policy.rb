@@ -37,12 +37,4 @@ class FacilityPolicy
   def destroy?
     @user&.admin?
   end
-
-  def facility_error?
-    @user&.can_manage_reports?
-  end
-
-  def facility_created?
-    @user&.can_manage_reports?
-  end
 end

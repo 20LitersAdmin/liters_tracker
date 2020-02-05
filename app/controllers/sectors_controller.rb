@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 class SectorsController < ApplicationController
-  before_action :set_sector, only: %w[show edit update destroy report new_facility]
+  before_action :set_sector, only: %w[show edit update destroy report children]
 
   # GET /sectors
   def index
@@ -39,21 +39,14 @@ class SectorsController < ApplicationController
 
     @plans = @sector.related_plans.where(technology: @technology).nearest_to_date(@date)
     @reports = @sector.related_reports.where(technology: @technology, date: @date)
-    # @contract = Contract.between(@date, @date).first
 
-    if @technology.scale == 'Family' # %w[SAM3, SAM3-M, SS].include?(@technology.short_name)
-      @cells = @sector.cells.order(:name)
-    elsif @technology.short_name != 'RWHS' # %w[SAM2, SAM2-M].include?(@technology.short_name)
-      @facilities = @sector.facilities.not_churches.order(:name)
-    else # @technology.short_name == 'RWHS'
-      @facilities = @sector.facilities.churches.order(:name)
-    end
+    @cell_select = @sector.cells.select(:id, :name).order(:name)
+    @village_select = @sector.villages.select(:id, :name).order(:name)
 
     return unless @technology.scale == 'Community'
 
+    @facility_select = @sector.facilities.select(:id, :name).order(:name)
     @facility = Facility.new
-    @cells = @sector.cells.select(:id, :name).order(:name)
-    @villages = @sector.villages.select(:id, :name).order(:name)
   end
 
   # GET /sectors/1
@@ -128,15 +121,11 @@ class SectorsController < ApplicationController
     end
   end
 
-  # TODO: what is this for???
-  # def new_facility
-  #   authorize @sector
-
-  #   respond_to do |format|
-  #     format.html
-  #     format.js
-  #   end
-  # end
+  ## facilities#form ajax
+  ## sectors#report ajax
+  def children
+    render json: @sector.cells.select(:id, :name).order(:name)
+  end
 
   private
 
