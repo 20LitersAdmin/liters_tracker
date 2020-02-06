@@ -9,7 +9,7 @@ class Report < ApplicationRecord
 
   belongs_to :plan, inverse_of: :reports, required: false
 
-  validates_presence_of :date, :user_id, :technology_id, :reportable_type, :reportable_id
+  validates_presence_of :date
 
   # form fields for simple_form
   attr_accessor :cell, :village
@@ -34,8 +34,8 @@ class Report < ApplicationRecord
 
   before_validation :set_year_and_month_from_date,  if: -> { (year.blank? || month.blank?) && date.present? }
   before_validation :set_date_from_year_and_month,  if: -> { date.blank? && year.present? && month.present? }
+  before_validation :flag_for_meaninglessness,      if: -> { (distributed.nil? || distributed.zero?) && (checked.nil? || checked.zero?) }
 
-  before_create :prevent_meaningless_reports, if: -> { (distributed.nil? || distributed.zero?) && (checked.nil? || checked.zero?) }
   before_save :calculate_impact
 
   before_save :set_contract_from_date, if: -> { contract_id.blank? && date.present? }
@@ -229,10 +229,9 @@ class Report < ApplicationRecord
 
   private
 
-  def prevent_meaningless_reports
-    # this should already be handled by #determine_action
-    # so this is just a fail-safe
-    throw :abort
+  def flag_for_meaninglessness
+    # either :distributed or :checked must have a value
+    errors.add(:distributed, 'or checked must be provided.')
   end
 
   def calculate_impact

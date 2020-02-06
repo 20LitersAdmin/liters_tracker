@@ -4,21 +4,18 @@
     #ajax_response
 .row
   .col-10
-    %h1= "#{@sector.name} Sector report:"
+    %h4= "#{@technology.short_name} in #{@sector.name} Sector during #{@date.strftime("%B, %Y")}"
   .col-2.text-right
     =link_to 'Back', select_sectors_path, class: 'btn yellow'
-.row
-  .col-12
-    %h2= "#{@technology.short_name} achievements in #{@date.strftime("%B, %Y")}"
 
 .row#sector_form
   .col-12
-    %h3 Create a new report:
+    %h5 Create a new report:
   .col-12
     - if @technology.scale == 'Family'
-      = render partial: 'village_form', locals: { report: Report.new }
+      = render partial: 'village_form', locals: { report: @report }
     - else # @technology.scale == 'Community'
-      = render partial: 'facility_form', locals: { report: Report.new }
+      = render partial: 'facility_form', locals: { report: @report }
 
 - if @technology.scale == 'Community'
   .row.justify-content-center
@@ -26,7 +23,7 @@
 
 .row#sector_reports
   .col-12
-    %h3 Existing reports:
+    %h5 Existing reports:
   .col-12
     = render partial: 'reports', locals: { scale: @technology.scale }
 

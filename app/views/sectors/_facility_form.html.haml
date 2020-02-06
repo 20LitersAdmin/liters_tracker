@@ -1,7 +1,7 @@
 -# frozen_string_literal: true
 = simple_form_for report, remote: true, defaults: { input_html: { class: 'facility-form' }} do |f|
-  = f.input :reportable_type, as: :string, input_html: { value: 'Facility' }
-  = f.input :technology_id, as: :string, input_html: { value: @technology.id }
+  = f.input :reportable_type, as: :hidden, input_html: { value: 'Facility' }
+  = f.input :technology_id, as: :hidden, input_html: { value: @technology.id }
   .row
     .col-4.col-lg-2.field
       = f.input :cell, collection: @cell_select, hint: 'Select to limit villages.'

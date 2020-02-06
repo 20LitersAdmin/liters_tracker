@@ -46,9 +46,7 @@ class FacilitiesController < ApplicationController
           render :new
         end
         format.js do
-          # the JSON isn't compatible with rails_ujs
-          # sending the errors as an array
-          render action: 'facility_error', status: :unprocessable_entity, location: @facility
+          render action: 'facility_error'
         end
       end
     end

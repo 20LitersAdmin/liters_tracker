@@ -43,7 +43,10 @@ class SectorsController < ApplicationController
 
     @cell_select = @sector.cells.select(:id, :name).order(:name)
 
-    @facility = Facility.new
+    @report = Report.new(technology: @technology)
+    @report.date = @date if @technology.scale == 'Family'
+
+    @facility = Facility.new if @technology.scale == 'Community'
   end
 
   # GET /sectors/1

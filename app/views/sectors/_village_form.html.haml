@@ -2,8 +2,8 @@
 = simple_form_for report, remote: true, defaults: { input_html: { class: 'village-form' }} do |f|
   = f.input :reportable_id, as: :hidden
   = f.input :reportable_type, as: :hidden
-  = f.input :technology_id, as: :hidden, input_html: { value: @technology.id }
-  = f.input :date, as: :hidden, input_html: { value: @date }
+  = f.input :technology_id, as: :hidden
+  = f.input :date, as: :hidden
   .row
     .col-6.col-md-2.field
       = f.input :cell, collection: @cell_select, hint: 'Select to limit villages.'

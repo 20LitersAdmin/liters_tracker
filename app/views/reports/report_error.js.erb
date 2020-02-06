@@ -1,0 +1,28 @@
+// fake the flash[:error] with a list of the errors
+var msgTitle = "<h4>Couldn't save the report:</h4>";
+var msgBody = "<%= @report.errors.full_messages.join('<br />').html_safe %>";
+var fullMsg = "<div class='alert alert-danger alert-dismissable fade show' role='alert'><button class='close' data-dismiss='alert'>x</button>" + msgTitle + msgBody + "</div>";
+$('main.container').prepend(fullMsg);
+// navigate to the top of the page so you can see the flash message
+window.scrollTo(0, 0);
+
+// inline error field highlighting
+var errors = {};
+<% @report.errors.collect do |field, msg| %>
+errors["<%= field %>"] = "<%= msg.html_safe %>";
+<% end %>
+for (var i = 0; i < Object.keys(errors).length; i++) {
+  var errorField, message, input;
+  errorField = Object.keys(errors)[i];
+  // first try matching the field name to the error
+  $('#report_' + errorField).addClass('is-invalid');
+  // handle field names that don't match model#methods
+  if (errorField == 'reportable') {
+    $('#report_cell').addClass('is-invalid');
+    $('#report_village').addClass('is-invalid');
+    $('#report_reportable_id').addClass('is-invalid');
+  };
+  if (errorField == 'distributed') {
+    $('#report_checked').addClass('is-invalid');
+  };
+};

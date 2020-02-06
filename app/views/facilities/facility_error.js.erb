@@ -1,14 +1,19 @@
+// fake the flash[:error] with a list of the errors
+var msgTitle = "<h4>Couldn't save the report:</h4>";
+var msgBody = "<%= @facility.errors.full_messages.join('<br />').html_safe %>";
+var fullMsg = "<div class='alert alert-danger alert-dismissable fade show' role='alert'><button class='close' data-dismiss='alert'>x</button>" + msgTitle + msgBody + "</div>";
+$('.modal-body').prepend(fullMsg);
+
+// inline error field highlighting with error messages
 var errors = {};
 <% @facility.errors.collect do |field, msg| %>
-  errors["<%= field %>"] = "<%= msg.html_safe %>";
+errors["<%= field %>"] = "<%= msg.html_safe %>";
 <% end %>
-var form = $('form#new_facility');
-var i
-var field; message; input;
-for (i = 0; i < Object.keys(errors).length; i++) {
-  var field = Object.keys(errors)[i];
-  var message = Object.values(errors)[i];
-  var input = $('#facility_' + field);
+for (var i = 0; i < Object.keys(errors).length; i++) {
+  var errorField, message, input;
+  errorField = Object.keys(errors)[i];
+  message = Object.values(errors)[i];
+  input = $('#facility_' + errorField);
   input.addClass('is-invalid');
-  input.parent('.form-group').siblings('.invalid-feedback-modal').html(message);
+  // input.parent('.form-group').siblings('.invalid-feedback-modal').html(message);
 };

@@ -9,7 +9,7 @@ $(document).on 'turbolinks:load', ->
   # init datatables
 
   # sort reports_villages by cell and village
-  $("table#dttb_reports").DataTable
+  $("table#dttb_sector_reports").DataTable
     order: [[ 0, 'asc' ], [ 1, 'asc' ]],
     columnDefs: [ {
       "searchable": false,
@@ -23,25 +23,18 @@ $(document).on 'turbolinks:load', ->
   first = date.startOf('month').format('YYYY-MM-DD')
   last = date.endOf('month').format('YYYY-MM-DD')
 
-  $('.datetimepicker-input').datetimepicker({
-    format: 'YYYY-MM-DD'
-    useCurrent: false
-    viewDate: date.startOf('month')
+  $('#report_date').datetimepicker({
+    format: 'YYYY-MM-DD',
+    useCurrent: false,
+    viewDate: date.startOf('month'),
     widgetPositioning: {
       horizontal: 'auto'
       vertical: 'bottom'
     }
   })
 
-  $('.datetimepicker-input').datetimepicker('minDate', first)
-  $('.datetimepicker-input').datetimepicker('maxDate', last)
-
-  # preserves the set date for existing reports
-  # $('.datetimepicker-input').each( ()->
-  #   if $(this).data('record') == 'existing'
-  #     val = $(this).attr('value')
-  #     $(this).datetimepicker('date', val)
-  # )
+  $('#report_date').datetimepicker('minDate', first)
+  $('#report_date').datetimepicker('maxDate', last)
 
   # existing reports delete button:
   # remove the deleted row from the table views using DataTables API

@@ -17,7 +17,7 @@
       = f.input :cell, collection: @cell_select, hint: 'Select to limit villages.'
       .invalid-feedback-modal
     .col.field
-      = f.input :village, collection: @village_select, required: true
+      = f.input :village, collection: [['Please select a cell','0']], disabled: 0, required: true
       .invalid-feedback-modal
   .row
     .col.field

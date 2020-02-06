@@ -42,6 +42,7 @@ class ReportsController < ApplicationController
       else
         format.html { render :new }
         format.json { render json: @report.errors, status: :unprocessable_entity }
+        format.js { render :report_error }
       end
     end
   end
@@ -56,6 +57,7 @@ class ReportsController < ApplicationController
       else
         format.html { render :edit }
         format.json { render json: @report.errors, status: :unprocessable_entity }
+        format.js { render :report_error }
       end
     end
   end
@@ -68,7 +70,7 @@ class ReportsController < ApplicationController
       format.html { redirect_to reports_url, notice: 'Report was successfully destroyed.' }
       format.json { head :no_content }
       # TODO: flash[:notice] = 'Report was successfully destroyed.'
-      format.js {}
+      format.js { render :report_destroyed }
     end
   end
 
@@ -88,10 +90,4 @@ class ReportsController < ApplicationController
                                    :reportable_id,
                                    :reportable_type)
   end
-
-  # def batch_report_params
-  #   params.require(:batch_reports).permit(:technology_id,
-  #                                         :master_date,
-  #                                         reports: %i[date technology_id distributed checked people reportable_id reportable_type])
-  # end
 end
