@@ -37,11 +37,7 @@ class ReportsController < ApplicationController
         format.json { render :show, status: :created, location: @report }
         format.js do
           @reports = @report.reportable.sector.related_reports.where(technology: @report.technology, date: @report.date)
-          if @report.technology.scale == 'Family'
-            render :village_report_created
-          else
-            render :facility_report_created
-          end
+          render :report_created
         end
       else
         format.html { render :new }

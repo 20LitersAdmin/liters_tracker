@@ -9,8 +9,13 @@ $(document).on 'turbolinks:load', ->
   # init datatables
 
   # sort reports_villages by cell and village
-  $("table#dttb_reports_villages").DataTable
-    order: [[ 0, 'asc' ], [ 1, 'asc' ]]
+  $("table#dttb_reports").DataTable
+    order: [[ 0, 'asc' ], [ 1, 'asc' ]],
+    columnDefs: [ {
+      "searchable": false,
+      "orderable": false,
+      "targets": [-1, -2]
+    } ]
 
   # handle datepickers on sector#reports:_facility_form
   dateStr = getParameterByName('date')
@@ -31,69 +36,71 @@ $(document).on 'turbolinks:load', ->
   $('.datetimepicker-input').datetimepicker('minDate', first)
   $('.datetimepicker-input').datetimepicker('maxDate', last)
 
-  $('.datetimepicker-input').each( ()->
-    if $(this).data('record') == 'existing'
-      val = $(this).attr('value')
-      $(this).datetimepicker('date', val)
-  )
+  # preserves the set date for existing reports
+  # $('.datetimepicker-input').each( ()->
+  #   if $(this).data('record') == 'existing'
+  #     val = $(this).attr('value')
+  #     $(this).datetimepicker('date', val)
+  # )
 
   # existing reports delete button:
   # remove the deleted row from the table views using DataTables API
-  $(document).on 'ajax:success', '.village-report-delete', ->
-    $('#dttb_reports_villages').DataTable()
+  $(document).on 'ajax:success', '.sector-report-delete', ->
+    $('#dttb_sector_reports').DataTable()
       .row( $(this).parents('tr') )
       .remove()
       .draw()
 
   # form error checking for @technology.scale == 'Community':
-  $('div.warning-div').hide()
+  # TODO: see if any of this should be preserved
+  # $('div.warning-div').hide()
 
-  checkRow = (row) ->
-    dist = row.find('input.distributed')
-    check = row.find('input.checked')
-    number = Number(dist.val()) + Number(check.val())
-    date = row.find('input.datetimepicker-input')
+  # checkRow = (row) ->
+  #   dist = row.find('input.distributed')
+  #   check = row.find('input.checked')
+  #   number = Number(dist.val()) + Number(check.val())
+  #   date = row.find('input.datetimepicker-input')
 
-    if number > 0 && date.val() == ''
-      dist.css('border-color', '#dc3545')
-      check.css('border-color', '#dc3545')
-      date.css('border-color', '#dc3545')
-      return 1
-    else
-      dist.css('border-color', '')
-      check.css('border-color', '')
-      date.css('border-color', '')
-      return 0
+  #   if number > 0 && date.val() == ''
+  #     dist.css('border-color', '#dc3545')
+  #     check.css('border-color', '#dc3545')
+  #     date.css('border-color', '#dc3545')
+  #     return 1
+  #   else
+  #     dist.css('border-color', '')
+  #     check.css('border-color', '')
+  #     date.css('border-color', '')
+  #     return 0
 
-  checkForm = () ->
-    errorCount = 0
-    $('tr.facility-row').each ()->
-      errorCount += checkRow($(this))
+  # checkForm = () ->
+  #   errorCount = 0
+  #   $('tr.facility-row').each ()->
+  #     errorCount += checkRow($(this))
 
-    if errorCount > 0
-      $('input[type=submit').attr('disabled', true)
-      $('div.warning-div').show()
-      $('div.submit-div').hide()
-    else
-      $('input[type=submit').attr('disabled', false)
-      $('div.warning-div').hide()
-      $('div.submit-div').show()
+  #   if errorCount > 0
+  #     $('input[type=submit').attr('disabled', true)
+  #     $('div.warning-div').show()
+  #     $('div.submit-div').hide()
+  #   else
+  #     $('input[type=submit').attr('disabled', false)
+  #     $('div.warning-div').hide()
+  #     $('div.submit-div').show()
 
-  $('tr.facility-row input.date-checker').on 'change', ->
-    checkForm()
+  # $('tr.facility-row input.date-checker').on 'change', ->
+  #   checkForm()
 
-  $('input.datetimepicker-input').on 'change.datetimepicker', ({date, oldDate})  ->
-    checkForm()
+  # $('input.datetimepicker-input').on 'change.datetimepicker', ({date, oldDate})  ->
+  #   checkForm()
 
   # _village_form: setting polymorphic reportable_type and reportable_id
   setPolymorphic = (type, id) ->
-    $('#report_reportable_type').val(type)
-    $('#report_reportable_id').val(id)
+    $('#report_reportable_type.village-form').val(type)
+    $('#report_reportable_id.village-form').val(id)
 
   selectLogic = () ->
     # don't forget: when #report_cell is un-set, #report_village gets reset by finders.coffee
-    cell_val = $('#report_cell').val()
-    vill_val = $('#report_village').val()
+    cell_val = $('#report_cell.village-form').val()
+    vill_val = $('#report_village.village-form').val()
 
     if vill_val != ''
       # if #report_village has a value, always use that
@@ -106,8 +113,10 @@ $(document).on 'turbolinks:load', ->
       setPolymorphic('','')
 
 
-  $('#report_cell').on 'change', ->
+  $('#report_cell.village-form').on 'change', ->
     selectLogic()
 
-  $('#report_village').on 'change', ->
+  $('#report_village.village-form').on 'change', ->
     selectLogic()
+
+  # _facility_form: setting polymorphic reportable_type and reportable_id

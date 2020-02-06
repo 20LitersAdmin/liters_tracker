@@ -3,10 +3,10 @@
 $('input.form-control').val('')
 $('select.form-control.optional').val('')
 // destroy the existing DataTable
-$("table#dttb_reports_villages").DataTable().destroy();
+$("table#dttb_sector_reports").DataTable().destroy();
 // re-populate the table body using the partial
-$("table#dttb_reports_villages tbody").html("<%= j render partial: 'sectors/report', collection: @reports %>");
+$("table#dttb_sector_reports tbody").html("<%= j render partial: 'sectors/report', collection: @reports, locals: { scale: @report.technology.scale } %>");
 // re-init the DataTable
-$("table#dttb_reports_villages").DataTable({
+$("table#dttb_sector_reports").DataTable({
   order: [[ 0, 'asc' ], [ 1, 'asc' ]]
 });

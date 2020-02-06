@@ -11,6 +11,8 @@ $(document).on 'turbolinks:load', ->
     target.append('<option></option>')
     if target.attr('id').includes('cell')
       $(target).append('<option disabled="disabled" value="0">Please select a sector</option>')
+    else if target.attr('id').includes('reportable_id') # aka facilitiy
+      $(target).append('<option disabled="disabled" value="0">Please select a village</option>')
     else # target.attr('id').includes('village')
       $(target).append('<option disabled="disabled" value="0">Please select a cell</option>')
 
@@ -55,10 +57,21 @@ $(document).on 'turbolinks:load', ->
     if cellId > 0
       ajaxGeography('cells', cellId, target)
 
-  # called from sectors#report:_village_form
+  # called from sectors#report:_village_form && _facility_form
   $('#report_cell').on 'change', ->
     cellId = $(this).val()
-    target = $('#report_village')
-    resetOptions(target)
+    villageTarget = $('#report_village')
+    facilityTarget = $('#report_reportable_id')
+    resetOptions(facilityTarget)
     if cellId > 0
-      ajaxGeography('cells', cellId, target)
+      ajaxGeography('cells', cellId, villageTarget)
+    else
+      resetOptions(villageTarget)
+
+  # called from sectors#report:_facility_form
+  $('#report_village').on 'change', ->
+    villageId = $(this).val()
+    target = $('#report_reportable_id')
+    resetOptions(target)
+    if villageId > 0
+      ajaxGeography('villages', villageId, target)

@@ -20,15 +20,15 @@
     - else # @technology.scale == 'Community'
       = render partial: 'facility_form', locals: { report: Report.new }
 
+- if @technology.scale == 'Community'
+  .row.justify-content-center
+    .col-auto= link_to 'Add New Facility', '#', id: 'facility-trigger', class: 'btn yellow', data: { toggle:  "modal", target: '#new_facility_modal' }
+
 .row#sector_reports
   .col-12
     %h3 Existing reports:
   .col-12
-    - if @technology.scale == 'Family'
-      = render partial: 'villages_reports'
-    - else # @technology.scale == 'Community'
-      = render partial: 'facilities_reports'
-
+    = render partial: 'reports', locals: { scale: @technology.scale }
 
 - if @technology.scale == 'Community'
   .modal.fade#new_facility_modal{tabindex: '-1', role: 'dialog', 'aria-labelledby': 'newFacilityLabel', 'aria-hidden': 'true' }

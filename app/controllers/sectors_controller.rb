@@ -38,14 +38,11 @@ class SectorsController < ApplicationController
     @date = params[:date].present? ? Date.parse(params[:date]) : Date.today.beginning_of_month - 1.month
 
     @plans = @sector.related_plans.where(technology: @technology).nearest_to_date(@date)
-    @reports = @sector.related_reports.where(technology: @technology, date: @date)
+
+    @reports = @sector.related_reports.where(technology: @technology).between(@date.beginning_of_month, @date.end_of_month)
 
     @cell_select = @sector.cells.select(:id, :name).order(:name)
-    @village_select = @sector.villages.select(:id, :name).order(:name)
 
-    return unless @technology.scale == 'Community'
-
-    @facility_select = @sector.facilities.select(:id, :name).order(:name)
     @facility = Facility.new
   end
 

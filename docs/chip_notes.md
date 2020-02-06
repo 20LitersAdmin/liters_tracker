@@ -3,12 +3,11 @@
 - `rails db:migrate` to make `Report#contract_id` optional
 
 3. Tweak reporting workflow
-- sectors#select is fine
-- sectors#report
--- `_villages_reports` and `_village_form` are working as expected
--- replicate the above for `_facilities_reports` and `_facility_form`, including AJAX at reports#create
--- Need flash notices of creation and deletion: https://stackoverflow.com/questions/23967390/rails-flash-notice-via-ajax
--- reports#create needs to check for an existing duplicate first
+- Test http://localhost:3000/sectors/2/report?date=2014-02-01&tech=1
+- Test http://localhost:3000/sectors/3/report?date=2014-04-01&tech=3
+- Test Add New Facility still works (especially select lookups)
+- Need flash notices of creation and deletion: https://stackoverflow.com/questions/23967390/rails-flash-notice-via-ajax
+- reports#create needs to check for an existing duplicate first
 
 4. What about un-met plans?
 - Help Rebero see work to be accomplished by Sector

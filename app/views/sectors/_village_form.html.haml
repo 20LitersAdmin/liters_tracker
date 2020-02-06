@@ -1,5 +1,5 @@
 -# frozen_string_literal: true
-= simple_form_for report, remote: true do |f|
+= simple_form_for report, remote: true, defaults: { input_html: { class: 'village-form' }} do |f|
   = f.input :reportable_id, as: :hidden
   = f.input :reportable_type, as: :hidden
   = f.input :technology_id, as: :hidden, input_html: { value: @technology.id }
