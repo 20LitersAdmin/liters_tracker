@@ -1,7 +1,8 @@
 # frozen_string_literal: true
 
 class FacilitiesController < ApplicationController
-  before_action :set_facility, only: %i[show edit update destroy facility_error]
+  before_action :set_facility, only: %i[show edit update destroy]
+  before_action :set_sector_collection, only: %i[new edit update create]
 
   # GET /facilities
   # GET /facilities.json
@@ -17,49 +18,38 @@ class FacilitiesController < ApplicationController
   # GET /facilities/new
   def new
     authorize @facility = Facility.new
-    @sectors = Sector.all.select(:name, :id).order(:name)
   end
 
   # GET /facilities/1/edit
-  def edit
-    @sectors = Sector.all.select(:name, :id).order(:name)
-  end
+  def edit; end
 
   # POST /facilities
   # POST /facilities.json
   def create
     authorize @facility = Facility.new(facility_params)
 
+    # params[:facility][:village] is coming through like "2", so it must be set separately
+    # otherwise, I have to use :village_id on all the forms and that's annoying.
+    @facility.village = Village.find(params[:facility][:village]) if params[:facility][:village].present?
+
     respond_to do |format|
       if @facility.save
         format.html do
           flash[:success] = 'Facility was successfully created.'
-          redirect_to root_path
+          redirect_to data_path
         end
         format.js do
-          # render json: @facility, status: :created
-          render action: 'facility_created', location: @facility, status: :created
+          render :facility_created
         end
       else
         format.html do
-          @sectors = Sector.all.select(:name, :id).order(:name)
           render :new
         end
         format.js do
-          # the JSON isn't compatible with rails_ujs
-          # Maybe try to figure out how to send it as an array?
-          render action: 'facility_error', status: :unprocessable_entity, location: @facility
+          render :facility_error
         end
       end
     end
-  end
-
-  def facility_error
-    authorize @facility
-  end
-
-  def facility_created
-    authorize @facility.reload
   end
 
   # PATCH/PUT /facilities/1
@@ -86,21 +76,18 @@ class FacilitiesController < ApplicationController
     end
   end
 
-  def village_finder
-    authorize @sector = Sector.find(params[:sector])
-
-    villages = @sector.villages.select(:id, :name).order(:name)
-
-    render json: villages
-  end
-
   private
 
   def set_facility
     authorize @facility = Facility.find(params[:id])
   end
 
+  def set_sector_collection
+    @sectors = Sector.all.select(:name, :id).order(:name)
+  end
+
   def facility_params
-    params.require(:facility).permit(:name, :category, :description, :village_id, :population, :households, :latitude, :longitude)
+    # village is not included in params, is set separately in the create / update actions
+    params.require(:facility).permit(:name, :category, :description, :population, :households, :latitude, :longitude)
   end
 end

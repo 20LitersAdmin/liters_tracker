@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 class CellsController < ApplicationController
-  before_action :set_cell, only: %w[show edit update destroy]
+  before_action :set_cell, only: %w[show edit update destroy children]
 
   # GET /cells
   # GET /cells.json
@@ -83,6 +83,12 @@ class CellsController < ApplicationController
       format.html { redirect_to cells_url, notice: 'Cell was successfully destroyed.' }
       format.json { head :no_content }
     end
+  end
+
+  ## facilities#form and facilities#modal_form ajax
+  ## sectors#reports ajax
+  def children
+    render json: @cell.villages.select(:id, :name).order(:name)
   end
 
   private

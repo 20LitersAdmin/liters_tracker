@@ -28,6 +28,10 @@ class MonthlyController < ApplicationController
     @date = Date.new(monthly.year, monthly.month, 1)
     @reports = Report.within_month(@date)
     @stories = Story.where(report_id: @reports.pluck(:id).uniq)
+
+    @previous = Monthly.new(year: @date.last_month.year, month: @date.last_month.month) if Report.within_month(@date.last_month).any?
+    @next = Monthly.new(year: @date.next_month.year, month: @date.next_month.month) if Report.within_month(@date.next_month).any?
+    console
   end
 
   private

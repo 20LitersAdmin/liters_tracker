@@ -24,15 +24,26 @@ class ReportsController < ApplicationController
   # POST /reports
   # POST /reports.json
   def create
-    authorize @report = Report.new(report_params)
+    # check for duplicates first
+    authorize @report = Report.where(dup_matching_params).first_or_initialize
+
+    @report.assign_attributes(report_params)
+    @report.user = current_user
+
+    @persistence = @report.new_record? ? 'Report was successfully created.' : 'A matching report was found and updated.'
 
     respond_to do |format|
       if @report.save
         format.html { redirect_to @report, notice: 'Report was successfully created.' }
         format.json { render :show, status: :created, location: @report }
+        format.js do
+          @reports = @report.reportable.sector.related_reports.where(technology: @report.technology).between(@report.date.beginning_of_month, @report.date.end_of_month)
+          render :report_created
+        end
       else
         format.html { render :new }
         format.json { render json: @report.errors, status: :unprocessable_entity }
+        format.js { render :report_error }
       end
     end
   end
@@ -47,6 +58,7 @@ class ReportsController < ApplicationController
       else
         format.html { render :edit }
         format.json { render json: @report.errors, status: :unprocessable_entity }
+        format.js { render :report_error }
       end
     end
   end
@@ -58,20 +70,9 @@ class ReportsController < ApplicationController
     respond_to do |format|
       format.html { redirect_to reports_url, notice: 'Report was successfully destroyed.' }
       format.json { head :no_content }
+      # TODO: flash[:notice] = 'Report was successfully destroyed.'
+      format.js { render :report_destroyed }
     end
-  end
-
-  def batch_process
-    authorize current_user
-
-    if Report.key_params_are_missing?(batch_report_params)
-      flash[:error] = 'Oops, some data got lost. Please try again'
-    else
-      Report.batch_process(batch_report_params, current_user.id)
-      flash[:success] = 'The report was successfully submitted.'
-    end
-
-    redirect_to select_sectors_path
   end
 
   private
@@ -81,10 +82,20 @@ class ReportsController < ApplicationController
   end
 
   def report_params
-    params.require(:report).permit(:date, :technology_id, :distributed, :checked, :user_id, :distribute, :checked, :people, :reportable_id, :reportable_type, :eager_image)
+    params.require(:report).permit(:date,
+                                   :technology_id,
+                                   :reportable_id,
+                                   :reportable_type,
+                                   :distributed,
+                                   :checked,
+                                   :user_id,
+                                   :people)
   end
 
-  def batch_report_params
-    params.require(:batch_reports).permit(:technology_id, :contract_id, :master_date, reports: %i[date technology_id distributed checked people reportable_id reportable_type])
+  def dup_matching_params
+    params.require(:report).permit(:date,
+                                   :technology_id,
+                                   :reportable_id,
+                                   :reportable_type)
   end
 end

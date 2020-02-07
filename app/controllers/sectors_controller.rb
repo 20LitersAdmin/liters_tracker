@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 class SectorsController < ApplicationController
-  before_action :set_sector, only: %w[show edit update destroy report new_facility]
+  before_action :set_sector, only: %w[show edit update destroy report children]
 
   # GET /sectors
   def index
@@ -24,6 +24,7 @@ class SectorsController < ApplicationController
     @technologies = Technology.report_worthy.order(:short_name)
 
     @date = params[:date].present? ? Date.parse(params[:date]) : Date.today.beginning_of_month - 1.month
+    @earliest_year = Report.earliest_date.year
   end
 
   def report
@@ -37,21 +38,15 @@ class SectorsController < ApplicationController
     @date = params[:date].present? ? Date.parse(params[:date]) : Date.today.beginning_of_month - 1.month
 
     @plans = @sector.related_plans.where(technology: @technology).nearest_to_date(@date)
-    @reports = @sector.related_reports.where(technology: @technology, date: @date)
-    @contract = Contract.between(@date, @date).first
 
-    if @technology.scale == 'Family' # %w[SAM3, SAM3-M, SS].include?(@technology.short_name)
-      @cells = @sector.cells.order(:name)
-    elsif @technology.short_name != 'RWHS' # %w[SAM2, SAM2-M].include?(@technology.short_name)
-      @facilities = @sector.facilities.not_churches.order(:name)
-    else # @technology.short_name == 'RWHS'
-      @facilities = @sector.facilities.churches.order(:name)
-    end
+    @reports = @sector.related_reports.where(technology: @technology).between(@date.beginning_of_month, @date.end_of_month)
 
-    if @technology.scale == 'Community'
-      @facility = Facility.new
-      @villages = @sector.villages.select(:id, :name).order(:name)
-    end
+    @cell_select = @sector.cells.select(:id, :name).order(:name)
+
+    @report = Report.new(technology: @technology)
+    @report.date = @date if @technology.scale == 'Family'
+
+    @facility = Facility.new if @technology.scale == 'Community'
   end
 
   # GET /sectors/1
@@ -126,13 +121,10 @@ class SectorsController < ApplicationController
     end
   end
 
-  def new_facility
-    authorize @sector
-
-    respond_to do |format|
-      format.html
-      format.js
-    end
+  ## facilities#form ajax
+  ## sectors#report ajax
+  def children
+    render json: @sector.cells.select(:id, :name).order(:name)
   end
 
   private
@@ -142,6 +134,11 @@ class SectorsController < ApplicationController
   end
 
   def sector_params
-    params.require(:sector).permit(:name, :gis_code, :latitude, :longitude, :population, :households)
+    params.require(:sector).permit(:name,
+                                   :gis_code,
+                                   :latitude,
+                                   :longitude,
+                                   :population,
+                                   :households)
   end
 end

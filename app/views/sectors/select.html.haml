@@ -9,11 +9,11 @@
   .col-12
     %h3 1. Select report date:
   #date-chooser.col-12
-    .row
-      .col-12.col-sm-6.text-right
-        = select_month(@date)
-      .col-12.col-sm-6
-        = select_year(@date, start_year: (@date - 1.year).year, end_year: (@date + 1.year).year)
+    .row.justify-content-center
+      .col-auto
+        = select_month(@date, {}, class: 'form-control')
+      .col-auto
+        = select_year(@date, { start_year: @earliest_year, end_year: (@date + 1.year).year }, class: 'form-control')
 .row
   .col-12
     %h3 2. Select a technology by sector:

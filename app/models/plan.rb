@@ -22,6 +22,8 @@ class Plan < ApplicationRecord
   scope :without_reports,         -> { left_outer_joins(:reports).where(reports: { id: nil }) }
   scope :with_reports_incomplete, -> { joins(:reports).group('plans.id').having('plans.goal > SUM(reports.distributed)').select('plans.*') }
 
+  after_save :find_reports
+
   def breadcrumb
     hierarchy = Constants::Geography::HIERARCHY
     position = hierarchy.index(planable_type)
@@ -121,5 +123,19 @@ class Plan < ApplicationRecord
 
   def self.ary_of_district_ids_from_sectors
     related_sectors.pluck(:district_id)
+  end
+
+  private
+
+  def find_reports
+    # edge case: reports have been created without a plan_id
+    # add plan_id to these records once an applicable plan is created
+    reps = Report.where(contract_id: contract_id,
+                        plan_id: nil,
+                        technology_id: technology_id,
+                        reportable_id: planable_id,
+                        reportable_type: planable_type)
+
+    reps.update_columns(plan_id: id) if reps.any?
   end
 end

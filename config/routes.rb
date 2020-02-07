@@ -11,7 +11,8 @@ Rails.application.routes.draw do
   get 'stats', to: 'dashboard#stats_json', as: 'stats'
 
   resources :reports do
-    post 'batch_process', on: :collection
+    # get 'report_created', on: :member
+    # get 'report_error', on: :member
   end
 
   resources :contracts
@@ -25,14 +26,18 @@ Rails.application.routes.draw do
   resources :sectors do
     get 'select', on: :collection
     get 'report', on: :member
-    get 'new_facility', on: :member
+    get 'children', on: :member
   end
-  resources :cells
-  resources :villages
-  resources :facilities do
-    get 'village_finder', on: :collection
-    get 'facility_error', on: :member
+  resources :cells do
+    get 'children', on: :member
   end
+  resources :villages do
+    get 'children', on: :member
+  end
+  resources :facilities #do
+    # get 'facility_error', on: :member
+    # get 'facility_created', on: :member
+  #end
 
   resources :stories do
     get 'image', on: :member

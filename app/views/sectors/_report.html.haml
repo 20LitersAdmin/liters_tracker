@@ -1,0 +1,19 @@
+%tr
+  %td= report.reportable.cell&.name
+  %td= report.reportable.village&.name
+  - if scale == 'Family'
+    %td.text-center= report.plan&.goal
+    %td.text-center= human_number report.distributed
+    %td.text-center= human_number report.impact
+    %td.text-center= human_number report.checked
+  - else # scale == 'Community'
+    - facility = report.reportable.facility
+    %td= facility.name
+    %td.text-center= human_number facility.population
+    %td.text-center= facility.category
+    %td.text-center= human_number report.distributed
+    %td.text-center= human_number report.checked
+    %td.text-center= human_date report.date
+    %td.text-center= human_number report.impact
+  %td= link_to 'Edit', edit_report_path(report), class: 'btn yellow small', target: '_blank'
+  %td= link_to 'Delete', report, method: :delete, class: 'btn red small sector-report-delete', remote: true, data: { confirm: 'Are you sure you want to DELETE the report?' }

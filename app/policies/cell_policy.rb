@@ -37,4 +37,8 @@ class CellPolicy
   def destroy?
     @user&.admin?
   end
+
+  def children?
+    @user&.admin? || @user&.can_manage_geography? || @user&.can_manage_reports?
+  end
 end

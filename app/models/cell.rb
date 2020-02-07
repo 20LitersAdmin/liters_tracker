@@ -38,4 +38,9 @@ class Cell < ApplicationRecord
   def cell
     self
   end
+
+  def village
+    # some views assume all reports are at the village level
+    nil
+  end
 end

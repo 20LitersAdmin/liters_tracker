@@ -1,66 +1,42 @@
 -# frozen_string_literal: true
-- modal ||= false
-- remote = modal ? true : false
-= simple_form_for facility, remote: remote do |f|
+
+= simple_form_for facility do |f|
   - if facility.errors.any?
     = render partial: 'shared/form_errors', locals: { object: facility }
 
   .row
     .col.field
       = f.input :name
-      - if modal
-        .invalid-feedback-modal
     .col.field
       = f.input :category, collection: Constants::Facility::CATEGORY
-      - if modal
-        .invalid-feedback-modal
   .row
     .col.field
       = f.input :description, as: :text
-      - if modal
-        .invalid-feedback-modal
   .row
     - if facility.new_record?
-      - unless modal
-        .col.field
-          = f.input :sector, collection: @sectors, required: true
-          .invalid-feedback-modal
       .col.field
-        - if modal
-          = f.input :village_id, collection: @villages, required: true
-          .invalid-feedback-modal
-        - else
-          = f.input :village_id, collection: [['Please select a sector','0']], disabled: 0
+        = f.input :sector, collection: @sectors, hint: 'Select to limit cells.'
+      .col.field
+        = f.input :cell, collection: [['Please select a sector', '0']], disabled: 0, hint: 'Select to limit villages.'
+      .col.field
+        = f.input :village, collection: [['Please select a cell','0']], disabled: 0
     - else
       .col.field
         = f.input :sector, collection: @sectors, selected: facility.sector.id
-        - if modal
-          .invalid-feedback-modal
       .col.field
-        = f.input :village_id, collection: facility.sector.villages.select(:name, :id).order(:name), selected: facility.village.id
-        - if modal
-          .invalid-feedback-modal
+        = f.input :village, collection: facility.sector.villages.select(:name, :id).order(:name), selected: facility.village.id
   .row
     .col.field
       = f.input :population
-      - if modal
-        .invalid-feedback-modal
     .col.field
       = f.input :households
-      - if modal
-        .invalid-feedback-modal
   .row
     .col.field
       = f.input :latitude, hint: 'like -2.054922'
-      - if modal
-        .invalid-feedback-modal
     .col.field
       = f.input :longitude, hint: 'like 30.0912883'
-      - if modal
-        .invalid-feedback-modal
   .row.my-3.actions
-    - unless modal
-      .col.text-left
-        = link_to 'Back', request.referrer, class: 'btn yellow'
+    .col.text-left
+      = link_to 'Back', request.referrer, class: 'btn yellow'
     .col.text-right
       = f.button :submit, class: 'btn yellow'

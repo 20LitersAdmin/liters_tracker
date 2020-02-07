@@ -1,66 +1,31 @@
 -# frozen_string_literal: true
 .row
+  .col-12
+    #ajax_response
+.row
   .col-10
-    %h1= "#{@sector.name} Sector report:"
+    %h4= "#{@technology.short_name} in #{@sector.name} Sector during #{@date.strftime("%B, %Y")}"
   .col-2.text-right
     =link_to 'Back', select_sectors_path, class: 'btn yellow'
-.row
+
+.row#sector_form
   .col-12
-    %h2= "#{@technology.short_name} achievements in #{@date.strftime("%B, %Y")}"
+    %h5 Create a new report:
+  .col-12
+    - if @technology.scale == 'Family'
+      = render partial: 'village_form', locals: { report: @report }
+    - else # @technology.scale == 'Community'
+      = render partial: 'facility_form', locals: { report: @report }
 
-.row#sector_report
-  .col-12.table-responsive
-    = form_tag batch_process_reports_path, autocomplete: 'off' do
-      .row
-        .col-12.text-center.submit-div
-          = submit_tag 'Submit report', class: 'btn btn-success'
-        .col-12.text-center.warning-div
-          %p.warning-text Please check form for errors
-      =hidden_field_tag 'batch_reports[technology_id]', @technology.id
-      =hidden_field_tag 'batch_reports[contract_id]', @contract.id
-      =hidden_field_tag 'batch_reports[master_date]', @date
+- if @technology.scale == 'Community'
+  .row.justify-content-end
+    .col-auto= link_to 'Add New Facility', '#', id: 'facility-trigger', class: 'btn blue', data: { toggle:  "modal", target: '#new_facility_modal' }
 
-      - if @technology.scale == 'Family'
-        %table.table.table-sm.table-hover#villages_table
-          %thead
-            %tr
-              %th Villages
-              - if @plans.any?
-                %th.text-center= "Planned (by #{human_date(@plans.first&.date)})"
-              - else
-                %th.text-center Planned
-              - if @reports.any?
-                %th.text-center= human_number(@reports.sum(:distributed)) + ' Distributed'
-                %th.text-center= human_number(@reports.sum(:people)) + ' People served'
-                %th.text-center= human_number(@reports.sum(:checked)) + ' Checked'
-              - else
-                %th.text-center Distributed
-                %th.text-center People served
-                %th.text-center Checked
-          %tbody
-            = render partial: 'cell_form', collection: @cells
-      - else # @technology.scale == 'Community'
-        %table.table.table-sm#facilities_table
-          %thead
-            %tr
-              %th Facilities
-              %th.text-center Population
-              %th Type
-              %th Cell
-              %th Village
-              %th.text-center= "#<br>Installed".html_safe
-              %th.text-center= "#<br>Checked".html_safe
-              %th.text-center Date
-              %th.text-center= "People<br>served".html_safe
-            %tbody
-              = render partial: 'facility_form', collection: @facilities, locals: { technology: @technology, date: @date, modal: false }
-        .row
-          .col-12.text-right= link_to 'Add Facility', '#', id: 'facility-trigger', class: 'btn yellow', data: { toggle:  "modal", target: '#new_facility_modal' }
-      .row
-        .col-12.text-center.submit-div
-          = submit_tag 'Submit report', class: 'btn btn-success'
-        .col-12.text-center.warning-div
-          %p.warning-text Please check form for errors
+.row#sector_reports
+  .col-12
+    %h5 Existing reports:
+  .col-12
+    = render partial: 'reports', locals: { scale: @technology.scale }
 
 - if @technology.scale == 'Community'
   .modal.fade#new_facility_modal{tabindex: '-1', role: 'dialog', 'aria-labelledby': 'newFacilityLabel', 'aria-hidden': 'true' }
@@ -70,4 +35,5 @@
           %h5.modal-title#new_facility_title Add Facility
           %button.close{ type: 'button', 'data-dismiss': 'modal', 'aria-label': 'Close' }
             %span{ 'aria-hidden': true } &times;
-        .modal-body= render partial: 'facilities/form', locals: { facility: @facility, modal: true }
+        .modal-body
+          = render partial: 'facilities/modal_form', locals: { facility: @facility }
