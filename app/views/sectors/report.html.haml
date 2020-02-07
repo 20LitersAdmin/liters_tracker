@@ -18,7 +18,7 @@
       = render partial: 'facility_form', locals: { report: @report }
 
 - if @technology.scale == 'Community'
-  .row.justify-content-right
+  .row.justify-content-end
     .col-auto= link_to 'Add New Facility', '#', id: 'facility-trigger', class: 'btn blue', data: { toggle:  "modal", target: '#new_facility_modal' }
 
 .row#sector_reports

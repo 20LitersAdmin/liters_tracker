@@ -24,12 +24,13 @@ class ReportsController < ApplicationController
   # POST /reports
   # POST /reports.json
   def create
-    authorize @report = Report.new(report_params)
+    # check for duplicates first
+    authorize @report = Report.where(dup_matching_params).first_or_initialize
+
+    @report.assign_attributes(report_params)
     @report.user = current_user
 
-    # check for duplicates first
-    # destroy the original and replace with this record if duplicate exists
-    # does Report.where(report_params).first_or_initialize work?
+    @persistence = @report.new_record? ? 'Report was successfully created.' : 'A matching report was found and updated.'
 
     respond_to do |format|
       if @report.save
@@ -83,10 +84,17 @@ class ReportsController < ApplicationController
   def report_params
     params.require(:report).permit(:date,
                                    :technology_id,
+                                   :reportable_id,
+                                   :reportable_type,
                                    :distributed,
                                    :checked,
                                    :user_id,
-                                   :people,
+                                   :people)
+  end
+
+  def dup_matching_params
+    params.require(:report).permit(:date,
+                                   :technology_id,
                                    :reportable_id,
                                    :reportable_type)
   end
