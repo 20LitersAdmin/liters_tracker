@@ -17,13 +17,13 @@ $(document).on 'turbolinks:load', ->
       "targets": [-1, -2]
     } ]
 
-  # handle datepickers on sector#reports:_facility_form
+  # handle datepicker on sector#reports:_facility_form
   dateStr = getParameterByName('date')
   date = moment(dateStr, 'YYYY-MM-DD')
   first = date.startOf('month').format('YYYY-MM-DD')
   last = date.endOf('month').format('YYYY-MM-DD')
 
-  $('#report_date').datetimepicker({
+  $('#report_date.datetimepicker-input').datetimepicker({
     format: 'YYYY-MM-DD',
     useCurrent: false,
     viewDate: date.startOf('month'),
@@ -33,8 +33,8 @@ $(document).on 'turbolinks:load', ->
     }
   })
 
-  $('#report_date').datetimepicker('minDate', first)
-  $('#report_date').datetimepicker('maxDate', last)
+  $('#report_date.datetimepicker-input').datetimepicker('minDate', first)
+  $('#report_date.datetimepicker-input').datetimepicker('maxDate', last)
 
   # existing reports delete button:
   # remove the deleted row from the table views using DataTables API
@@ -44,48 +44,7 @@ $(document).on 'turbolinks:load', ->
       .remove()
       .draw()
 
-  # form error checking for @technology.scale == 'Community':
-  # TODO: see if any of this should be preserved
-  # $('div.warning-div').hide()
-
-  # checkRow = (row) ->
-  #   dist = row.find('input.distributed')
-  #   check = row.find('input.checked')
-  #   number = Number(dist.val()) + Number(check.val())
-  #   date = row.find('input.datetimepicker-input')
-
-  #   if number > 0 && date.val() == ''
-  #     dist.css('border-color', '#dc3545')
-  #     check.css('border-color', '#dc3545')
-  #     date.css('border-color', '#dc3545')
-  #     return 1
-  #   else
-  #     dist.css('border-color', '')
-  #     check.css('border-color', '')
-  #     date.css('border-color', '')
-  #     return 0
-
-  # checkForm = () ->
-  #   errorCount = 0
-  #   $('tr.facility-row').each ()->
-  #     errorCount += checkRow($(this))
-
-  #   if errorCount > 0
-  #     $('input[type=submit').attr('disabled', true)
-  #     $('div.warning-div').show()
-  #     $('div.submit-div').hide()
-  #   else
-  #     $('input[type=submit').attr('disabled', false)
-  #     $('div.warning-div').hide()
-  #     $('div.submit-div').show()
-
-  # $('tr.facility-row input.date-checker').on 'change', ->
-  #   checkForm()
-
-  # $('input.datetimepicker-input').on 'change.datetimepicker', ({date, oldDate})  ->
-  #   checkForm()
-
-  # _village_form: setting polymorphic reportable_type and reportable_id
+  # _village_form && _facility_form: setting polymorphic reportable_type and reportable_id
   setPolymorphic = (type, id) ->
     $('#report_reportable_type.village-form').val(type)
     $('#report_reportable_id.village-form').val(id)

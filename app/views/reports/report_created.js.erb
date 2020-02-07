@@ -1,7 +1,23 @@
-// for sectors#report:_village_form
-// clear out the form fields
-$('input.form-control').val('')
-$('select.form-control.optional').val('')
+// for sectors#report:_village_form && _facility_form
+
+// remove any 'is-invalid' css tags
+$('.is-invalid').removeClass('is-invalid');
+
+// clear out the visible form fields on _village_form and _facility_form
+$('form#new_report').find('select#report_cell').val('')
+$('form#new_report').find('select#report_village').val('')
+$('form#new_report').find('select#report_reportable_id').val('')
+$('form#new_report').find('input#report_distributed').val('')
+$('form#new_report').find('input#report_checked').val('')
+$('form#new_report').find('input#report_people').val('')
+
+// clear out the reportable hidden fields on _village_form
+$('form#new_report').find('input#report_reportable_id').val('')
+$('form#new_report').find('input#report_reportable_type').val('')
+
+// the datetimepicker
+$('form#new_report').find('input#report_date.datetimepicker-input').val('')
+
 // destroy the existing DataTable
 $("table#dttb_sector_reports").DataTable().destroy();
 // re-populate the table body using the partial
@@ -10,6 +26,9 @@ $("table#dttb_sector_reports tbody").html("<%= j render partial: 'sectors/report
 $("table#dttb_sector_reports").DataTable({
   order: [[ 0, 'asc' ], [ 1, 'asc' ]]
 });
+
+// remove any old flashes
+$('div.alert.alert-dismissable').remove();
 // fake the flash[:success]
 $('main.container').prepend('<div class="alert alert-success alert-dismissable fade show" role="alert"><button class="close" data-dismiss="alert">x</button>Report was successfully created.</div>')
 // navigate to the top of the page so you can see the flash message

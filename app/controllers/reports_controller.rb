@@ -36,7 +36,7 @@ class ReportsController < ApplicationController
         format.html { redirect_to @report, notice: 'Report was successfully created.' }
         format.json { render :show, status: :created, location: @report }
         format.js do
-          @reports = @report.reportable.sector.related_reports.where(technology: @report.technology, date: @report.date)
+          @reports = @report.reportable.sector.related_reports.where(technology: @report.technology).between(@report.date.beginning_of_month, @report.date.end_of_month)
           render :report_created
         end
       else

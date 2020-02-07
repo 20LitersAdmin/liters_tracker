@@ -1,3 +1,8 @@
+// remove any 'is-invalid' css tags
+$('.is-invalid').removeClass('is-invalid');
+
+// remove any old flashes
+$('div.alert.alert-dismissable').remove();
 // fake the flash[:error] with a list of the errors
 var msgTitle = "<h4>Couldn't save the report:</h4>";
 var msgBody = "<%= @report.errors.full_messages.join('<br />').html_safe %>";

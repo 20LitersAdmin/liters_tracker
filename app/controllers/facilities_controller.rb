@@ -39,14 +39,14 @@ class FacilitiesController < ApplicationController
           redirect_to data_path
         end
         format.js do
-          render action: 'facility_created', location: @facility, status: :created
+          render :facility_created
         end
       else
         format.html do
           render :new
         end
         format.js do
-          render action: 'facility_error'
+          render :facility_error
         end
       end
     end

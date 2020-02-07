@@ -3,10 +3,6 @@
 - `rails db:migrate` to make `Report#contract_id` optional
 
 3. Tweak reporting workflow
-- Test http://localhost:3000/sectors/2/report?date=2014-02-01&tech=1
-- Test http://localhost:3000/sectors/3/report?date=2014-04-01&tech=3
-- Add New Facility no longer works:
--- Need to write `facility_created.js.erb` to match `report_created.js.erb`
 - reports#create needs to check for an existing duplicate first
 
 4. What about un-met plans?
