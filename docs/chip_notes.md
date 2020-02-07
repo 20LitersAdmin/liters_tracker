@@ -2,9 +2,6 @@
 0. Next deploy:
 - `rails db:migrate` to make `Report#contract_id` optional
 
-3. Tweak reporting workflow
-- reports#create needs to check for an existing duplicate first
-
 4. What about un-met plans?
 - Help Rebero see work to be accomplished by Sector
 
