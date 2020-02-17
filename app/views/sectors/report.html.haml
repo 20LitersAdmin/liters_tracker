@@ -8,6 +8,15 @@
   .col-2.text-right
     =link_to 'Back', select_sectors_path, class: 'btn yellow'
 
+- if @technology.name.include?("Train")
+  .row#training_explanation
+    .col
+      %h5 Training report:
+      - if @technology.scale == 'Family'
+        %p Select the village where training occurred.
+      - else
+        %p Select the facility where volunteers were trained.
+
 .row#sector_form
   .col-12
     %h5 Create a new report:

@@ -7,7 +7,7 @@ class DashboardController < ApplicationController
     @lifetime_stats = Technology.report_worthy.map do |technology|
       next if technology.reports.distributions.empty?
 
-      { stat: technology.lifetime_distributed, title: "#{technology.name}s" }
+      { stat: technology.lifetime_distributed, title: technology.plural_name }
     end
     @global_impact = Report.distributions.sum(:impact)
 

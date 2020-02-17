@@ -24,4 +24,16 @@ class Technology < ApplicationRecord
   def lifetime_distributed
     reports.distributions.sum(:distributed)
   end
+
+  def plural_name
+    if name.include?('Training')
+      ary = []
+      split = name.split(' ')
+      ary << split[0].pluralize
+      ary << 'Trained'
+      ary.join(' ')
+    else
+      name.pluralize
+    end
+  end
 end

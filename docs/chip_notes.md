@@ -1,5 +1,17 @@
 # CURRENT:
 
+0. DEBATE: Training reports:
+- 'One person is trained multiple times, so what stat and language matters?'
+- Count value in :distributed vs :people?
+- Show on dashboard?
+- "in the month of January, X people were trained Y times"
+- Volunteers as a "Community" scope?
+- Training Tech has impact of 0
+- Does Technology need more booleans:
+-- :is_training? - replace @technology.name.includes?('Train')
+-- :dashboard_worthy? - replace @technology.report_worthy? in DashboardController
+
+
 0. sectors/:id/report
 - When technology is Training, include a message about how to complete [Distributed][People][Checked]
 

@@ -1,21 +1,25 @@
 -# frozen_string_literal: true
+- distributed_label = @technology.name.include?("Train") ? '# Trained' : 'Installed'
 = simple_form_for report, remote: true, defaults: { input_html: { class: 'facility-form' }} do |f|
   = f.input :reportable_type, as: :hidden, input_html: { value: 'Facility' }
   = f.input :technology_id, as: :hidden, input_html: { value: @technology.id }
   .row
-    .col-4.col-lg-2.field
+    .col-4.field
       = f.input :cell, collection: @cell_select, hint: 'Select to limit villages.'
-    .col-4.col-lg-2.field
+    .col-4.field
       = f.input :village, collection: [['Please select a cell','0']], disabled: 0, hint: 'Select to limit facilities.'
-    .col-4.col-lg-2.field
+    .col-4.field
       = f.input :reportable_id, label: 'Facility', collection: [['Please select a village','0']], disabled: 0
-    .col-2.col-lg-1.field
-      = f.input :distributed, label: 'Installed'
-    .col-2.col-lg-1.field
-      = f.input :checked
-    .col-3.col-lg-2.field
+  .row
+    .col-2.field
+      = f.input :distributed, label: distributed_label
+    - unless @technology.name.include?("Train")
+      .col-2.field
+        = f.input :checked
+    .col-3.field
       = f.input :date, as: :string, input_html: { class: 'datetimepicker-input', data: { toggle: 'datetimepicker', target: '#report_date' } }
-    .col-3.col-lg-1.field
-      = f.input :people
-    .col-2.col-lg-1.field
+    - unless @technology.name.include?("Train")
+      .col-3.field
+        = f.input :people
+    .col-2.field
       = f.button :submit, 'Save', class: 'btn yellow skinny btn-match-field-height', id: 'submit_report'
