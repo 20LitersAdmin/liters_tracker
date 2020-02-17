@@ -54,11 +54,11 @@ class TechnologiesController < ApplicationController
   # GET /technologies/new
   def new
     authorize @technology = Technology.new
+    @scale = Constants::Technology::SCALE
   end
 
   # GET /technologies/1/edit
-  def edit
-  end
+  def edit; end
 
   # POST /technologies
   def create
@@ -66,7 +66,7 @@ class TechnologiesController < ApplicationController
 
     respond_to do |format|
       if @technology.save
-        format.html { redirect_to @technology, notice: 'Technology was successfully created.' }
+        format.html { redirect_to technologies_path, notice: 'Technology was successfully created.' }
         format.json { render :show, status: :created, location: @technology }
       else
         format.html { render :new }
@@ -80,7 +80,7 @@ class TechnologiesController < ApplicationController
   def update
     respond_to do |format|
       if @technology.update(technology_params)
-        format.html { redirect_to @technology, notice: 'Technology was successfully updated.' }
+        format.html { redirect_to technologies_path, notice: 'Technology was successfully updated.' }
         format.json { render :show, status: :ok, location: @technology }
       else
         format.html { render :edit }
@@ -106,6 +106,16 @@ class TechnologiesController < ApplicationController
   end
 
   def technology_params
-    params.require(:technology).permit(:name, :default_impact, :agreement_required, :scale, :direct_cost, :indirect_cost, :us_cost, :local_cost)
+    params.require(:technology).permit(:name,
+                                       :short_name,
+                                       :description,
+                                       :default_impact,
+                                       :report_worthy,
+                                       :agreement_required,
+                                       :scale,
+                                       :direct_cost,
+                                       :indirect_cost,
+                                       :us_cost,
+                                       :local_cost)
   end
 end

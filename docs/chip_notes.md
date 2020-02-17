@@ -1,10 +1,18 @@
 # CURRENT:
-4. What about un-met plans?
+
+0. sectors/:id/report
+- When technology is Training, include a message about how to complete [Distributed][People][Checked]
+
+1. What about un-met plans?
 - Help Rebero see work to be accomplished by Sector
 
 
-5. Deleting a (duplicate) Facility that has associated Reports:
+2. Deleting a (duplicate) Facility that has associated Reports:
 - Need to re-assign reports before deleting facility
+
+3. technology_path(:id)
+- Add Report button does nothing
+- Add Plan button does nothing
 
 # Creating/Updating Targets
 
