@@ -55,23 +55,6 @@ class Report < ApplicationRecord
     hsh
   end
 
-  # adding rows to DataTable on sectors#report
-  def data_table_array
-    ary = []
-    if technology.scale == 'Family'
-      ary << reportable.cell&.name
-      ary << reportable.village&.name
-    else
-      ary << reportable.facility&.name
-    end
-
-    ary << plan&.goal
-    ary << distributed
-    ary << people
-    ary << checked
-  end
-
-
   def details
     if distributed&.positive?
       val = distributed
@@ -87,77 +70,6 @@ class Report < ApplicationRecord
       "#{ActionController::Base.helpers.pluralize(val, technology.name)} installed on #{date.strftime('%B, %d, %Y')}"
     end
   end
-
-  # def self.key_params_are_missing?(batch_process_params)
-  #   batch_process_params[:technology_id].blank? ||
-  #     batch_process_params[:master_date].blank? ||
-  #     batch_process_params[:reports].count.zero?
-  # end
-
-  # def self.batch_process(batch_report_params, user_id)
-  #   technology_id = batch_report_params[:technology_id].to_i
-  #   fallback_date = batch_report_params[:master_date]
-
-  #   batch_report_params[:reports].each do |report_params|
-  #     process(report_params, technology_id, user_id, fallback_date)
-  #   end
-  # end
-
-  # def self.process(report_params, technology_id, user_id, fallback_date)
-  #   date_string = report_params[:date].blank? ? fallback_date : report_params[:date]
-  #   date = Date.parse(date_string)
-
-  #   # date searching must be a range for reports where technology.scale == 'Community'
-  #   report = Report.where(
-  #     date: date.beginning_of_month..date.end_of_month,
-  #     technology_id: technology_id,
-  #     reportable_id: report_params[:reportable_id].to_i,
-  #     reportable_type: report_params[:reportable_type]
-  #   ).first_or_initialize
-
-  #   action = report.determine_action(report_params, user_id)
-
-  #   return if action.zero?
-
-  #   return report.destroy if action == 1
-
-  #   report.tap do |rep|
-  #     rep.user_id = user_id
-  #     rep.distributed = report_params[:distributed]
-  #     rep.checked = report_params[:checked]
-  #     rep.people = report_params[:people]
-  #     rep.date = date
-  #   end
-  #   report.save
-  # end
-
-  # def determine_action(params, user_id)
-  #   # 0 = Skip (record is new and meaningful params are nil OR record persists and attributes match)
-  #   # 1 = Destroy (record persists and meaningful params are nil)
-  #   # 2 = Create (meaningful params are not nil)
-  #   # 3 = Update (meaningful params are not nil)
-
-  #   return 0 if new_record? &&
-  #               !params[:distributed].to_i.positive? &&
-  #               !params[:checked].to_i.positive?
-
-  #   # handles the "equality" of nil and 0 by forcing conversion to integers
-  #   # ensures dates match exactly for reports where technology.scale == 'Community'
-  #   return 0 if persisted? &&
-  #               self.user_id == user_id &&
-  #               distributed.to_i == params[:distributed].to_i &&
-  #               checked.to_i == params[:checked].to_i &&
-  #               people.to_i == params[:people].to_i &&
-  #               date == Date.parse(params[:date])
-
-  #   return 1 if persisted? &&
-  #               !params[:distributed].to_i.positive? &&
-  #               !params[:checked].to_i.positive?
-
-  #   return 2 if new_record?
-
-  #   3 # if persisted?
-  # end
 
   def self.related_facilities
     # return a collection of Facilities from a collection of Reports

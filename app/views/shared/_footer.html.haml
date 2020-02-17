@@ -7,8 +7,7 @@
     = "©#{Date.today.year.to_s}"
     %a{:href => "https://www.facebook.com/20liters"}
       %i.fa.fa-facebook
-    / <a href="https://twitter.com/20liters"><i class="fa fa-twitter"></i></a>
     %a{:href => "https://www.instagram.com/20liters/"}
       %i.fa.fa-instagram
-    - unless current_user || controller.controller_name == 'sessions'
-      = link_to 'data', new_user_session_path, class: 'float-right'
+    - unless controller.controller_name == 'sessions'
+      = link_to 'data', data_path, class: 'float-right'

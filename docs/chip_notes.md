@@ -1,14 +1,7 @@
 # CURRENT:
-0. Next deploy:
-- `rails db:migrate` to make `Report#contract_id` optional
-
 4. What about un-met plans?
 - Help Rebero see work to be accomplished by Sector
 
-- Stories are added from Monthly#index --> Monthly#show
--- include ability to add story from sectors#report?
-
-- TODO: why is this?? sectors_controller#new_facility && sector_policy#new_facility? && routes#sectors#new_facility
 
 5. Deleting a (duplicate) Facility that has associated Reports:
 - Need to re-assign reports before deleting facility
