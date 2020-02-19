@@ -51,6 +51,8 @@ class ReportsController < ApplicationController
   # PATCH/PUT /reports/1
   # PATCH/PUT /reports/1.json
   def update
+    @report.user = current_user
+
     respond_to do |format|
       if @report.update(report_params)
         format.html { redirect_to @report, notice: 'Report was successfully edited.' }
@@ -82,14 +84,18 @@ class ReportsController < ApplicationController
   end
 
   def report_params
+    # user_id is set in ReportsController#create and ReportsController#update
+    # contract_id is set in Report#set_contract_from_date
+    # impact is set in Report#calculate_impact
+    # year and month are set in Report#set_year_and_month_from_date
     params.require(:report).permit(:date,
                                    :technology_id,
                                    :reportable_id,
                                    :reportable_type,
                                    :distributed,
                                    :checked,
-                                   :user_id,
-                                   :people)
+                                   :people,
+                                   :hours)
   end
 
   def dup_matching_params

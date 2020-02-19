@@ -19,10 +19,10 @@ module ApplicationHelper
     datetime&.strftime('%-m/%-d @ %l:%M:%S %p %Z')
   end
 
-  def human_number(integer)
-    return '-' if integer.nil? || integer.zero?
+  def human_number(number)
+    return '-' if number.nil? || number.zero?
 
-    number_with_delimiter(integer, delimiter: ',')
+    number_with_delimiter(number, delimiter: ',')
   end
 
   def form_date(date)

@@ -1,17 +1,22 @@
 # CURRENT:
-0. Next deploy:
-- `rails db:migrate` to make `Report#contract_id` optional
 
-4. What about un-met plans?
+0. NEXT MIGRATION:
+- `Technology.all.update(is_engagement: false)`
+- `Technology.report_worthy.update(dashboard_worthy: true)`
+- Create 2 new technologies: Volunteer Training, Recipient Training
+
+1. Editing reports
+- Need to work on `_form`
+
+2. What about un-met plans?
 - Help Rebero see work to be accomplished by Sector
 
-- Stories are added from Monthly#index --> Monthly#show
--- include ability to add story from sectors#report?
-
-- TODO: why is this?? sectors_controller#new_facility && sector_policy#new_facility? && routes#sectors#new_facility
-
-5. Deleting a (duplicate) Facility that has associated Reports:
+3. Deleting a (duplicate) Facility that has associated Reports:
 - Need to re-assign reports before deleting facility
+
+4. technology_path(:id)
+- Add Report button does nothing
+- Add Plan button does nothing
 
 # Creating/Updating Targets
 

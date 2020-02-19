@@ -2,6 +2,7 @@
 
 class TechnologiesController < ApplicationController
   before_action :set_technology, only: %i[show edit update destroy]
+  before_action :set_scale, only: %i[new edit]
 
   # GET /technologies
   def index
@@ -57,8 +58,7 @@ class TechnologiesController < ApplicationController
   end
 
   # GET /technologies/1/edit
-  def edit
-  end
+  def edit; end
 
   # POST /technologies
   def create
@@ -66,7 +66,7 @@ class TechnologiesController < ApplicationController
 
     respond_to do |format|
       if @technology.save
-        format.html { redirect_to @technology, notice: 'Technology was successfully created.' }
+        format.html { redirect_to technologies_path, notice: 'Technology was successfully created.' }
         format.json { render :show, status: :created, location: @technology }
       else
         format.html { render :new }
@@ -80,7 +80,7 @@ class TechnologiesController < ApplicationController
   def update
     respond_to do |format|
       if @technology.update(technology_params)
-        format.html { redirect_to @technology, notice: 'Technology was successfully updated.' }
+        format.html { redirect_to technologies_path, notice: 'Technology was successfully updated.' }
         format.json { render :show, status: :ok, location: @technology }
       else
         format.html { render :edit }
@@ -101,11 +101,28 @@ class TechnologiesController < ApplicationController
 
   private
 
+  def set_scale
+    @scale = Constants::Technology::SCALE
+  end
+
   def set_technology
     authorize @technology = Technology.find(params[:id])
   end
 
   def technology_params
-    params.require(:technology).permit(:name, :default_impact, :agreement_required, :scale, :direct_cost, :indirect_cost, :us_cost, :local_cost)
+    params.require(:technology).permit(:name,
+                                       :short_name,
+                                       :description,
+                                       :default_impact,
+                                       :scale,
+                                       :image_name,
+                                       :agreement_required,
+                                       :is_engagement,
+                                       :report_worthy,
+                                       :dashboard_worthy,
+                                       :direct_cost,
+                                       :indirect_cost,
+                                       :us_cost,
+                                       :local_cost)
   end
 end

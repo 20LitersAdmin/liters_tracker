@@ -31,7 +31,6 @@ class MonthlyController < ApplicationController
 
     @previous = Monthly.new(year: @date.last_month.year, month: @date.last_month.month) if Report.within_month(@date.last_month).any?
     @next = Monthly.new(year: @date.next_month.year, month: @date.next_month.month) if Report.within_month(@date.next_month).any?
-    console
   end
 
   private

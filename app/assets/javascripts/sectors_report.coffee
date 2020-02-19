@@ -23,18 +23,18 @@ $(document).on 'turbolinks:load', ->
   first = date.startOf('month').format('YYYY-MM-DD')
   last = date.endOf('month').format('YYYY-MM-DD')
 
+  # init datetimepickers
   $('#report_date.datetimepicker-input').datetimepicker({
     format: 'YYYY-MM-DD',
     useCurrent: false,
+    minDate: first,
+    maxDate: last,
     viewDate: date.startOf('month'),
     widgetPositioning: {
       horizontal: 'auto'
       vertical: 'bottom'
     }
   })
-
-  $('#report_date.datetimepicker-input').datetimepicker('minDate', first)
-  $('#report_date.datetimepicker-input').datetimepicker('maxDate', last)
 
   # existing reports delete button:
   # remove the deleted row from the table views using DataTables API

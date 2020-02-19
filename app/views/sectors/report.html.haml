@@ -25,7 +25,12 @@
   .col-12
     %h5 Existing reports:
   .col-12
-    = render partial: 'reports', locals: { scale: @technology.scale }
+    - if @technology.is_engagement?
+      = render partial: 'engagement_reports'
+    - elsif @technology.scale == 'Family'
+      = render partial: 'family_reports'
+    - else
+      = render partial: 'community_reports'
 
 - if @technology.scale == 'Community'
   .modal.fade#new_facility_modal{tabindex: '-1', role: 'dialog', 'aria-labelledby': 'newFacilityLabel', 'aria-hidden': 'true' }

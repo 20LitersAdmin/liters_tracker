@@ -4,10 +4,11 @@ class DashboardController < ApplicationController
   layout 'dashboard', only: %i[index]
 
   def index
-    @lifetime_stats = Technology.report_worthy.map do |technology|
-      next if technology.reports.distributions.empty?
+    @lifetime_stats = Technology.dashboard_worthy.map do |technology|
+      lifetime_stat = technology.lifetime_distributed
+      next if lifetime_stat.zero?
 
-      { stat: technology.lifetime_distributed, title: "#{technology.name}s" }
+      { stat: lifetime_stat, title: technology.plural_name }
     end
     @global_impact = Report.distributions.sum(:impact)
 

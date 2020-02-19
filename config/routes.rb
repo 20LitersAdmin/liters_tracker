@@ -34,10 +34,7 @@ Rails.application.routes.draw do
   resources :villages do
     get 'children', on: :member
   end
-  resources :facilities #do
-    # get 'facility_error', on: :member
-    # get 'facility_created', on: :member
-  #end
+  resources :facilities
 
   resources :stories do
     get 'image', on: :member

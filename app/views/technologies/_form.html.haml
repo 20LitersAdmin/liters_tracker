@@ -1,31 +1,49 @@
 -# frozen_string_literal: true
-= form_for @technology do |f|
+= simple_form_for @technology do |f|
   - if @technology.errors.any?
     = render partial: 'shared/form_errors', locals: { object: @technology }
 
-  .field
-    = f.label :name
-    = f.text_field :name
-  .field
-    = f.label :default_impact
-    = f.number_field :default_impact
-  .field
-    = f.label :agreement_required
-    = f.check_box :agreement_required
-  .field
-    = f.label :scale
-    = f.text_field :scale
-  .field
-    = f.label :direct_cost
-    = f.text_field :direct_cost
-  .field
-    = f.label :indirect_cost
-    = f.text_field :indirect_cost
-  .field
-    = f.label :us_cost
-    = f.text_field :us_cost
-  .field
-    = f.label :local_cost
-    = f.text_field :local_cost
-  .actions
-    = f.submit 'Save'
+  .row
+    .col-8.field
+      = f.input :name, hint: 'Like: "Household Filter" or "Recipient Training"'
+    .col-4.field
+      = f.input :short_name, hint: 'Like: "SAM3" or "Recipient Training"'
+  .row
+    .col.field
+      = f.input :description, hint: 'This information will appear on stories about this technology.'
+  .row
+    .col.field
+      = f.input :default_impact, hint: 'Average number of people impacted. E.G. SAM3 serves 5 people.'
+    .col.field
+      = f.input :scale, collection: @scale, hint: 'Technology benefits either a family or a community.'
+    .col.field
+      = f.input :image_name, hint: 'Provide the filename of an image saved in `app/assets/images`. Adding a new image requires a developer familiar with the web framework.'
+  .row
+    .col.field
+      = f.input :agreement_required, hint: 'E.G. SAM2 and RWHS have agreements signed with facilities.'
+    .col.field
+      = f.input :is_engagement, hint: 'E.G. trainings or community events.', label: 'Engagement activity'
+    .col.field
+      = f.input :report_worthy, hint: 'Allow reports to be created with this technology.', label: 'Include in reports'
+    .col.field
+      = f.input :dashboard_worthy, hint: 'Show a summary of reports on the dashboard.', label: 'Include on dashboard'
+  .row
+    .col
+      %h5 Prices
+  .row
+    .col
+      %p All prices are entered in USD ($).
+  .row
+    .col.field
+      = f.input :direct_cost, hint: 'The cost of materials and supplies.'
+    .col.field
+      = f.input :indirect_cost, hint: 'Direct cost plus additional costs like transportation, training, administration.'
+    .col.field
+      = f.input :us_cost, hint: 'Expenses in the U.S.', label: 'U.S. cost'
+    .col.field
+      = f.input :local_cost, hint: 'Expenses in the host country'
+  .row.my-3.actions
+    .col.text-right
+      = f.button :submit, class: 'btn yellow'
+    .col.text-left
+      = link_to 'Back', technologies_path, class: 'btn empty'
