@@ -16,9 +16,6 @@ class Technology < ApplicationRecord
 
   before_save :community_engagement_is_family_scale, if: -> { is_engagement? && scale == 'Community' }
 
-  ### when is_enagement == true
-  # use report.people and report.hours on forms
-
   def default_household_impact
     default_impact.to_i / Constants::Population::HOUSEHOLD_SIZE
   end
@@ -36,8 +33,6 @@ class Technology < ApplicationRecord
     end
   end
 
-  # TODO: rename this
-  # and should be "X hours of Recipient training"
   def plural_name
     if is_engagement?
       "#{name} hours"
