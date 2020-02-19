@@ -5,9 +5,9 @@
 
   .row
     .col-8.field
-      = f.input :name, hint: 'Like: Household Filter'
+      = f.input :name, hint: 'Like: "Household Filter" or "Recipient Training"'
     .col-4.field
-      = f.input :short_name, hint: 'Like: SAM3'
+      = f.input :short_name, hint: 'Like: "SAM3" or "Recipient Training"'
   .row
     .col.field
       = f.input :description, hint: 'This information will appear on stories about this technology.'
@@ -17,15 +17,22 @@
     .col.field
       = f.input :scale, collection: @scale, hint: 'Technology benefits either a family or a community.'
     .col.field
+      = f.input :image_name, hint: 'Provide the filename of an image saved in `app/assets/images`. Adding a new image requires a developer familiar with the web framework.'
+  .row
+    .col.field
       = f.input :agreement_required, hint: 'E.G. SAM2 and RWHS have agreements signed with facilities.'
     .col.field
+      = f.input :is_engagement, hint: 'E.G. trainings or community events.', label: 'Engagement activity'
+    .col.field
       = f.input :report_worthy, hint: 'Allow reports to be created with this technology.', label: 'Include in reports'
+    .col.field
+      = f.input :dashboard_worthy, hint: 'Show a summary of reports on the dashboard.', label: 'Include on dashboard'
   .row
     .col
       %h5 Prices
   .row
     .col
-      %p All prices are entered in USD.
+      %p All prices are entered in USD ($).
   .row
     .col.field
       = f.input :direct_cost, hint: 'The cost of materials and supplies.'

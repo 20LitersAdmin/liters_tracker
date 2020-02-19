@@ -2,6 +2,7 @@
 
 class TechnologiesController < ApplicationController
   before_action :set_technology, only: %i[show edit update destroy]
+  before_action :set_scale, only: %i[new edit]
 
   # GET /technologies
   def index
@@ -54,7 +55,6 @@ class TechnologiesController < ApplicationController
   # GET /technologies/new
   def new
     authorize @technology = Technology.new
-    @scale = Constants::Technology::SCALE
   end
 
   # GET /technologies/1/edit
@@ -101,6 +101,10 @@ class TechnologiesController < ApplicationController
 
   private
 
+  def set_scale
+    @scale = Constants::Technology::SCALE
+  end
+
   def set_technology
     authorize @technology = Technology.find(params[:id])
   end
@@ -110,9 +114,12 @@ class TechnologiesController < ApplicationController
                                        :short_name,
                                        :description,
                                        :default_impact,
-                                       :report_worthy,
-                                       :agreement_required,
                                        :scale,
+                                       :image_name,
+                                       :agreement_required,
+                                       :is_engagement,
+                                       :report_worthy,
+                                       :dashboard_worthy,
                                        :direct_cost,
                                        :indirect_cost,
                                        :us_cost,

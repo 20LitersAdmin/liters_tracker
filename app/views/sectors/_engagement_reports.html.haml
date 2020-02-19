@@ -1,0 +1,22 @@
+%table.table.table-sm.table-hover#dttb_sector_reports
+  %thead
+    %tr
+      %th Cell
+      %th Village
+      - if @plans.any?
+        %th.text-center= "#{human_number(@plans.sum(:goal))} Planned (by #{human_date(@plans.first&.date)})"
+      - else
+        %th.text-center Planned
+      - if @reports.any?
+        %th.text-center= human_number(@reports.sum(:people)) + ' People'
+        %th.text-center= human_number(@reports.sum(:hours)) + ' Hours'
+        %th.text-center= human_number(@reports.sum(:impact)) + ' Impact hours'
+      - else
+        %th.text-center People
+        %th.text-center Hours
+        %th.text-center Impact hours
+      %th
+      %th
+    %tbody
+      = render partial: 'engagement_report', collection: @reports
+

@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_02_04_141218) do
+ActiveRecord::Schema.define(version: 2020_02_17_214652) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -136,6 +136,7 @@ ActiveRecord::Schema.define(version: 2020_02_04_141218) do
     t.bigint "plan_id"
     t.integer "year"
     t.integer "month"
+    t.decimal "hours", precision: 5, scale: 2, default: "0.0"
     t.index ["contract_id", "technology_id", "reportable_id", "reportable_type"], name: "idx_belongs_to_plan"
     t.index ["contract_id"], name: "index_reports_on_contract_id"
     t.index ["date"], name: "index_reports_on_date"
@@ -199,6 +200,10 @@ ActiveRecord::Schema.define(version: 2020_02_04_141218) do
     t.datetime "updated_at", null: false
     t.string "image_name"
     t.text "description"
+    t.boolean "is_engagement", default: false
+    t.boolean "dashboard_worthy", default: true
+    t.index ["dashboard_worthy"], name: "index_technologies_on_dashboard_worthy"
+    t.index ["is_engagement"], name: "index_technologies_on_is_engagement"
     t.index ["report_worthy"], name: "index_technologies_on_report_worthy"
   end
 

@@ -31,10 +31,11 @@ class Report < ApplicationRecord
   scope :with_stories,    -> { joins(:story).where.not(stories: { id: nil }) }
 
   scope :distributions,   -> { where.not(distributed: nil) }
+  scope :with_hours,      -> { where('hours > 0.0') }
 
   before_validation :set_year_and_month_from_date,  if: -> { (year.blank? || month.blank?) && date.present? }
   before_validation :set_date_from_year_and_month,  if: -> { date.blank? && year.present? && month.present? }
-  before_validation :flag_for_meaninglessness,      if: -> { (distributed.nil? || distributed.zero?) && (checked.nil? || checked.zero?) }
+  before_validation :flag_for_meaninglessness,      if: -> { hours.zero? && (distributed.nil? || distributed.zero?) && (checked.nil? || checked.zero?) }
 
   before_save :calculate_impact
 
@@ -142,19 +143,32 @@ class Report < ApplicationRecord
   private
 
   def flag_for_meaninglessness
-    # either :distributed or :checked must have a value
-    errors.add(:distributed, 'or checked must be provided.')
+    # if technology.is_engagement? :hours is required
+    # else :distributed or :checked must have a value
+    technology.is_engagement? ? errors.add(:hours, 'must be provided.') : errors.add(:distributed, 'or checked must be provided.')
   end
 
   def calculate_impact
-    return if distributed.nil? || distributed.zero?
+    return unless distributed&.nonzero? || hours&.nonzero?
 
+    technology.is_engagement? ? calculate_hours_impact : calculate_distributed_impact
+  end
+
+  def calculate_distributed_impact
     self.impact = if people&.positive?
                     people
                   elsif reportable_type == 'Facility' && reportable.population&.positive?
                     reportable.population
                   else
                     technology.default_impact * distributed.to_i
+                  end
+  end
+
+  def calculate_hours_impact
+    self.impact = if hours&.positive?
+                    people * hours
+                  else
+                    people
                   end
   end
 

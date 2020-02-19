@@ -1,28 +1,20 @@
 # CURRENT:
 
-0. DEBATE: Training reports:
-- 'One person is trained multiple times, so what stat and language matters?'
-- Count value in :distributed vs :people?
-- Show on dashboard?
-- "in the month of January, X people were trained Y times"
-- Volunteers as a "Community" scope?
-- Training Tech has impact of 0
-- Does Technology need more booleans:
--- :is_training? - replace @technology.name.includes?('Train')
--- :dashboard_worthy? - replace @technology.report_worthy? in DashboardController
+0. NEXT MIGRATION:
+- `Technology.all.update(is_engagement: false)`
+- `Technology.report_worthy.update(dashboard_worthy: true)`
+- Create 2 new technologies: Volunteer Training, Recipient Training
 
+1. Editing reports
+- Need to work on `_form`
 
-0. sectors/:id/report
-- When technology is Training, include a message about how to complete [Distributed][People][Checked]
-
-1. What about un-met plans?
+2. What about un-met plans?
 - Help Rebero see work to be accomplished by Sector
 
-
-2. Deleting a (duplicate) Facility that has associated Reports:
+3. Deleting a (duplicate) Facility that has associated Reports:
 - Need to re-assign reports before deleting facility
 
-3. technology_path(:id)
+4. technology_path(:id)
 - Add Report button does nothing
 - Add Plan button does nothing
 

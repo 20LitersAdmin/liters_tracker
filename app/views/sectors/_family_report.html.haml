@@ -1,0 +1,9 @@
+%tr
+  %td= family_report.reportable.cell&.name
+  %td= family_report.reportable.village&.name
+  %td.text-center= family_report.plan&.goal
+  %td.text-center= human_number family_report.distributed
+  %td.text-center= human_number family_report.impact
+  %td.text-center= human_number family_report.checked
+  %td= link_to 'Edit', edit_report_path(family_report), class: 'btn yellow small', target: '_blank'
+  %td= link_to 'Delete', family_report, method: :delete, class: 'btn red small sector-report-delete', remote: true, data: { confirm: 'Are you sure you want to DELETE the report?' }

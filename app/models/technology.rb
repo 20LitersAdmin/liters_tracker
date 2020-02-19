@@ -12,6 +12,12 @@ class Technology < ApplicationRecord
   monetize :direct_cost_cents, :indirect_cost_cents, :us_cost_cents, :local_cost_cents, allow_nil: true, allow_blank: true
 
   scope :report_worthy, -> { where(report_worthy: true) }
+  scope :dashboard_worthy, -> { where(dashboard_worthy: true) }
+
+  before_save :community_engagement_is_family_scale, if: -> { is_engagement? && scale == 'Community' }
+
+  ### when is_enagement == true
+  # use report.people and report.hours on forms
 
   def default_household_impact
     default_impact.to_i / Constants::Population::HOUSEHOLD_SIZE
@@ -22,18 +28,27 @@ class Technology < ApplicationRecord
   end
 
   def lifetime_distributed
-    reports.distributions.sum(:distributed)
+    if is_engagement?
+      reps = reports.with_hours.select(:hours, :people)
+      reps.sum(:hours) * reps.sum(:people)
+    else
+      reports.distributions.sum(:distributed)
+    end
   end
 
+  # TODO: rename this
+  # and should be "X hours of Recipient training"
   def plural_name
-    if name.include?('Training')
-      ary = []
-      split = name.split(' ')
-      ary << split[0].pluralize
-      ary << 'Trained'
-      ary.join(' ')
+    if is_engagement?
+      "#{name} hours"
     else
       name.pluralize
     end
+  end
+
+  private
+
+  def community_engagement_is_family_scale
+    self.scale = 'Family'
   end
 end

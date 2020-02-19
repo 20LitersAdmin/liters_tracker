@@ -8,15 +8,6 @@
   .col-2.text-right
     =link_to 'Back', select_sectors_path, class: 'btn yellow'
 
-- if @technology.name.include?("Train")
-  .row#training_explanation
-    .col
-      %h5 Training report:
-      - if @technology.scale == 'Family'
-        %p Select the village where training occurred.
-      - else
-        %p Select the facility where volunteers were trained.
-
 .row#sector_form
   .col-12
     %h5 Create a new report:
@@ -34,7 +25,12 @@
   .col-12
     %h5 Existing reports:
   .col-12
-    = render partial: 'reports', locals: { scale: @technology.scale }
+    - if @technology.is_engagement?
+      = render partial: 'engagement_reports'
+    - elsif @technology.scale == 'Family'
+      = render partial: 'family_reports'
+    - else
+      = render partial: 'community_reports'
 
 - if @technology.scale == 'Community'
   .modal.fade#new_facility_modal{tabindex: '-1', role: 'dialog', 'aria-labelledby': 'newFacilityLabel', 'aria-hidden': 'true' }
