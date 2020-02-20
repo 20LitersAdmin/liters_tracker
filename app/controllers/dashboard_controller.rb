@@ -63,10 +63,11 @@ class DashboardController < ApplicationController
   end
 
   def stats_json
-    lifetime_stats = Technology.report_worthy.map do |technology|
-      next if technology.reports.distributions.empty?
+    lifetime_stats = Technology.dashboard_worthy.map do |technology|
+      lifetime_stat = technology.lifetime_distributed
+      next if lifetime_stat.zero?
 
-      { stat: technology.lifetime_distributed, title: "#{technology.name}s" }
+      { stat: lifetime_stat, title: technology.plural_name }
     end
 
     lifetime_stats << { stat: Report.distributions.sum(:impact), title: 'People served' }
