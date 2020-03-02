@@ -1,10 +1,5 @@
 # CURRENT:
 
-0. Resize images:
-- https://imagemagick.org/Usage/resize/
-- https://github.com/minimagick/minimagick#usage
-- `@story#resize_image!`
-
 1. Editing reports
 - Need to work on `_form`
 
