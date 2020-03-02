@@ -9,7 +9,7 @@ class Report < ApplicationRecord
 
   belongs_to :plan, inverse_of: :reports, required: false
 
-  validates_presence_of :date
+  validates_presence_of :date, :year, :month
 
   # form fields for simple_form
   attr_accessor :cell, :village
@@ -38,9 +38,11 @@ class Report < ApplicationRecord
   before_validation :flag_for_meaninglessness,      if: -> { hours.zero? && (distributed.nil? || distributed.zero?) && (checked.nil? || checked.zero?) }
 
   before_save :calculate_impact
-
   before_save :set_contract_from_date, if: -> { contract_id.blank? && date.present? }
   after_save :set_plan,                if: -> { contract_id.present? && plan_id.blank? }
+
+  before_update :set_year_and_month_from_date, if: -> { date.present? && date_changed? }
+  before_update :set_date_from_year_and_month, if: -> { year.present? && month.present? && (year_changed? || month_changed?) }
 
   def breadcrumb
     @hierarchy = Constants::Geography::HIERARCHY
@@ -182,7 +184,6 @@ class Report < ApplicationRecord
   end
 
   def set_contract_from_date
-    # edge case: report saved outside of an existing contract timeframe, allow contract_id to be null
     self.contract = Contract.between(date, date).first
   end
 
@@ -194,10 +195,6 @@ class Report < ApplicationRecord
 
     return if id.zero?
 
-    if new_record?
-      self.plan_id = id
-    else
-      update_columns(plan_id: id)
-    end
+    update_columns(plan_id: id)
   end
 end
