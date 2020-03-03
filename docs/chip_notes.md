@@ -1,10 +1,5 @@
 # CURRENT:
 
-0. NEXT MIGRATION:
-- `Technology.all.update(is_engagement: false)`
-- `Technology.report_worthy.update(dashboard_worthy: true)`
-- Create 2 new technologies: Volunteer Training, Recipient Training
-
 1. Editing reports
 - Need to work on `_form`
 

@@ -84,15 +84,17 @@ class Story < ApplicationRecord
       return false
     end
 
+    # allowing .attach() to replace the image uses .perge_later which is dumb
+    # so we first purge the image
     image.purge if image.attached?
 
     mini_image = MiniMagick::Image.new(image_io.tempfile.path)
+    # always resize the image to 355px wide, height automagically selected to preserve aspect ratio.
     mini_image.resize '355'
 
     # rename
     image_name = "#{report_id}_#{report.date.year}-#{report.date.month}.#{image_io.original_filename.split(/\./)[1]}"
 
-    # allowing .attach() to replace the image uses .perge_lager which is dumb
     image.attach(io: File.open(image_io.tempfile.path), filename: image_name, content_type: image_io.content_type)
 
     image.attached?
