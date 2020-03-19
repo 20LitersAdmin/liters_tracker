@@ -9,3 +9,14 @@ a[data-sort="down"] {
 a[data-sort="up"] {
   display: inline;
 }
+
+table.slim-rows {
+  td {
+    padding: 0.25rem 0.75rem;
+    vertical-align: middle;
+
+    a.btn {
+      padding: 0.15rem 0.5rem;
+    }
+  }
+}

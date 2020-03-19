@@ -11,7 +11,7 @@
   .col-12.tech-table-div
     - if tech_reports.any?
 
-      %table.table.table-striped.tech-table{id: "tech_#{technology.id}"}
+      %table.table.table-striped.tech-table.slim-rows{id: "tech_#{technology.id}"}
         %thead
           %tr
             %th Sector
