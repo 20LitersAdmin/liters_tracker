@@ -1,7 +1,4 @@
 # CURRENT:
-1. Editing reports
-- Need to work on `_form`
-
 2. What about un-met plans?
 - Help Rebero see work to be accomplished by Sector
 

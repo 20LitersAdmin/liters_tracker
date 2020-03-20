@@ -1,9 +1,24 @@
 -# frozen_string_literal: true
 = simple_form_for @report, wrapper: :horizontal_form do |f|
-  = f.input :reportable
-  = f.input :date, discard_day: true
-  = f.input :technology
-  = f.input :distributed
-  = f.input :checked
-  = f.input :user
-  = f.button :submit
+  - if @report.errors.any?
+    = render partial: 'shared/form_errors', locals: { object: @report }
+  .row
+    .col-12.col-md-6.field
+      = f.input :technology, collection: @technologies, selected: @report.technology.id
+    .col-12.col-md-6.field
+      = f.input :date
+  .row
+    .col.field
+      = f.input :distributed
+    .col.field
+      = f.input :checked
+    .col.field
+      = f.input :people
+    .col.field
+      = f.input :hours, hint: 'Only include hours for trainings or events'
+  .row.my-3.actions
+    .col.text-right
+      = f.button :submit, class: 'btn yellow'
+    .col.text-left
+      = link_to 'Back', @return_to, class: 'btn empty'
+      = link_to 'Delete Report', report_path(@report, rt: @return_to), method: :delete, class: 'btn red', data: { confirm: 'Are you sure you want to DELETE the report?' }

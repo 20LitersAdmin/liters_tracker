@@ -16,6 +16,10 @@ class District < ApplicationRecord
   validates_presence_of :name, :country_id
   validates_uniqueness_of :gis_code, allow_nil: true
 
+  def parent
+    country
+  end
+
   def related_plans
     Plan.where(planable_type: 'District', planable_id: id)
         .or(Plan.where(planable_type: 'Sector', planable_id: sectors.pluck(:id)))

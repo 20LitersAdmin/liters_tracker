@@ -1,13 +1,14 @@
 $(document).on 'turbolinks:load', ->
-  return unless controllerMatches(['facilities', 'sectors']) &&
+  return unless controllerMatches(['facilities', 'sectors', 'reports']) &&
     actionMatches(['new', 'edit', 'create', 'update', 'report'])
 
   # AJAX look up child objects from a parent
-  # e.g. /sectors/2/cell_finder
+  # e.g. /sectors/2/children
   # returns a select_field ready array of [:id, :name]
 
   resetOptions = (target)->
     target.html('')
+    # needs some re-work: use a hash? ["sector" => "cell"], then take the last part of the ID and run it through the hash to match
     target.append('<option></option>')
     if target.attr('id').includes('cell')
       $(target).append('<option disabled="disabled" value="0">Please select a sector</option>')
@@ -21,7 +22,7 @@ $(document).on 'turbolinks:load', ->
     # parentId = int
     # "/sectors/#{id}/children" returns cells
     # "/cells/#{id}/children" returns villages
-    # "/cillages/#{id}/children" returns facilities
+    # "/villages/#{id}/children" returns facilities
 
     uri = '/' + parentType + '/' + parentId + '/children'
     $.ajax(

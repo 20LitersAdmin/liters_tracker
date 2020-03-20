@@ -19,7 +19,19 @@ class ReportsController < ApplicationController
   end
 
   # GET /reports/1/edit
-  def edit; end
+  def edit
+    @technologies = Technology.report_worthy.pluck(:name, :id)
+
+    @geography = @report.reportable
+    @parent = @geography.parent
+    @hierarchy = ["#{@parent.name} #{@parent.class}"]
+    @grandparent = @parent.parent
+    @hierarchy << "#{@grandparent.name} #{@grandparent.class}" if @grandparent
+    @great_grandparent = @grandparent.parent
+    @hierarchy << "#{@great_grandparent.name} #{@great_grandparent.class}" if @great_grandparent
+
+    @return_to = URI(request.referrer).request_uri || data_path
+  end
 
   # POST /reports
   # POST /reports.json
@@ -69,8 +81,11 @@ class ReportsController < ApplicationController
   # DELETE /reports/1.json
   def destroy
     @report.destroy
+
+    @redirect = params[:rt].present? ? params[:rt] : reports_path
+
     respond_to do |format|
-      format.html { redirect_to reports_url, notice: 'Report was successfully destroyed.' }
+      format.html { redirect_to @redirect, notice: 'Report was successfully destroyed.' }
       format.json { head :no_content }
       # TODO: flash[:notice] = 'Report was successfully destroyed.'
       format.js { render :report_destroyed }

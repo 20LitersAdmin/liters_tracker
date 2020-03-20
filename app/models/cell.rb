@@ -17,6 +17,10 @@ class Cell < ApplicationRecord
   validates_presence_of :name, :sector_id
   validates_uniqueness_of :gis_code, allow_blank: true
 
+  def parent
+    sector
+  end
+
   def related_plans
     Plan.where(planable_type: 'Cell', planable_id: id)
         .or(Plan.where(planable_type: 'Village', planable_id: villages.pluck(:id)))

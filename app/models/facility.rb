@@ -30,4 +30,8 @@ class Facility < ApplicationRecord
   def facility
     self
   end
+
+  def parent
+    village
+  end
 end
