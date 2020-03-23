@@ -4,6 +4,7 @@
 
 3. Deleting a (duplicate) Facility that has associated Reports:
 - Need to re-assign reports before deleting facility
+- or create a Merge function?
 
 4. technology_path(:id)
 - Add Report button does nothing

@@ -7,15 +7,15 @@ $(document).on 'turbolinks:load', ->
   # returns a select_field ready array of [:id, :name]
 
   resetOptions = (target)->
+    refParent = {
+      cell: 'sector',
+      village: 'cell',
+      reportable_id: 'village'
+    }
+    targetName = target.attr('id').substr(target.attr('id').indexOf('_')+1)
     target.html('')
-    # needs some re-work: use a hash? ["sector" => "cell"], then take the last part of the ID and run it through the hash to match
     target.append('<option></option>')
-    if target.attr('id').includes('cell')
-      $(target).append('<option disabled="disabled" value="0">Please select a sector</option>')
-    else if target.attr('id').includes('reportable_id') # aka facilitiy
-      $(target).append('<option disabled="disabled" value="0">Please select a village</option>')
-    else # target.attr('id').includes('village')
-      $(target).append('<option disabled="disabled" value="0">Please select a cell</option>')
+    $(target).append('<option disabled="disabled" value="0">Please select a ' + refParent[targetName] + '</option>')
 
   ajaxGeography = (parentType, parentId, target)->
     # parentType = [sectors, cells, villages]
