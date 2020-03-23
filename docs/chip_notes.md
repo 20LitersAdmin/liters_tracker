@@ -1,4 +1,9 @@
 # CURRENT:
+1. Plans architecture:
+- Plan form
+-- geography: contracts/{:id}/plans
+-- technology: technologies/{:id}/plans
+
 2. What about un-met plans?
 - Help Rebero see work to be accomplished by Sector
 
@@ -15,10 +20,10 @@
 * Copy the sector/select && sector/#id/report process
 
 # Forms
-- Tech form
 - Contract form
+- Tech form
 - Target form
-- Plan form
+
 
 # Geography forms (also need a chooser view)
 - Country form

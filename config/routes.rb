@@ -15,11 +15,16 @@ Rails.application.routes.draw do
     # get 'report_error', on: :member
   end
 
-  resources :contracts
+  resources :contracts do
+    resources :plans
+  end
+
   resources :plans
   resources :targets
 
-  resources :technologies
+  resources :technologies do
+    resources :plans
+  end
 
   resources :countries
   resources :districts

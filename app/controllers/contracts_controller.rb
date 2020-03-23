@@ -64,12 +64,26 @@ class ContractsController < ApplicationController
   end
 
   private
-  
+
   def set_contract
     authorize @contract = Contract.find(params[:id])
   end
 
   def contract_params
-    params.require(:contract).permit(:start_date, :end_date, :budget, :household_goal, :people_goal)
+    params.require(:contract).permit(
+                                      :start_date,
+                                      :end_date,
+                                      :budget,
+                                      :household_goal,
+                                      :people_goal,
+                                      plans_attributes: [
+                                        :contract_id,
+                                        :technology_id,
+                                        :goal,
+                                        :people_goal,
+                                        :planable_type,
+                                        :planable_id
+                                      ]
+                                    )
   end
 end
