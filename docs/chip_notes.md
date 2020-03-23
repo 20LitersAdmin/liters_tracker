@@ -7,7 +7,6 @@
 - or create a Merge function?
 
 4. technology_path(:id)
-- Add Report button does nothing
 - Add Plan button does nothing
 
 # Creating/Updating Targets
