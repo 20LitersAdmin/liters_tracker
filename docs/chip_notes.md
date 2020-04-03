@@ -1,4 +1,8 @@
 # CURRENT:
+0. ISSUES:
+- I can't get into the system to add stories for older months... I tried and failed to load up June 2017, July 2017, January 2018, and March 2018. I could get into April 2018 and everything after that.
+- narrative report showing Slow Sand and track showing SAM3 [May 2018] or two SAM2 in track for April 2018 that aren't mentioned in any narrative reports in the quarter
+
 1. Plans architecture:
 - Plan form
 -- geography: contracts/{:id}/plans

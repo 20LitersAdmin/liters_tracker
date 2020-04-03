@@ -1,8 +1,8 @@
 - story = report.story
 %tr
-  %td= report.reportable.sector.name
-  %td= report.reportable.cell.name
-  %td= report.reportable.village.name
+  %td= report.reportable.sector&.name
+  %td= report.reportable.cell&.name
+  %td= report.reportable.village&.name
   - if tech_scale == 'Community'
     %td= report.reportable.facility.name
     %td= human_date report.date
