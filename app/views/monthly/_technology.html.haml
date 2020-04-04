@@ -23,13 +23,15 @@
             %th.text-right Distributed
             %th.text-right Checked
             %th.text-right People served
-            %th.text-right Stories
+            %th Story
+            %th Report
         %tfoot
           %tr
             %th{colspan: "#{tech_scale == 'Community' ? 5 : 3}"} Total:
             %th.text-right= human_number tech_reports.sum(:distributed)
             %th.text-right= human_number tech_reports.sum(:checked)
             %th.text-right= human_number tech_reports.map(&:impact).sum
+            %th
             %th
         %tbody
           = render partial: 'report', collection: tech_reports, locals: { tech_scale: tech_scale }

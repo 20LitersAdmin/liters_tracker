@@ -3,22 +3,16 @@
 class ReportsController < ApplicationController
   before_action :set_report, only: %i[show edit update destroy]
 
-  # GET /reports
-  # GET /reports.json
   def index
     authorize @reports = Report.order(date: :desc).paginate(page: params[:page], per_page: params[:per_page] || 20)
   end
 
-  # GET /reports/1
-  # GET /reports/1.json
   def show; end
 
-  # GET /reports/new
   def new
     authorize @report = Report.new
   end
 
-  # GET /reports/1/edit
   def edit
     @technologies = Technology.report_worthy.pluck(:name, :id)
 
@@ -29,12 +23,8 @@ class ReportsController < ApplicationController
     @hierarchy << "#{@grandparent.name} #{@grandparent.class}" if @grandparent
     @great_grandparent = @grandparent.parent
     @hierarchy << "#{@great_grandparent.name} #{@great_grandparent.class}" if @great_grandparent
-
-    @return_to = URI(request.referrer).request_uri || data_path
   end
 
-  # POST /reports
-  # POST /reports.json
   def create
     # check for duplicates first
     authorize @report = Report.where(dup_matching_params).first_or_initialize
@@ -46,7 +36,10 @@ class ReportsController < ApplicationController
 
     respond_to do |format|
       if @report.save
-        format.html { redirect_to @report, notice: 'Report was successfully created.' }
+        format.html do
+          flash[:success] = @persistence
+          redirect_to @return_path
+        end
         format.json { render :show, status: :created, location: @report }
         format.js do
           @reports = @report.reportable.sector.related_reports.where(technology: @report.technology).between(@report.date.beginning_of_month, @report.date.end_of_month)
@@ -60,14 +53,15 @@ class ReportsController < ApplicationController
     end
   end
 
-  # PATCH/PUT /reports/1
-  # PATCH/PUT /reports/1.json
   def update
     @report.user = current_user
 
     respond_to do |format|
       if @report.update(report_params)
-        format.html { redirect_to @report, notice: 'Report was successfully edited.' }
+        format.html do
+          flash[:success] = 'Report was successfully edited.'
+          redirect_to @return_path
+        end
         format.json { render :show, status: :ok, location: @report }
       else
         format.html { render :edit }
@@ -80,14 +74,16 @@ class ReportsController < ApplicationController
   # DELETE /reports/1
   # DELETE /reports/1.json
   def destroy
-    @report.destroy
+    # @report.destroy
 
-    @redirect = params[:rt].present? ? params[:rt] : reports_path
+    byebug
 
     respond_to do |format|
-      format.html { redirect_to @redirect, notice: 'Report was successfully destroyed.' }
+      format.html do
+        flash[:notice] = 'Report was successfully deleted.'
+        redirect_to @return_path
+      end
       format.json { head :no_content }
-      # TODO: flash[:notice] = 'Report was successfully destroyed.'
       format.js { render :report_destroyed }
     end
   end
@@ -110,7 +106,8 @@ class ReportsController < ApplicationController
                                    :distributed,
                                    :checked,
                                    :people,
-                                   :hours)
+                                   :hours,
+                                   :rt)
   end
 
   def dup_matching_params

@@ -4,7 +4,7 @@
     = render partial: 'shared/form_errors', locals: { object: @report }
   .row
     .col-12.col-md-6.field
-      = f.input :technology, collection: @technologies, selected: @report.technology.id
+      = f.input :technology_id, collection: @technologies, selected: @report.technology.id
     .col-12.col-md-6.field
       = f.input :date
   .row
@@ -16,9 +16,10 @@
       = f.input :people
     .col.field
       = f.input :hours, hint: 'Only include hours for trainings or events'
+      = f.input :rt, as: :string
   .row.my-3.actions
     .col.text-right
       = f.button :submit, class: 'btn yellow'
     .col.text-left
-      = link_to 'Back', @return_to, class: 'btn empty'
-      = link_to 'Delete Report', report_path(@report, rt: @return_to), method: :delete, class: 'btn red', data: { confirm: 'Are you sure you want to DELETE the report?' }
+      = link_to 'Back', @return_path, class: 'btn empty'
+      = link_to 'Delete Report', report_path(@report), method: :delete, class: 'btn red', data: { confirm: 'Are you sure you want to DELETE the report?' }

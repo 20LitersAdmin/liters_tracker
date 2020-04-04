@@ -10,10 +10,7 @@ Rails.application.routes.draw do
 
   get 'stats', to: 'dashboard#stats_json', as: 'stats'
 
-  resources :reports do
-    # get 'report_created', on: :member
-    # get 'report_error', on: :member
-  end
+  resources :reports
 
   resources :contracts do
     resources :plans

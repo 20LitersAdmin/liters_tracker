@@ -9,8 +9,9 @@
   %td.text-right= human_number report.distributed
   %td.text-right= human_number report.checked
   %td.text-right= human_number report.impact
-  %td.text-right
+  %td
     - if story.nil?
       =link_to 'Add', new_story_path(year: params[:year], month: params[:month], report_id: report.id), class: 'btn yellow'
     - else
       =link_to 'Edit', edit_story_path(story.id, year: params[:year], month: params[:month]), class: 'btn blue'
+  %td=link_to 'Edit', edit_report_path(report.id), class: 'btn blue'

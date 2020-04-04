@@ -30,6 +30,19 @@ module Constants
     CURRENT = 4
   end
 
+  class Params
+    BAD_ACTIONS = %w[create
+                     children
+                     data_filter destroy
+                     edit
+                     handler
+                     image upload_image rotate_image destroy_image
+                     new
+                     redirector
+                     stats
+                     users update].freeze
+  end
+
   class Population
     HOUSEHOLD_SIZE = 5
   end
