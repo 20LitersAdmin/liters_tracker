@@ -71,4 +71,4 @@ $(document).on 'turbolinks:load', ->
   $('#report_village.village-form').on 'change', ->
     selectLogic()
 
-  # _facility_form: setting polymorphic reportable_type and reportable_id
+  # _facility_form: always uses the 'Facility' type, and the select is the _id field, so no JS needed.

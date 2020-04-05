@@ -3,11 +3,11 @@
     %tr
       %th Cell
       %th Village
-      - if @plans.any?
+      - if @plans.present?
         %th.text-center= "#{human_number(@plans.sum(:goal))} Planned (by #{human_date(@plans.first&.date)})"
       - else
         %th.text-center Planned
-      - if @reports.any?
+      - if @reports.present?
         %th.text-center= human_number(@reports.sum(:people)) + ' People'
         %th.text-center= human_number(@reports.sum(:hours)) + ' Hours'
         %th.text-center= human_number(@reports.sum(:impact)) + ' Impact hours'
@@ -18,5 +18,5 @@
       %th
       %th
     %tbody
-      = render partial: 'engagement_report', collection: @reports
+      = render partial: 'sectors/engagement_report', collection: @reports
 

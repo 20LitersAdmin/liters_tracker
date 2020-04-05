@@ -37,6 +37,6 @@
       = f.input :longitude, hint: 'like 30.0912883'
   .row.my-3.actions
     .col.text-left
-      = link_to 'Back', request.referrer, class: 'btn yellow'
+      = link_to 'Back', @return_path, class: 'btn yellow'
     .col.text-right
       = f.button :submit, class: 'btn yellow'

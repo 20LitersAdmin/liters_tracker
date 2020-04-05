@@ -15,7 +15,7 @@
   .col-sm-2.text-right
     - if current_user.can_manage_technologies? || current_user.admin?
       = link_to 'Edit', edit_technology_path(@technology), class: 'btn yellow'
-    = link_to 'Back', technologies_path, class: 'btn blue'
+    = link_to 'Back', @return_path, class: 'btn blue'
 
 = render partial: 'shared/search', locals: { from: @from, to: @to, earliest: @earliest, latest: @latest }
 

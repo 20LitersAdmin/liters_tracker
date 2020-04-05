@@ -30,6 +30,21 @@ module Constants
     CURRENT = 4
   end
 
+  class Params
+    # when storing previous URLs, ignore the URL if the action is one of these
+    # see ApplicationController#bad_param?()
+    BAD_ACTIONS = %w[create
+                     children
+                     destroy
+                     edit
+                     handler
+                     image destroy_image upload_image
+                     new
+                     redirector
+                     stats
+                     users update].freeze
+  end
+
   class Population
     HOUSEHOLD_SIZE = 5
   end
@@ -37,7 +52,5 @@ module Constants
   class Story
     # https://developer.mozilla.org/en-US/docs/Web/HTML/Element/img
     IMAGE_FORMATS = %w[apng bmp ico svg tiff webp png jpeg jpg gif].freeze
-    # IMAGE_URL = 'https://d5t73r6km0hzm.cloudfront.net/'
-    # S3_BUCKET = '20liters'
   end
 end

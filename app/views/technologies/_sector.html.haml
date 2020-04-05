@@ -20,4 +20,4 @@
     %td.text-right= human_number @report_sub.map(&:impact).sum
   - else
     %td{'colspan': '4'}= "No plans or reports related to #{@technology.short_name} for this sector and time period"
-    %td= link_to 'Add report', '#', class: 'btn empty'
+    %td= link_to 'Add report', select_sectors_path, class: 'btn empty'

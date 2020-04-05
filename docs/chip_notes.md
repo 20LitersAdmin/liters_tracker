@@ -1,15 +1,17 @@
 # CURRENT:
-1. Editing reports
-- Need to work on `_form`
+1. Plans architecture:
+- Plan form
+-- geography: contracts/{:id}/plans
+-- technology: technologies/{:id}/plans
 
 2. What about un-met plans?
 - Help Rebero see work to be accomplished by Sector
 
 3. Deleting a (duplicate) Facility that has associated Reports:
 - Need to re-assign reports before deleting facility
+- or create a Merge function?
 
 4. technology_path(:id)
-- Add Report button does nothing
 - Add Plan button does nothing
 
 # Creating/Updating Targets
@@ -18,10 +20,10 @@
 * Copy the sector/select && sector/#id/report process
 
 # Forms
-- Tech form
 - Contract form
+- Tech form
 - Target form
-- Plan form
+
 
 # Geography forms (also need a chooser view)
 - Country form

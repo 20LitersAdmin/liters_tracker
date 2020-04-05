@@ -12,7 +12,7 @@ class Report < ApplicationRecord
   validates_presence_of :date, :year, :month
 
   # form fields for simple_form
-  attr_accessor :cell, :village
+  attr_accessor :sector, :cell, :village
 
   scope :only_districts,  -> { where(reportable_type: 'District') }
   scope :only_sectors,    -> { where(reportable_type: 'Sector') }

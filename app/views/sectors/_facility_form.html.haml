@@ -17,7 +17,7 @@
       .col-2.field
         = f.input :checked
     .col-3.field
-      = f.input :date, as: :string, input_html: { class: 'datetimepicker-input', data: { toggle: 'datetimepicker', target: '#report_date' } }
+      = f.input :date, as: :string, input_html: { class: 'datetimepicker-input', autocomplete: 'off', data: { toggle: 'datetimepicker', target: '#report_date' } }
     - unless @technology.name.include?("Train")
       .col-3.field
         = f.input :people
