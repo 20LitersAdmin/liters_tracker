@@ -11,17 +11,19 @@ $('form#new_report').find('input#report_distributed').val('')
 $('form#new_report').find('input#report_checked').val('')
 $('form#new_report').find('input#report_people').val('')
 
-// clear out the reportable hidden fields on _village_form
-$('form#new_report').find('input#report_reportable_id').val('')
-$('form#new_report').find('input#report_reportable_type').val('')
+// clear out the reportable hidden fields on _village_form ONLY
+$('form#new_report').find('input#report_reportable_id.village-form').val('')
+$('form#new_report').find('input#report_reportable_type.village-form').val('')
 
-// the datetimepicker
+// clear out the datetimepicker
 $('form#new_report').find('input#report_date.datetimepicker-input').val('')
 
 // destroy the existing DataTable
 $("table#dttb_sector_reports").DataTable().destroy();
-// re-populate the table body using the partial
-$("table#dttb_sector_reports tbody").html("<%= j render partial: 'sectors/report', collection: @reports, locals: { scale: @report.technology.scale } %>");
+// destroy the table
+$('#sector_reports_container').html('');
+// re-create the table using the correct partial:  _engagement_reports || _family_reports || _community_reports
+$("#sector_reports_container").html("<%= j render partial: @partial %>");
 // re-init the DataTable
 $("table#dttb_sector_reports").DataTable({
   order: [[ 0, 'asc' ], [ 1, 'asc' ]]

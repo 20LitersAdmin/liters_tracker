@@ -1,6 +1,6 @@
 # CURRENT:
 0. ISSUES:
-- narrative report showing Slow Sand and track showing SAM3 [May 2018] or two SAM2 in track for April 2018 that aren't mentioned in any narrative reports in the quarter
+- Submitting RWHS report?
 
 1. Plans architecture:
 - Plan form

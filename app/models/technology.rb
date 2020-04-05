@@ -41,6 +41,16 @@ class Technology < ApplicationRecord
     end
   end
 
+  def type
+    return 'engagement' if is_engagement?
+
+    scale.downcase
+  end
+
+  def type_for_form
+    scale == 'Community' ? 'facility' : 'village'
+  end
+
   private
 
   def community_engagement_is_family_scale

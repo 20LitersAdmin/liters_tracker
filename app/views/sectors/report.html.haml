@@ -12,10 +12,7 @@
   .col-12
     %h5 Create a new report:
   .col-12
-    - if @technology.scale == 'Family'
-      = render partial: 'village_form', locals: { report: @report }
-    - else # @technology.scale == 'Community'
-      = render partial: 'facility_form', locals: { report: @report }
+    = render partial: "#{@technology.type_for_form}_form", locals: { report: @report }
 
 - if @technology.scale == 'Community'
   .row.justify-content-end
@@ -24,13 +21,8 @@
 .row#sector_reports
   .col-12
     %h5 Existing reports:
-  .col-12
-    - if @technology.is_engagement?
-      = render partial: 'engagement_reports'
-    - elsif @technology.scale == 'Family'
-      = render partial: 'family_reports'
-    - else
-      = render partial: 'community_reports'
+  .col-12#sector_reports_container
+    = render partial: "#{@technology.type}_reports"
 
 - if @technology.scale == 'Community'
   .modal.fade#new_facility_modal{tabindex: '-1', role: 'dialog', 'aria-labelledby': 'newFacilityLabel', 'aria-hidden': 'true' }

@@ -49,7 +49,7 @@ class ApplicationController < ActionController::Base
     back = build_url(session[:pre_previous]) if session[:pre_previous].present? && (params_match?(session[:previous], params) || bad_param?(session[:previous]))
 
     # @return_path is now available to all controllers and views
-    @return_path = URI(back).path
+    @return_path = URI(back).to_s
   end
 
   def params_match?(param1, param2)

@@ -42,7 +42,9 @@ class ReportsController < ApplicationController
         end
         format.json { render :show, status: :created, location: @report }
         format.js do
-          @reports = @report.reportable.sector.related_reports.where(technology: @report.technology).between(@report.date.beginning_of_month, @report.date.end_of_month)
+          @technology = @report.technology
+          @reports = @report.reportable.sector.related_reports.where(technology: @technology).between(@report.date.beginning_of_month, @report.date.end_of_month)
+          @partial = "sectors/#{@technology.type}_reports"
           render :report_created
         end
       else
@@ -74,9 +76,7 @@ class ReportsController < ApplicationController
   # DELETE /reports/1
   # DELETE /reports/1.json
   def destroy
-    # @report.destroy
-
-    byebug
+    @report.destroy
 
     respond_to do |format|
       format.html do
@@ -106,8 +106,7 @@ class ReportsController < ApplicationController
                                    :distributed,
                                    :checked,
                                    :people,
-                                   :hours,
-                                   :rt)
+                                   :hours)
   end
 
   def dup_matching_params

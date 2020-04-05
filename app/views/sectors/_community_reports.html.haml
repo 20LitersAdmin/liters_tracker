@@ -6,12 +6,22 @@
       %th Facility
       %th.text-center Population
       %th Type
-      %th.text-center= "#<br>Installed".html_safe
-      %th.text-center= "#<br>Checked".html_safe
-      %th.text-center Date
-      %th.text-center= "People<br>served".html_safe
+      - if @plans.present?
+        %th.text-center= "#{human_number(@plans.sum(:goal))} Planned (by #{human_date(@plans.first&.date)})"
+      - else
+        %th.text-center Planned
+      - if @reports.present?
+        %th.text-center= "#{human_number(@reports.sum(:distributed))}<br>Installed".html_safe
+        %th.text-center= "#{human_number(@reports.sum(:checked))}<br>Checked".html_safe
+        %th.text-center Date
+        %th.text-center= "#{human_number(@reports.sum(:impact))} People<br>served".html_safe
+      - else
+        %th.text-center= "#<br>Installed".html_safe
+        %th.text-center= "#<br>Checked".html_safe
+        %th.text-center Date
+        %th.text-center= "People<br>served".html_safe
       %th
       %th
     %tbody
-      = render partial: 'community_report', collection: @reports
+      = render partial: 'sectors/community_report', collection: @reports
 
