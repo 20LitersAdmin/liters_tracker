@@ -1,7 +1,4 @@
 # CURRENT:
-0. ISSUES:
-- Submitting RWHS report?
-
 1. Plans architecture:
 - Plan form
 -- geography: contracts/{:id}/plans
