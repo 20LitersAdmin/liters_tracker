@@ -3,7 +3,7 @@
   .col-12
     %h1 New Story
     %h4= "For Report ##{link_to(@report.id, @report)}: #{@report.details}".html_safe
-    %h4= "#{@report.reportable.village.name}, #{@report.reportable.sector.name}"
+    %h4= "#{@report.reportable.village&.name}, #{@report.reportable.sector&.name}"
   .col-12
     = simple_form_for @story, wrapper: :horizontal_form, html: { id: 'story_form' }  do |f|
       = f.input :report_id, as: :hidden

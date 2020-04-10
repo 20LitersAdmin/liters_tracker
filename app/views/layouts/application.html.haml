@@ -16,15 +16,3 @@
     %main.container
       = flash_messages
       = yield
-    - if Rails.env == 'development'
-      %table.table
-        %tbody
-          %tr
-            %td @return_path
-            %td= @return_path
-          %tr
-            %td session[:previous]
-            %td= session[:previous]
-          %tr
-            %td session[:pre_previous]
-            %td= session[:pre_previous]
