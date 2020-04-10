@@ -11,7 +11,7 @@
       %p= @story.text.html_safe
     .col-6
       %p= "For Report ##{link_to(@report.id, @report)}: #{@report.details}".html_safe
-      %p= "#{@report.reportable.village.name}, #{@report.reportable.sector.name}"
+      %p= "#{@report.reportable.village&.name}, #{@report.reportable.sector&.name}"
   .row
     .col-6.field
       = f.file_field :image, id: "image_upload", accept: 'image/*'

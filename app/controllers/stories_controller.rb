@@ -20,6 +20,7 @@ class StoriesController < ApplicationController
   end
 
   def new
+    # TODO: what am I doing with year && month params?
     @story ||= Story.new
     @story.report_id = @report.id
     @year = params[:year]
@@ -28,9 +29,8 @@ class StoriesController < ApplicationController
     authorize @story
   end
 
-  # POST /stories
-  # POST /stories.json
   def create
+    # TODO: what am I doing with year && month params?
     authorize @story = Story.new(story_params)
 
     if @story.save
@@ -49,11 +49,13 @@ class StoriesController < ApplicationController
   end
 
   def edit
+    # TODO: what am I doing with year && month params?
     @year = params[:year]
     @month = params[:month]
   end
 
   def update
+    # TODO: what am I doing with year && month params?
     if @story.update(story_params)
       flash[:success] = 'Story was successfully edited.'
 
@@ -91,6 +93,7 @@ class StoriesController < ApplicationController
     if @story.process_image!(image_params[:image])
       flash[:success] = 'Image was successfully saved.'
 
+      # TODO: what am I doing with year && month params?
       redirect_to image_story_path(@story, month: params[:month], year: params[:year])
 
       # if params[:month].blank? || params[:year].blank?
@@ -111,12 +114,14 @@ class StoriesController < ApplicationController
     else
       flash[:error] = 'Something went wrong.'
     end
+    # TODO: If I need year && month, I'm loosing them here?
     redirect_to image_story_path(@story)
   end
 
   def destroy_image
     @story.image.purge
     flash[:success] = 'Image successfully deleted.'
+    # TODO: If I need year && month, I'm loosing them here?
     redirect_to image_story_path(@story)
   end
 
@@ -140,6 +145,7 @@ class StoriesController < ApplicationController
     if report_id.blank?
       year = params[:year]
       month = params[:month]
+      # TODO: should this be @return_path?
       redirect_back(fallback_location: monthly_w_date_path(year: year, month: month))
       flash[:error] = 'Something went wrong and the report_id wasn\'t properly associated to this new story. Please navigate back and try again!'
     else

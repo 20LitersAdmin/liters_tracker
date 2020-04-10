@@ -1,4 +1,12 @@
 # CURRENT:
+0. List from Amanda of missing or bad info
+
+0. StoriesController is maintaining year & month params
+- Couldn't I just create a Monthly object from the report? e.g. `@report.`
+- Why does Stories#form need hidden fields for year and month?
+
+0. Story authorship for admins
+
 1. Plans architecture:
 - Plan form
 -- geography: contracts/{:id}/plans
@@ -13,6 +21,9 @@
 
 4. technology_path(:id)
 - Add Plan button does nothing
+
+5. `views/monthly/_report.html.haml` line 14 & 16 is sending year and month. Why?
+- For return to monthly#show maybe?
 
 # Creating/Updating Targets
 
