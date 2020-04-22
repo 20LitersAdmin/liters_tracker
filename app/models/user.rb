@@ -11,6 +11,7 @@ class User < ApplicationRecord
          :validatable
 
   has_many :reports, inverse_of: :user
+  has_many :stories, inverse_of: :user
 
   validates_presence_of :fname, :lname
   validates :email, presence: true, uniqueness: true

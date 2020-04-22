@@ -6,6 +6,7 @@
   .col-sm-6
     %p= "For Report ##{link_to(@report.id, @report)}: #{@report.details}".html_safe
     %p= "#{@report.reportable.village&.name}, #{@report.reportable.sector&.name}"
+    %p= "Reported by #{@reporter}, Story written by #{@author}"
 .row.mt-4.align-items-end
   .col.text-right
     =link_to rotate_image_story_path(@story, direction: 'left'), class: 'rotate-btn' do

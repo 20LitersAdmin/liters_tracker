@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_02_17_214652) do
+ActiveRecord::Schema.define(version: 2020_04_22_122321) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -167,7 +167,9 @@ ActiveRecord::Schema.define(version: 2020_02_17_214652) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.boolean "prominent", default: false
+    t.bigint "user_id", null: false
     t.index ["report_id"], name: "index_stories_on_report_id"
+    t.index ["user_id"], name: "index_stories_on_user_id"
   end
 
   create_table "targets", force: :cascade do |t|
@@ -261,6 +263,7 @@ ActiveRecord::Schema.define(version: 2020_02_17_214652) do
   add_foreign_key "reports", "technologies"
   add_foreign_key "reports", "users"
   add_foreign_key "stories", "reports"
+  add_foreign_key "stories", "users"
   add_foreign_key "targets", "contracts"
   add_foreign_key "targets", "technologies"
 end

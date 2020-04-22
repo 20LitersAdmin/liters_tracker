@@ -3,7 +3,7 @@
 class StoriesController < ApplicationController
   before_action :set_story, only: %i[show edit update destroy image upload_image rotate_image destroy_image]
   before_action :set_report_from_param, only: %i[new create]
-  before_action :set_report, only: %i[show edit update destroy]
+  before_action :set_report, only: %i[show edit update destroy image]
   layout 'dashboard', only: %i[show]
 
   def index
@@ -12,11 +12,14 @@ class StoriesController < ApplicationController
 
   def show
     @title = @story.title
-    @subtitle = "Reported by #{@story.report.user.name}"
+    @reporter = @report.user.name
+    @subtitle = "Reported by #{@reporter}"
     @related_stories = @story.related(3)
 
     @breadcrumb = @story.breadcrumb
     @technology = @story.technology
+
+    @author = @story.user.name
   end
 
   def new
@@ -32,6 +35,8 @@ class StoriesController < ApplicationController
   def create
     # TODO: what am I doing with year && month params?
     authorize @story = Story.new(story_params)
+
+    @story.user = current_user
 
     if @story.save
       flash[:success] = 'Story was successfully created.'
@@ -55,6 +60,8 @@ class StoriesController < ApplicationController
   end
 
   def update
+    @story.user = current_user
+
     # TODO: what am I doing with year && month params?
     if @story.update(story_params)
       flash[:success] = 'Story was successfully edited.'
@@ -72,7 +79,9 @@ class StoriesController < ApplicationController
   end
 
   def image
-    @report = @story.report
+    @reporter = @report.user.name
+    @author = @story.user.name
+
     @year = params[:year]
     @month = params[:month]
 

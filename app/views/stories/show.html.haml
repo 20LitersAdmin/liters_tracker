@@ -8,6 +8,7 @@
           .meta
             = @story.report.date.strftime('%B %d, %Y')
           %h3= @story.title
+          %i= "Reported by #{@reporter}, Story written by #{@author}"
           .story-text= @story.text.html_safe
       .row
         .col-sm-auto.mb-4

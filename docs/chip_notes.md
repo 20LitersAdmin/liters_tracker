@@ -54,7 +54,7 @@
 # Remind myself:
 * `magic_frozen_string_literal . #get those frozen string benefits`
 * production backup / development restore-from production (https://github.com/thoughtbot/parity)
-  `User.first.update(password: 'password', password_confirmation: 'password')`
+  `User.first.reset_password('password', 'password')`
 * byebug commands
     continue   -- Runs on
     delete     -- Deletes breakpoints
