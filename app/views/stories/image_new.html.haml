@@ -18,3 +18,7 @@
       = f.file_field :image, id: "image_upload", accept: 'image/*'
     .col-6.actions
       = f.submit 'Save Image', class: 'btn yellow', disabled: true, id: 'submit'
+    .col-auto
+      =link_to 'Edit Story', edit_story_path(@story), class: 'btn yellow'
+    .col-auto
+      =link_to "Back to #{@monthly_report_name} Report", monthly_w_date_path(year: @monthly.year, month: @monthly.month), class: 'btn blue'

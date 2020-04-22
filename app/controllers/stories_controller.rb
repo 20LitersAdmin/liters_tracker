@@ -4,6 +4,7 @@ class StoriesController < ApplicationController
   before_action :set_story, only: %i[show edit update destroy image upload_image rotate_image destroy_image]
   before_action :set_report_from_param, only: %i[new create]
   before_action :set_report, only: %i[show edit update destroy image]
+  before_action :set_monthly, only: %i[new show edit image]
   layout 'dashboard', only: %i[show]
 
   def index
@@ -23,17 +24,12 @@ class StoriesController < ApplicationController
   end
 
   def new
-    # TODO: what am I doing with year && month params?
     @story ||= Story.new
     @story.report_id = @report.id
-    @year = params[:year]
-    @month = params[:month]
-
     authorize @story
   end
 
   def create
-    # TODO: what am I doing with year && month params?
     authorize @story = Story.new(story_params)
 
     @story.user = current_user
@@ -41,11 +37,7 @@ class StoriesController < ApplicationController
     if @story.save
       flash[:success] = 'Story was successfully created.'
 
-      if params[:month].blank? || params[:year].blank?
-        redirect_to image_story_path(@story)
-      else
-        redirect_to image_story_path(@story, month: params[:month], year: params[:year])
-      end
+      redirect_to image_story_path(@story)
     else
       @year = params[:year]
       @month = params[:month]
@@ -53,24 +45,15 @@ class StoriesController < ApplicationController
     end
   end
 
-  def edit
-    # TODO: what am I doing with year && month params?
-    @year = params[:year]
-    @month = params[:month]
-  end
+  def edit; end
 
   def update
     @story.user = current_user
 
-    # TODO: what am I doing with year && month params?
     if @story.update(story_params)
       flash[:success] = 'Story was successfully edited.'
 
-      if params[:month].blank? || params[:year].blank?
-        redirect_to image_story_path(@story)
-      else
-        redirect_to image_story_path(@story, month: params[:month], year: params[:year])
-      end
+      redirect_to image_story_path(@story)
     else
       @year = params[:year]
       @month = params[:month]
@@ -82,9 +65,6 @@ class StoriesController < ApplicationController
     @reporter = @report.user.name
     @author = @story.user.name
 
-    @year = params[:year]
-    @month = params[:month]
-
     if @story.image.attached?
       render :image_edit
     else
@@ -95,24 +75,14 @@ class StoriesController < ApplicationController
   def upload_image
     unless params.include? :story
       flash[:error] = 'Oops, no image selected.'
-      redirect_to image_story_path(@story, month: params[:month], year: params[:year])
+      redirect_to image_story_path(@story)
       return
     end
 
     if @story.process_image!(image_params[:image])
       flash[:success] = 'Image was successfully saved.'
-
-      # TODO: what am I doing with year && month params?
-      redirect_to image_story_path(@story, month: params[:month], year: params[:year])
-
-      # if params[:month].blank? || params[:year].blank?
-      #   redirect_to @story
-      # else
-      #   redirect_to monthly_w_date_url(month: params[:month], year: params[:year])
-      # end
+      redirect_to image_story_path(@story)
     else
-      @year = params[:year]
-      @month = params[:month]
       render :image
     end
   end
@@ -123,14 +93,12 @@ class StoriesController < ApplicationController
     else
       flash[:error] = 'Something went wrong.'
     end
-    # TODO: If I need year && month, I'm loosing them here?
     redirect_to image_story_path(@story)
   end
 
   def destroy_image
     @story.image.purge
     flash[:success] = 'Image successfully deleted.'
-    # TODO: If I need year && month, I'm loosing them here?
     redirect_to image_story_path(@story)
   end
 
@@ -152,10 +120,7 @@ class StoriesController < ApplicationController
   def set_report_from_param
     report_id = params[:report_id].nil? ? story_params[:report_id] : params[:report_id]
     if report_id.blank?
-      year = params[:year]
-      month = params[:month]
-      # TODO: should this be @return_path?
-      redirect_back(fallback_location: monthly_w_date_path(year: year, month: month))
+      redirect_to @return_path
       flash[:error] = 'Something went wrong and the report_id wasn\'t properly associated to this new story. Please navigate back and try again!'
     else
       @report = Report.find(report_id)
@@ -164,5 +129,10 @@ class StoriesController < ApplicationController
 
   def set_report
     @report = @story.report
+  end
+
+  def set_monthly
+    @monthly = Monthly.new(year: @report.year, month: @report.month)
+    @monthly_report_name = "#{Date::MONTHNAMES[@monthly.month][0..2]}, #{@monthly.year}"
   end
 end
