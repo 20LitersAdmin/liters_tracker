@@ -12,8 +12,13 @@
     .col-6
       %p= "For Report ##{link_to(@report.id, @report)}: #{@report.details}".html_safe
       %p= "#{@report.reportable.village&.name}, #{@report.reportable.sector&.name}"
+      %p= "Reported by #{@reporter}, Story written by #{@author}"
   .row
     .col-6.field
       = f.file_field :image, id: "image_upload", accept: 'image/*'
     .col-6.actions
       = f.submit 'Save Image', class: 'btn yellow', disabled: true, id: 'submit'
+    .col-auto
+      =link_to 'Edit Story', edit_story_path(@story), class: 'btn yellow'
+    .col-auto
+      =link_to "Back to #{@monthly_report_name} Report", monthly_w_date_path(year: @monthly.year, month: @monthly.month), class: 'btn blue'

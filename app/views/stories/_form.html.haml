@@ -7,21 +7,23 @@
   .col-12
     = simple_form_for @story, wrapper: :horizontal_form, html: { id: 'story_form' }  do |f|
       = f.input :report_id, as: :hidden
-      = hidden_field_tag :year, @year
-      = hidden_field_tag :month, @month
       .field
         = f.input :title
       .field
         = f.input :prominent
       .field.wysiwyg
         = f.input :text, input_html: { class: "tinymce", style: "height: 300px;" }
-      .row.actions.text-center
-        .col
+      .row.actions.justify-content-center
+        .col-auto
           = f.submit 'Save Story', class: 'btn yellow'
-        .col
-          - if @story.persisted?
+        - if @story.persisted?
+          .col-auto
+            = link_to 'View Story', story_path(@story), class: 'btn blue'
+          .col-auto
             = link_to 'Delete Story', story_path(@story), method: :delete, class: 'btn red'
         -if @story.image.attached?
-          .col
-            = link_to 'Go to image', image_story_path(@story, year: params[:year], month: params[:month]), class: 'btn blue'
+          .col-auto
+            = link_to 'Go to image', image_story_path(@story, year: params[:year], month: params[:month]), class: 'btn yellow'
+        .col-auto
+          = link_to "Back to #{@monthly_report_name} Report", monthly_w_date_path(year: @monthly.year, month: @monthly.month), class: 'btn blue'
 = tinymce

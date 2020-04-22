@@ -5,6 +5,7 @@ class Story < ApplicationRecord
   require 'fileutils'
 
   belongs_to :report, inverse_of: :story
+  belongs_to :user, inverse_of: :stories
   has_one_attached :image, dependent: :purge
   has_one :technology, through: :report
 

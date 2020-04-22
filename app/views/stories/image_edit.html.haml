@@ -6,6 +6,7 @@
   .col-sm-6
     %p= "For Report ##{link_to(@report.id, @report)}: #{@report.details}".html_safe
     %p= "#{@report.reportable.village&.name}, #{@report.reportable.sector&.name}"
+    %p= "Reported by #{@reporter}, Story written by #{@author}"
 .row.mt-4.align-items-end
   .col.text-right
     =link_to rotate_image_story_path(@story, direction: 'left'), class: 'rotate-btn' do
@@ -15,8 +16,12 @@
   .col
     =link_to rotate_image_story_path(@story, direction: 'right'), class: 'rotate-btn' do
       = fa_icon 'rotate-right 3x'
-.row.mt-5
-  .col.text-right
+.row.mt-5.justify-content-center
+  .col-auto
     =link_to 'Delete image', destroy_image_story_path(@story), class: 'btn red'
-  .col
+  .col-auto
+    =link_to 'Edit Story', story_path(@story), class: 'btn blue'
+  .col-auto
     =link_to 'View Story', story_path(@story), class: 'btn yellow'
+  .col-auto
+    =link_to "Back to #{@monthly_report_name} Report", monthly_w_date_path(year: @monthly.year, month: @monthly.month), class: 'btn blue'
