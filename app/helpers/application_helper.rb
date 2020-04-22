@@ -48,4 +48,16 @@ module ApplicationHelper
   def monthly_date(monthly)
     Date.new(monthly.year, monthly.month, 1).strftime('%m/%Y')
   end
+
+  def apple_touch_icon(dimension)
+    s = "#{dimension}x#{dimension}"
+    url = "https://20liters.org/wp-content/themes/twenty-liters/library/images/icons/apple-touch-icon-#{s}.png"
+    "<link rel='apple-touch-icon-precomposed' sizes='#{s}' href='#{url}'>".html_safe
+  end
+
+  def favicon(dimension)
+    s = "#{dimension}x#{dimension}"
+    url = "https://20liters.org/wp-content/themes/twenty-liters/library/images/icons/favicon-#{s}.png"
+    "<link rel='icon' type='image/png' sizes='#{s}' href='#{url}'>".html_safe
+  end
 end
