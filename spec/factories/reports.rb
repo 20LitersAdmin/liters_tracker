@@ -5,7 +5,6 @@ FactoryBot.define do
     date { '2019-01-10' }
     association :technology, factory: :technology_family
     association :user, factory: :user_reports
-    contract
     distributed { 1 }
     people { nil }
     checked { 1 }
@@ -16,7 +15,6 @@ FactoryBot.define do
     date { '2019-01-10' }
     association :technology, factory: :technology_family
     association :user, factory: :user_reports
-    contract
     distributed { 1 }
     checked { 1 }
     people { 1 }
@@ -27,7 +25,6 @@ FactoryBot.define do
     date { '2019-01-10' }
     association :technology, factory: :technology_family
     association :user, factory: :user_reports
-    contract
     distributed { 1 }
     checked { 1 }
     people { 1 }
@@ -38,7 +35,6 @@ FactoryBot.define do
     date { '2019-01-10' }
     association :technology, factory: :technology_family
     association :user, factory: :user_reports
-    contract
     distributed { 1 }
     checked { 1 }
     people { 1 }
@@ -49,10 +45,18 @@ FactoryBot.define do
     date { '2019-01-10' }
     association :technology, factory: :technology_family
     association :user, factory: :user_reports
-    contract
     distributed { 1 }
     checked { 1 }
     people { 1 }
     association :reportable, factory: :district
+  end
+
+  factory :report_engagement, class: Report do
+    date { '2019-01-10' }
+    association :technology, factory: :technology_engagement
+    association :user, factory: :user_reports
+    hours { 1.2 }
+    people { 1 }
+    association :reportable, factory: :village
   end
 end

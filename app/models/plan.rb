@@ -136,6 +136,6 @@ class Plan < ApplicationRecord
                         reportable_id: planable_id,
                         reportable_type: planable_type)
 
-    reps.update_columns(plan_id: id) if reps.any?
+    reps.each { |rep| rep.update_column(:plan_id, id) } if reps.any?
   end
 end

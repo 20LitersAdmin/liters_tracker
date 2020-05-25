@@ -28,7 +28,7 @@ RSpec.describe Facility, type: :model do
       expect(no_village.errors[:village_id]).to match_array("can't be blank")
 
       bad_village.valid?
-      expect(bad_village.errors[:village]).to match_array('must exist')
+      expect(bad_village.errors[:village]).to match_array('must be selected.')
     end
 
     it 'category' do
