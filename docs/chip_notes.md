@@ -5,6 +5,7 @@
 
 0. Check model specs for missing methods
 - Report is checked
+- Story is checked
 
 1. Plans architecture:
 - Plan form

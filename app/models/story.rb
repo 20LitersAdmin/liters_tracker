@@ -20,10 +20,6 @@ class Story < ApplicationRecord
     report.breadcrumb
   end
 
-  def breadcrumb_geo
-    report.breadcrumb_geo
-  end
-
   def date
     report.date
   end
@@ -46,9 +42,34 @@ class Story < ApplicationRecord
   # binary = story.image.download
 
   def picture
-    image.present? ? Rails.application.routes.url_helpers.rails_blob_path(image, only_path: true) : ActionController::Base.helpers.asset_path('story_no_image.png')
+    image.attached? ? Rails.application.routes.url_helpers.rails_blob_path(image, only_path: true) : ActionController::Base.helpers.asset_path('story_no_image.png')
   end
 
+  def process_image!(image_io)
+    unless image_io.content_type.start_with? 'image/'
+      errors.add(:image, 'needs to be an image')
+      return false
+    end
+
+    # allowing .attach() to replace the image uses .perge_later which is not what I want
+    # so we first purge the image
+    image.purge if image.attached?
+
+    mini_image = magick_image(image_io.tempfile.path)
+    # always resize the image to 355px wide, height automagically selected to preserve aspect ratio.
+    # this overwrites image_io
+    mini_image.resize '355'
+
+    # rename
+    image_name = "#{report_id}_#{report.date.year}-#{report.date.month}.#{image_io.original_filename.split(/\./)[1]}"
+
+    image.attach(io: File.open(image_io.tempfile.path), filename: image_name, content_type: image_io.content_type)
+
+    image.attached?
+  end
+
+  # returns a set number of related stories. This is used on Storise#show view.
+  # stories are related to each other by technology, sector and date
   def related(limit = nil)
     ilimit = limit.to_i
 
@@ -79,28 +100,6 @@ class Story < ApplicationRecord
     end
   end
 
-  def process_image!(image_io)
-    unless image_io.content_type.start_with? 'image/'
-      errors.add(:image, 'needs to be an image')
-      return false
-    end
-
-    # allowing .attach() to replace the image uses .perge_later which is dumb
-    # so we first purge the image
-    image.purge if image.attached?
-
-    mini_image = MiniMagick::Image.new(image_io.tempfile.path)
-    # always resize the image to 355px wide, height automagically selected to preserve aspect ratio.
-    mini_image.resize '355'
-
-    # rename
-    image_name = "#{report_id}_#{report.date.year}-#{report.date.month}.#{image_io.original_filename.split(/\./)[1]}"
-
-    image.attach(io: File.open(image_io.tempfile.path), filename: image_name, content_type: image_io.content_type)
-
-    image.attached?
-  end
-
   def rotate_image!(direction)
     return false unless %w[left right].include?(direction) && image.attached?
 
@@ -117,10 +116,11 @@ class Story < ApplicationRecord
       file.close
     end
 
-    mini_image = MiniMagick::Image.new(attachment_path)
+    mini_image = magick_image(attachment_path)
+    # this overwrites image_io
     mini_image.rotate rotation
 
-    # allowing .attach() to replace the image uses .perge_lager which is dumb
+    # allowing .attach() to replace the image uses .perge_lager which is not what I want
     image.purge
     image.attach(io: File.open(attachment_path), filename: filename, content_type: content_type)
 
@@ -130,10 +130,15 @@ class Story < ApplicationRecord
   private
 
   def check_image_format
-    return true if image.blob.content_type.start_with? 'image/'
+    return true if image.content_type.start_with? 'image/'
 
-    image.purge
+    image.persisted? ? image.purge : image.delete
+
     errors.add(:image, 'needs to be an image')
+  end
+
+  def magick_image(path)
+    MiniMagick::Image.new(path)
   end
 end
 

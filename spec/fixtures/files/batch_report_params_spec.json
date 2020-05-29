@@ -1,8 +1,0 @@
-{"technology_id": "1", "contract_id": "4", "master_date": "2019-01-10", "reports": [
-  {"date": "2019-07-01", "distributed": "5", "checked": "", "people": "25", "households": "", "reportable_id": "1", "reportable_type": "Village"},
-  {"date": "2019-07-01", "distributed": "5", "checked": "", "people": "25", "households": "", "reportable_id": "2", "reportable_type": "Village"},
-  {"date": "2019-07-01", "distributed": "10", "checked": "", "people": "50", "households": "", "reportable_id": "3", "reportable_type": "Village"},
-  {"date": "2019-07-01", "distributed": "6", "checked": "", "people": "30", "households": "", "reportable_id": "4", "reportable_type": "Village"},
-  {"date": "2019-07-01", "distributed": "", "checked": "", "people": "", "households": "", "reportable_id": "5", "reportable_type": "Village"},
-  {"date": "2019-07-01", "distributed": "", "checked": "", "people": "", "households": "", "reportable_id": "6", "reportable_type": "Village"}
-]}
