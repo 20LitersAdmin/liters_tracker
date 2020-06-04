@@ -25,7 +25,7 @@ RSpec.describe Facility, type: :model do
 
     it 'village' do
       no_village.valid?
-      expect(no_village.errors[:village_id]).to match_array("can't be blank")
+      expect(no_village.errors[:village]).to match_array('must be selected.')
 
       bad_village.valid?
       expect(bad_village.errors[:village]).to match_array('must be selected.')
@@ -83,6 +83,18 @@ RSpec.describe Facility, type: :model do
       story = FactoryBot.create(:story, report: report)
 
       expect(facility.related_stories).to include story
+    end
+  end
+
+  describe '#facility' do
+    it 'returns itself because all geographies need to respond to all types of geography' do
+      expect(facility.facility).to eq facility
+    end
+  end
+
+  describe '#parent' do
+    it 'returns the parent village' do
+      expect(facility.parent).to eq facility.village
     end
   end
 end

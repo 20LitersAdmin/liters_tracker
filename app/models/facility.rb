@@ -13,7 +13,7 @@ class Facility < ApplicationRecord
   has_many   :reports,  as: :reportable, inverse_of: :reportable
   has_many   :plans,    as: :planable,   inverse_of: :planable
 
-  validates_presence_of :name, :village_id
+  validates_presence_of :name
   validates :category, inclusion: { in: Constants::Facility::CATEGORY, message: "must be one of these: #{Constants::Facility::CATEGORY.to_sentence}" }
 
   scope :churches,     -> { where(category: 'Church') }

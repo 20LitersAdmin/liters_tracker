@@ -3,9 +3,7 @@
 
 0. Load dashboard to a specific year && month
 
-0. Check model specs for missing methods
-- Report is checked
-- Story is checked
+0. Feature specs
 
 1. Plans architecture:
 - Plan form

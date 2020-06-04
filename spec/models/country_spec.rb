@@ -47,7 +47,7 @@ RSpec.describe Country, type: :model do
     end
   end
 
-  describe 'self#related_plans' do
+  describe '#related_plans' do
     let!(:country2) { create :country }
 
     context 'when no plans exist' do
@@ -87,7 +87,7 @@ RSpec.describe Country, type: :model do
     end
   end
 
-  describe 'related_reports' do
+  describe '#related_reports' do
     let!(:country2) { create :country }
 
     context 'when no reports exist' do

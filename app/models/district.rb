@@ -13,7 +13,7 @@ class District < ApplicationRecord
   has_many   :reports,    as: :reportable,       inverse_of: :reportable
   has_many   :plans,      as: :planable,         inverse_of: :planable
 
-  validates_presence_of :name, :country_id
+  validates_presence_of :name
   validates_uniqueness_of :gis_code, allow_nil: true
 
   def parent

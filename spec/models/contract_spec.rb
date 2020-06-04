@@ -45,7 +45,7 @@ RSpec.describe Contract, type: :model do
   end
 
   context "has a 'between' scope which" do
-    it 'returns all records that fall within given dates at any point' do
+    it 'returns all contracts that fall within given dates at any point' do
       from = Date.today - 1.year
       to = Date.today
       too_old = FactoryBot.create :contract, start_date: Date.today - 3.years, end_date: Date.today - 2.years
@@ -81,6 +81,39 @@ RSpec.describe Contract, type: :model do
       expect(contract.url_params).to include('&to=')
       expect(contract.url_params).to include(contract.start_date.strftime('%Y-%m-%d'))
       expect(contract.url_params).to include(contract.end_date.strftime('%Y-%m-%d'))
+    end
+  end
+
+  private
+
+  describe '#find_reports' do
+    before :each do
+      contract.save
+
+      3.times do
+        FactoryBot.create(:report_village, date: contract.start_date + 10.days)
+      end
+
+      3.times do
+        FactoryBot.create(:report_village, date: contract.start_date - 10.days)
+      end
+
+      # Saving the reports triggers Report#set_contract_from_date
+      # So it must be manually cleared for this edge case.
+      Report.update_all(contract_id: nil)
+    end
+
+    it 'finds all reports without a contract_id that fall within the contract period' do
+      expect(contract.send(:find_reports)).to eq 3
+    end
+
+    fit 'updates all matching reports' do
+      expect(Report.all.pluck(:contract_id).uniq).to eq [nil]
+
+      contract.send(:find_reports)
+
+      expect(Report.all.pluck(:contract_id).uniq).to eq [nil, contract.id]
+      expect(Report.where(contract_id: contract.id).size).to eq 3
     end
   end
 end

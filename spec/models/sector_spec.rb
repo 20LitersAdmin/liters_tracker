@@ -158,4 +158,10 @@ RSpec.describe Sector, type: :model do
       expect(sector.related_stories).to include story
     end
   end
+
+  describe '#sector' do
+    it 'returns itself, because I need all Geography models to respond to record.cell' do
+      expect(sector.sector).to eq sector
+    end
+  end
 end

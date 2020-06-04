@@ -786,4 +786,43 @@ RSpec.describe Plan, type: :model do
       end
     end
   end
+
+  private
+
+  describe '#find_reports' do
+    before :each do
+      plan.save
+      contract = plan.contract
+      technology = plan.technology
+      geography = plan.planable
+
+      3.times do
+        FactoryBot.create(:report_village, date: contract.start_date + 2.months,
+                                           technology: technology,
+                                           reportable: geography)
+      end
+
+      3.times do
+        FactoryBot.create(:report_facility, date: contract.end_date + 2.months)
+      end
+
+      # Saving the reports triggers Report#set_contract_from_date
+      # which then allows for Report#set_plan to fire
+      # So it must be manually cleared for this edge case.
+      Report.update_all(plan_id: nil)
+    end
+
+    it 'finds all reports where everything matches except the plan_id' do
+      expect(plan.send(:find_reports)).to eq 3
+    end
+
+    it 'sets the plan_id for all matching plans' do
+      expect(Report.all.pluck(:plan_id).uniq).to eq [nil]
+
+      plan.send(:find_reports)
+
+      expect(Report.all.pluck(:plan_id).uniq).to eq [nil, plan.id]
+      expect(Report.where(plan_id: plan.id).size).to eq 3
+    end
+  end
 end
