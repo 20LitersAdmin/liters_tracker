@@ -107,7 +107,7 @@ RSpec.describe Contract, type: :model do
       expect(contract.send(:find_reports)).to eq 3
     end
 
-    fit 'updates all matching reports' do
+    it 'updates all matching reports' do
       expect(Report.all.pluck(:contract_id).uniq).to eq [nil]
 
       contract.send(:find_reports)

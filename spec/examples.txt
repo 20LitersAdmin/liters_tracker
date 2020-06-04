@@ -20,7 +20,7 @@ example_id                                | status | run_time        |
 ./spec/models/contract_spec.rb[1:4:1]     | passed | 0.08342 seconds |
 ./spec/models/contract_spec.rb[1:5:1]     | passed | 0.00415 seconds |
 ./spec/models/contract_spec.rb[1:6:1]     | passed | 0.18399 seconds |
-./spec/models/contract_spec.rb[1:6:2]     | passed | 0.66643 seconds |
+./spec/models/contract_spec.rb[1:6:2]     | passed | 0.64041 seconds |
 ./spec/models/country_spec.rb[1:1:1:1]    | passed | 0.11283 seconds |
 ./spec/models/country_spec.rb[1:1:2:1]    | passed | 0.00177 seconds |
 ./spec/models/country_spec.rb[1:1:2:2]    | passed | 0.00832 seconds |
