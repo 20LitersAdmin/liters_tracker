@@ -41,7 +41,70 @@ RSpec.describe Village, type: :model do
     end
   end
 
-  describe '.pop_hh' do
+  describe '#related_plans' do
+    before :each do
+      village.save
+    end
+
+    it 'returns plans related to this village' do
+      related_plan = FactoryBot.create(:plan_village, planable: village)
+      unrelated_plan = FactoryBot.create(:plan_village)
+
+      expect(village.related_plans).to include related_plan
+      expect(village.related_plans).not_to include unrelated_plan
+    end
+
+    it 'returns plans related to child facilities of this village' do
+      related_facility = FactoryBot.create(:facility, village: village)
+      related_plan = FactoryBot.create(:plan_facility, planable: related_facility)
+      unrelated_plan = FactoryBot.create(:plan_facility)
+
+      expect(village.related_plans).to include related_plan
+      expect(village.related_plans).not_to include unrelated_plan
+    end
+  end
+
+  describe '#related_reports' do
+    it 'returns reports related to this village' do
+      related_report = FactoryBot.create(:report_village, reportable: village)
+      unrelated_report = FactoryBot.create(:report_village)
+
+      expect(village.related_reports).to include related_report
+      expect(village.related_reports).not_to include unrelated_report
+    end
+
+    it 'returns reports related to child facilities of this village' do
+      related_facility = FactoryBot.create(:facility, village: village)
+      related_report = FactoryBot.create(:report_facility, reportable: related_facility)
+      unrelated_report = FactoryBot.create(:report_facility)
+
+      expect(village.related_reports).to include related_report
+      expect(village.related_reports).not_to include unrelated_report
+    end
+  end
+
+  describe '#related_stories' do
+    it 'returns stories related to this village' do
+      related_report = FactoryBot.create(:report_village, reportable: village)
+      related_story = FactoryBot.create(:story, report: related_report)
+      unrelated_story = FactoryBot.create(:story)
+
+      expect(village.related_stories).to include related_story
+      expect(village.related_stories).not_to include unrelated_story
+    end
+
+    it 'returns stories related to child facilities of this village' do
+      related_facility = FactoryBot.create(:facility, village: village)
+      related_report = FactoryBot.create(:report_facility, reportable: related_facility)
+      related_story = FactoryBot.create(:story, report: related_report)
+      unrelated_story = FactoryBot.create(:story)
+
+      expect(village.related_stories).to include related_story
+      expect(village.related_stories).not_to include unrelated_story
+    end
+  end
+
+  describe '#pop_hh' do
     it 'displays a string with the population and household' do
       village.update(population: 10, households: 3)
 
@@ -49,8 +112,8 @@ RSpec.describe Village, type: :model do
     end
   end
 
-  describe '.village' do
-    it 'returns itself' do
+  describe '#village' do
+    it 'returns itself because I need all geography records to respond to all possible geographies' do
       village.save
       expect(village.village).to eq village
     end

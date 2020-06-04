@@ -31,6 +31,11 @@ RSpec.describe User, type: :model do
       dup_email.valid?
       expect(dup_email.errors[:email]).to match_array('has already been taken')
     end
+
+    it 'admin' do
+      no_admin.valid?
+      expect(no_admin.errors[:admin]).to match_array('is not included in the list')
+    end
   end
 
   context 'has an admin scope' do

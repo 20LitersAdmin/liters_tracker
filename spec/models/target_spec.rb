@@ -33,4 +33,11 @@ RSpec.describe Target, type: :model do
       expect(no_goal.errors[:goal]).to match_array("can't be blank")
     end
   end
+
+  describe '#date' do
+    it 'returns the end date of the parent contract' do
+      target.save
+      expect(target.date).to eq target.contract.end_date
+    end
+  end
 end

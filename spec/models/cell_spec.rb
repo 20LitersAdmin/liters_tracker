@@ -166,4 +166,10 @@ RSpec.describe Cell, type: :model do
       expect(cell.cell).to eq cell
     end
   end
+
+  describe '#village' do
+    it 'returns nil' do
+      expect(cell.village).to eq nil
+    end
+  end
 end

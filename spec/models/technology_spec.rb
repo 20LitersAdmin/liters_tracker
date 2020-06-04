@@ -13,6 +13,8 @@ RSpec.describe Technology, type: :model do
     let(:no_agreement_required) { build :technology_family, agreement_required: nil }
     let(:no_scale) { build :technology_family, scale: nil }
     let(:bad_scale) { build :technology_family, scale: 'small' }
+    let(:no_report_worthy) { build :technology_family, report_worthy: nil }
+    let(:no_dashboard_worthy) { build :technology_family, dashboard_worthy: nil }
 
     it 'name' do
       no_name.valid?
@@ -46,12 +48,30 @@ RSpec.describe Technology, type: :model do
       expect(no_agreement_required.errors[:agreement_required][0]).to include('is not included in the list')
 
       no_agreement_required.agreement_required = true
-      no_agreement_required.valid?
-      expect(no_agreement_required.errors.any?).to eq false
+      expect(no_agreement_required.valid?).to eq true
 
       no_agreement_required.agreement_required = false
-      no_agreement_required.valid?
-      expect(no_agreement_required.errors.any?).to eq false
+      expect(no_agreement_required.valid?).to eq true
+    end
+
+    it 'report_worthy' do
+      no_report_worthy.valid?
+      expect(no_report_worthy.errors[:report_worthy][0]).to include('is not included in the list')
+
+      no_report_worthy.report_worthy = true
+      expect(no_report_worthy.valid?).to eq true
+      no_report_worthy.report_worthy = false
+      expect(no_report_worthy.valid?).to eq true
+    end
+
+    it 'dashboard_worthy' do
+      no_dashboard_worthy.valid?
+      expect(no_dashboard_worthy.errors[:dashboard_worthy][0]).to include('is not included in the list')
+
+      no_dashboard_worthy.dashboard_worthy = true
+      expect(no_dashboard_worthy.valid?).to eq true
+      no_dashboard_worthy.dashboard_worthy = false
+      expect(no_dashboard_worthy.valid?).to eq true
     end
 
     it 'scale' do
@@ -63,13 +83,25 @@ RSpec.describe Technology, type: :model do
     end
   end
 
-  describe '.report_worthy' do
-    let(:report_worthy) { create :technology_family, report_worthy: true }
-    let(:not_report_worthy) { create :technology_family, report_worthy: false }
+  describe 'has scopes for' do
+    context '#report_worthy' do
+      let(:report_worthy) { create :technology_family, report_worthy: true }
+      let(:not_report_worthy) { create :technology_family, report_worthy: false }
 
-    it 'returns only Technology where report_worthy is true' do
-      expect(Technology.report_worthy).to include report_worthy
-      expect(Technology.report_worthy).not_to include not_report_worthy
+      it 'returns only Technology where report_worthy is true' do
+        expect(Technology.report_worthy).to include report_worthy
+        expect(Technology.report_worthy).not_to include not_report_worthy
+      end
+    end
+
+    context '#dashboard_worthy' do
+      let(:dashboard_worthy) { create :technology_family, dashboard_worthy: true }
+      let(:not_dashboard_worthy) { create :technology_family, dashboard_worthy: false }
+
+      it 'returns only Technology where dashboard_worthy is true' do
+        expect(Technology.dashboard_worthy).to include dashboard_worthy
+        expect(Technology.dashboard_worthy).not_to include not_dashboard_worthy
+      end
     end
   end
 
@@ -114,6 +146,100 @@ RSpec.describe Technology, type: :model do
 
       it 'equals 0' do
         expect(technology.reload.lifetime_distributed).to eq(0)
+      end
+    end
+  end
+
+  describe '#plural_name' do
+    let(:tech_engagement) { build :technology_engagement }
+
+    context 'when Technology.is_engagement? is true' do
+      it 'returns the technology name appended with "hours"' do
+        expect(tech_engagement.plural_name).to eq "#{tech_engagement.name} hours"
+      end
+    end
+
+    context 'when Technology.is_engagement? is false' do
+      it 'returns the plural of the technology name' do
+        expect(technology.plural_name).to eq technology.name.pluralize
+      end
+    end
+  end
+
+  describe '#type' do
+    let(:tech_engagement) { build :technology_engagement }
+
+    context 'when Technology.is_engagement? is true' do
+      it 'returns "engagement"' do
+        expect(tech_engagement.type).to eq 'engagement'
+      end
+    end
+
+    context 'when Technology.is_engagement? is false' do
+      it 'returns the scale attribute downcased' do
+        expect(technology.type).to eq technology.scale.downcase
+      end
+    end
+  end
+
+  describe '#type_for_form' do
+    let(:tech_community) { build :technology_community }
+
+    context 'when Technology.scale == "Community"' do
+      it 'returns "facility"' do
+        expect(tech_community.type_for_form).to eq 'facility'
+      end
+    end
+
+    context 'when Technology.scale != "Community"' do
+      it 'returns "village"' do
+        expect(technology.type_for_form).to eq 'village'
+      end
+    end
+  end
+
+  private
+
+  describe '#community_engagement_is_family_scale' do
+    context 'when is_engagement is true and scale == "Community"' do
+      let(:tech_community) { build :technology_community, is_engagement: true }
+
+      it 'fires on before_save' do
+        expect(tech_community).to receive(:community_engagement_is_family_scale).exactly(1).times
+
+        tech_community.save
+      end
+
+      it 'sets the scale to family' do
+        expect { tech_community.save }.to change { tech_community.scale }.from('Community').to('Family')
+      end
+    end
+
+    context 'when is_engagement is false and scale == "Community"' do
+      let(:tech_community) { build :technology_community, is_engagement: false }
+
+      it 'doesn\'t fire' do
+        expect(tech_community).not_to receive(:community_engagement_is_family_scale)
+
+        tech_community.save
+      end
+    end
+
+    context 'when is_engagement is true and scale != "Community"' do
+      it 'doesn\'t fire' do
+        technology.is_engagement = true
+
+        expect(technology).not_to receive(:community_engagement_is_family_scale)
+
+        technology.save
+      end
+    end
+
+    context 'when is_engagement is false and scale != "Community"' do
+      it 'doesn\'t fire' do
+        expect(technology).not_to receive(:community_engagement_is_family_scale)
+
+        technology.save
       end
     end
   end

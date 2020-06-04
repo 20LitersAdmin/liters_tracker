@@ -1,6 +1,10 @@
 # CURRENT:
 0. List from Amanda of missing or bad info
 
+0. Load dashboard to a specific year && month
+
+0. Feature specs
+
 1. Plans architecture:
 - Plan form
 -- geography: contracts/{:id}/plans
@@ -15,6 +19,8 @@
 
 4. technology_path(:id)
 - Add Plan button does nothing
+
+5. Feature tests
 
 # Creating/Updating Targets
 

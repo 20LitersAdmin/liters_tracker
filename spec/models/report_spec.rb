@@ -18,25 +18,16 @@ RSpec.describe Report, type: :model do
     it 'user' do
       no_user.valid?
       expect(no_user.errors[:user]).to match_array('must exist')
-      expect(no_user.errors[:user_id]).to match_array("can't be blank")
-    end
-
-    it 'contract' do
-      no_contract.valid?
-      expect(no_contract.errors[:contract]).to match_array('must exist')
-      expect(no_contract.errors[:contract_id]).to match_array("can't be blank")
     end
 
     it 'technology' do
       no_technology.valid?
-      expect(no_technology.errors[:technology]).to match_array('must exist')
-      expect(no_technology.errors[:technology_id]).to match_array("can't be blank")
+      expect(no_technology.errors[:technology]).to match_array('must be provided.')
     end
 
     it 'reportable' do
       no_reportable.valid?
-      expect(no_reportable.errors[:reportable_id]).to match_array("can't be blank")
-      expect(no_reportable.errors[:reportable_type]).to match_array("can't be blank")
+      expect(no_reportable.errors[:reportable]).to match_array('must be selected.')
     end
   end
 
@@ -150,31 +141,94 @@ RSpec.describe Report, type: :model do
     end
 
     context '#between' do
-      pending 'limits results to records between two dates'
+      it 'limits results to records between two dates' do
+        earliest
+        early
+        kinda_early
+        kinda_late
+        late
+        latest
+        range = Report.between(early.date, late.date)
+
+        expect(range).not_to include(earliest)
+        expect(range).to include(early)
+        expect(range).to include(kinda_early)
+        expect(range).to include(kinda_late)
+        expect(range).to include(late)
+        expect(range).not_to include(latest)
+      end
     end
   end
 
   describe 'has scopes for joins' do
+    let(:no_story) { create :report_village }
+    let(:has_story) { create :report_village }
+    let(:story) { create :story, report: has_story }
+    let(:report_technology) { create :report_village }
+    let(:report_engagement) { create :report_engagement }
+
     context '#with_plans' do
-      it 'is currently unused' do
-        expect(true).to eq true
+      it 'is commented out and unused' do
+        expect { Report.with_plans }.to raise_error(NoMethodError)
       end
     end
 
     context '#with_stories' do
-      pending 'it only returns reports that have a story'
+      it 'it only returns reports that have a story' do
+        no_story
+        has_story
+        story
+        with_stories = Report.with_stories
+
+        expect(with_stories).to include(has_story)
+        expect(with_stories).not_to include(no_story)
+      end
+    end
+
+    context '#with_hours' do
+      it 'only returns reports that have hours above 0' do
+        report_technology
+        report_engagement
+        with_hours = Report.with_hours
+
+        expect(with_hours).to include(report_engagement)
+        expect(with_hours).not_to include(report_technology)
+      end
     end
   end
 
   describe 'has general scopes' do
+    let(:distribution) { create :report_village, checked: nil, distributed: 3 }
+    let(:check) { create :report_village, checked: 3, distributed: nil }
+
     context '#distributions' do
-      pending 'returns only reports where distributed is not nil'
+      it 'returns only reports where distributed is not nil' do
+        distribution
+        check
+
+        expect(Report.distributions).to include distribution
+        expect(Report.distributions).not_to include check
+      end
     end
 
     context '#checks' do
-      it 'is currently unused' do
-        expect(true).to eq true
+      it 'returns only reports where checked is not nil' do
+        distribution
+        check
+
+        expect(Report.checks).to include check
+        expect(Report.checks).not_to include distribution
       end
+    end
+  end
+
+  describe 'breadcrumb' do
+    let(:report) { create :report_village }
+
+    it 'returns a hash of parent geographies as strings' do
+      expect(report.breadcrumb.is_a?(Hash)).to eq true
+      expect(report.breadcrumb.keys[0]).to eq 'Country'
+      expect(report.breadcrumb.keys[-1]).to eq 'Village'
     end
   end
 
@@ -263,268 +317,6 @@ RSpec.describe Report, type: :model do
       expect(rep_dist_comm.details).to include ActionController::Base.helpers.pluralize(rep_dist_comm.distributed, rep_dist_comm.technology.name)
       expect(rep_check_fam.details).to include ActionController::Base.helpers.pluralize(rep_check_fam.checked, rep_check_fam.technology.name)
       expect(rep_check_comm.details).to include ActionController::Base.helpers.pluralize(rep_check_comm.checked, rep_check_comm.technology.name)
-    end
-  end
-
-  describe 'Model processing methods' do
-    before :each do
-      @data = JSON.parse(file_fixture('batch_report_params_spec.json').read)
-      ActionController::Parameters.permit_all_parameters = true
-      @batch_params = ActionController::Parameters.new(@data)
-    end
-
-    describe '#key_params_are_missing?' do
-      it 'returns false if #technology_id, #contract_id, #master_date are present and #reports.count is not zero' do
-        expect(Report.key_params_are_missing?(@batch_params)).to eq false
-      end
-
-      it 'returns true if #technology_id is missing' do
-        expect(Report.key_params_are_missing?(@batch_params.except('technology_id'))).to eq true
-      end
-
-      it 'returns true if #contract_id is missing' do
-        expect(Report.key_params_are_missing?(@batch_params.except('contract_id'))).to eq true
-      end
-
-      it 'returns true if #master_date is missing' do
-        expect(Report.key_params_are_missing?(@batch_params.except('master_date'))).to eq true
-      end
-
-      it 'returns true if #reports.count is zero' do
-        data = JSON.parse(file_fixture('batch_report_params_no_reports_spec.json').read)
-        batch_params = ActionController::Parameters.new(data)
-        expect(Report.key_params_are_missing?(batch_params)).to eq true
-      end
-    end
-
-    describe '#batch_process' do
-      it 'calls #process for each report in the param' do
-        expect(Report).to receive(:process).exactly(@batch_params['reports'].count).times
-
-        Report.batch_process(@batch_params, 1)
-      end
-
-      it 'creates multiple records' do
-        FactoryBot.create(:technology_family, id: 1)
-        FactoryBot.create(:user_reports, id: 1)
-        FactoryBot.create(:contract, id: 4)
-        13.times do |id|
-          FactoryBot.create(:village, id: id + 1)
-        end
-
-        # determine meaningful records a.k.a. params get a 2 from #determine_action
-        count = 0
-        @batch_params['reports'].each do |report_param|
-          count += 1 if report_param['distributed'].to_i.positive? || report_param['checked'].to_i.positive?
-        end
-
-        expect { Report.batch_process(@batch_params, 1) }.to change { Report.count }.by(count)
-      end
-    end
-
-    describe '#process' do
-      let(:user) { create :user_reports, id: 1 }
-
-      it 'calls #determine_action' do
-        user
-        allow_any_instance_of(Report).to receive(:determine_action).and_return(3)
-
-        report_params = @batch_params[:reports][0]
-
-        expect_any_instance_of(Report).to receive(:determine_action).and_return(3)
-
-        Report.process(report_params, @batch_params[:technology_id], @batch_params[:contract_id], user.id, @batch_params[:master_date])
-      end
-
-      it 'returns if action == 0' do
-        user
-        allow_any_instance_of(Report).to receive(:determine_action).and_return(0)
-        report_params = @batch_params[:reports][0]
-
-        expect { Report.process(report_params, @batch_params[:technology_id], @batch_params[:contract_id], user.id, @batch_params[:master_date]) }.not_to change { Report.all.size }
-      end
-
-      it 'destroys the record if action == 1' do
-        user
-        FactoryBot.create(:technology_family, id: 1)
-        FactoryBot.create(:contract, id: 4)
-        FactoryBot.create(:village, id: 1)
-
-        report_params = @batch_params[:reports][0]
-        report_params[:distributed] = ''
-
-        Report.create(
-          date: report_params[:date],
-          technology_id: 1,
-          reportable_id: 1,
-          reportable_type: 'Village',
-          distributed: 5,
-          checked: 5,
-          user: user,
-          contract_id: 4,
-          people: 25
-        )
-
-        expect { Report.process(report_params, @batch_params[:technology_id], @batch_params[:contract_id], user.id, @batch_params[:master_date]) }.to change { Report.all.size }.from(1).to(0)
-      end
-
-      it 'creates the record if action == 2' do
-        user
-        FactoryBot.create(:technology_family, id: 1)
-        FactoryBot.create(:contract, id: 4)
-        FactoryBot.create(:village, id: 1)
-
-        report_params = @batch_params[:reports][0]
-
-        expect { Report.process(report_params, @batch_params[:technology_id], @batch_params[:contract_id], user.id, @batch_params[:master_date]) }.to change { Report.all.size }.from(0).to(1)
-      end
-
-      it 'updates the record if action == 3' do
-        user
-        FactoryBot.create(:technology_family, id: 1)
-        FactoryBot.create(:contract, id: 4)
-        FactoryBot.create(:village, id: 1)
-
-        report_params = @batch_params[:reports][0]
-
-        report = Report.create(
-          date: report_params[:date],
-          technology_id: 1,
-          reportable_id: 1,
-          reportable_type: 'Village',
-          distributed: 2,
-          user: user,
-          contract_id: 4,
-          people: 25
-        )
-
-        expect { Report.process(report_params, @batch_params[:technology_id], @batch_params[:contract_id], user.id, @batch_params[:master_date]) }.to change { report.reload.distributed }.from(2).to(5)
-      end
-    end
-
-    describe '#determine_action' do
-      before :each do
-        @report_params = @batch_params[:reports][0]
-        @user = FactoryBot.create(:user_reports, id: 1)
-        @contract = FactoryBot.create(:contract, id: 4)
-      end
-
-      it 'returns 0 if record is new, but meaningful params are not positive' do
-        @report_params[:distributed] = '0'
-        @report_params[:checked] = '0'
-
-        report = Report.new(
-          date: '2019-07-01',
-          technology_id: 1,
-          reportable_id: 1,
-          reportable_type: 'Village',
-          distributed: 2,
-          user_id: 1,
-          contract_id: 4,
-          people: 25
-        )
-
-        expect(report.new_record?).to eq true
-        expect(@report_params[:distributed].to_i.positive?).to eq false
-        expect(@report_params[:checked].to_i.positive?).to eq false
-
-        expect(report.determine_action(@report_params, 4, 1)).to eq 0
-      end
-
-      it 'returns 0 if record exists and matches params' do
-        FactoryBot.create(:technology_family, id: 1)
-        FactoryBot.create(:village, id: 1)
-
-        report = Report.create(
-          date: '2019-07-01',
-          technology_id: 1,
-          reportable_id: 1,
-          reportable_type: 'Village',
-          distributed: 5,
-          user_id: 1,
-          contract_id: 4,
-          people: 25
-        )
-
-        expect(report.new_record?).to eq false
-        expect(report.contract_id == @contract.id).to eq true
-        expect(report.user_id == @user.id).to eq true
-        expect(report.distributed.to_i == @report_params[:distributed].to_i).to eq true
-        expect(report.checked.to_i == @report_params[:checked].to_i).to eq true
-        expect(report.people.to_i == @report_params[:people].to_i).to eq true
-
-        expect(report.determine_action(@report_params, 4, 1)).to eq 0
-      end
-
-      it 'returns 1 if record exists but params are not positive' do
-        FactoryBot.create(:technology_family, id: 1)
-        FactoryBot.create(:village, id: 1)
-
-        report = Report.create(
-          date: '2019-07-01',
-          technology_id: 1,
-          reportable_id: 1,
-          reportable_type: 'Village',
-          distributed: 5,
-          user_id: 1,
-          contract_id: 4,
-          people: 25
-        )
-
-        @report_params[:distributed] = '0'
-        @report_params[:checked] = '0'
-
-        expect(report.persisted?).to eq true
-        expect(@report_params[:distributed].to_i.positive?).to eq false
-        expect(@report_params[:checked].to_i.positive?).to eq false
-        expect(report.determine_action(@report_params, 4, 1)).to eq 1
-      end
-
-      it 'returns 2 if the record is new and params are positive' do
-        @report_params[:distributed] = '10'
-        @report_params[:checked] = '2'
-
-        report = Report.new(
-          date: '2019-07-01',
-          technology_id: 1,
-          reportable_id: 1,
-          reportable_type: 'Village',
-          distributed: 2,
-          user_id: 1,
-          contract_id: 4,
-          people: 25
-        )
-
-        expect(report.new_record?).to eq true
-        expect(@report_params[:distributed].to_i.positive?).to eq true
-        expect(@report_params[:checked].to_i.positive?).to eq true
-        expect(report.determine_action(@report_params, 4, 1)).to eq 2
-      end
-
-      it 'returns 3 if the record exists, but params are different' do
-        FactoryBot.create(:technology_family, id: 1)
-        FactoryBot.create(:village, id: 1)
-
-        report = Report.create(
-          date: '2019-07-01',
-          technology_id: 1,
-          reportable_id: 1,
-          reportable_type: 'Village',
-          distributed: 5,
-          checked: 1,
-          user_id: 1,
-          contract_id: 4,
-          people: 25
-        )
-
-        @report_params[:distributed] = '10'
-        @report_params[:checked] = '2'
-
-        expect(report.persisted?).to eq true
-        expect(report.distributed == @report_params[:distributed]).to eq false
-        expect(report.checked == @report_params[:checked]).to eq false
-        expect(report.determine_action(@report_params, 4, 1)).to eq 3
-      end
     end
   end
 
@@ -1005,13 +797,50 @@ RSpec.describe Report, type: :model do
     end
   end
 
-  describe '#prevent_meaningless_reports' do
-    pending 'is called on before_create'
-    pending 'is called if distributed is nil'
-    pending 'is called if distributed is zero'
-    pending 'is called if checked is nil'
-    pending 'is called if checked is zero'
-    pending 'prevents a record from being created'
+  describe '#flag_for_meaninglessness' do
+    let(:report) { build :report_village, hours: 0, distributed: nil, checked: nil }
+
+    it 'is triggered by before_validation' do
+      expect(report).to receive(:flag_for_meaninglessness).exactly(1).times
+
+      report.valid?
+    end
+
+    it 'only fires if hours are zero and distributed and checked are zero or nil' do
+      expect(report).to receive(:flag_for_meaninglessness).exactly(2).times
+
+      report.valid? # should fire
+      report.hours = 0.1
+      report.valid? # should not fire
+      report.hours = 0
+      report.distributed = 1
+      report.valid? # should not fire
+      report.distributed = 0
+      report.checked = 1
+      report.valid? # should not fire
+      report.checked = 0
+      report.valid? # should fire
+    end
+
+    context 'when technology.is_engagement?' do
+      it 'adds an error to :hours' do
+        report.technology = FactoryBot.create(:technology_engagement)
+
+        report.valid?
+
+        expect(report.errors[:hours][0]).to eq 'must be provided.'
+        expect(report.errors[:distributed]).to eq []
+      end
+    end
+
+    context 'when technology is not engagement' do
+      it 'adds an error to :distributed' do
+        report.valid?
+
+        expect(report.errors[:distributed][0]).to eq 'or checked must be provided.'
+        expect(report.errors[:hours]).to eq []
+      end
+    end
   end
 
   describe '#calculate_impact' do
@@ -1067,59 +896,221 @@ RSpec.describe Report, type: :model do
     end
   end
 
-  describe '#set_year_and_month_from_date' do
-    context 'with new records' do
-      pending 'fires on before_save'
+  describe '#calculate_distributed_impact' do
+    let(:report) { build :report_village }
+    let(:report_fac) { build :report_facility }
+
+    it 'fires on #calculate_impact' do
+      expect(report).to receive(:calculate_distributed_impact).exactly(1).times
+
+      report.send(:calculate_impact)
     end
 
-    context 'with existing records' do
-      pending 'fires on before_save'
+    it 'sets the value of impact' do
+      expect(report.impact).to eq 0
+
+      report.send(:calculate_distributed_impact)
+
+      expect(report.impact).not_to eq 0
     end
 
-    pending 'fires if year is blank'
+    context 'when people is present and positive' do
+      it 'sets impact to equal people' do
+        report.people = 5
+        report.send(:calculate_distributed_impact)
 
-    pending 'fires if month is blank'
+        expect(report.impact).to eq report.people
+      end
+    end
 
-    pending 'doesn\'t fire if year and month are both present'
+    context 'when people is unset but reportable is a facility with a positive population' do
+      it 'sets impact to eq reportable.population' do
+        facility = report_fac.reportable
+        facility.update(population: 8)
 
-    pending 'updates the record with the year and month from the date'
+        report_fac.send(:calculate_distributed_impact)
+        expect(report_fac.impact).to eq facility.population
+      end
+    end
+
+    context 'when people is unset and reportable is not a facility' do
+      it 'sets impact using the default_impact and the value of distributed' do
+        # TODO
+      end
+    end
   end
 
-  describe '#find_plan' do
-    context 'on new records' do
-      let(:report) { build :report_village }
+  describe '#calculate_hours_impact' do
+    let(:report) { build :report_engagement }
 
-      it 'fires on after_save' do
+    it 'fires on #calculate_impact' do
+      expect(report).to receive(:calculate_hours_impact).exactly(1).times
+
+      report.send(:calculate_impact)
+    end
+
+    it 'sets the value of impact' do
+      expect(report.impact).to eq 0
+
+      report.send(:calculate_hours_impact)
+
+      expect(report.impact).not_to eq 0
+    end
+
+    context 'when hours is present and positive' do
+      it 'sets impact to people * hours' do
+        report.people = 5
+        report.hours = 2.0
+        report.send(:calculate_hours_impact)
+
+        expect(report.impact).to eq 10
+      end
+    end
+
+    context 'when hours is not present or positive' do
+      it 'sets the impact to people' do
+        report.people = 7
+        report.hours = 0
+        report.send(:calculate_hours_impact)
+
+        expect(report.impact).to eq 7
+      end
+    end
+  end
+
+  describe '#set_date_from_year_and_month' do
+    let(:report) { build :report_village, date: nil, year: 2020, month: 1 }
+
+    context 'when date is blank and year and month are present' do
+      it 'fires from before_validation' do
+        expect(report).to receive(:set_date_from_year_and_month).exactly(1).times
+
+        report.valid?
+      end
+    end
+
+    context 'when date is present and year and month are present' do
+      it 'doesn\'t fire' do
+        report.date = Date.today
+
+        expect(report).not_to receive(:set_date_from_year_and_month)
+
+        report.valid?
+      end
+    end
+
+    context 'when date is present and year and month are nil' do
+      it 'doesn\'t fire' do
+        report.date = Date.today
+        report.year = nil
+        report.month = nil
+
+        expect(report).not_to receive(:set_date_from_year_and_month)
+
+        report.valid?
+      end
+    end
+
+    context 'when date is blank and year and month are nil' do
+      it 'doesn\'t fire' do
+        report.year = nil
+        report.month = nil
+
+        expect(report).not_to receive(:set_date_from_year_and_month)
+
+        report.valid?
+      end
+    end
+
+    it 'sets the date from year and month' do
+      expect { report.send(:set_date_from_year_and_month) }.to change { report.date }.from(nil).to(Date.new(2020, 1, 1))
+    end
+  end
+
+  describe '#set_contract_from_date' do
+    let(:report) { build :report_village, date: Date.today, contract_id: nil }
+    let(:contract) { create :contract, start_date: Date.today - 3.days, end_date: Date.today + 3.days }
+
+    context 'when contract_id is blank and date is present' do
+      it 'fires from before_save' do
+        expect(report).to receive(:set_contract_from_date).exactly(1).times
+
+        report.save
+      end
+    end
+
+    context 'when contract_id is present and date is present' do
+      it 'doesn\'t fire' do
+        report.contract_id = contract.id
+        expect(report).not_to receive(:set_contract_from_date)
+
+        report.save
+      end
+    end
+
+    context 'when contract_id is present and date is blank' do
+      it 'doesn\'t fire' do
+        report.contract_id = contract.id
+        report.date = nil
+        expect(report).not_to receive(:set_contract_from_date)
+
+        report.save
+      end
+    end
+
+    context 'when contract_id is blank and date is blank' do
+      it 'doesn\'t fire' do
+        report.date = nil
+        expect(report).not_to receive(:set_contract_from_date)
+
+        report.save
+      end
+    end
+
+    it 'finds the first contract that encompasses the date of the report' do
+      contract
+      expect { report.send(:set_contract_from_date) }.to change { report.contract_id }.from(nil).to(contract.id)
+    end
+  end
+
+  describe '#set_plan' do
+    context 'on new records' do
+      let(:contract) { create :contract }
+      let(:report) { build :report_village, contract: contract }
+
+      it 'fires on before_save' do
         expect(report.new_record?).to eq true
-        expect(report).to receive(:find_plan).exactly(1).times
+        expect(report).to receive(:set_plan).exactly(1).times
 
         report.save
       end
     end
 
     context 'on persistent records' do
-      let(:report) { create :report_village }
+      let(:contract) { create :contract }
+      let(:report) { create :report_village, contract: contract }
 
-      it 'fires on after_save' do
+      it 'fires on before_save' do
         report.impact = 25
 
         expect(report.persisted?).to eq true
-        expect(report).to receive(:find_plan).exactly(1).times
+        expect(report).to receive(:set_plan).exactly(1).times
 
         report.save
       end
     end
 
     context 'when a matching plan is found' do
-      let(:new_report) { build :report_village }
-      let(:existing_report) { create :report_village }
+      let(:contract) { create :contract }
+      let(:new_report) { build :report_village, contract: contract }
+      let(:existing_report) { create :report_village, contract: contract }
 
       it 'sets the plan_id' do
-        new_plan = FactoryBot.create(:plan_village, contract: new_report.contract, technology: new_report.technology, planable: new_report.reportable)
-        existing_plan = FactoryBot.create(:plan_village, contract: existing_report.contract, technology: existing_report.technology, planable: existing_report.reportable)
+        new_plan = FactoryBot.create(:plan_village, contract: contract, technology: new_report.technology, planable: new_report.reportable)
+        existing_plan = FactoryBot.create(:plan_village, contract: contract, technology: existing_report.technology, planable: existing_report.reportable)
 
-        expect { new_report.send(:find_plan) }.to change { new_report.plan_id }.from(nil).to(new_plan.id)
-        expect { existing_report.send(:find_plan) }.to change { existing_report.plan_id }.from(nil).to(existing_plan.id)
+        expect { new_report.send(:set_plan) }.to change { new_report.plan_id }.from(nil).to(new_plan.id)
+        expect { existing_report.send(:set_plan) }.to change { existing_report.plan_id }.from(nil).to(existing_plan.id)
       end
     end
 
@@ -1129,8 +1120,8 @@ RSpec.describe Report, type: :model do
       let(:existing_report) { create :report_village }
 
       it 'does not set the plan_id' do
-        expect { new_report.send(:find_plan) }.not_to change { new_report.plan_id }
-        expect { existing_report.send(:find_plan) }.not_to change { existing_report.plan_id }
+        expect { new_report.send(:set_plan) }.not_to change { new_report.plan_id }
+        expect { existing_report.send(:set_plan) }.not_to change { existing_report.plan_id }
       end
     end
   end

@@ -18,7 +18,7 @@ FactoryBot.define do
     local_cost_currency { 'USD' }
   end
 
-  factory :technology_family, class: 'Technology' do
+  factory :technology_family, class: Technology do
     name { 'TechFamily' }
     short_name { 'TF' }
     default_impact { 1 }
@@ -29,7 +29,7 @@ FactoryBot.define do
     local_cost { 200 }
   end
 
-  factory :technology_community, class: 'Technology' do
+  factory :technology_community, class: Technology do
     name { 'TechCommunity' }
     short_name { 'TC' }
     default_impact { 1 }
@@ -39,5 +39,14 @@ FactoryBot.define do
     indirect_cost { 1500 }
     us_cost { 800 }
     local_cost { 200 }
+  end
+
+  factory :technology_engagement, class: Technology do
+    name { 'TechEngagement' }
+    short_name { 'TE' }
+    default_impact { 1 }
+    scale { 'Family' }
+    agreement_required { false }
+    is_engagement { true }
   end
 end

@@ -2,7 +2,7 @@
 
 FactoryBot.define do
   factory :contract do
-    start_date { '2019-01-09' }
+    start_date { '2018-01-09' }
     end_date { '2019-01-09' }
     budget { '50000' }
     household_goal { 1 }

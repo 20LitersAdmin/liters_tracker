@@ -29,9 +29,10 @@ class Report < ApplicationRecord
   # currently unused
   # scope :with_plans,      -> { joins('LEFT JOIN plans ON reports.contract_id = plans.contract_id AND reports.technology_id = plans.technology_id AND reports.reportable_id = plans.planable_id AND reports.reportable_type = plans.planable_type') }
   scope :with_stories,    -> { joins(:story).where.not(stories: { id: nil }) }
+  scope :with_hours,      -> { where('hours > 0.0') }
 
   scope :distributions,   -> { where.not(distributed: nil) }
-  scope :with_hours,      -> { where('hours > 0.0') }
+  scope :checks,          -> { where.not(checked: nil) }
 
   before_validation :set_year_and_month_from_date,  if: -> { (year.blank? || month.blank?) && date.present? }
   before_validation :set_date_from_year_and_month,  if: -> { date.blank? && year.present? && month.present? }
@@ -39,7 +40,7 @@ class Report < ApplicationRecord
 
   before_save :calculate_impact
   before_save :set_contract_from_date, if: -> { contract_id.blank? && date.present? }
-  after_save :set_plan,                if: -> { contract_id.present? && plan_id.blank? }
+  before_save :set_plan,               if: -> { contract_id.present? && plan_id.blank? }
 
   before_update :set_year_and_month_from_date, if: -> { date.present? && date_changed? }
   before_update :set_date_from_year_and_month, if: -> { year.present? && month.present? && (year_changed? || month_changed?) }
@@ -195,6 +196,6 @@ class Report < ApplicationRecord
 
     return if id.zero?
 
-    update_columns(plan_id: id)
+    self.plan_id = id
   end
 end
