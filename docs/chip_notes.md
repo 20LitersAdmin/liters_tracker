@@ -4,8 +4,7 @@
 0. Feature specs
 
 0. Geography navigation:
-- links to child geograhy are missing date filters
-- links to technologies contain no geography or date filters
+- links to technologies contain no geography filter (should they?)
 
 1. Plans architecture:
 - Plan form

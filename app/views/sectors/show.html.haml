@@ -50,7 +50,10 @@
             %th Cell
             - @technologies.each do |technology|
               - next if @reports.where(technology: technology).size.zero? && @plans.where(technology: technology).size.zero?
-              %th.text-right= "#{technology.short_name} Dist/Plan"
+              -if technology.is_engagement?
+                %th.text-right= "#{technology.short_name} Ppl/Plan"
+              -else
+                %th.text-right= "#{technology.short_name} Dist/Plan"
               %th.text-right= "#{technology.short_name} Checked"
             %th.text-right People served
             %th.text-right= "People goal (by #{@plan_date})"
@@ -60,7 +63,10 @@
             %th Grand Total
             - @technologies.each do |technology|
               - next if @reports.where(technology: technology).size.zero? && @plans.where(technology: technology).size.zero?
-              %th.text-right= human_number(@reports.where(technology: technology).sum(:distributed)) + ' / ' + human_number(@plans.where(technology: technology).sum(:goal))
+              -if technology.is_engagement?
+                %th.text-right= human_number(@reports.where(technology: technology).sum(:people)) + ' / ' + human_number(@plans.where(technology: technology).sum(:people_goal))
+              -else
+                %th.text-right= human_number(@reports.where(technology: technology).sum(:distributed)) + ' / ' + human_number(@plans.where(technology: technology).sum(:goal))
               %th.text-right= human_number @reports.where(technology: technology).sum(:checked)
             %th.text-right= human_number @reports.map(&:impact).sum
             %th.text-right= human_number @plans.sum(:people_goal)

@@ -4,11 +4,7 @@
 - return if @plan_sub.blank? && @report_sub.blank? && @skip_blanks
 %tr
   %td.text-left
-    - if @plan_sub.empty? && current_user.contract_manager?
-      %span.float-left= link_to sector.name, sector_path(sector)
-      %span.float-right= link_to 'Add plan', '#', class: 'btn empty small'
-    -else
-      = link_to sector.name, sector_path(sector)
+    = link_to sector.name, sector_path(sector, from: @from, to: @to)
   - if @plan_sub.any? || @report_sub.any?
     - @technologies.each do |technology|
       - next if @reports.where(technology: technology).size.zero? && @plans.where(technology: technology).size.zero?
