@@ -4,14 +4,7 @@
 - return if @plan_sub.blank? && @report_sub.blank? && @skip_blanks
 %tr
   %td.text-left
-    - if @plan_sub.empty? && current_user.contract_manager?
-      %span.float-left= link_to technology.name, technology_path(technology)
-      %span.float-right= link_to 'Add plan', '#', class: 'btn empty'
-    - elsif @report_sub.empty? && current_user.contract_manager?
-      %span.float-left= link_to technology.name, technology_path(technology)
-      %span.float-right= link_to 'Add report', report_sector_path(@village.sector, tech: technology), class: 'btn empty'
-    - else
-      = link_to technology.name, technology_path(technology)
+    = link_to technology.name, technology_path(technology, from: @from, to: @to)
   - if @plan_sub.any? || @report_sub.any?
     %td.text-right= human_number @report_sub.sum(:distributed)
     %td.text-right= human_number @plan_sub.sum(:goal)
@@ -19,8 +12,4 @@
     %td.text-right= human_number @report_sub.map(&:impact).sum
     %td.text-right= human_number @plan_sub.sum(:people_goal)
   - else
-    %td{colspan: 4}= "No plans or reports related to #{@village.name} for this time period"
-    - if current_user.report_manager?
-      %td= link_to 'Add report', report_sector_path(@village.sector, tech: technology), class: 'btn empty'
-    - else
-      %td
+    %td.text-center{colspan: 5} No plans or reports for this time period

@@ -4,13 +4,16 @@
 - return if @plan_sub.blank? && @report_sub.blank? && @skip_blanks
 %tr
   %td.text-left
-    = link_to facility.name, facility_path(facility)
+    = link_to facility.name, facility_path(facility, from: @from, to: @to)
   - if @plan_sub.any? || @report_sub.any?
     - @technologies.each do |technology|
       - next if @reports.where(technology: technology).size.zero? && @plans.where(technology: technology).size.zero?
-      %td.text-right= human_number @report_sub.where(technology: technology).sum(:distributed)
-      %td.text-right= human_number @plan_sub.where(technology: technology).sum(:goal)
+      -if technology.is_engagement?
+        %td.text-right= human_number(@report_sub.where(technology: technology).sum(:people)) + ' / ' + human_number(@plan_sub.where(technology: technology).sum(:people_goal))
+      -else
+        %td.text-right= human_number(@report_sub.where(technology: technology).sum(:distributed)) + ' / ' + human_number(@plan_sub.where(technology: technology).sum(:goal))
+        %td.text-right= human_number(@report_sub.where(technology: technology).sum(:checked))
     %td.text-right= human_number @report_sub.map(&:impact).sum
     %td.text-right= human_number @plan_sub.sum(:people_goal)
   - else
-    %td{colspan: 6}= "No plans or reports related to #{@village.name} for this facility and time period"
+    %td{colspan: 99} No plans or reports for this time period

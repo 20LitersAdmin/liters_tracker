@@ -7,6 +7,7 @@ module ApplicationHelper
 
   def hierarchy(geography)
     str = ''
+
     geography.hierarchy.each do |geo|
       str += geo[:name]
       str += ' > ' unless geo == geography.hierarchy.last
@@ -20,7 +21,7 @@ module ApplicationHelper
 
     geography.hierarchy.each do |geo|
       str += link_to geo[:name], geo[:link]
-      str += '>' unless geo == geography.hierarchy.last
+      str += ' > ' unless geo == geography.hierarchy.last
     end
 
     str.html_safe

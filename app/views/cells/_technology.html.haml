@@ -12,4 +12,4 @@
     %td.text-right= human_number @report_sub.map(&:impact).sum
     %td.text-right= human_number @plan_sub.sum(:people_goal)
   - else
-    %td{colspan: 5}= "No plans or reports for this time period"
+    %td{colspan: 5} No plans or reports for this time period

@@ -30,8 +30,8 @@ class CellsController < ApplicationController
     @contract_search_param_add += @skip_blanks ? '&skip_blanks=true' : ''
 
     @reports = @cell.related_reports.between(@from, @to)
-    @technologies = Technology.report_worthy
     @plans = @cell.related_plans.between(@from, @to)
+    @technologies = Technology.report_worthy
     @plan_date = human_date @plans.size.zero? ? nil : Contract.find(@plans.pluck(:contract_id).max).end_date
     @villages = @cell.villages.order(name: :asc)
   end

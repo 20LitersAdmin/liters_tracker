@@ -16,8 +16,8 @@
     - if current_user.can_manage_geography? || current_user.admin?
       = link_to 'Edit', edit_cell_path(@cell), class: 'btn yellow'
     = link_to 'Back', @return_path, class: 'btn blue'
-  .col
-    breadcrumb
+  .col-sm-12=hierarchy_with_links @cell
+
 
 = render partial: 'shared/search', locals: { from: @from, to: @to, earliest: @earliest, latest: @latest }
 
@@ -56,7 +56,7 @@
                 %th.text-right= "#{technology.short_name} Ppl/Plan"
               -else
                 %th.text-right= "#{technology.short_name} Dist/Plan"
-              %th.text-right= "#{technology.short_name} Checked"
+                %th.text-right= "#{technology.short_name} Checked"
             %th.text-right People served
             %th.text-right= "People goal (by #{@plan_date})"
         %tfoot
@@ -68,7 +68,7 @@
                 %th.text-right= human_number(@reports.where(technology: technology).sum(:people)) + ' / ' + human_number(@plans.where(technology: technology).sum(:people_goal))
               -else
                 %th.text-right= human_number(@reports.where(technology: technology).sum(:distributed)) + ' / ' + human_number(@plans.where(technology: technology).sum(:goal))
-              %th.text-right= human_number @reports.where(technology: technology).sum(:checked)
+                %th.text-right= human_number @reports.where(technology: technology).sum(:checked)
             %th.text-right= human_number @reports.map(&:impact).sum
             %th.text-right= human_number @plans.sum(:people_goal)
         %tbody

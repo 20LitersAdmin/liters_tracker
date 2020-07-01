@@ -16,6 +16,7 @@
     - if current_user.can_manage_geography? || current_user.admin?
       = link_to 'Edit', edit_sector_path(@sector), class: 'btn yellow'
     = link_to 'Back', @return_path, class: 'btn blue'
+  .col-sm-12=hierarchy_with_links @sector
 
 = render partial: 'shared/search', locals: { from: @from, to: @to, earliest: @earliest, latest: @latest }
 
@@ -54,7 +55,7 @@
                 %th.text-right= "#{technology.short_name} Ppl/Plan"
               -else
                 %th.text-right= "#{technology.short_name} Dist/Plan"
-              %th.text-right= "#{technology.short_name} Checked"
+                %th.text-right= "#{technology.short_name} Checked"
             %th.text-right People served
             %th.text-right= "People goal (by #{@plan_date})"
 

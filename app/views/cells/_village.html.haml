@@ -12,8 +12,8 @@
         %td.text-right= human_number(@report_sub.where(technology: technology).sum(:people)) + ' / ' + human_number(@plan_sub.where(technology: technology).sum(:people_goal))
       -else
         %td.text-right= human_number(@report_sub.where(technology: technology).sum(:distributed)) + ' / ' + human_number(@plan_sub.where(technology: technology).sum(:goal))
-      %td.text-right= human_number(@report_sub.where(technology: technology).sum(:checked))
+        %td.text-right= human_number(@report_sub.where(technology: technology).sum(:checked))
     %td.text-right= human_number @report_sub.map(&:impact).sum
     %td.text-right= human_number @plan_sub.sum(:people_goal)
   - else
-    %td{colspan: 8}= "No plans or reports for this time period"
+    %td{colspan: 99} No plans or reports for this time period

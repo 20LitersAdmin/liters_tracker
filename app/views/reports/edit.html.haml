@@ -1,9 +1,6 @@
 -# frozen_string_literal: true
 %h1= "Edit report for #{@geography.name} #{@geography.class}"
-%p
-  - @geography.hierarchy.each do |geo|
-    = geo[:name]
-    = ">" unless geo == @geography.hierarchy.last
+%p= hierarchy @geography
 
 %h5 If the Geography is incorrect, please delete this report and re-create it.
 %br
