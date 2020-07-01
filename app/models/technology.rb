@@ -12,6 +12,7 @@ class Technology < ApplicationRecord
   monetize :direct_cost_cents, :indirect_cost_cents, :us_cost_cents, :local_cost_cents, allow_nil: true, allow_blank: true
 
   scope :report_worthy, -> { where(report_worthy: true) }
+  scope :not_engagement, -> { where(is_engagement: false) }
   scope :dashboard_worthy, -> { where(dashboard_worthy: true) }
 
   before_save :community_engagement_is_family_scale, if: -> { is_engagement? && scale == 'Community' }

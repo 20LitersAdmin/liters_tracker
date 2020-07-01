@@ -19,12 +19,7 @@
 -- Check each level of geography
 
 1. User permissions
-- `(current_user.can_manage_contracts? || current_user.admin?)` in views, should be moved to model. E.g.:
-```
-def contract_manager
-  current_user.can_manage_contracts? || current_user.admin?
-end
-```
+- `(current_user.can_manage_contracts? || current_user.admin?)` in views should be simplified to `current_user.contract_manager?`
 
 2. What about un-met plans?
 - Help Rebero see work to be accomplished by Sector

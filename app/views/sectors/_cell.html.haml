@@ -15,8 +15,8 @@
   - if @plan_sub.any? || @report_sub.any?
     - @technologies.each do |technology|
       - next if @reports.where(technology: technology).size.zero? && @plans.where(technology: technology).size.zero?
-      %td.text-right= human_number @report_sub.where(technology: technology).sum(:distributed)
-      %td.text-right= human_number @plan_sub.where(technology: technology).sum(:goal)
+      %td.text-right= human_number(@report_sub.where(technology: technology).sum(:distributed)) + ' / ' + human_number(@plan_sub.where(technology: technology).sum(:goal))
+      %td.text-right= human_number(@report_sub.where(technology: technology).sum(:checked))
     %td.text-right= human_number @report_sub.map(&:impact).sum
     %td.text-right= human_number @plan_sub.sum(:people_goal)
   - else

@@ -1,0 +1,22 @@
+-# frozen_string_literal: true
+- @report_sub = sector.related_reports.between(@from, @to)
+- @plan_sub = sector.related_plans.between(@from, @to)
+- return if @plan_sub.blank? && @report_sub.blank? && @skip_blanks
+%tr
+  %td.text-left
+    - if @plan_sub.empty? && current_user.contract_manager?
+      %span.float-left= link_to sector.name, sector_path(sector)
+      %span.float-right= link_to 'Add plan', '#', class: 'btn empty small'
+    -else
+      = link_to sector.name, sector_path(sector)
+  - if @plan_sub.any? || @report_sub.any?
+    - @technologies.each do |technology|
+      - next if @reports.where(technology: technology).size.zero? && @plans.where(technology: technology).size.zero?
+      -if technology.is_engagement?
+        %td.text-right= human_number(@report_sub.where(technology: technology).sum(:people)) + ' / ' + human_number(@plan_sub.where(technology: technology).sum(:people_goal))
+      -else
+        %td.text-right= human_number(@report_sub.where(technology: technology).sum(:distributed)) + ' / ' + human_number(@plan_sub.where(technology: technology).sum(:goal))
+    %td.text-right= human_number @report_sub.map(&:impact).sum
+    %td.text-right= human_number @plan_sub.sum(:people_goal)
+  - else
+    %td.text-center{colspan: 7}= 'No plans or reports for this time period'
