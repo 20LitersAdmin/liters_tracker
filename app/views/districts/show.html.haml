@@ -13,9 +13,11 @@
     - else
       = link_to 'Hide empty rows',  @skip_blanks_rfp, class: 'btn btn-outline-dark', id: 'dist_skipblank'
   .col-sm-2.text-right
-    - if current_user.can_manage_geography? || current_user.admin?
+    - if current_user.geography_manager?
       = link_to 'Edit', edit_district_path(@district), class: 'btn yellow'
     = link_to 'Back', @return_path, class: 'btn blue'
+  .col-sm-2 Hierarchy:
+  .col-sm-10=hierarchy_with_links @district
 
 = render partial: 'shared/search', locals: { from: @from, to: @to, earliest: @earliest, latest: @latest }
 
@@ -50,8 +52,11 @@
             %th Sector
             - @technologies.each do |technology|
               - next if @reports.where(technology: technology).size.zero? && @plans.where(technology: technology).size.zero?
-              %th.text-right= "#{technology.short_name} Dist"
-              %th.text-right= "#{technology.short_name} Planned"
+              -if technology.is_engagement?
+                %th.text-right= "#{technology.short_name} Ppl/Plan"
+              -else
+                %th.text-right= "#{technology.short_name} Dist/Plan"
+                %th.text-right= "#{technology.short_name} Checked"
             %th.text-right People served
             %th.text-right= "People goal (by #{@plan_date})"
         %tfoot
@@ -59,8 +64,11 @@
             %th Grand Total
             - @technologies.each do |technology|
               - next if @reports.where(technology: technology).size.zero? && @plans.where(technology: technology).size.zero?
-              %th.text-right= human_number @reports.where(technology: technology).sum(:distributed)
-              %th.text-right= human_number @plans.where(technology: technology).sum(:goal)
+              -if technology.is_engagement?
+                %th.text-right= human_number(@reports.where(technology: technology).sum(:people)) + ' / ' + human_number(@plans.where(technology: technology).sum(:people_goal))
+              -else
+                %th.text-right= human_number(@reports.where(technology: technology).sum(:distributed)) + ' / ' + human_number(@plans.where(technology: technology).sum(:goal))
+                %th.text-right= human_number @reports.where(technology: technology).sum(:checked)
             %th.text-right= human_number @reports.map(&:impact).sum
             %th.text-right= human_number @plans.sum(:people_goal)
         %tbody

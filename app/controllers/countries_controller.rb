@@ -28,10 +28,10 @@ class CountriesController < ApplicationController
     @contract_search_param_add += @skip_blanks ? '&skip_blanks=true' : ''
 
     @reports = @country.related_reports.between(@from, @to)
-    @technologies = Technology.report_worthy
     @plans = @country.related_plans.between(@from, @to)
+    @technologies = Technology.report_worthy
     @plan_date = human_date @plans.size.zero? ? nil : Contract.find(@plans.pluck(:contract_id).max).end_date
-    @sectors = @country.sectors.order(name: :asc)
+    @districts = @country.districts.order(name: :asc)
   end
 
   # GET /countries/new

@@ -4,7 +4,7 @@
     %h4= "Data: #{@country.name}"
   .col-sm-3.text-center
     - if @by_tech
-      = link_to 'View by Cell', request.fullpath.gsub('&by_tech=true', '').gsub('?by_tech=true', '') , class: 'btn btn-outline-dark', id: 'dist_viewby'
+      = link_to 'View by District', request.fullpath.gsub('&by_tech=true', '').gsub('?by_tech=true', '') , class: 'btn btn-outline-dark', id: 'dist_viewby'
     - else
       = link_to 'View by Technology', @by_tech_rfp , class: 'btn btn-outline-dark', id: 'dist_viewby'
   .col-sm-3.text-center
@@ -47,7 +47,7 @@
       %table.table.table-striped
         %thead
           %tr
-            %th Sector
+            %th District
             - @technologies.each do |technology|
               - next if @reports.where(technology: technology).size.zero? && @plans.where(technology: technology).size.zero?
               -if technology.is_engagement?
@@ -69,4 +69,4 @@
             %th.text-right= human_number @reports.map(&:impact).sum
             %th.text-right= human_number @plans.sum(:people_goal)
         %tbody
-          = render partial: 'sector', collection: @sectors
+          = render partial: 'district', collection: @districts
