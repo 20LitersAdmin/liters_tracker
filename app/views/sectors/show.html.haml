@@ -67,7 +67,7 @@
                 %th.text-right= human_number(@reports.where(technology: technology).sum(:people)) + ' / ' + human_number(@plans.where(technology: technology).sum(:people_goal))
               -else
                 %th.text-right= human_number(@reports.where(technology: technology).sum(:distributed)) + ' / ' + human_number(@plans.where(technology: technology).sum(:goal))
-              %th.text-right= human_number @reports.where(technology: technology).sum(:checked)
+                %th.text-right= human_number @reports.where(technology: technology).sum(:checked)
             %th.text-right= human_number @reports.map(&:impact).sum
             %th.text-right= human_number @plans.sum(:people_goal)
         %tbody
