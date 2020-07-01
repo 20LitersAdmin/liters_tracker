@@ -37,6 +37,28 @@ class VillagesController < ApplicationController
 
   # GET /villages/1
   def show
+    @earliest = form_date Report.earliest_date
+    @latest =   form_date Report.latest_date
+
+    @from = params[:from].present? ? Date.parse(params[:from]) : @earliest
+    @to =   params[:to].present? ? Date.parse(params[:to]) : @latest
+
+    @skip_blanks = params[:skip_blanks].present?
+    @skip_blanks_rfp = request.fullpath.include?('?') ? request.fullpath + '&skip_blanks=true' : request.fullpath + '?skip_blanks=true'
+
+    @by_tech = params[:by_tech].present?
+    @by_tech_rfp = request.fullpath.include?('?') ? request.fullpath + '&by_tech=true' : request.fullpath + '?by_tech=true'
+
+    @searchbar_hidden_fields = @by_tech ? [{ name: 'by_tech', value: 'true' }] : []
+    @searchbar_hidden_fields << { name: 'skip_blanks', value: 'true' } if @skip_blanks
+    @contract_search_param_add = @by_tech ? '&by_tech=true' : ''
+    @contract_search_param_add += @skip_blanks ? '&skip_blanks=true' : ''
+
+    @reports = @village.related_reports.between(@from, @to)
+    @technologies = Technology.report_worthy
+    @plans = @village.related_plans.between(@from, @to)
+    @plan_date = human_date @plans.size.zero? ? nil : Contract.find(@plans.pluck(:contract_id).max).end_date
+    @facilities = @village.facilities.order(name: :asc)
   end
 
   # GET /villages/new

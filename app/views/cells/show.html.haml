@@ -49,16 +49,16 @@
           %tr
             %th Village
             - @technologies.each do |technology|
-              - next if @reports.where(technology: technology).count.zero? && @plans.where(technology: technology).count.zero?
-              %th.text-right= "#{technology.short_name} Dist"
-              %th.text-right= "#{technology.short_name} Planned"
+              - next if @reports.where(technology: technology).size.zero? && @plans.where(technology: technology).size.zero?
+              %th.text-right= "#{technology.short_name} Dist/Plan"
+              %th.text-right= "#{technology.short_name} Checked"
             %th.text-right People served
             %th.text-right= "People goal (by #{@plan_date})"
         %tfoot
           %tr
             %th Grand Total
             - @technologies.each do |technology|
-              - next if @reports.where(technology: technology).count.zero?
+              - next if @reports.where(technology: technology).size.zero?
               %th.text-right= human_number @reports.where(technology: technology).sum(:distributed)
               %th.text-right= human_number @plans.where(technology: technology).sum(:goal)
             %th.text-right= human_number @reports.map(&:impact).sum

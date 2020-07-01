@@ -2,26 +2,20 @@
 - @report_sub = village.related_reports.between(@from, @to)
 - @plan_sub = village.related_plans.between(@from, @to)
 - return if @plan_sub.blank? && @report_sub.blank? && @skip_blanks
+/ - byebug if village.id == 240
 %tr
   %td.text-left
-    - if @plan_sub.empty? && (current_user.can_manage_contracts? || current_user.admin?)
+    - if @plan_sub.empty? && current_user.contract_manager?
       %span.float-left= link_to village.name, village_path(village)
       %span.float-right= link_to 'Add plan', '#', class: 'btn empty'
-    - elsif @report_sub.empty? && (current_user.can_manage_reports? || current_user.admin?)
-      %span.float-left= link_to village.name, village_path(village)
-      %span.float-right= link_to 'Add report', '#', class: 'btn empty'
     -else
       = link_to village.name, village_path(village)
   - if @plan_sub.any? || @report_sub.any?
     - @technologies.each do |technology|
       - next if @reports.where(technology: technology).size.zero? && @plans.where(technology: technology).size.zero?
-      %td.text-right= human_number @report_sub.where(technology: technology).sum(:distributed)
-      %td.text-right= human_number @plan_sub.where(technology: technology).sum(:goal)
+      %td.text-right= human_number(@report_sub.where(technology: technology).sum(:distributed)) + " / " + human_number(@plan_sub.where(technology: technology).sum(:goal))
+      %td.text-right= human_number(@report_sub.where(technology: technology).sum(:checked))
     %td.text-right= human_number @report_sub.map(&:impact).sum
     %td.text-right= human_number @plan_sub.sum(:people_goal)
   - else
-    %td= "No plans or reports related to #{@cell.name} for this village and time period"
-    - if current_user.can_manage_reports? || current_user.admin?
-      %td= link_to 'Add report', '#', class: 'btn empty'
-    - else
-      %td
+    %td{colspan: 8}= "No plans or reports related to #{@cell.name} for this village and time period"

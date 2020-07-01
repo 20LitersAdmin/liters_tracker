@@ -1,14 +1,30 @@
 # CURRENT:
-0. List from Amanda of missing or bad info
-
 0. Load dashboard to a specific year && month
 
 0. Feature specs
+
+0. Geography navigation:
+- links to child geograhy are missing date filters
+- links to technologies contain no geography or date filters
 
 1. Plans architecture:
 - Plan form
 -- geography: contracts/{:id}/plans
 -- technology: technologies/{:id}/plans
+
+1. Geography views:
+- Add Plan button does nothing
+- Add Report button does nothing
+-- Reports can only be added from `_technology` partials, date is gracefully added if not included
+-- Check each level of geography
+
+1. User permissions
+- `(current_user.can_manage_contracts? || current_user.admin?)` in views, should be moved to model. E.g.:
+```
+def contract_manager
+  current_user.can_manage_contracts? || current_user.admin?
+end
+```
 
 2. What about un-met plans?
 - Help Rebero see work to be accomplished by Sector
