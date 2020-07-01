@@ -20,6 +20,8 @@
 
 = render partial: 'shared/search', locals: { from: @from, to: @to, earliest: @earliest, latest: @latest }
 
+= render partial: 'shared/geography_direct_reports', locals: { geography: @district, from: @from, to: @to } if @district.reports.any?
+
 - if @by_tech
   .row.mt-3#tech_section
     .col

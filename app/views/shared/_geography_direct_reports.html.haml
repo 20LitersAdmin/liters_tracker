@@ -1,0 +1,39 @@
+- reports = geography.reports.between(@from, @to)
+.row.mt-3
+  .col-11
+    %h3 Direct reports
+  .col-1
+    = link_to 'Hide', '#', class: 'btn blue global-toggle-btn', id: 'hide_rep_section'
+    = link_to 'Show', '#', class: 'btn blue global-toggle-btn start-hidden', id: 'show_rep_section'
+.row.mb-5#rep_section
+  .col-12
+    %table.table.table-striped
+      %thead
+        %tr
+          %th Date
+          %th Location
+          %th Sector
+          %th Tech
+          %th Dist
+          %th Checked
+          %th Ppl
+          %th Hrs
+          %th Impact
+          %th Author
+          %th
+
+      %tbody
+        - reports.each do |report|
+        - geo = report.reportable
+          %tr
+            %td= report.date
+            %td= "#{geo.name} #{geo.class}"
+            %td= geo.sector.name
+            %td= report.technology.name
+            %td= human_number report.distributed
+            %td= human_number report.checked
+            %td= human_number report.people
+            %td= human_number report.hours
+            %td= human_number report.impact
+            %td= report.user.fname
+            %td= link_to 'Edit', edit_report_path(report), class: 'btn yellow small', target: '_blank'

@@ -1,4 +1,9 @@
 # CURRENT:
+0. Geography#show views:
+- Make By Tech and By Geography into partials
+- Same as I did with Direct Reports
+- Should eliminate 2 partials per Geography
+
 0. Load dashboard to a specific year && month
 
 0. Feature specs
@@ -10,12 +15,6 @@
 - Plan form
 -- geography: contracts/{:id}/plans
 -- technology: technologies/{:id}/plans
-
-1. Geography views:
-- Add Plan button does nothing
-- Add Report button does nothing
--- Reports can only be added from `_technology` partials, date is gracefully added if not included
--- Check each level of geography
 
 1. User permissions
 - `(current_user.can_manage_contracts? || current_user.admin?)` in views should be simplified to `current_user.contract_manager?`

@@ -13,6 +13,22 @@ class FacilitiesController < ApplicationController
   # GET /facilities/1
   # GET /facilities/1.json
   def show
+    @earliest = form_date Report.earliest_date
+    @latest =   form_date Report.latest_date
+
+    @from = params[:from].present? ? Date.parse(params[:from]) : @earliest
+    @to =   params[:to].present? ? Date.parse(params[:to]) : @latest
+
+    @skip_blanks = params[:skip_blanks].present?
+    @skip_blanks_rfp = request.fullpath.include?('?') ? request.fullpath + '&skip_blanks=true' : request.fullpath + '?skip_blanks=true'
+
+    @searchbar_hidden_fields = @skip_blanks ? [{ name: 'skip_blanks', value: 'true' }] : []
+    @contract_search_param_add = @skip_blanks ? '&skip_blanks=true' : ''
+
+    @reports = @facility.reports.between(@from, @to)
+    @plans = @facility.plans.between(@from, @to)
+    @technologies = Technology.report_worthy
+    @plan_date = human_date @plans.size.zero? ? nil : Contract.find(@plans.pluck(:contract_id).max).end_date
   end
 
   # GET /facilities/new
