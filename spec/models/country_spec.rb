@@ -41,6 +41,12 @@ RSpec.describe Country, type: :model do
     end
   end
 
+  describe 'child_class' do
+    it 'returns "District"' do
+      expect(country.child_class).to eq 'District'
+    end
+  end
+
   describe '#country' do
     it 'returns itself, because I need all Geography models to respond to record.country' do
       expect(country.country).to eq country

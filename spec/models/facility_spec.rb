@@ -63,6 +63,17 @@ RSpec.describe Facility, type: :model do
     end
   end
 
+  describe 'hierarchy' do
+    it 'returns an array of hashes with name and link' do
+      hierarchy = facility.hierarchy
+
+      expect(hierarchy.is_a?(Array)).to eq true
+      expect(hierarchy[0].is_a?(Hash)).to eq true
+      expect(hierarchy[0][:name].present?).to eq true
+      expect(hierarchy[0][:link].present?).to eq true
+    end
+  end
+
   describe '#impact' do
     it 'returns an integer' do
       expect(facility.impact.is_a?(Integer)).to eq true

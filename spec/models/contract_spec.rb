@@ -112,7 +112,7 @@ RSpec.describe Contract, type: :model do
 
       contract.send(:find_reports)
 
-      expect(Report.all.pluck(:contract_id).uniq).to eq [nil, contract.id]
+      expect(Report.all.pluck(:contract_id).uniq).to include(nil, contract.id)
       expect(Report.where(contract_id: contract.id).size).to eq 3
     end
   end

@@ -55,6 +55,29 @@ RSpec.describe Cell, type: :model do
     end
   end
 
+  describe 'child_class' do
+    it 'returns "Village"' do
+      expect(cell.child_class).to eq 'Village'
+    end
+  end
+
+  describe 'hierarchy' do
+    it 'returns an array of hashes with name and link' do
+      hierarchy = cell.hierarchy
+
+      expect(hierarchy.is_a?(Array)).to eq true
+      expect(hierarchy[0].is_a?(Hash)).to eq true
+      expect(hierarchy[0][:name].present?).to eq true
+      expect(hierarchy[0][:link].present?).to eq true
+    end
+  end
+
+  describe 'parent' do
+    it 'returns the parent object' do
+      expect(cell.parent).to eq cell.sector
+    end
+  end
+
   describe '#related_plans' do
     let(:cell) { create :cell }
 

@@ -821,7 +821,7 @@ RSpec.describe Plan, type: :model do
 
       plan.send(:find_reports)
 
-      expect(Report.all.pluck(:plan_id).uniq).to eq [nil, plan.id]
+      expect(Report.all.pluck(:plan_id).uniq).to include(nil, plan.id)
       expect(Report.where(plan_id: plan.id).size).to eq 3
     end
   end
