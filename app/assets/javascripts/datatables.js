@@ -52,7 +52,16 @@ $(document).on('preInit.dt', function(e, settings) {
 // init on turbolinks load
 $(document).on('turbolinks:load', function() {
   if (!$.fn.DataTable.isDataTable("table[id^=dttb]")) {
-    $("table[id^=dttb-]").DataTable();
+    $("table[id^=dttb-]").DataTable( {
+      language: {
+        paginate: {
+          first: "&#8676",
+          previous: "&#8592",
+          next: "&#8594",
+          last: "&#8677"
+        }
+      }
+    });
     $("table[id^=dttb_btn0-]").DataTable( {
       order: [1, 'asc'],
       columnDefs: [ {

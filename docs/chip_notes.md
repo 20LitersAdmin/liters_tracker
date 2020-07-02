@@ -6,6 +6,9 @@
 0. Geography navigation:
 - links to technologies contain no geography filter (should they?)
 
+0. Navigation:
+- monthly view should show reports as editable
+
 1. Plans architecture:
 - Plan form
 -- geography: contracts/{:id}/plans

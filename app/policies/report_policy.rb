@@ -9,32 +9,34 @@ class ReportPolicy
   end
 
   def index?
-    raise ActiveRecord::RecordNotFound if @record.empty?
+    @user.report_manager?
+  end
 
-    @user
+  def dttb_index?
+    @user.report_manager?
   end
 
   def show?
-    @user
+    @user.report_manager?
   end
 
   def new?
-    @user&.admin? || @user&.can_manage_reports?
+    show?
   end
 
   def create?
-    new?
+    show?
   end
 
   def edit?
-    new?
+    show?
   end
 
   def update?
-    new?
+    show?
   end
 
   def destroy?
-    @user&.admin?
+    show?
   end
 end

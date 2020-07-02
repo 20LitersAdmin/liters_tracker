@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
 class Report < ApplicationRecord
+  include Rails.application.routes.url_helpers
+
   belongs_to :technology, inverse_of: :reports
   belongs_to :user,       inverse_of: :reports
   belongs_to :contract,   inverse_of: :reports, optional: true
@@ -60,6 +62,32 @@ class Report < ApplicationRecord
       "#{ActionController::Base.helpers.pluralize(val, technology.name)} installed on #{date.strftime('%B, %d, %Y')}"
     end
   end
+
+  #############
+
+  def location
+    "#{reportable.name} #{reportable.class}"
+  end
+
+  def sector
+    reportable.sector.name || ''
+  end
+
+  def tech
+    technology.short_name
+  end
+
+  def author
+    user.name
+  end
+
+  def links
+    "<a class='btn yellow small' href='/reports/#{id}'>Show</a>
+      <a class='btn blue small' href='/reports/#{id}/edit'>Edit</a>
+      <a data-confirm='Are you sure?' class='btn red small' rel='nofollow' data-method='delete' href='/reports/#{id}'>Delete</a>".html_safe
+  end
+
+  #############
 
   def self.related_facilities
     # return a collection of Facilities from a collection of Reports

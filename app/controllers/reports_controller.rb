@@ -3,8 +3,15 @@
 class ReportsController < ApplicationController
   before_action :set_report, only: %i[show edit update destroy]
 
-  def index
-    authorize @reports = Report.order(date: :desc).paginate(page: params[:page], per_page: params[:per_page] || 20)
+  def index; end
+
+  def dttb_index
+    authorize @reports = Report.order(date: :desc)
+
+    respond_to do |format|
+      format.html
+      format.json { render 'index.json' }
+    end
   end
 
   def show; end

@@ -77,6 +77,9 @@ GEM
       zeitwerk (~> 2.2, >= 2.2.2)
     addressable (2.7.0)
       public_suffix (>= 2.0.2, < 5.0)
+    ajax-datatables-rails (1.2.0)
+      railties (>= 5.0)
+      zeitwerk
     ast (2.4.1)
     autoprefixer-rails (9.8.4)
       execjs
@@ -365,6 +368,7 @@ PLATFORMS
   x86_64-darwin-18
 
 DEPENDENCIES
+  ajax-datatables-rails
   aws-sdk-s3
   bootsnap (>= 1.4)
   bootstrap (~> 4)
