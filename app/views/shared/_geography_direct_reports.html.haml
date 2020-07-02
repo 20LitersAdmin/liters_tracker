@@ -22,7 +22,6 @@
 
       %tbody
         - reports.each do |report|
-        - geo = report.reportable
           %tr
             %td= report.date
             %td= report.technology.short_name

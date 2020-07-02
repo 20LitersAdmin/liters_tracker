@@ -24,20 +24,6 @@ class Plan < ApplicationRecord
 
   after_save :find_reports
 
-  def breadcrumb
-    hierarchy = Constants::Geography::HIERARCHY
-    position = hierarchy.index(planable_type)
-
-    hsh = {}
-    (position + 1).times do |idx|
-      sym = hierarchy[idx].downcase.to_sym
-
-      hsh[@hierarchy[idx]] = planable.send(sym).name
-    end
-
-    hsh
-  end
-
   def self.incomplete
     ary = []
     ary << Plan.without_reports.pluck(:id)

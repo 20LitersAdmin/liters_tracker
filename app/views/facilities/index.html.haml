@@ -2,8 +2,8 @@
 .container
   %h1 All Facilities
 
-  %table.table.table-dark.table-striped.table-hover.table-sm.table-responsive-sm
-    %thead.thead-dark
+  %table.table#dttb-facilities
+    %thead
       %tr
         %th Name
         %th Village
@@ -31,5 +31,3 @@
   .row.justify-content-center.align-self-center
     .col-2
       = link_to 'New Facility', new_facility_path, class: 'btn yellow'
-    .col-10
-      = will_paginate @facilities, class: "pagination-sm float-right", renderer: WillPaginate::ActionView::Bootstrap4LinkRenderer

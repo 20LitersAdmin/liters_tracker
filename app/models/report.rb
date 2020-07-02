@@ -45,20 +45,6 @@ class Report < ApplicationRecord
   before_update :set_year_and_month_from_date, if: -> { date.present? && date_changed? }
   before_update :set_date_from_year_and_month, if: -> { year.present? && month.present? && (year_changed? || month_changed?) }
 
-  def breadcrumb
-    @hierarchy = Constants::Geography::HIERARCHY
-    position = @hierarchy.index(reportable_type)
-
-    hsh = {}
-    (position + 1).times do |idx|
-      sym = @hierarchy[idx].downcase.to_sym
-
-      hsh[@hierarchy[idx]] = reportable.send(sym).name
-    end
-
-    hsh
-  end
-
   def details
     if distributed&.positive?
       val = distributed
