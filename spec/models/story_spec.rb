@@ -87,16 +87,6 @@ RSpec.describe Story, type: :model do
     end
   end
 
-  describe '#breadcrumb' do
-    it 'calls #breadcrumb on the associated report' do
-      story.save
-
-      expect(story.report).to receive(:breadcrumb).exactly(1).times
-
-      story.breadcrumb
-    end
-  end
-
   describe '#date' do
     it 'calls #date on the associated report' do
       story.save
