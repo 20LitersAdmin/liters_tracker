@@ -28,6 +28,18 @@ class Facility < ApplicationRecord
     population.to_i + (households.to_i * Constants::Population::HOUSEHOLD_SIZE)
   end
 
+  # Even though facilities don't have any children,
+  # all geographies need to respond to related_reports
+  def related_reports
+    reports
+  end
+
+  # Even though facilities don't have any children,
+  # all geographies need to respond to related_plans
+  def related_plans
+    plans
+  end
+
   def related_stories
     Story.joins(:report).where("reports.reportable_type = 'Facility' AND reports.reportable_id = ?", id)
   end

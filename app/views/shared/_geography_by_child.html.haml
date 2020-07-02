@@ -1,3 +1,43 @@
 -# frozen_string_literal: true
--# use this partial to replace all geography _child partials
--# e.g. Country#_district.html.haml; District#_sector.html.haml; Sector#_cell.html.haml
+-has_direct_reports = geography.reports.any?
+.row.mt-3
+  .col-11
+    - if children.any?
+      %h4= "Totals from the #{geography.child_class.pluralize(2)} of #{geography.name}:"
+    - else
+      %h4= "Totals for #{geography.name}:"
+  .col-1
+    = link_to 'Hide', '#', class: 'btn blue global-toggle-btn', id: 'hide_geography_section'
+    = link_to 'Show', '#', class: 'btn blue global-toggle-btn start-hidden', id: 'show_geography_section'
+.row.mt-3#geography_section
+  .col-12
+    %table.table.table-striped
+      %thead
+        %tr
+          %th= "#{geography.child_class if children.any?}"
+          - @technologies.each do |technology|
+            - next if @reports.where(technology: technology).size.zero? && @plans.where(technology: technology).size.zero?
+            -if technology.is_engagement?
+              %th.text-right= "#{technology.short_name} Ppl/Plan"
+            -else
+              %th.text-right= "#{technology.short_name} Dist./Plan"
+              %th.text-right= "#{technology.short_name} Checked"
+          %th.text-right Impact
+          %th.text-right= "People goal (by #{@plan_date})"
+      %tfoot
+        %tr
+          %th= "#{geography.name} #{geography.class} Ttl#{'*' if has_direct_reports}:"
+          - @technologies.each do |technology|
+            - next if @reports.where(technology: technology).size.zero? && @plans.where(technology: technology).size.zero?
+            -if technology.is_engagement?
+              %th.text-right= human_number(@reports.where(technology: technology).sum(:people)) + ' / ' + human_number(@plans.where(technology: technology).sum(:people_goal))
+            -else
+              %th.text-right= human_number(@reports.where(technology: technology).sum(:distributed)) + ' / ' + human_number(@plans.where(technology: technology).sum(:goal))
+              %th.text-right= human_number @reports.where(technology: technology).sum(:checked)
+          %th.text-right= human_number @reports.map(&:impact).sum
+          %th.text-right= human_number @plans.sum(:people_goal)
+      %tbody
+        = render partial: 'shared/geography', collection: children
+  -if has_direct_reports
+    .col-12.mt-n4
+      %i * Totals include the sum of reports below

@@ -1,20 +1,18 @@
 - reports = geography.reports.between(@from, @to)
 .row.mt-3
   .col-11
-    %h3 Direct reports
+    %h4= "Reports on #{geography.name} #{geography.class}:"
   .col-1
-    = link_to 'Hide', '#', class: 'btn blue global-toggle-btn', id: 'hide_rep_section'
-    = link_to 'Show', '#', class: 'btn blue global-toggle-btn start-hidden', id: 'show_rep_section'
-.row.mb-5#rep_section
+    = link_to 'Hide', '#', class: 'btn blue global-toggle-btn', id: 'hide_report_section'
+    = link_to 'Show', '#', class: 'btn blue global-toggle-btn start-hidden', id: 'show_report_section'
+.row.mb-5#report_section
   .col-12
     %table.table.table-striped
       %thead
         %tr
           %th Date
-          %th Location
-          %th Sector
-          %th Tech
-          %th Dist
+          %th Technology
+          %th Distributed
           %th Checked
           %th Ppl
           %th Hrs
@@ -27,9 +25,7 @@
         - geo = report.reportable
           %tr
             %td= report.date
-            %td= "#{geo.name} #{geo.class}"
-            %td= geo.sector.name
-            %td= report.technology.name
+            %td= report.technology.short_name
             %td= human_number report.distributed
             %td= human_number report.checked
             %td= human_number report.people

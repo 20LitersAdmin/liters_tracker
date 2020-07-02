@@ -1,9 +1,4 @@
 # CURRENT:
-0. Geography#show views:
-- Make By Tech and By Geography into partials
-- Same as I did with Direct Reports
-- Should eliminate 2 partials per Geography
-
 0. Load dashboard to a specific year && month
 
 0. Feature specs

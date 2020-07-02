@@ -17,6 +17,10 @@ class Sector < ApplicationRecord
   validates_presence_of :name, :district_id
   validates_uniqueness_of :gis_code, allow_blank: true
 
+  def child_class
+    'Cell'
+  end
+
   def hierarchy
     district.hierarchy << { name: "#{district.name} District", link: district_path(district) }
   end

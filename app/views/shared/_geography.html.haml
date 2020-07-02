@@ -1,10 +1,10 @@
 -# frozen_string_literal: true
-- @report_sub = cell.related_reports.between(@from, @to)
-- @plan_sub = cell.related_plans.between(@from, @to)
+- @report_sub = geography.related_reports.between(@from, @to)
+- @plan_sub = geography.related_plans.between(@from, @to)
 - return if @plan_sub.blank? && @report_sub.blank? && @skip_blanks
 %tr
   %td.text-left
-    = link_to cell.name, cell_path(cell, from: @from, to: @to)
+    = link_to geography.name, polymorphic_path(geography, from: @from, to: @to)
   - if @plan_sub.any? || @report_sub.any?
     - @technologies.each do |technology|
       - next if @reports.where(technology: technology).size.zero? && @plans.where(technology: technology).size.zero?

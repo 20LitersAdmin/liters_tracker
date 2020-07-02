@@ -1,3 +1,32 @@
 -# frozen_string_literal: true
--# use this partial to replace all geography _technology partials
--# e.g. Country#_technology.html.haml; District#_technology.html.haml
+.row.mt-3
+  .col-11
+    %h4= "Totals by Technology from the #{geography.child_class.pluralize(2)} of #{geography.name}:"
+  .col-1
+    = link_to 'Hide', '#', class: 'btn blue global-toggle-btn', id: 'hide_tech_section'
+    = link_to 'Show', '#', class: 'btn blue global-toggle-btn start-hidden', id: 'show_tech_section'
+.row.mt-3#tech_section
+  .col
+    %table.table.table-striped
+      %thead
+        %tr
+          %th Technology
+          %th.text-right Distributed
+          %th.text-right= "Dist. Goal (by #{@plan_date})"
+          %th.text-right Checked
+          %th.text-right People
+          %th.text-right Hours
+          %th.text-right Impact
+          %th.text-right People goal
+      %tfoot
+        %tr
+          %th Grand Total
+          %th.text-right= human_number @reports.sum(:distributed)
+          %th.text-right= human_number @plans.sum(:goal)
+          %th.text-right= human_number @reports.sum(:checked)
+          %th.text-right= human_number @reports.sum(:people)
+          %th.text-right= human_number @reports.sum(:hours)
+          %th.text-right= human_number @reports.map(&:impact).sum
+          %th.text-right= human_number @plans.sum(:people_goal)
+      %tbody
+        = render partial: 'shared/technology', collection: @technologies

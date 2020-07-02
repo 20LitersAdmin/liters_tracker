@@ -17,6 +17,10 @@ class District < ApplicationRecord
   validates_presence_of :name
   validates_uniqueness_of :gis_code, allow_nil: true
 
+  def child_class
+    'Sector'
+  end
+
   def hierarchy
     [{ name: country.name, link: country_path(country) }]
   end

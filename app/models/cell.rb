@@ -18,6 +18,10 @@ class Cell < ApplicationRecord
   validates_presence_of :name, :sector_id
   validates_uniqueness_of :gis_code, allow_blank: true
 
+  def child_class
+    'Village'
+  end
+
   def hierarchy
     sector.hierarchy << { name: "#{sector.name} Sector", link: sector_path(sector) }
   end
