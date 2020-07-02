@@ -2,6 +2,7 @@
 
 class Sector < ApplicationRecord
   include GeographyType
+  include Rails.application.routes.url_helpers
 
   belongs_to :district,   inverse_of: :sectors
 
@@ -15,6 +16,14 @@ class Sector < ApplicationRecord
 
   validates_presence_of :name, :district_id
   validates_uniqueness_of :gis_code, allow_blank: true
+
+  def child_class
+    'Cell'
+  end
+
+  def hierarchy
+    district.hierarchy << { name: "#{district.name} District", link: district_path(district) }
+  end
 
   def parent
     district

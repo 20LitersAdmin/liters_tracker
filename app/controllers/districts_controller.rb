@@ -39,8 +39,8 @@ class DistrictsController < ApplicationController
     @contract_search_param_add = @by_tech ? '&by_tech=true' : ''
     @contract_search_param_add += @skip_blanks ? '&skip_blanks=true' : ''
 
-    @reports = @district.related_reports.where(date: @from..@to).order(date: :asc)
-    @plans = @district.related_plans
+    @reports = @district.related_reports.between(@from, @to)
+    @plans = @district.related_plans.between(@from, @to)
     @technologies = Technology.report_worthy
     @plan_date = human_date @plans.size.zero? ? nil : Contract.find(@plans.pluck(:contract_id).max).end_date
     @sectors = @district.sectors.order(name: :asc)

@@ -1,25 +1,28 @@
 -# frozen_string_literal: true
-%p#notice= notice
+.row.mb-3
+  .col-sm-4
+    %h4= "Data: #{@village.name} Village"
+  .col-sm-3.text-center
+    - if @by_tech
+      = link_to 'View by Facility', request.fullpath.gsub('&by_tech=true', '').gsub('?by_tech=true', '') , class: 'btn btn-outline-dark', id: 'dist_viewby'
+    - else
+      = link_to 'View by Technology', @by_tech_rfp , class: 'btn btn-outline-dark', id: 'dist_viewby'
+  .col-sm-3.text-center
+    - if @skip_blanks
+      = link_to 'Show empty rows', request.fullpath.gsub('&skip_blanks=true', '').gsub('?skip_blanks=true', '') , class: 'btn btn-outline-dark', id: 'dist_skipblank'
+    - else
+      = link_to 'Hide empty rows',  @skip_blanks_rfp, class: 'btn btn-outline-dark', id: 'dist_skipblank'
+  .col-sm-2.text-right
+    - if current_user.can_manage_geography? || current_user.admin?
+      = link_to 'Edit', edit_village_path(@village), class: 'btn yellow'
+    = link_to 'Back', @return_path, class: 'btn blue'
+  .col-sm-12=hierarchy_with_links @village
 
-%p
-  %b Name:
-  = @village.name
-%p
-  %b Gis:
-  = @village.gis_code
-%p
-  %b Latitude:
-  = @village.latitude
-%p
-  %b Longitude:
-  = @village.longitude
-%p
-  %b Population:
-  = @village.population
-%p
-  %b Households:
-  = @village.households
+= render partial: 'shared/search', locals: { from: @from, to: @to, earliest: @earliest, latest: @latest }
 
-= link_to 'Edit', edit_village_path(@village)
-\|
-= link_to 'Back', @return_path
+- if @by_tech
+  = render partial: 'shared/geography_by_technology', locals: { geography: @village }
+- else
+  = render partial: 'shared/geography_by_child', locals: { geography: @village, children: @facilities }
+
+= render partial: 'shared/geography_direct_reports', locals: { geography: @village } if @village.reports.any?

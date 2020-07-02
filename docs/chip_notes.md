@@ -1,14 +1,18 @@
 # CURRENT:
-0. List from Amanda of missing or bad info
-
 0. Load dashboard to a specific year && month
 
 0. Feature specs
+
+0. Geography navigation:
+- links to technologies contain no geography filter (should they?)
 
 1. Plans architecture:
 - Plan form
 -- geography: contracts/{:id}/plans
 -- technology: technologies/{:id}/plans
+
+1. User permissions
+- `(current_user.can_manage_contracts? || current_user.admin?)` in views should be simplified to `current_user.contract_manager?`
 
 2. What about un-met plans?
 - Help Rebero see work to be accomplished by Sector

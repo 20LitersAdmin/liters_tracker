@@ -41,6 +41,29 @@ RSpec.describe Village, type: :model do
     end
   end
 
+  describe 'child_class' do
+    it 'returns "Facility"' do
+      expect(village.child_class).to eq 'Facility'
+    end
+  end
+
+  describe 'hierarchy' do
+    it 'returns an array of hashes with name and link' do
+      hierarchy = village.hierarchy
+
+      expect(hierarchy.is_a?(Array)).to eq true
+      expect(hierarchy[0].is_a?(Hash)).to eq true
+      expect(hierarchy[0][:name].present?).to eq true
+      expect(hierarchy[0][:link].present?).to eq true
+    end
+  end
+
+  describe 'parent' do
+    it 'returns the parent object' do
+      expect(village.parent).to eq village.cell
+    end
+  end
+
   describe '#related_plans' do
     before :each do
       village.save

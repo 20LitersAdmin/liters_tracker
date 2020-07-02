@@ -47,6 +47,29 @@ RSpec.describe Sector, type: :model do
     end
   end
 
+  describe 'child_class' do
+    it 'returns "Cell"' do
+      expect(sector.child_class).to eq 'Cell'
+    end
+  end
+
+  describe 'hierarchy' do
+    it 'returns an array of hashes with name and link' do
+      hierarchy = sector.hierarchy
+
+      expect(hierarchy.is_a?(Array)).to eq true
+      expect(hierarchy[0].is_a?(Hash)).to eq true
+      expect(hierarchy[0][:name].present?).to eq true
+      expect(hierarchy[0][:link].present?).to eq true
+    end
+  end
+
+  describe 'parent' do
+    it 'returns the parent object' do
+      expect(sector.parent).to eq sector.district
+    end
+  end
+
   describe '#related_plans' do
     before :each do
       sector.save

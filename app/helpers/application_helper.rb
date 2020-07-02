@@ -5,6 +5,28 @@ module ApplicationHelper
     Constants::Application::BOOTSTRAP_CLASSES[flash_type.to_sym] || flash_type.to_s
   end
 
+  def hierarchy(geography)
+    str = ''
+
+    geography.hierarchy.each do |geo|
+      str += geo[:name]
+      str += ' > ' unless geo == geography.hierarchy.last
+    end
+
+    str
+  end
+
+  def hierarchy_with_links(geography)
+    str = ''
+
+    geography.hierarchy.each do |geo|
+      str += link_to geo[:name], geo[:link]
+      str += ' > ' unless geo == geography.hierarchy.last
+    end
+
+    str.html_safe
+  end
+
   def human_boolean(boolean)
     boolean ? 'Yes' : 'No'
   end

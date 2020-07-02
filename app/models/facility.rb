@@ -2,6 +2,7 @@
 
 class Facility < ApplicationRecord
   include GeographyType
+  include Rails.application.routes.url_helpers
 
   belongs_to :village,  inverse_of: :facilities
 
@@ -19,8 +20,24 @@ class Facility < ApplicationRecord
   scope :churches,     -> { where(category: 'Church') }
   scope :not_churches, -> { where.not(category: 'Church') }
 
+  def hierarchy
+    village.hierarchy << { name: "#{village.name} Village", link: village_path(village) }
+  end
+
   def impact
     population.to_i + (households.to_i * Constants::Population::HOUSEHOLD_SIZE)
+  end
+
+  # Even though facilities don't have any children,
+  # all geographies need to respond to related_reports
+  def related_reports
+    reports
+  end
+
+  # Even though facilities don't have any children,
+  # all geographies need to respond to related_plans
+  def related_plans
+    plans
   end
 
   def related_stories

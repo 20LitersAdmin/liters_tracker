@@ -17,12 +17,6 @@ class ReportsController < ApplicationController
     @technologies = Technology.report_worthy.pluck(:name, :id)
 
     @geography = @report.reportable
-    @parent = @geography.parent
-    @hierarchy = ["#{@parent.name} #{@parent.class}"]
-    @grandparent = @parent.parent
-    @hierarchy << "#{@grandparent.name} #{@grandparent.class}" if @grandparent
-    @great_grandparent = @grandparent.parent
-    @hierarchy << "#{@great_grandparent.name} #{@great_grandparent.class}" if @great_grandparent
   end
 
   def create

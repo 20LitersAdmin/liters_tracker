@@ -39,6 +39,29 @@ RSpec.describe District, type: :model do
     end
   end
 
+  describe 'child_class' do
+    it 'returns "Sector"' do
+      expect(district.child_class).to eq 'Sector'
+    end
+  end
+
+  describe 'hierarchy' do
+    it 'returns an array of hashes with name and link' do
+      hierarchy = district.hierarchy
+
+      expect(hierarchy.is_a?(Array)).to eq true
+      expect(hierarchy[0].is_a?(Hash)).to eq true
+      expect(hierarchy[0][:name].present?).to eq true
+      expect(hierarchy[0][:link].present?).to eq true
+    end
+  end
+
+  describe 'parent' do
+    it 'returns the parent object' do
+      expect(district.parent).to eq district.country
+    end
+  end
+
   describe '#related_plans' do
     let(:district) { create :district }
 

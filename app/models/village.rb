@@ -2,6 +2,7 @@
 
 class Village < ApplicationRecord
   include GeographyType
+  include Rails.application.routes.url_helpers
 
   belongs_to :cell,       inverse_of: :villages
 
@@ -16,6 +17,14 @@ class Village < ApplicationRecord
 
   validates_presence_of :name, :cell_id
   validates_uniqueness_of :gis_code, allow_blank: true
+
+  def child_class
+    'Facility'
+  end
+
+  def hierarchy
+    cell.hierarchy << { name: "#{cell.name} Cell", link: cell_path(cell) }
+  end
 
   def parent
     cell

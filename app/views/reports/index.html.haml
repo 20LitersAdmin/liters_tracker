@@ -2,29 +2,40 @@
 .container
   %h1.left All Reports
 
-  %table.table.table-dark.table-striped.table-hover.table-sm.table-responsive-sm
-    %thead.thead-dark
+  %table.table.table-striped
+    %thead
       %tr
         %th Date
-        %th Technology
-        %th Distributed
+        %th Location
+        %th Sector
+        %th Tech
+        %th Dist
         %th Checked
-        %th User
+        %th Ppl
+        %th Hrs
+        %th Impact
+        %th Author
         %th
         %th
         %th
 
     %tbody
       - @reports.each do |report|
+      - geo = report.reportable
         %tr
           %td= report.date
+          %td= "#{geo.name} #{geo.class}"
+          %td= geo.sector.name
           %td= report.technology.name
-          %td= report.distributed
-          %td= report.checked
+          %td= human_number report.distributed
+          %td= human_number report.checked
+          %td= human_number report.people
+          %td= human_number report.hours
+          %td= human_number report.impact
           %td= report.user.fname
-          %td= link_to 'Show', report, class: 'btn yellow'
-          %td= link_to 'Edit', edit_report_path(report), class: 'btn blue'
-          %td= link_to 'Delete', report, method: :delete, data: { confirm: 'Are you sure?' }, class: 'btn red'
+          %td= link_to 'Show', report, class: 'btn yellow small'
+          %td= link_to 'Edit', edit_report_path(report), class: 'btn blue small'
+          %td= link_to 'Delete', report, method: :delete, data: { confirm: 'Are you sure?' }, class: 'btn red small'
 
   .row.justify-content-center.align-self-center
     .col-2

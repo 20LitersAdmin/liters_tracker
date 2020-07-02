@@ -1,0 +1,18 @@
+-# frozen_string_literal: true
+- @report_sub = @reports.where(technology: technology)
+- @plan_sub = @plans.where(technology: technology)
+- return if @plan_sub.blank? && @report_sub.blank? && @skip_blanks
+%tr
+  %td.text-left
+    = link_to technology.name, technology_path(technology, from: @from, to: @to)
+  - if @plan_sub.any? || @report_sub.any?
+    %td.text-right= human_number @report_sub.sum(:distributed)
+    %td.text-right= human_number @plan_sub.sum(:goal)
+    %td.text-right= human_number @report_sub.sum(:checked)
+    %td.text-right= human_number @report_sub.sum(:people)
+    %td.text-right= human_number @report_sub.sum(:hours)
+    %td.text-right= human_number @report_sub.map(&:impact).sum
+    %td.text-right= human_number @plan_sub.sum(:people_goal)
+  - else
+    %td.text-center{colspan: 7}
+      %i No plans or reports for this time period

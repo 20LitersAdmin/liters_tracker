@@ -1,7 +1,7 @@
 -# frozen_string_literal: true
 .row.mb-3
   .col-sm-4
-    %h4= "Data: #{@sector.name} Sector"
+    %h2= "Data: #{@sector.name} Sector"
   .col-sm-3.text-center
     - if @by_tech
       = link_to 'View by Cell', request.fullpath.gsub('&by_tech=true', '').gsub('?by_tech=true', '') , class: 'btn btn-outline-dark', id: 'dist_viewby'
@@ -16,53 +16,13 @@
     - if current_user.can_manage_geography? || current_user.admin?
       = link_to 'Edit', edit_sector_path(@sector), class: 'btn yellow'
     = link_to 'Back', @return_path, class: 'btn blue'
+  .col-sm-12=hierarchy_with_links @sector
 
 = render partial: 'shared/search', locals: { from: @from, to: @to, earliest: @earliest, latest: @latest }
 
 - if @by_tech
-  .row.mt-3#tech_section
-    .col
-      %table.table.table-striped
-        %thead
-          %tr
-            %th Technology
-            %th.text-right Distributed
-            %th.text-right= "Dist. Goal (by #{@plan_date})"
-            %th.text-right Checked
-            %th.text-right People served
-            %th.text-right People goal
-        %tfoot
-          %tr
-            %th Grand Total
-            %th.text-right= human_number @reports.sum(:distributed)
-            %th.text-right= human_number @plans.sum(:goal)
-            %th.text-right= human_number @reports.sum(:checked)
-            %th.text-right= human_number @reports.map(&:impact).sum
-            %th.text-right= human_number @plans.sum(:people_goal)
-        %tbody
-          = render partial: 'technology', collection: @technologies
+  = render partial: 'shared/geography_by_technology', locals: { geography: @sector }
 - else
-  .row.mt-3#sector_section
-    .col
-      %table.table.table-striped
-        %thead
-          %tr
-            %th Cell
-            - @technologies.each do |technology|
-              - next if @reports.where(technology: technology).size.zero? && @plans.where(technology: technology).size.zero?
-              %th.text-right= "#{technology.short_name} Dist"
-              %th.text-right= "#{technology.short_name} Planned"
-            %th.text-right People served
-            %th.text-right= "People goal (by #{@plan_date})"
+  = render partial: 'shared/geography_by_child', locals: { geography: @sector, children: @cells }
 
-        %tfoot
-          %tr
-            %th Grand Total
-            - @technologies.each do |technology|
-              - next if @reports.where(technology: technology).size.zero? && @plans.where(technology: technology).size.zero?
-              %th.text-right= human_number @reports.where(technology: technology).sum(:distributed)
-              %th.text-right= human_number @plans.where(technology: technology).sum(:goal)
-            %th.text-right= human_number @reports.map(&:impact).sum
-            %th.text-right= human_number @plans.sum(:people_goal)
-        %tbody
-          = render partial: 'cell', collection: @cells
+= render partial: 'shared/geography_direct_reports', locals: { geography: @sector } if @sector.reports.any?

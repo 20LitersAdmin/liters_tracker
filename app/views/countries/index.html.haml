@@ -3,7 +3,7 @@
   %h1.left Listing Countries
 
 %div.row
-  %table.table.table-dark.table-striped.table-hover.table-sm.table-responsive-sm
+  %table.table.table-striped.table-hover.table-sm.table-responsive-sm
     %thead.thead-dark
       %tr
         %th Name
@@ -11,18 +11,14 @@
         %th Population
         %th Households
         %th
-        %th
-        %th
     %tbody
       -@countries.each do |country|
         %tr
-          %td=country.name
-          %td
-          %td
-          %td
-          %td
-          %td
-          %td
+          %td= link_to country.name, country_path(country)
+          %td= country.gis_code
+          %td= country.population
+          %td= country.households
+          %td= link_to 'Edit', edit_country_path(country), class: 'btn yellow small'
 
   %div.row
     = link_to 'New Country', new_country_path

@@ -23,8 +23,8 @@ class Report < ApplicationRecord
   scope :within_month,    ->(date) { where(date: date.beginning_of_month..date.end_of_month) }
   scope :earliest_date,   -> { order(date: :asc).first.date }
   scope :latest_date,     -> { order(date: :asc).last.date }
-  # even though this is simple, it matches Plan.between(), so it's nice.
-  scope :between,         ->(from, to) { where(date: from..to) }
+  # even though this is simple, it matches Plan.between(), so it's nice to have.
+  scope :between,         ->(from, to) { where(date: from..to).order(date: :desc) }
 
   # currently unused
   # scope :with_plans,      -> { joins('LEFT JOIN plans ON reports.contract_id = plans.contract_id AND reports.technology_id = plans.technology_id AND reports.reportable_id = plans.planable_id AND reports.reportable_type = plans.planable_type') }

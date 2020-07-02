@@ -3,11 +3,11 @@
   - if @report.errors.any?
     = render partial: 'shared/form_errors', locals: { object: @report }
   .row
-    .col-12.col-md-6.field
+    .col-12.field
       = f.input :technology_id, collection: @technologies, selected: @report.technology.id
-    .col-12.col-md-6.field
+    .col-12.field
       = f.input :date
-  .row
+  .row.mt-3
     .col.field
       = f.input :distributed
     .col.field
