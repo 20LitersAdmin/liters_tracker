@@ -8,17 +8,16 @@
           .meta
             = @story.report.date.strftime('%B %d, %Y')
           %h3= @story.title
-          %i= "Reported by #{@reporter}, Story written by #{@author}"
+          %i= @tagline
           .story-text= @story.text.html_safe
       .row
         .col-sm-auto.mb-4
           .location-details
             %h5 Location:
             %table.table.table-sm.small-text
-              -@breadcrumb.each do |geo, name|
+              -@hierarchy.each do |geo|
                 %tr
-                  %td="#{geo}:"
-                  %td="#{name}"
+                  %td="#{geo[:name]}"
         .col
           .technology-details
             %h5 Solution:

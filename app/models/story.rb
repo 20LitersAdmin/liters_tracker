@@ -16,10 +16,6 @@ class Story < ApplicationRecord
   scope :between_dates, ->(start_date, end_date) { joins(:report).where('reports.date BETWEEN ? AND ?', start_date, end_date) }
   scope :ordered_by_date, -> { joins(:report).order('reports.date DESC') }
 
-  def breadcrumb
-    report.breadcrumb
-  end
-
   def date
     report.date
   end

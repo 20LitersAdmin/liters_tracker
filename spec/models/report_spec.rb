@@ -222,16 +222,6 @@ RSpec.describe Report, type: :model do
     end
   end
 
-  describe 'breadcrumb' do
-    let(:report) { create :report_village }
-
-    it 'returns a hash of parent geographies as strings' do
-      expect(report.breadcrumb.is_a?(Hash)).to eq true
-      expect(report.breadcrumb.keys[0]).to eq 'Country'
-      expect(report.breadcrumb.keys[-1]).to eq 'Village'
-    end
-  end
-
   describe '#details' do
     let(:tech_fam) { create :technology_family }
     let(:tech_comm) { create :technology_community }

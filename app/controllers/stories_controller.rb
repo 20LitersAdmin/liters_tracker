@@ -17,10 +17,12 @@ class StoriesController < ApplicationController
     @subtitle = "Reported by #{@reporter}"
     @related_stories = @story.related(3)
 
-    @breadcrumb = @story.breadcrumb
+    @hierarchy = @story.report.reportable.hierarchy
     @technology = @story.technology
 
     @author = @story.user.name
+
+    @tagline = @reporter == @author ? "Reported by #{@author}" : "Reported by #{@reporter}, Story written by #{@author}"
   end
 
   def new

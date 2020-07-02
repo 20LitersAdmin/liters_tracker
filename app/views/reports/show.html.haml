@@ -1,20 +1,31 @@
 -# frozen_string_literal: true
-%p
-  %b Date:
-  = @report.date
-%p
-  %b Technology:
-  = @report.technology
-%p
-  %b Distributed:
-  = @report.distributed
-%p
-  %b Checked:
-  = @report.checked
-%p
-  %b User:
-  = @report.user
+.row
+  %h4= @report.details
+  %p= hierarchy_with_links @report.reportable
+.row.mb-5
+  .col-12
+    %table.table.table-striped
+      %thead
+        %tr
+          %th Date
+          %th Technology
+          %th Distributed
+          %th Checked
+          %th Ppl
+          %th Hrs
+          %th Impact
+          %th Author
 
-= link_to 'Edit', edit_report_path(@report)
-\|
-= link_to 'Back', @return_path
+      %tbody
+        %tr
+          %td= @report.date
+          %td= @report.technology.short_name
+          %td= human_number @report.distributed
+          %td= human_number @report.checked
+          %td= human_number @report.people
+          %td= human_number @report.hours
+          %td= human_number @report.impact
+          %td= @report.user.fname
+
+= link_to 'Edit', edit_report_path(@report), class: 'btn yellow'
+= link_to 'Back', @return_path, class: 'btn blue'

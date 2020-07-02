@@ -1,6 +1,7 @@
 -# frozen_string_literal: true
 %h1= "Edit report for #{@geography.name} #{@geography.class}"
 %p= hierarchy @geography
+%p= "Submitted by #{@report.user.name}"
 
 %h5 If the Geography is incorrect, please delete this report and re-create it.
 %br
