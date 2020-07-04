@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 class PlansController < ApplicationController
-  before_action :set_plan, only: [:show, :edit, :update, :destroy]
+  before_action :set_plan, only: %i[show edit update destroy]
 
   # GET /plans
   # GET /plans.json
@@ -70,6 +70,12 @@ class PlansController < ApplicationController
   end
 
   def plan_params
-    params.require(:plan).permit(:contract_id, :technology_id, :goal, :people_goal, :planable_type, :planable_id)
+    params.require(:plan).permit(:contract_id,
+                                 :technology_id,
+                                 :goal,
+                                 :people_goal,
+                                 :planable_type,
+                                 :planable_id,
+                                 :date)
   end
 end

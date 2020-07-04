@@ -19,7 +19,7 @@ class TechnologyPolicy
   end
 
   def new?
-    @user&.admin? || @user&.can_manage_technologies?
+    @user&.technology_manager?
   end
 
   def create?

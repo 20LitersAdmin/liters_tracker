@@ -8,7 +8,7 @@
     - else
       = link_to 'Hide empty rows',  @skip_blanks_rfp, class: 'btn btn-outline-dark', id: 'dist_skipblank'
   .col-sm-2.text-right
-    - if current_user.can_manage_geography? || current_user.admin?
+    - if current_user.geography_manager?
       = link_to 'Edit', edit_facility_path(@facility), class: 'btn yellow'
     = link_to 'Back', @return_path, class: 'btn blue'
   .col-sm-12=hierarchy_with_links @facility

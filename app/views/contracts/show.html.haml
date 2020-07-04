@@ -1,22 +1,23 @@
 -# frozen_string_literal: true
-%p#notice= notice
+.row
+  .col-auto
+    %h1= "Contract ##{@contract.name}"
+  .col.text-right
+    = link_to 'Edit', edit_contract_path(@contract), class: 'btn yellow'
+    - if current_user.admin?
+      = link_to 'Destroy', @contract, method: :delete, data: { confirm: 'Are you sure?' }, class: 'btn red'
+    = link_to 'Back', @return_path, class: 'btn blue'
 
-%p
-  %b Start date:
-  = @contract.start_date
-%p
-  %b End date:
-  = @contract.end_date
-%p
-  %b Budget:
-  = @contract.budget
-%p
-  %b Household goal:
-  = @contract.household_goal
-%p
-  %b People goal:
-  = @contract.people_goal
-
-= link_to 'Edit', edit_contract_path(@contract)
-\|
-= link_to 'Back', @return_path
+.row
+  .col
+    %table.table
+      %thead
+        %tr
+          %th Budget
+          %th Households
+          %th People
+      %tbody
+        %tr
+          %td= humanized_money_with_symbol @contract.budget
+          %td= human_number @contract.household_goal
+          %td= human_number @contract.people_goal

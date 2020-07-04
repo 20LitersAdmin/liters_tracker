@@ -19,7 +19,7 @@ class TargetPolicy
   end
 
   def new?
-    @user&.admin? || @user&.can_manage_contracts?
+    @user&.contracts_manager?
   end
 
   def create?

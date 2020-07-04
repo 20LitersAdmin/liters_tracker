@@ -40,6 +40,8 @@ class Plan < ApplicationRecord
   end
 
   def complete?
+    return false unless reports.any?
+
     (goal || 0) <= (reports.sum(:distributed) || 0)
   end
 

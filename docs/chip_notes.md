@@ -1,21 +1,8 @@
 # CURRENT:
-0. Load dashboard to a specific year && month
-
 0. Feature specs
 
-0. Geography navigation:
-- links to technologies contain no geography filter (should they?)
-
-0. Navigation:
-- monthly view should show reports as editable
-
 1. Plans architecture:
-- Plan form
--- geography: contracts/{:id}/plans
--- technology: technologies/{:id}/plans
-
-1. User permissions
-- `(current_user.can_manage_contracts? || current_user.admin?)` in views should be simplified to `current_user.contract_manager?`
+- contracts/
 
 2. What about un-met plans?
 - Help Rebero see work to be accomplished by Sector
@@ -23,11 +10,6 @@
 3. Deleting a (duplicate) Facility that has associated Reports:
 - Need to re-assign reports before deleting facility
 - or create a Merge function?
-
-4. technology_path(:id)
-- Add Plan button does nothing
-
-5. Feature tests
 
 # Creating/Updating Targets
 

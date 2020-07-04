@@ -16,10 +16,6 @@ class ReportsController < ApplicationController
 
   def show; end
 
-  def new
-    authorize @report = Report.new
-  end
-
   def edit
     @technologies = Technology.report_worthy.pluck(:name, :id)
 
@@ -27,6 +23,7 @@ class ReportsController < ApplicationController
   end
 
   def create
+    # Sectors#report forms submit to this action as AJAX
     # check for duplicates first
     authorize @report = Report.where(dup_matching_params).first_or_initialize
 

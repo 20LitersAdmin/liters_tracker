@@ -5,7 +5,7 @@
   .col-sm-2.text-right
     = link_to 'All Sectors', sectors_path, class: 'btn yellow'
   .col-sm-2.text-right
-    - if current_user.can_manage_reports? || current_user.admin?
+    - if current_user.report_manager?
       = link_to 'New', new_district_path, class: 'btn yellow'
     = link_to 'Back', @return_path, class: 'btn blue'
 

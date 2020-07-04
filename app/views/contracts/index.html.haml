@@ -1,30 +1,25 @@
 -# frozen_string_literal: true
-%h1 Listing contracts
+.row
+  .col
+    %h1 Contracts
+  .col.text-right
+    = link_to 'New Contract', new_contract_path, class: 'btn yellow'
 
-%table.table.table-striped
-  %thead
-    %tr
-      %th Start date
-      %th End date
-      %th Budget
-      %th Household goal
-      %th People goal
-      %th
-      %th
-      %th
-
-  %tbody
-    - @contracts.each do |contract|
-      %tr
-        %td= human_date contract.start_date
-        %td= human_date contract.end_date
-        %td= humanized_money_with_symbol contract.budget
-        %td= human_number contract.household_goal
-        %td= human_number contract.people_goal
-        %td= link_to 'Show', contract
-        %td= link_to 'Edit', edit_contract_path(contract)
-        %td= link_to 'Destroy', contract, method: :delete, data: { confirm: 'Are you sure?' }
-
-%br
-
-= link_to 'New Contract', new_contract_path
+.row
+  .col
+    %table.table.table-striped
+      %thead
+        %tr
+          %th MOU
+          %th Budget
+          %th Households
+          %th People
+          %th
+      %tbody
+        - @contracts.each do |contract|
+          %tr
+            %td= contract.name
+            %td= humanized_money_with_symbol contract.budget
+            %td= human_number contract.household_goal
+            %td= human_number contract.people_goal
+            %td= "#{link_to 'Show', contract, class: 'btn yellow small'} #{link_to 'Edit', edit_contract_path(contract), class: 'btn blue small'}".html_safe + " #{link_to 'Destroy', contract, method: :delete, data: { confirm: 'Are you sure?' }, class: 'btn red small'}".html_safe if current_user.admin?

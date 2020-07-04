@@ -19,7 +19,7 @@ class StoryPolicy
   end
 
   def new?
-    @user&.admin? || @user&.can_manage_reports?
+    @user&.reports_manager?
   end
 
   def create?

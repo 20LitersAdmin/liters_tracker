@@ -19,7 +19,7 @@ class VillagePolicy
   end
 
   def new?
-    @user&.admin? || @user&.can_manage_geography?
+    @user&.geography_manager?
   end
 
   def create?
@@ -39,6 +39,6 @@ class VillagePolicy
   end
 
   def children?
-    @user&.admin? || @user&.can_manage_geography? || @user&.can_manage_reports?
+    @user&.geography_manager? || @user&.reports_manager?
   end
 end

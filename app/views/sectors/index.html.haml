@@ -5,7 +5,7 @@
   .col-sm-2.text-right
     = link_to 'All Districts', districts_path, class: 'btn yellow'
   .col-sm-2.text-right
-    - if current_user.can_manage_geography? || current_user.admin?
+    - if current_user.geography_manager?
       = link_to 'New', new_sector_path, class: 'btn yellow'
     = link_to 'Back', @return_path, class: 'btn blue'
 
