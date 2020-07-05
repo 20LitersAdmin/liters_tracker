@@ -5,7 +5,7 @@
   .col.text-right
     = link_to 'Edit', edit_contract_path(@contract), class: 'btn yellow'
     - if current_user.admin?
-      = link_to 'Destroy', @contract, method: :delete, data: { confirm: 'Are you sure?' }, class: 'btn red'
+      = link_to 'Delete', @contract, method: :delete, data: { confirm: 'Are you sure?' }, class: 'btn red'
     = link_to 'Back', @return_path, class: 'btn blue'
 
 .row

@@ -21,6 +21,7 @@ class ContractsController < ApplicationController
 
   # GET /contracts/1/edit
   def edit
+    @start_date = form_date(@contract.start_date) || nil
   end
 
   # POST /contracts
