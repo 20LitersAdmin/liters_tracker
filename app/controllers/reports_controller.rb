@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 class ReportsController < ApplicationController
-  before_action :set_report, only: %i[show edit update destroy]
+  before_action :set_report, only: %i[edit update destroy]
 
   def index; end
 
@@ -13,8 +13,6 @@ class ReportsController < ApplicationController
       format.json { render 'index.json' }
     end
   end
-
-  def show; end
 
   def edit
     @technologies = Technology.report_worthy.pluck(:name, :id)

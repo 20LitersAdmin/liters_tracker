@@ -16,7 +16,8 @@
     .col.field
       = f.input :people_goal
   .row.actions
-    .col
+    .col.text-center
       = f.button :submit, class: 'btn yellow'
-    .col
-      = link_to 'Back', @return_path, class: 'btn blue'
+      = link_to 'Cancel', @return_path, class: 'btn blue'
+      - if @contract.persisted? && current_user.admin?
+        = link_to 'Delete Contract', @contract, method: :delete, data: { confirm: 'Are you sure?' }, class: 'btn red'

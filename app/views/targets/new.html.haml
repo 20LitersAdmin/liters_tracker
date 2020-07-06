@@ -1,6 +1,11 @@
 -# frozen_string_literal: true
-%h1 New target
+.row
+  .col-auto
+    %h1= "Contract ##{@contract.name}"
+  .col.text-right
+    = link_to 'Back', @return_path, class: 'btn blue'
+  .col-12
+    %h3 New Target
+    %p Targets can only be created using technologies that currently don't have a target
 
 = render 'form'
-
-= link_to 'Back', @return_path

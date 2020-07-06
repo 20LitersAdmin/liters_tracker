@@ -1,26 +1,22 @@
 # frozen_string_literal: true
 
 class TargetsController < ApplicationController
-  before_action :set_target, only: [:show, :edit, :update, :destroy]
+  before_action :set_target, only: %i[edit update destroy]
+  before_action :set_contract, only: %i[new create update]
 
-  # GET /targets
-  # GET /targets.json
-  def index
-    authorize @targets = Target.all
-  end
-
-  # GET /targets/1
-  # GET /targets/1.json
-  def show
-  end
-
-  # GET /targets/new
+  # GET /targets/1/edit
   def new
-    authorize @target = Target.new
+    @target = Target.new
+
+    # force users to edit existing Target records by
+    # only allowing them to create new Targets with 'unused' technologies
+    targeted_technologies = @contract.targets.pluck(:technology_id)
+    @untargeted_technologies = Technology.where.not(id: targeted_technologies).order(name: :asc).pluck(:name, :id)
   end
 
   # GET /targets/1/edit
   def edit
+    @contract = @target.contract
   end
 
   # POST /targets
@@ -28,11 +24,16 @@ class TargetsController < ApplicationController
   def create
     authorize @target = Target.new(target_params)
 
+    @target.contract = @contract
+
     respond_to do |format|
       if @target.save
-        format.html { redirect_to @target, notice: 'Target was successfully created.' }
+        format.html { redirect_to @return_path, success: 'Target created.' }
         format.json { render :show, status: :created, location: @target }
       else
+        @contract = Contract.find(params[:contract_id])
+        targeted_technologies = @contract.targets.pluck(:technology_id)
+        @untargeted_technologies = Technology.where.not(id: targeted_technologies).order(name: :asc).pluck(:name, :id)
         format.html { render :new }
         format.json { render json: @target.errors, status: :unprocessable_entity }
       end
@@ -42,9 +43,11 @@ class TargetsController < ApplicationController
   # PATCH/PUT /targets/1
   # PATCH/PUT /targets/1.json
   def update
+    byebug
+
     respond_to do |format|
       if @target.update(target_params)
-        format.html { redirect_to @target, notice: 'Target was successfully updated.' }
+        format.html { redirect_to @return_path, success: 'Target updated.' }
         format.json { render :show, status: :ok, location: @target }
       else
         format.html { render :edit }
@@ -56,9 +59,9 @@ class TargetsController < ApplicationController
   # DELETE /targets/1
   # DELETE /targets/1.json
   def destroy
-    authorize @target.destroy
+    @target.destroy
     respond_to do |format|
-      format.html { redirect_to targets_url, notice: 'Target was successfully destroyed.' }
+      format.html { redirect_to @return_path, notice: 'Target deleted.' }
       format.json { head :no_content }
     end
   end
@@ -69,7 +72,11 @@ class TargetsController < ApplicationController
     authorize @target = Target.find(params[:id])
   end
 
+  def set_contract
+    @contract = Contract.find(params[:contract_id])
+  end
+
   def target_params
-    params.require(:target).permit(:contract_id, :technology_id, :goal, :people_goal)
+    params.require(:target).permit(:technology_id, :goal, :people_goal)
   end
 end

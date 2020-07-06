@@ -9,7 +9,15 @@ class Target < ApplicationRecord
   # scope :between, ->(sdate, edate) { joins(:contract).where('contracts.start_date BETWEEN ? AND ?', sdate, edate) }
   scope :between, ->(from, to) { joins(:contract).where('contracts.end_date >= ? AND contracts.start_date <= ?', from, to) }
 
+  before_save :set_people_goal, if: -> { people_goal.nil? || people_goal.zero? }
+
   def date
     contract.end_date
+  end
+
+  private
+
+  def set_people_goal
+    self.people_goal = technology.default_impact * goal
   end
 end

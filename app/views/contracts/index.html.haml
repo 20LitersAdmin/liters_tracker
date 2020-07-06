@@ -14,12 +14,16 @@
           %th Budget
           %th Households
           %th People
-          %th
+          %th # of targets
+          %th # of plans
+          %th # of reports
       %tbody
         - @contracts.each do |contract|
           %tr
-            %td= contract.name
+            %td= link_to contract.name, contract, class: 'btn yellow'
             %td= humanized_money_with_symbol contract.budget
             %td= human_number contract.household_goal
             %td= human_number contract.people_goal
-            %td= "#{link_to 'Show', contract, class: 'btn yellow small'} #{link_to 'Edit', edit_contract_path(contract), class: 'btn blue small'}".html_safe + " #{link_to 'Destroy', contract, method: :delete, data: { confirm: 'Are you sure?' }, class: 'btn red small'}".html_safe if current_user.admin?
+            %td= human_number contract.targets.size
+            %td= human_number contract.plans.size
+            %td= human_number contract.reports.size

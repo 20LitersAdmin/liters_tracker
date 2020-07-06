@@ -1,19 +1,23 @@
 -# frozen_string_literal: true
-= form_for @target do |f|
+= simple_form_for [@contract, @target] do |f|
   - if @target.errors.any?
     = render partial: 'shared/form_errors', locals: { object: @target }
 
-  .field
-    = f.label :contract
-    = f.text_field :contract
-  .field
-    = f.label :technology
-    = f.text_field :technology
-  .field
-    = f.label :goal
-    = f.number_field :goal
-  .field
-    = f.label :people_goal
-    = f.number_field :people_goal
-  .actions
-    = f.submit 'Save'
+  .row.mt-3
+    .col.field
+      - if @target.new_record?
+        = f.input :technology_id, collection: @untargeted_technologies
+      - else
+        %h4.mb-3= "Technology: #{@target.technology.name}"
+  .row
+    .col.field
+      = f.input :goal
+    .col.field
+      = f.input :people_goal
+  .row.my-3.actions
+    .col.text-right
+      = f.button :submit, class: 'btn yellow'
+    .col.text-left
+      = link_to 'Back', @return_path, class: 'btn empty'
+      - if @target.persisted?
+        = link_to 'Delete Target', contract_target_path(@contract, @target), method: :delete, class: 'btn red', data: { confirm: 'Are you sure you want to DELETE the target?' }

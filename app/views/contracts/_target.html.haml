@@ -1,0 +1,9 @@
+-# frozen_string_literal: true
+%tr
+  %td= target.technology.name.pluralize
+  %td.text-right= human_number target.goal
+  %td.text-right= human_number target.people_goal
+  %td.text-right
+    = link_to 'Edit', edit_contract_target_path(@contract, target), class: 'btn blue small'
+    - if current_user.admin?
+      = link_to 'Delete', contract_target_path(@contract, target), method: :delete, data: { confirm: 'Are you sure?' }, class: 'btn red small'
