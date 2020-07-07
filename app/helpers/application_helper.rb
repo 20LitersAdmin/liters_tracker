@@ -8,7 +8,8 @@ module ApplicationHelper
   def hierarchy(geography, slim: false)
     str = ''
 
-    collection = geography.hierarchy_slim
+    collection = slim ? geography.hierarchy_slim : geography.hierarchy
+
     collection.each do |geo|
       str += geo[:name]
       str += ' > ' unless geo == geography.hierarchy.last

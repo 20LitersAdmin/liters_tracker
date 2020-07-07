@@ -20,6 +20,8 @@ class Facility < ApplicationRecord
   scope :churches,     -> { where(category: 'Church') }
   scope :not_churches, -> { where.not(category: 'Church') }
 
+  after_save :update_hierarchy, if: -> { saved_change_to_village_id? }
+
   def impact
     population.to_i + (households.to_i * Constants::Population::HOUSEHOLD_SIZE)
   end
@@ -46,5 +48,11 @@ class Facility < ApplicationRecord
 
   def parent
     village
+  end
+
+  def update_hierarchy
+    update_column(:hierarchy, village.hierarchy << { parent_name: village.name, parent_type: village.class.to_s, link: village_path(village) })
+
+    reload
   end
 end

@@ -17,6 +17,8 @@ class Sector < ApplicationRecord
   validates_presence_of :name, :district_id
   validates_uniqueness_of :gis_code, allow_blank: true
 
+  after_save :update_hierarchy, if: -> { saved_change_to_district_id? }
+
   def child_class
     'Cell'
   end
@@ -48,5 +50,15 @@ class Sector < ApplicationRecord
 
   def sector
     self
+  end
+
+  def update_hierarchy(cascade: false)
+    update_column(:hierarchy, district.hierarchy << { parent_name: district.name, parent_type: district.class.to_s, link: district_path(district) })
+
+    return unless cascade || saved_change_to_district_id?
+
+    reload.cells.each do |c|
+      c.reload.update_hierarchy(cascade: true)
+    end
   end
 end

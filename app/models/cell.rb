@@ -18,6 +18,8 @@ class Cell < ApplicationRecord
   validates_presence_of :name, :sector_id
   validates_uniqueness_of :gis_code, allow_blank: true
 
+  after_save :update_hierarchy, if: -> { saved_change_to_sector_id? }
+
   def child_class
     'Village'
   end
@@ -51,5 +53,17 @@ class Cell < ApplicationRecord
   def village
     # some views assume all reports are at the village level
     nil
+  end
+
+  def update_hierarchy(cascade: false)
+    parent_hierarchy = sector.hierarchy
+
+    update_column(:hierarchy, parent_hierarchy << { parent_name: sector.name, parent_type: sector.class.to_s, link: sector_path(sector) })
+
+    return unless cascade || saved_change_to_sector_id?
+
+    reload.villages.each do |v|
+      v.reload.update_hierarchy(cascade: true)
+    end
   end
 end

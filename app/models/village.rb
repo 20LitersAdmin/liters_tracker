@@ -18,6 +18,8 @@ class Village < ApplicationRecord
   validates_presence_of :name, :cell_id
   validates_uniqueness_of :gis_code, allow_blank: true
 
+  after_save :update_hierarchy, if: -> { saved_change_to_cell_id? }
+
   def child_class
     'Facility'
   end
@@ -49,5 +51,15 @@ class Village < ApplicationRecord
 
   def village
     self
+  end
+
+  def update_hierarchy(cascade: false)
+    update_column(:hierarchy, cell.hierarchy << { parent_name: cell.name, parent_type: cell.class.to_s, link: cell_path(cell) })
+
+    return unless cascade || saved_change_to_cell_id?
+
+    reload.facilities.each do |f|
+      f.reload.update_hierarchy
+    end
   end
 end

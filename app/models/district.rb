@@ -17,6 +17,8 @@ class District < ApplicationRecord
   validates_presence_of :name
   validates_uniqueness_of :gis_code, allow_nil: true
 
+  after_save :update_hierarchy, if: -> { saved_change_to_country_id? }
+
   def child_class
     'Sector'
   end
@@ -47,5 +49,15 @@ class District < ApplicationRecord
          .or(Story.joins(:report).where("reports.reportable_type = 'Cell' AND reports.reportable_id IN (?)", cells.pluck(:id)))
          .or(Story.joins(:report).where("reports.reportable_type = 'Village' AND reports.reportable_id IN (?)", villages.pluck(:id)))
          .or(Story.joins(:report).where("reports.reportable_type = 'Facility' AND reports.reportable_id IN (?)", facilities.pluck(:id)))
+  end
+
+  def update_hierarchy(cascade: false)
+    update_column(:hierarchy, [{ parent_name: parent.name, parent_type: parent.class.to_s, link: country_path(country) }])
+
+    return unless cascade || saved_change_to_country_id?
+
+    reload.sectors.each do |s|
+      s.reload.update_hierarchy(cascade: true)
+    end
   end
 end
