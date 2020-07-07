@@ -2,8 +2,10 @@
 
 class PlansController < ApplicationController
   before_action :set_plan, only: %i[edit update destroy]
+  before_action :set_contract, only: %i[new create dttb_index]
 
   def dttb_index
+    authorize @plans = @contract.plans.includes(:technology).order(date: :asc)
 
     respond_to do |format|
       format.html
@@ -69,6 +71,10 @@ class PlansController < ApplicationController
 
   def set_plan
     authorize @plan = Plan.find(params[:id])
+  end
+
+  def set_contract
+    @contract = Contract.find(params[:contract_id])
   end
 
   def plan_params

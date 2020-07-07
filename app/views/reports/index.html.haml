@@ -2,8 +2,8 @@
 .container
   %h1.left All Reports
 
-  %table.table.table-striped#dttb-reports{data: {source: dttb_index_reports_path(format: :json)}}
-    %thead
+  %table.table.table-striped#reports-dttb{data: {source: dttb_index_reports_path(format: :json) } }
+    %thead.thead-dark
       %tr
         %th Date
         %th Location
@@ -17,7 +17,3 @@
         %th Author
         %th
     %tbody
-
-  .row.justify-content-center.align-self-center
-    .col-2
-    .col-10

@@ -50,6 +50,8 @@ $(document).on('preInit.dt', function(e, settings) {
 
 
 // init on turbolinks load
+// Global dataTables can be initialized using #dttb-{name}
+// For custom dataTables, use #{name}-dttb
 $(document).on('turbolinks:load', function() {
   if (!$.fn.DataTable.isDataTable("table[id^=dttb]")) {
     $("table[id^=dttb-]").DataTable( {

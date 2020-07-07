@@ -50,7 +50,7 @@
     %h3 Plans
     %p Plans represent a detailed goal for which technology will be distributed/implemented in a specific area before a specific deadline.
   .col-12
-    %table.table.table-striped.table-sm
+    %table.table.table-striped.table-sm#plans-dttb{ data: { source: dttb_index_contract_plans_path(@contract, format: :json) } }
       %thead.thead-dark
         %tr
           %th Technology
@@ -60,4 +60,3 @@
           %th.text-right People
           %th
       %tbody
-        = render partial: 'plan', collection: @plans

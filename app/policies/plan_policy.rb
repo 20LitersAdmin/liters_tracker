@@ -8,7 +8,7 @@ class PlanPolicy
     @record = record
   end
 
-  def index?
+  def dttb_index?
     @user
   end
 

@@ -4,7 +4,7 @@
 
 $(document).on 'turbolinks:load', ->
   return unless controllerMatches(['contracts']) &&
-    actionMatches(['new', 'edit'])
+    actionMatches(['new', 'edit', 'show'])
 
   # init datetimepickers
   $('.datetimepicker-input').datetimepicker({
@@ -21,3 +21,27 @@ $(document).on 'turbolinks:load', ->
 
   endDate = $('#contract_end_date').attr('value')
   $('#contract_end_date').datetimepicker('date', endDate)
+
+  # plans table on Contracts#show
+  $('table#plans-dttb').dataTable
+    processing: true
+    ajax:
+      url: $('table#plans-dttb').data('source')
+    lengthMenu: [[50, 100, 500, -1], [50, 100, 500, "All"] ]
+    columns: [
+      {data: 'technology'}
+      {data: 'location'}
+      {data: 'date'}
+      {data: 'goal'}
+      {data: 'people'}
+      {data: 'links'}
+    ]
+    pagingType: 'full_numbers'
+    language: {
+      paginate: {
+        first: "&#8676",
+        previous: "&#8592",
+        next: "&#8594",
+        last: "&#8677"
+      }
+    }
