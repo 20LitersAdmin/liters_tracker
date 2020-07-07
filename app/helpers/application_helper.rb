@@ -5,10 +5,11 @@ module ApplicationHelper
     Constants::Application::BOOTSTRAP_CLASSES[flash_type.to_sym] || flash_type.to_s
   end
 
-  def hierarchy(geography)
+  def hierarchy(geography, slim: false)
     str = ''
 
-    geography.hierarchy.each do |geo|
+    collection = geography.hierarchy_slim
+    collection.each do |geo|
       str += geo[:name]
       str += ' > ' unless geo == geography.hierarchy.last
     end

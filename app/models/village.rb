@@ -22,10 +22,6 @@ class Village < ApplicationRecord
     'Facility'
   end
 
-  def hierarchy
-    cell.hierarchy << { name: "#{cell.name} Cell", link: cell_path(cell) }
-  end
-
   def parent
     cell
   end

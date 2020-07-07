@@ -21,10 +21,6 @@ class District < ApplicationRecord
     'Sector'
   end
 
-  def hierarchy
-    [{ name: country.name, link: country_path(country) }]
-  end
-
   def parent
     country
   end

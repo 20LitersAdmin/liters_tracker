@@ -20,10 +20,6 @@ class Facility < ApplicationRecord
   scope :churches,     -> { where(category: 'Church') }
   scope :not_churches, -> { where.not(category: 'Church') }
 
-  def hierarchy
-    village.hierarchy << { name: "#{village.name} Village", link: village_path(village) }
-  end
-
   def impact
     population.to_i + (households.to_i * Constants::Population::HOUSEHOLD_SIZE)
   end

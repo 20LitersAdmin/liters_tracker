@@ -3,7 +3,7 @@
   .col-auto
     %h1= "Contract ##{@contract.name}"
   .col.text-right
-    = link_to 'Back', @return_path, class: 'btn blue'
+    = link_to 'Back', @return_path, class: 'btn empty'
 
 .row.mt-3
   .col
@@ -39,7 +39,7 @@
           %th.text-right Goal
           %th.text-right People
           %th
-      .tbody
+      %tbody
         = render partial: 'target', collection: @targets
   - if @untargeted_technologies_exist
     .col-12
@@ -49,3 +49,15 @@
   .col
     %h3 Plans
     %p Plans represent a detailed goal for which technology will be distributed/implemented in a specific area before a specific deadline.
+  .col-12
+    %table.table.table-striped.table-sm
+      %thead.thead-dark
+        %tr
+          %th Technology
+          %th Location
+          %th Date
+          %th.text-right Goal
+          %th.text-right People
+          %th
+      %tbody
+        = render partial: 'plan', collection: @plans

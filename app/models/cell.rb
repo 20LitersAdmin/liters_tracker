@@ -22,10 +22,6 @@ class Cell < ApplicationRecord
     'Village'
   end
 
-  def hierarchy
-    sector.hierarchy << { name: "#{sector.name} Sector", link: sector_path(sector) }
-  end
-
   def parent
     sector
   end

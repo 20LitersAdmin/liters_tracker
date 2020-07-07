@@ -43,8 +43,6 @@ class TargetsController < ApplicationController
   # PATCH/PUT /targets/1
   # PATCH/PUT /targets/1.json
   def update
-    byebug
-
     respond_to do |format|
       if @target.update(target_params)
         format.html { redirect_to @return_path, success: 'Target updated.' }

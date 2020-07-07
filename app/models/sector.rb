@@ -21,10 +21,6 @@ class Sector < ApplicationRecord
     'Cell'
   end
 
-  def hierarchy
-    district.hierarchy << { name: "#{district.name} District", link: district_path(district) }
-  end
-
   def parent
     district
   end
