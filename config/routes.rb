@@ -10,7 +10,7 @@ Rails.application.routes.draw do
 
   get 'stats', to: 'dashboard#stats_json', as: 'stats'
 
-  resources :reports, except: %i[new show] do
+  resources :reports, except: %i[new] do
     get 'dttb_index', on: :collection
   end
 

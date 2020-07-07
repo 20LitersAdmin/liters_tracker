@@ -32,6 +32,12 @@ class Plan < ApplicationRecord
     Plan.where(id: ary.flatten)
   end
 
+  def complete?
+    return false unless reports.any?
+
+    (goal || 0) <= (reports.sum(:distributed) || 0)
+  end
+
   def picture
     planable_type == 'Facility' ? 'plan_facility.jpg' : 'plan_village.jpg'
   end
@@ -40,14 +46,12 @@ class Plan < ApplicationRecord
     "#{ActionController::Base.helpers.pluralize(goal, technology.name)} for #{people_goal} people by #{date.strftime('%m/%d/%Y')}"
   end
 
-  def complete?
-    return false unless reports.any?
-
-    (goal || 0) <= (reports.sum(:distributed) || 0)
-  end
-
   def date
     read_attribute(:date) || contract.end_date
+  end
+
+  def links
+    "<a class='btn yellow small' href='/contracts/#{contract_id}/plans/#{id}/edit'>Edit</a> <a data-confirm='Are you sure?' class='btn red small' rel='nofollow' data-method='delete' href='/contracts/#{contract_id}/reports/#{id}'>Delete</a>".html_safe
   end
 
   def self.related_facilities

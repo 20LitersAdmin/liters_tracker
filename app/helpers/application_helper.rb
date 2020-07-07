@@ -15,22 +15,11 @@ module ApplicationHelper
 
       geo_name = slim ? geo[:parent_name] : "#{geo[:parent_name]} #{geo[:parent_type]}"
       str += links ? link_to(geo_name, geo[:link]) : geo_name
-      str += ' > ' unless geo == geography.hierarchy.last
+      str += ' > ' unless geo == array_of_hashes.last
     end
 
     str.html_safe
   end
-
-  # def hierarchy_with_links(geography)
-  #   str = ''
-
-  #   geography.hierarchy.each do |geo|
-  #     str +=
-  #     str += ' > ' unless geo == geography.hierarchy.last
-  #   end
-
-  #   str.html_safe
-  # end
 
   def human_boolean(boolean)
     boolean ? 'Yes' : 'No'

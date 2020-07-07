@@ -1,12 +1,14 @@
 # frozen_string_literal: true
 
 class ReportsController < ApplicationController
-  before_action :set_report, only: %i[edit update destroy]
+  before_action :set_report, only: %i[show edit update destroy]
 
   def index; end
 
+  def show; end
+
   def dttb_index
-    authorize @reports = Report.order(date: :desc)
+    authorize @reports = Report.includes(:technology).includes(:user).order(date: :desc)
 
     respond_to do |format|
       format.html

@@ -17,7 +17,8 @@
             %table.table.table-sm.small-text
               -@hierarchy.each do |geo|
                 %tr
-                  %td="#{geo[:name]}"
+                  %td="#{geo['parent_type']}:"
+                  %td="#{geo['parent_name']}"
         .col
           .technology-details
             %h5 Solution:

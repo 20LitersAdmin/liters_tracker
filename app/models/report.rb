@@ -75,18 +75,8 @@ class Report < ApplicationRecord
     reportable.sector.name || ''
   end
 
-  def tech
-    technology.short_name
-  end
-
-  def author
-    user.name
-  end
-
   def links
-    "<a class='btn yellow small' href='/reports/#{id}'>Show</a>
-      <a class='btn blue small' href='/reports/#{id}/edit'>Edit</a>
-      <a data-confirm='Are you sure?' class='btn red small' rel='nofollow' data-method='delete' href='/reports/#{id}'>Delete</a>".html_safe
+    "<a class='btn yellow small' href='/reports/#{id}/edit'>Edit</a><br /><a data-confirm='Are you sure?' class='btn red small' rel='nofollow' data-method='delete' href='/reports/#{id}'>Delete</a>".html_safe
   end
 
   #############

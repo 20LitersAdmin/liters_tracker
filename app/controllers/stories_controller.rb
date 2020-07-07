@@ -17,7 +17,7 @@ class StoriesController < ApplicationController
     @subtitle = "Reported by #{@reporter}"
     @related_stories = @story.related(3)
 
-    @hierarchy = @story.report.reportable.hierarchy
+    @hierarchy = @story.report.hierarchy
     @technology = @story.technology
 
     @author = @story.user.name

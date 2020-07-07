@@ -1,8 +1,7 @@
 # CURRENT:
-0. Feature specs
 
 1. Plans architecture:
-- contracts/
+- `contracts#_plan` should be a `dttb_index` like Reports
 
 2. What about un-met plans?
 - Help Rebero see work to be accomplished by Sector
@@ -11,16 +10,8 @@
 - Need to re-assign reports before deleting facility
 - or create a Merge function?
 
-# Creating/Updating Targets
-
-# Creating/Updating Plans
-* Copy the sector/select && sector/#id/report process
-
 # Forms
-- Contract form
 - Tech form
-- Target form
-
 
 # Geography forms (also need a chooser view)
 - Country form
@@ -31,8 +22,6 @@
 
 # Indexes need:
 - Facilities: datatables (replace will_paginate)
-- Reports: datatables (replace will_paginate)
-- all geographies: datatables (replace will_paginate)
 
 # Shows need:
 - Facility: reports / plans
