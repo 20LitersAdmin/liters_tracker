@@ -9,8 +9,6 @@ class SectorPolicy
   end
 
   def index?
-    raise ActiveRecord::RecordNotFound if @record.empty?
-
     @user
   end
 
@@ -19,11 +17,11 @@ class SectorPolicy
   end
 
   def select?
-    @user&.reports_manager? || @user&.geography_manager?
+    new?
   end
 
   def report?
-    @user&.reports_manager? || @user&.geography_manager?
+    @user
   end
 
   def new?
@@ -47,6 +45,6 @@ class SectorPolicy
   end
 
   def children?
-    @user&.geography_manager? || @user&.reports_manager?
+    @user&.geography_manager?
   end
 end

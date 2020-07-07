@@ -47,6 +47,8 @@ class Report < ApplicationRecord
   before_update :set_year_and_month_from_date, if: -> { date.present? && date_changed? }
   before_update :set_date_from_year_and_month, if: -> { year.present? && month.present? && (year_changed? || month_changed?) }
 
+  after_save :update_hierarchy, if: -> { saved_change_to_reportable_id? || saved_change_to_reportable_type? }
+
   def details
     if distributed&.positive?
       val = distributed
@@ -211,5 +213,9 @@ class Report < ApplicationRecord
     return if id.zero?
 
     self.plan_id = id
+  end
+
+  def update_hierarchy
+    update_column(:hierarchy, reload.reportable.hierarchy)
   end
 end

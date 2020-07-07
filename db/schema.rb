@@ -115,6 +115,7 @@ ActiveRecord::Schema.define(version: 2020_07_07_010045) do
     t.integer "planable_id"
     t.string "planable_type"
     t.date "date"
+    t.jsonb "hierarchy"
     t.index ["contract_id", "technology_id", "planable_id", "planable_type"], name: "idx_has_many_reports", unique: true
     t.index ["contract_id"], name: "index_plans_on_contract_id"
     t.index ["created_at"], name: "index_plans_on_created_at"
@@ -140,6 +141,7 @@ ActiveRecord::Schema.define(version: 2020_07_07_010045) do
     t.integer "year"
     t.integer "month"
     t.decimal "hours", precision: 5, scale: 2, default: "0.0"
+    t.jsonb "hierarchy"
     t.index ["contract_id", "technology_id", "reportable_id", "reportable_type"], name: "idx_belongs_to_plan"
     t.index ["contract_id"], name: "index_reports_on_contract_id"
     t.index ["date"], name: "index_reports_on_date"

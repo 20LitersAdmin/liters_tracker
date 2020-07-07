@@ -13,9 +13,7 @@ class UserPolicy
   end
 
   def index?
-    raise ActiveRecord::RecordNotFound if @record.empty?
-
-    @user
+    @user&.admin?
   end
 
   def show?
@@ -35,7 +33,7 @@ class UserPolicy
   end
 
   def update?
-    new?
+    show?
   end
 
   def destroy?

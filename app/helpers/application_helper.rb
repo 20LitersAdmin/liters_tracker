@@ -5,29 +5,32 @@ module ApplicationHelper
     Constants::Application::BOOTSTRAP_CLASSES[flash_type.to_sym] || flash_type.to_s
   end
 
-  def hierarchy(geography, slim: false)
+  def format_hierarchy(array_of_hashes, slim: false, links: false)
     str = ''
 
-    collection = slim ? geography.hierarchy_slim : geography.hierarchy
+    array_of_hashes.each do |geo|
+      geo.symbolize_keys!
 
-    collection.each do |geo|
-      str += geo[:name]
-      str += ' > ' unless geo == geography.hierarchy.last
-    end
+      next if slim && geo[:parent_type] == 'Country'
 
-    str
-  end
-
-  def hierarchy_with_links(geography)
-    str = ''
-
-    geography.hierarchy.each do |geo|
-      str += link_to geo[:name], geo[:link]
+      geo_name = slim ? geo[:parent_name] : "#{geo[:parent_name]} #{geo[:parent_type]}"
+      str += links ? link_to(geo_name, geo[:link]) : geo_name
       str += ' > ' unless geo == geography.hierarchy.last
     end
 
     str.html_safe
   end
+
+  # def hierarchy_with_links(geography)
+  #   str = ''
+
+  #   geography.hierarchy.each do |geo|
+  #     str +=
+  #     str += ' > ' unless geo == geography.hierarchy.last
+  #   end
+
+  #   str.html_safe
+  # end
 
   def human_boolean(boolean)
     boolean ? 'Yes' : 'No'

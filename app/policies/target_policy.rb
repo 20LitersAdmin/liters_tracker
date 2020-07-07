@@ -9,8 +9,6 @@ class TargetPolicy
   end
 
   def index?
-    raise ActiveRecord::RecordNotFound if @record.empty?
-
     @user
   end
 

@@ -10,6 +10,9 @@ class AddHierarchiesToGeographies < ActiveRecord::Migration[6.0]
     add_column :villages, :hierarchy, :jsonb
     add_column :facilities, :hierarchy, :jsonb
 
+    add_column :reports, :hierarchy, :jsonb
+    add_column :plans, :hierarchy, :jsonb
+
     District.all.each do |d|
       d.update_column(:hierarchy, [{ parent_name: d.country.name, parent_type: 'Country', link: country_path(d.country) }])
     end
@@ -29,6 +32,14 @@ class AddHierarchiesToGeographies < ActiveRecord::Migration[6.0]
     Facility.all.each do |f|
       f.update_column(:hierarchy, f.village.hierarchy << { parent_name: f.village.name, parent_type: 'Village', link: village_path(f.village) })
     end
+
+    Report.all.each do |r|
+      r.update_column(:hierarchy, r.reportable.hierarchy)
+    end
+
+    Plan.all.each do |pl|
+      pl.update_column(:hierarchy, pl.planable.hierarchy)
+    end
   end
 
   def down
@@ -37,5 +48,7 @@ class AddHierarchiesToGeographies < ActiveRecord::Migration[6.0]
     remove_column :cells, :hierarchy
     remove_column :villages, :hierarchy
     remove_column :facilities, :hierarchy
+    remove_column :reports, :hierarchy
+    remove_column :plans, :hierarchy
   end
 end

@@ -1,12 +1,14 @@
 # frozen_string_literal: true
 
 class PlansController < ApplicationController
-  before_action :set_plan, only: %i[show edit update destroy]
+  before_action :set_plan, only: %i[edit update destroy]
 
-  # GET /plans
-  # GET /plans.json
-  def index
-    authorize @plans = Plan.all.includes(:contract).includes(:technology)
+  def dttb_index
+
+    respond_to do |format|
+      format.html
+      format.json { render 'index.json' }
+    end
   end
 
   # GET /plans/1

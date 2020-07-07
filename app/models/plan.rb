@@ -23,6 +23,7 @@ class Plan < ApplicationRecord
   scope :with_reports_incomplete, -> { joins(:reports).group('plans.id').having('plans.goal > SUM(reports.distributed)').select('plans.*') }
 
   after_save :find_reports
+  after_save :update_hierarchy, if: -> { saved_change_to_planable_id? || saved_change_to_planable_type? }
 
   def self.incomplete
     ary = []
@@ -126,5 +127,9 @@ class Plan < ApplicationRecord
 
     # reps.each { |rep| rep.update_column(:plan_id, id) } if reps.any?
     reps.update_all(plan_id: id) if reps.any?
+  end
+
+  def update_hierarchy
+    update_column(:hierarchy, reload.planable.hierarchy)
   end
 end

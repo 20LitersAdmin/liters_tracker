@@ -16,7 +16,7 @@ Rails.application.routes.draw do
 
   resources :contracts do
     resources :targets, only: %i[new create edit update destroy]
-    resources :plans, except: %i[new show] do
+    resources :plans, only: %i[new create edit update destroy] do
       get 'dttb_index', on: :collection
     end
   end
