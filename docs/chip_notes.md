@@ -1,7 +1,7 @@
 # CURRENT:
 
-1. Plans architecture:
-- `contracts#_plan` should be a `dttb_index` like Reports
+1. Contracts/Plans architecture:
+- How to add new plans? All those geographies...
 
 2. What about un-met plans?
 - Help Rebero see work to be accomplished by Sector
