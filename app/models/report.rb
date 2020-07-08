@@ -71,7 +71,7 @@ class Report < ApplicationRecord
     "#{reportable.name} #{reportable.class}"
   end
 
-  def sector
+  def sector_name
     reportable.sector.name || ''
   end
 

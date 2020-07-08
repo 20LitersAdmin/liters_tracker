@@ -108,6 +108,7 @@ class VillagesController < ApplicationController
   end
 
   ## sectors#reports ajax
+  ## plans#_form ajax
   def children
     render json: @village.facilities.select(:id, :name).order(:name)
   end

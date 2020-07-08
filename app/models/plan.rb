@@ -9,6 +9,9 @@ class Plan < ApplicationRecord
 
   has_many :reports, inverse_of: :plan
 
+  # form fields for _form
+  attr_accessor :district, :sector, :cell, :village, :facility
+
   scope :between,         ->(from, to) { joins(:contract).where('contracts.end_date >= ? AND contracts.start_date <= ?', from, to) }
   scope :current,         -> { where(contract_id: Contract.current) }
   scope :nearest_to_date, ->(date) { joins(:contract).where('contracts.end_date >= ?', date).order(:created_at) }
@@ -51,7 +54,7 @@ class Plan < ApplicationRecord
   end
 
   def links
-    "<a class='btn yellow small' href='/contracts/#{contract_id}/plans/#{id}/edit'>Edit</a> <a data-confirm='Are you sure?' class='btn red small' rel='nofollow' data-method='delete' href='/contracts/#{contract_id}/reports/#{id}'>Delete</a>".html_safe
+    "<a class='btn blue small' href='/contracts/#{contract_id}/plans/#{id}/edit'>Edit</a> <a data-confirm='Are you sure?' class='btn red small' rel='nofollow' data-method='delete' href='/contracts/#{contract_id}/reports/#{id}'>Delete</a>".html_safe
   end
 
   def self.related_facilities

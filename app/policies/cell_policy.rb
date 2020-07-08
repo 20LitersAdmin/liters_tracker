@@ -39,6 +39,6 @@ class CellPolicy
   end
 
   def children?
-    @user&.geography_manager? || @user&.reports_manager?
+    new?
   end
 end

@@ -45,6 +45,6 @@ class SectorPolicy
   end
 
   def children?
-    @user&.geography_manager?
+    new?
   end
 end

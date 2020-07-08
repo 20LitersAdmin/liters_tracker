@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 class DistrictsController < ApplicationController
-  before_action :set_district, only: %i[show edit update destroy]
+  before_action :set_district, only: %i[show edit update destroy children]
 
   # GET /districts
   def index
@@ -89,6 +89,13 @@ class DistrictsController < ApplicationController
       format.html { redirect_to districts_url, notice: 'District was successfully destroyed.' }
       format.json { head :no_content }
     end
+  end
+
+  ## facilities#_form ajax
+  ## plans#_form ajax
+  ## sectors#report ajax
+  def children
+    render json: @district.sectors.select(:id, :name).order(:name)
   end
 
   private

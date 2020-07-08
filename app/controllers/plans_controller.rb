@@ -2,7 +2,7 @@
 
 class PlansController < ApplicationController
   before_action :set_plan, only: %i[edit update destroy]
-  before_action :set_contract, only: %i[new create dttb_index]
+  before_action :set_contract, only: %i[edit new create dttb_index]
 
   def dttb_index
     authorize @plans = @contract.plans.includes(:technology).order(date: :asc)
@@ -25,11 +25,17 @@ class PlansController < ApplicationController
 
   # GET /plans/1/edit
   def edit
+    @technologies = Technology.report_worthy.pluck(:name, :id)
+    @min_date = @contract.start_date
+    @max_date = @contract.end_date
+
+    console
   end
 
   # POST /plans
   # POST /plans.json
   def create
+    # check for duplicates!!
     authorize @plan = Plan.new(plan_params)
 
     respond_to do |format|

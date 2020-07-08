@@ -35,4 +35,8 @@ class DistrictPolicy
   def destroy?
     @user&.admin?
   end
+
+  def children?
+    new?
+  end
 end

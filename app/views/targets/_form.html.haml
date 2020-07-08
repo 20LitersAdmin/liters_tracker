@@ -15,9 +15,8 @@
     .col.field
       = f.input :people_goal
   .row.my-3.actions
-    .col.text-right
+    .col
       = f.button :submit, class: 'btn yellow'
-    .col.text-left
-      = link_to 'Back', @return_path, class: 'btn empty'
+      = link_to 'Back', @return_path, class: 'btn blue'
       - if @target.persisted?
-        = link_to 'Delete Target', contract_target_path(@contract, @target), method: :delete, class: 'btn red', data: { confirm: 'Are you sure you want to DELETE the target?' }
+        = link_to 'Delete', contract_target_path(@contract, @target), method: :delete, class: 'btn red', data: { confirm: 'Are you sure you want to DELETE the target?' }

@@ -12,7 +12,6 @@ $(document).on 'turbolinks:load', ->
   # 4. Ensure another button exists with same id prepended by 'hide_' and the same 'global-btn' class (e.g. 'hide_report_section')
   # 5. Choose which button will be hidden first by adding the class 'start-hidden'
   ###
-
   $('.global-toggle-btn.start-hidden').hide()
 
   idParser = (idStr) ->

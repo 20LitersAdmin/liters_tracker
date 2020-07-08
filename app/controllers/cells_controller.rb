@@ -87,6 +87,7 @@ class CellsController < ApplicationController
 
   ## facilities#form and facilities#modal_form ajax
   ## sectors#reports ajax
+  ## plans#_form ajax
   def children
     render json: @cell.villages.select(:id, :name).order(:name)
   end

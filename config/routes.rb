@@ -24,7 +24,9 @@ Rails.application.routes.draw do
   resources :technologies
 
   resources :countries
-  resources :districts
+  resources :districts do
+    get 'children', on: :member
+  end
   resources :sectors do
     get 'select', on: :collection
     get 'report', on: :member

@@ -14,23 +14,23 @@ class AddHierarchiesToGeographies < ActiveRecord::Migration[6.0]
     add_column :plans, :hierarchy, :jsonb
 
     District.all.each do |d|
-      d.update_column(:hierarchy, [{ parent_name: d.country.name, parent_type: 'Country', link: country_path(d.country) }])
+      d.update_column(:hierarchy, [{ parent_id: d.country.id, parent_name: d.country.name, parent_type: 'Country', link: country_path(d.country) }])
     end
 
     Sector.all.each do |s|
-      s.update_column(:hierarchy, s.district.hierarchy << { parent_name: s.district.name, parent_type: 'District', link: district_path(s.district) })
+      s.update_column(:hierarchy, s.district.hierarchy << { parent_id: s.district.id, parent_name: s.district.name, parent_type: 'District', link: district_path(s.district) })
     end
 
     Cell.all.each do |c|
-      c.update_column(:hierarchy, c.sector.hierarchy << { parent_name: c.sector.name, parent_type: 'Sector', link: sector_path(c.sector) })
+      c.update_column(:hierarchy, c.sector.hierarchy << { parent_id: c.sector.id, parent_name: c.sector.name, parent_type: 'Sector', link: sector_path(c.sector) })
     end
 
     Village.all.each do |v|
-      v.update_column(:hierarchy, v.cell.hierarchy << { parent_name: v.cell.name, parent_type: 'Cell', link: cell_path(v.cell) })
+      v.update_column(:hierarchy, v.cell.hierarchy << { parent_id: v.cell.id, parent_name: v.cell.name, parent_type: 'Cell', link: cell_path(v.cell) })
     end
 
     Facility.all.each do |f|
-      f.update_column(:hierarchy, f.village.hierarchy << { parent_name: f.village.name, parent_type: 'Village', link: village_path(f.village) })
+      f.update_column(:hierarchy, f.village.hierarchy << { parent_id: f.village.id, parent_name: f.village.name, parent_type: 'Village', link: village_path(f.village) })
     end
 
     Report.all.each do |r|

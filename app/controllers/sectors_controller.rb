@@ -121,7 +121,8 @@ class SectorsController < ApplicationController
     end
   end
 
-  ## facilities#form ajax
+  ## facilities#_form ajax
+  ## plans#_form ajax
   ## sectors#report ajax
   def children
     render json: @sector.cells.select(:id, :name).order(:name)
