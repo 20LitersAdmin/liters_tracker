@@ -34,6 +34,19 @@ class FacilitiesController < ApplicationController
   # GET /facilities/new
   def new
     authorize @facility = Facility.new
+
+    # "blank" geographies for selected values on select fields
+    @district = District.new
+    @sector = Sector.new
+    @cell = Cell.new
+    @village = Village.new
+
+    # default collections
+    @districts = District.order(:name)
+    @sectors = [['Please select a District', '0']]
+    @cells = [['Please select a Sector', '0']]
+    @villages = [['Please select a Cell', '0']]
+    @facilities = [['Please select a Village', '0']]
   end
 
   # GET /facilities/1/edit
@@ -50,20 +63,27 @@ class FacilitiesController < ApplicationController
 
     respond_to do |format|
       if @facility.save
-        format.html do
-          flash[:success] = 'Facility was successfully created.'
-          redirect_to data_path
-        end
-        format.js do
-          render :facility_created
-        end
+        format.html { redirect_to @return_path, success: 'Facility was successfully created.' }
+        format.js { render :facility_created }
       else
-        format.html do
-          render :new
+        if @facility.village.nil?
+          flash[:danger] = 'No village was selected, please try again'
+          redirect_to new_facility_path and return
         end
-        format.js do
-          render :facility_error
-        end
+        # pre-populate select fields on error using current planable
+        @district = @facility.district
+        @sector = @facility.sector
+        @cell = @facility.cell
+        @village = @facility.village
+
+        # default collections
+        @districts = District.order(:name).pluck(:name, :id)
+        @sectors = @facility.sectors&.pluck(:name, :id)
+        @cells = @facility.cells&.pluck(:name, :id)
+        @villages = @facility.villages&.pluck(:name, :id)
+
+        format.html { render :new }
+        format.js { render :facility_error }
       end
     end
   end

@@ -25,6 +25,8 @@ class Plan < ApplicationRecord
   scope :without_reports,         -> { left_outer_joins(:reports).where(reports: { id: nil }) }
   scope :with_reports_incomplete, -> { joins(:reports).group('plans.id').having('plans.goal > SUM(reports.distributed)').select('plans.*') }
 
+  before_validation :add_error_to_district_field, if: -> { planable_type.blank? || planable_id.blank? }
+
   after_save :find_reports
   after_save :update_hierarchy, if: -> { saved_change_to_planable_id? || saved_change_to_planable_type? }
 
@@ -50,6 +52,8 @@ class Plan < ApplicationRecord
   end
 
   def date
+    return unless self.persisted?
+
     read_attribute(:date) || contract.end_date
   end
 
@@ -122,6 +126,10 @@ class Plan < ApplicationRecord
   end
 
   private
+
+  def add_error_to_district_field
+    errors.add(:district, ': No geography selected')
+  end
 
   def find_reports
     # edge case: reports have been created without a plan_id

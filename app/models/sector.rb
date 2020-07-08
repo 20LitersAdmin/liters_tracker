@@ -19,12 +19,27 @@ class Sector < ApplicationRecord
 
   after_save :update_hierarchy, if: -> { saved_change_to_district_id? }
 
+  def cell
+    # Report and Plan want to be able to call any geography
+    nil
+  end
+
   def child_class
     'Cell'
   end
 
+  def districts
+    # Report and Plan want to be able to call any geography
+    district&.parent&.districts
+  end
+
   def parent
     district
+  end
+
+  def facility
+    # Report and Plan want to be able to call any geography
+    nil
   end
 
   def related_plans
@@ -50,6 +65,16 @@ class Sector < ApplicationRecord
 
   def sector
     self
+  end
+
+  def sectors
+    # Report and Plan want to be able to call any geography
+    parent&.sectors
+  end
+
+  def village
+    # Report and Plan want to be able to call any geography
+    nil
   end
 
   def update_hierarchy(cascade: false)

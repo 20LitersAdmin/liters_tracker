@@ -22,8 +22,32 @@ class Facility < ApplicationRecord
 
   after_save :update_hierarchy, if: -> { saved_change_to_village_id? }
 
+  def cells
+    # Report and Plan want to be able to call any geography
+    cell&.parent&.cells
+  end
+
+  def districts
+    # Report and Plan want to be able to call any geography
+    district&.parent&.districts
+  end
+
+  def facility
+    # Report and Plan want to be able to call any geography
+    self
+  end
+
+  def facilities
+    # Report and Plan want to be able to call any geography
+    parent&.facilities
+  end
+
   def impact
     population.to_i + (households.to_i * Constants::Population::HOUSEHOLD_SIZE)
+  end
+
+  def parent
+    village
   end
 
   # Even though facilities don't have any children,
@@ -42,17 +66,19 @@ class Facility < ApplicationRecord
     Story.joins(:report).where("reports.reportable_type = 'Facility' AND reports.reportable_id = ?", id)
   end
 
-  def facility
-    self
-  end
-
-  def parent
-    village
+  def sectors
+    # Report and Plan want to be able to call any geography
+    sector&.parent&.sectors
   end
 
   def update_hierarchy
     update_column(:hierarchy, village.hierarchy << { parent_name: village.name, parent_type: village.class.to_s, link: village_path(village) })
 
     reload
+  end
+
+  def villages
+    # Report and Plan want to be able to call any geography
+    village&.parent&.villages
   end
 end

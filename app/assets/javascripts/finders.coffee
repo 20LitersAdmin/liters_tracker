@@ -1,29 +1,88 @@
-$(document).on 'turbolinks:load', ->
-  return unless controllerMatches(['facilities', 'sectors', 'reports']) &&
-    actionMatches(['new', 'edit', 'create', 'update', 'report'])
+# $(document).on 'turbolinks:load', ->
+#   return unless controllerMatches(['facilities', 'sectors', 'reports', 'plans']) &&
+#     actionMatches(['new', 'edit', 'create', 'update', 'report'])
 
-  # AJAX look up child objects from a parent
-  # e.g. /sectors/2/children
-  # returns a select_field ready array of [:id, :name]
+### Global linked-select fields for geography lookups
+## Setup: Ensure that:
+# HTML Body tag has data-action and data-controller values. e.g.:
+#   <body data-action="show" data-controller="contracts">
+#
+# Select fields are ID'd in the following format: '#{controller}_{geography}'. e.g.:
+#   '#contract_sector', '#plan_village'
+#
+# All geography controllers (except the last child) have a `/children` collection method
+#   that returns the immediate children's name and id in a JSON colleciton. e.g.:
+#   class DistrictsController
+#     def children
+#       render json: @district.sectors.select(:id, :name).order(:name)
+#     end
+#   end
+#
+# For polymorphic models: form has hidden fields for the polymorphic attributes: [name, id], e.g.:
+#   = f.input :planable_id, as: :hidden
+#   = f.input :planable_type, as: :hidden
+#
+## Usage:
+# Place these calls in the apropriate files. e.g.:
+# plans.coffee:
+# $('#plan_district').on 'change', ->
+#   # to update linked select fields
+#   LinkedSelect.updateChildSelectors($(this))
+#   # to update polymorphic hidden fields
+#   LinkedSelect.assessPolymorphics($(this))
+###
 
-  resetOptions = (target)->
-    refParent = {
-      cell: 'sector',
-      village: 'cell',
-      reportable_id: 'village'
-    }
-    targetName = target.attr('id').substr(target.attr('id').indexOf('_')+1)
-    target.html('')
-    target.append('<option></option>')
-    $(target).append('<option disabled="disabled" value="0">Please select a ' + refParent[targetName] + '</option>')
+class LinkedSelect
+  # main functions
+  @updateChildSelectors = (trigger)->
+    target = findTarget(trigger)
+    resetChildrenOptions(trigger)
+    if trigger.val() > 0
+      ajaxGeography(trigger, target)
+    else
 
-  ajaxGeography = (parentType, parentId, target)->
-    # parentType = [sectors, cells, villages]
-    # parentId = int
-    # "/sectors/#{id}/children" returns cells
-    # "/cells/#{id}/children" returns villages
-    # "/villages/#{id}/children" returns facilities
+  @assessPolymorphics = (trigger)->
+    if ['', '0'].includes(trigger.val())
+      findLowestSelectedOption()
+    else
+      setPolymorphics(trigger)
 
+  # support functions
+  refParent = {
+    sector: 'District',
+    cell: 'Sector',
+    village: 'Cell',
+    facility: 'Village'
+  }
+
+  refChild = {
+    district: 'Sector',
+    sector: 'Cell',
+    cell: 'Village',
+    village: 'Facility'
+  }
+
+  refChildren = {
+    all: ['district', 'sector', 'cell', 'village', 'facility' ],
+    district: ['facility', 'village', 'cell', 'sector'],
+    sector: ['facility', 'village', 'cell'],
+    cell: ['facility', 'village'],
+    village: ['facility']
+  }
+
+  refPlurals = {
+    districts: 'district'
+    sectors: 'sector'
+    cells: 'cell'
+    villages: 'village'
+    facilities: 'facility'
+    plans: 'plan'
+    reports: 'report'
+  }
+
+  ajaxGeography = (trigger, target)->
+    parentType = parseId(trigger.attr('id')) + 's'
+    parentId = trigger.val()
     uri = '/' + parentType + '/' + parentId + '/children'
     $.ajax(
       url: uri
@@ -33,162 +92,114 @@ $(document).on 'turbolinks:load', ->
   appendOptionLoop = (record, target)->
     target.append('<option value="' + record.id + '">' + record.name + '</option>')
 
+  controllerName = ()->
+    plural = $('body').attr('data-controller')
+    refPlurals[plural]
+
+  findLowestSelectedOption = ()->
+    setPolymorphics(findTargetFromName(targetName)) for targetName in refChildren['all']
+
+  findTarget = (trigger)->
+    triggerId = parseId(trigger.attr('id'))
+    targetId = '#' + controllerName() + '_' + refChild[triggerId].toLowerCase()
+    target = $(targetId)
+
+  findTargetFromName = (name)->
+    $('#' + controllerName() + '_' + name)
+
+  parseId = (id) ->
+    controller = controllerName() + '_'
+    id.replace(controller, '')
+
   prepareOptions = (target, records)->
     target.html('')
     target.append('<option></option>')
     appendOptionLoop(record, target) for record in records
 
+  resetChildrenOptions = (trigger)->
+    triggerId = parseId(trigger.attr('id'))
+    resetOptions(findTargetFromName(targetName)) for targetName in refChildren[triggerId]
 
-  # called from facilities#new
-  $('#facility_sector').on 'change', ->
-    sectorId = $(this).val()
-    villageTarget = $('#facility_village')
-    resetOptions(villageTarget)
-    cellTarget = $('#facility_cell')
-    if sectorId > 0
-      ajaxGeography('sectors', sectorId, cellTarget)
-    else
-      resetOptions(cellTarget)
+  resetOptions = (target)->
+    return if target.length == 0 || ['', '0'].includes(target.val())
 
-  # called from facilities#new && sectors#report:facilities/_modal_form
-  $('#facility_cell').on 'change', ->
-    cellId = $(this).val()
-    target = $('#facility_village')
-    resetOptions(target)
-    if cellId > 0
-      ajaxGeography('cells', cellId, target)
+    targetName = parseId(target.attr('id'))
+    target.html('')
+    target.append('<option></option>')
+    $(target).append('<option disabled="disabled" value="0">Please select a ' + refParent[targetName] + '</option>')
 
-  # called from sectors#report:_village_form && _facility_form
-  $('#report_cell').on 'change', ->
-    cellId = $(this).val()
-    villageTarget = $('#report_village')
-    facilityTarget = $('#report_reportable_id')
-    resetOptions(facilityTarget)
-    if cellId > 0
-      ajaxGeography('cells', cellId, villageTarget)
-    else
-      resetOptions(villageTarget)
+  setPolymorphics = (source)->
+    return if ['', '0'].includes(source.val()) && !source.attr('id').includes('district')
 
-  # called from sectors#report:_facility_form
-  $('#report_village').on 'change', ->
-    villageId = $(this).val()
-    target = $('#report_reportable_id')
-    resetOptions(target)
-    if villageId > 0
-      ajaxGeography('villages', villageId, target)
+    typeLowercase = parseId(source.attr('id'))
+    type = typeLowercase[0].toUpperCase() + typeLowercase.substring(1)
+    id = source.val()
+    polyName = '#' + controllerName() + '_' + controllerName()
+    $(polyName + 'able_type').val(type)
+    $(polyName + 'able_id').val(id)
 
+root              = exports ? this
+root.LinkedSelect = LinkedSelect
 
-## LEAVING THIS FOR POSTERITY
-## A more universal approach to the above
-# linked select dropdowns
-# refParent = {
-#   sector: 'District',
-#   cell: 'Sector',
-#   village: 'Cell',
-#   facility: 'Village'
-# }
+  ## OLD VERSION
 
-# refChild = {
-#   district: 'Sector',
-#   sector: 'Cell',
-#   cell: 'Village',
-#   village: 'Facility'
-# }
+  # resetOptions = (target)->
+  #   refParent = {
+  #     cell: 'sector',
+  #     village: 'cell',
+  #     reportable_id: 'village'
+  #   }
+  #   targetName = target.attr('id').substr(target.attr('id').indexOf('_')+1)
+  #   target.html('')
+  #   target.append('<option></option>')
+  #   $(target).append('<option disabled="disabled" value="0">Please select a ' + refParent[targetName] + '</option>')
 
-# refChildren = {
-#   all: ['facility', 'village', 'cell', 'sector', 'district'],
-#   district: ['facility', 'village', 'cell', 'sector'],
-#   sector: ['facility', 'village', 'cell'],
-#   cell: ['facility', 'village'],
-#   village: ['facility']
-# }
+  # ajaxGeography = (parentType, parentId, target)->
+  #   # parentType = [sectors, cells, villages]
+  #   # parentId = int
+  #   # "/sectors/#{id}/children" returns cells
+  #   # "/cells/#{id}/children" returns villages
+  #   # "/villages/#{id}/children" returns facilities
 
-# updateChildSelectors = (trigger)->
-#   target = findTarget(trigger)
-#   resetChildrenOptions(trigger)
-#   if trigger.val() > 0
-#     ajaxGeography(trigger, target)
-#   else
+  #   uri = '/' + parentType + '/' + parentId + '/children'
+  #   $.ajax(
+  #     url: uri
+  #   ).done (response) ->
+  #     prepareOptions(target, response)
+
+  # appendOptionLoop = (record, target)->
+  #   target.append('<option value="' + record.id + '">' + record.name + '</option>')
+
+  # prepareOptions = (target, records)->
+  #   target.html('')
+  #   target.append('<option></option>')
+  #   appendOptionLoop(record, target) for record in records
 
 
-# ajaxGeography = (trigger, target)->
-#   # trigger is the select dropdown that fired the on 'change' event
-#   # parentType = [districts, sectors, cells, villages]
-#   # parentId = int
-#   # e.g. "/sectors/#{id}/children" returns cells
-#   parentType = parseId(trigger.attr('id')) + 's'
-#   parentId = trigger.val()
-#   uri = '/' + parentType + '/' + parentId + '/children'
-#   $.ajax(
-#     url: uri
-#   ).done (response) ->
-#     prepareOptions(target, response)
 
-# appendOptionLoop = (record, target)->
-#   target.append('<option value="' + record.id + '">' + record.name + '</option>')
+  # # called from facilities#new && sectors#report:facilities/_modal_form
+  # $('#facility_cell').on 'change', ->
+  #   cellId = $(this).val()
+  #   target = $('#facility_village')
+  #   resetOptions(target)
+  #   if cellId > 0
+  #     ajaxGeography('cells', cellId, target)
 
-# findTarget = (trigger)->
-#   triggerId = parseId(trigger.attr('id'))
-#   targetId = '#plan_' + refChild[triggerId].toLowerCase()
-#   target = $(targetId)
+  # # called from sectors#report:_village_form && _facility_form
+  # $('#report_cell').on 'change', ->
+  #   cellId = $(this).val()
+  #   villageTarget = $('#report_village')
+  #   facilityTarget = $('#report_reportable_id')
+  #   resetOptions(facilityTarget)
+  #   if cellId > 0
+  #     ajaxGeography('cells', cellId, villageTarget)
+  #   else
+  #     resetOptions(villageTarget)
 
-# findTargetFromName = (name)->
-#   $('#plan_' + name)
-
-# parseId = (id) ->
-#   id.replace('plan_', '')
-
-# prepareOptions = (target, records)->
-#   target.html('')
-#   target.append('<option></option>')
-#   appendOptionLoop(record, target) for record in records
-
-# resetChildrenOptions = (trigger)->
-#   triggerId = parseId(trigger.attr('id'))
-#   resetOptions(findTargetFromName(targetName)) for targetName in refChildren[triggerId]
-
-# resetOptions = (target)->
-#   return if ['', '0'].includes(target.val())
-
-#   targetName = parseId(target.attr('id'))
-#   target.html('')
-#   target.append('<option></option>')
-#   $(target).append('<option disabled="disabled" value="0">Please select a ' + refParent[targetName] + '</option>')
-
-# assessPlanables = (trigger)->
-#   if ['', '0'].includes(trigger.val())
-#     findLowestSelectedOption
-#   else
-#     setPlanables(trigger)
-
-# setPlanables = (source)->
-#   return if ['', '0'].includes(source.val())
-
-#   typeLowercase = parseId(source.attr('id'))
-#   type = typeLowercase[0].toUpperCase() + typeLowercase.substring(1)
-#   id = source.val()
-#   $('#plan_planable_type').val(type)
-#   $('#plan_planable_id').val(id)
-
-# findLowestSelectedOption = ()->
-#   setPlanables(findTargetFromName(targetName)) for targetName in refChildren[all]
-
-
-# $('#plan_district.plan-form').on 'change', ->
-#   updateChildSelectors($(this))
-#   setPlanables($(this))
-
-# $('#plan_sector.plan-form').on 'change', ->
-#   updateChildSelectors($(this))
-#   setPlanables($(this))
-
-# $('#plan_cell.plan-form').on 'change', ->
-#   updateChildSelectors($(this))
-#   setPlanables($(this))
-
-# $('#plan_village.plan-form').on 'change', ->
-#   updateChildSelectors($(this))
-#   setPlanables($(this))
-
-# $('#plan_facility.plan-form').on 'change', ->
-#   setPlanables($(this))
+  # # called from sectors#report:_facility_form
+  # $('#report_village').on 'change', ->
+  #   villageId = $(this).val()
+  #   target = $('#report_reportable_id')
+  #   resetOptions(target)
+  #   if villageId > 0
+  #     ajaxGeography('villages', villageId, target)

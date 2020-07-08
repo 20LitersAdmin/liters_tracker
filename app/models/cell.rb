@@ -20,8 +20,27 @@ class Cell < ApplicationRecord
 
   after_save :update_hierarchy, if: -> { saved_change_to_sector_id? }
 
+  def cell
+    self
+  end
+
+  def cells
+    # Report and Plan want to be able to call any geography
+    parent&.cells
+  end
+
   def child_class
     'Village'
+  end
+
+  def districts
+    # Report and Plan want to be able to call any geography
+    district&.parent&.districts
+  end
+
+  def facility
+    # Report and Plan want to be able to call any geography
+    nil
   end
 
   def parent
@@ -46,12 +65,13 @@ class Cell < ApplicationRecord
          .or(Story.joins(:report).where("reports.reportable_type = 'Facility' AND reports.reportable_id IN (?)", facilities.pluck(:id)))
   end
 
-  def cell
-    self
+  def sectors
+    # Report and Plan want to be able to call any geography
+    sector&.parent&.sectors
   end
 
   def village
-    # some views assume all reports are at the village level
+    # Report and Plan want to be able to call any geography
     nil
   end
 

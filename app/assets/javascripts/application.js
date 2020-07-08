@@ -21,6 +21,7 @@
 //= require moment
 //= require tempusdominus-bootstrap-4.js
 //= require tinymce
+//= require finders
 //= require_tree .
 
 function getParameterByName(name, url) {

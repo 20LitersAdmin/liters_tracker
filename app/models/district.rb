@@ -19,8 +19,22 @@ class District < ApplicationRecord
 
   after_save :update_hierarchy, if: -> { saved_change_to_country_id? }
 
+  def cell
+    # Report and Plan want to be able to call any geography
+    nil
+  end
+
   def child_class
     'Sector'
+  end
+
+  def district
+    self
+  end
+
+  def facility
+    # Report and Plan want to be able to call any geography
+    nil
   end
 
   def parent
@@ -51,6 +65,11 @@ class District < ApplicationRecord
          .or(Story.joins(:report).where("reports.reportable_type = 'Facility' AND reports.reportable_id IN (?)", facilities.pluck(:id)))
   end
 
+  def sector
+    # Report and Plan want to be able to call any geography
+    nil
+  end
+
   def update_hierarchy(cascade: false)
     update_column(:hierarchy, [{ parent_name: parent.name, parent_type: parent.class.to_s, link: country_path(country) }])
 
@@ -59,5 +78,10 @@ class District < ApplicationRecord
     reload.sectors.each do |s|
       s.reload.update_hierarchy(cascade: true)
     end
+  end
+
+  def village
+    # Report and Plan want to be able to call any geography
+    nil
   end
 end

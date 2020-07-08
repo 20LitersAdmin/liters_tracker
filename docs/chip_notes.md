@@ -1,7 +1,13 @@
 # CURRENT:
+0. Implementing the new global linked-select fields in finders.coffee
+- facility modal
+- report forms
+- look for all `collection: ` references in views
+
+0. New model tests in geographies (Report and Plan want to be able to call any geography)
 
 1. Contracts/Plans architecture:
-- How to add new plans? All those geographies...
+- Plans#edit form will need some work in controller for geographies, right?
 
 2. What about un-met plans?
 - Help Rebero see work to be accomplished by Sector

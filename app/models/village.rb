@@ -24,8 +24,29 @@ class Village < ApplicationRecord
     'Facility'
   end
 
+  def cells
+    # Report and Plan want to be able to call any geography
+    cell&.parent&.cells
+  end
+
+  def districts
+    # Report and Plan want to be able to call any geography
+    district&.parent&.districts
+  end
+
+  def facility
+    # Report and Plan want to be able to call any geography
+    nil
+  end
+
   def parent
     cell
+  end
+
+  def pop_hh
+    pop = population.present? ? ActiveSupport::NumberHelper.number_to_delimited(population, delimiter: ',') : '-'
+    hh = households.present? ? ActiveSupport::NumberHelper.number_to_delimited(households, delimiter: ',') : '-'
+    "#{pop} / #{hh}"
   end
 
   def related_plans
@@ -43,14 +64,18 @@ class Village < ApplicationRecord
          .or(Story.joins(:report).where("reports.reportable_type = 'Facility' AND reports.reportable_id IN (?)", facilities.pluck(:id)))
   end
 
-  def pop_hh
-    pop = population.present? ? ActiveSupport::NumberHelper.number_to_delimited(population, delimiter: ',') : '-'
-    hh = households.present? ? ActiveSupport::NumberHelper.number_to_delimited(households, delimiter: ',') : '-'
-    "#{pop} / #{hh}"
+  def sectors
+    # Report and Plan want to be able to call any geography
+    sectors&.parent&.sectors
   end
 
   def village
     self
+  end
+
+  def villages
+    # Report and Plan want to be able to call any geography
+    parent&.villages
   end
 
   def update_hierarchy(cascade: false)

@@ -21,6 +21,24 @@ class PlansController < ApplicationController
   # GET /plans/new
   def new
     authorize @plan = Plan.new
+
+    @technologies = Technology.report_worthy.pluck(:name, :id)
+    @min_date = @contract.start_date
+    @max_date = @contract.end_date
+
+    # "blank" geographies for selected values on select fields
+    @district = District.new
+    @sector = Sector.new
+    @cell = Cell.new
+    @village = Village.new
+    @facility = Facility.new
+
+    # default collections
+    @districts = District.order(:name)
+    @sectors = [['Please select a District', '0']]
+    @cells = [['Please select a Sector', '0']]
+    @villages = [['Please select a Cell', '0']]
+    @facilities = [['Please select a Village', '0']]
   end
 
   # GET /plans/1/edit
@@ -28,8 +46,6 @@ class PlansController < ApplicationController
     @technologies = Technology.report_worthy.pluck(:name, :id)
     @min_date = @contract.start_date
     @max_date = @contract.end_date
-
-    console
   end
 
   # POST /plans
@@ -43,8 +59,29 @@ class PlansController < ApplicationController
         format.html { redirect_to @plan, notice: 'Plan was successfully created.' }
         format.json { render :show, status: :created, location: @plan }
       else
+        @technologies = Technology.report_worthy.pluck(:name, :id)
+        @min_date = @contract.start_date
+        @max_date = @contract.end_date
+
+        # pre-populate select fields on error using current planable
+        @location = @plan.planable
+        @district = @location.district
+        @sector = @location.sector
+        @cell = @location.cell
+        @village = @location.village
+        @facility = @location.facility
+
+        # default collections
+        @districts = District.order(:name).pluck(:name, :id)
+        @sectors = @location.sectors&.pluck(:name, :id)
+        @cells = @location.cells&.pluck(:name, :id)
+        @villages = @location.villages&.pluck(:name, :id)
+        @facilities = @location.facilities&.pluck(:name, :id)
+
         format.html { render :new }
         format.json { render json: @plan.errors, status: :unprocessable_entity }
+
+        console
       end
     end
   end
