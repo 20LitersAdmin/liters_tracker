@@ -1,32 +1,49 @@
-# $(document).on 'turbolinks:load', ->
-#   return unless controllerMatches(['facilities', 'sectors', 'reports', 'plans']) &&
-#     actionMatches(['new', 'edit', 'create', 'update', 'report'])
-
-### Global linked-select fields for geography lookups
+### Global linked select fields for geography lookups
 ## Setup: Ensure that:
-# 1. The parent form is ID'd in the following format: '#{action}_{model}'. e.g.:
-#   '#new_plan', '#edit_facility'
-#
-# 2. Select fields are ID'd in the following format: '#{model}_{geography}'. e.g.:
-#   '#plan_village', '#village_sector'
-#
-# 3. For polymorphic models: form has hidden fields for the polymorphic attributes: [name, id], e.g.:
-#   = f.input :planable_id, as: :hidden
-#   = f.input :planable_type, as: :hidden
-#
+1. The parent form is ID'd in the following format: '#{action}_{model}'. e.g.:
+  '#new_plan', '#edit_facility'
+
+2. Select fields are ID'd in the following format: '#{model}_{geography}'. e.g.:
+  '#plan_village', '#village_sector'
+
+3. Polymorphic models:
+  A. form has hidden fields for the polymorphic attributes: [name, id], e.g.:
+    = f.input :planable_id, as: :hidden
+    = f.input :planable_type, as: :hidden (_type can be skipped and set in the controller if needed)
+  B. If a specific geography is required, it is tagged as such, e.g.:
+    Reports related to a 'Community' technology have to be tied to a Facility
+
 ## Usage:
-# Place these calls in the apropriate files. e.g.:
-#   plans.coffee:
-#   $('#plan_district').on 'change', ->
-#     # to update linked select fields
-#     LinkedSelect.updateChildSelectors($(this))
-#     # to update polymorphic hidden fields
-#     LinkedSelect.assessPolymorphics($(this))
+Place these calls in the apropriate files.
+
+LinkedSelect.updateChildSelectors($(this)):
+- Finds the next child geography select field and populate its
+
+LinkedSelect.assessPolymorphics($(this)):
+- Decides what to put in the polymorphic fields
+
+LinkedSelect.clearPolymorphics($(this), scope):
+- Force-clears one or both of the polymorphic fields
+- scope is one of these: ['id', 'type', 'both']
+
+LinkedSelect.forcePolymorphics($(this), scope):
+- Force-sets one or both of the polymorphic fields
+- scope is one of these: ['id', 'type', 'both']
+
+e.g.:
+  plans.coffee:
+  $('#plan_district').on 'change', ->
+    LinkedSelect.updateChildSelectors($(this))
+    LinkedSelect.assessPolymorphics($(this))
 #
-#   facilities.coffee:
-#   $('#facility_cell').on 'change', ->
-#     # to update linked select fields
-#     LinkedSelect.updateChildSelectors($(this))
+  facilities.coffee:
+  $('#facility_cell').on 'change', ->
+    LinkedSelect.updateChildSelectors($(this))
+
+    if ['', '0'].includes($(this).val())
+      LinkedSelect.clearPolymorphics($(this), 'both')
+    else
+      LinkedSelect.forcePolymorphics($(this), 'id')
 ###
 
 class LinkedSelect
@@ -45,6 +62,43 @@ class LinkedSelect
       findLowestSelectedOption(trigger)
     else
       setPolymorphics(trigger)
+
+  @clearPolymorphics = (source, scope)->
+    # scope can be 'id', 'type', or 'both'
+    # skip for missing sources
+    return unless source.length > 0
+
+    model = modelName(source.attr('id'))
+    # Only the Report and Plan models have polymorphic fields
+    return unless ['report', 'plan'].includes(model)
+
+    polyName = '#' + model + '_' + model
+
+    if ['id', 'both'].includes(scope)
+      $(polyName + 'able_id').val('')
+
+    if ['type', 'both'].includes(scope)
+      $(polyName + 'able_type').val('')
+
+  @forcePolymorphics = (source, scope)->
+    # scope can be 'id', 'type', or 'both'
+    # skip for missing sources
+    return unless source.length > 0
+
+    model = modelName(source.attr('id'))
+    # Only the Report and Plan models have polymorphic fields
+    return unless ['report', 'plan'].includes(model)
+
+    typeLowercase = geographyName(source.attr('id'))
+    type = typeLowercase[0].toUpperCase() + typeLowercase.substring(1)
+    id = source.val()
+    polyName = '#' + modelName(source.attr('id')) + '_' + modelName(source.attr('id'))
+
+    if ['id', 'both'].includes(scope)
+      $(polyName + 'able_id').val(id)
+
+    if ['type', 'both'].includes(scope)
+      $(polyName + 'able_type').val(type)
 
   # support functions
   refParent = {
@@ -127,8 +181,11 @@ class LinkedSelect
     $(target).append('<option disabled="disabled" value="0">Please select a ' + refParent[targetGeo] + '</option>')
 
   setPolymorphics = (source)->
+    # skip for missing sources
+    return unless source.length > 0
+
     # Dont' set the polymorphic fields if the source field is being set to nil
-    # or if the source field is a District (the higest geography)
+    # and the source field is not a District (the highest geography)
     return if ['', '0'].includes(source.val()) && !source.attr('id').includes('district')
 
     typeLowercase = geographyName(source.attr('id'))
@@ -141,32 +198,3 @@ class LinkedSelect
 root              = exports ? this
 root.LinkedSelect = LinkedSelect
 
-
-# Other places to be reformatted:
-
-  # # called from facilities#new && sectors#report:facilities/_modal_form
-  # $('#facility_cell').on 'change', ->
-  #   cellId = $(this).val()
-  #   target = $('#facility_village')
-  #   resetOptions(target)
-  #   if cellId > 0
-  #     ajaxGeography('cells', cellId, target)
-
-  # # called from sectors#report:_village_form && _facility_form
-  # $('#report_cell').on 'change', ->
-  #   cellId = $(this).val()
-  #   villageTarget = $('#report_village')
-  #   facilityTarget = $('#report_reportable_id')
-  #   resetOptions(facilityTarget)
-  #   if cellId > 0
-  #     ajaxGeography('cells', cellId, villageTarget)
-  #   else
-  #     resetOptions(villageTarget)
-
-  # # called from sectors#report:_facility_form
-  # $('#report_village').on 'change', ->
-  #   villageId = $(this).val()
-  #   target = $('#report_reportable_id')
-  #   resetOptions(target)
-  #   if villageId > 0
-  #     ajaxGeography('villages', villageId, target)

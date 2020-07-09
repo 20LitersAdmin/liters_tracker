@@ -65,10 +65,35 @@ $(document).on 'turbolinks:load', ->
       setPolymorphic('','')
 
 
-  $('#report_cell.village-form').on 'change', ->
-    selectLogic()
+  # $('#report_cell.village-form').on 'change', ->
+  #   selectLogic()
+
+  # $('#report_village.village-form').on 'change', ->
+  #   selectLogic()
+
+  # _facility_form
+  $('#report_cell').on 'change', ->
+    LinkedSelect.updateChildSelectors($(this))
+
+    if ['', '0'].includes($(this).val())
+      LinkedSelect.clearPolymorphics($(this), 'id')
+
+  $('#report_village.facility-form').on 'change', ->
+    LinkedSelect.updateChildSelectors($(this))
+
+    if ['', '0'].includes($(this).val())
+      LinkedSelect.clearPolymorphics($(this), 'id')
 
   $('#report_village.village-form').on 'change', ->
-    selectLogic()
+    if ['', '0'].includes($(this).val())
+      LinkedSelect.clearPolymorphics($(this), 'id')
+    else
+      LinkedSelect.forcePolymorphics($(this), 'id')
 
-  # _facility_form: always uses the 'Facility' type, and the select is the _id field, so no JS needed.
+  $('#report_facility').on 'change', ->
+    if ['', '0'].includes($(this).val())
+      LinkedSelect.clearPolymorphics($(this), 'id')
+    else
+      LinkedSelect.forcePolymorphics($(this), 'id')
+
+#facilities/_modal_form

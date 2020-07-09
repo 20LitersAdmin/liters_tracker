@@ -44,11 +44,15 @@ class SectorsController < ApplicationController
     @report = Report.new(technology: @technology)
     @report.date = @date if @technology.scale == 'Family'
 
-    @facility = Facility.new if @technology.scale == 'Community'
     @cells = @sector.cells.order(:name).pluck(:name, :id)
     @cell = Cell.new
     @villages = [['Please select a Cell', '0']]
     @village = Village.new
+
+    return unless @technology.scale == 'Community'
+
+    @facility = Facility.new
+    @facilities = [['Please select a Village', '0']]
   end
 
   # GET /sectors/1

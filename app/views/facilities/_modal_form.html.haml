@@ -16,7 +16,7 @@
       = f.input :cell, collection: @cells, hint: 'Select to limit villages.', include_blank: true, selected: @cell.id
       .invalid-feedback-modal
     .col.field
-      = f.input :village, collection: @villages, disabled: 0, include_blank: true, required: true, selected: @village.id
+      = f.input :village, collection: @villages, disabled: 0, include_blank: true, required: true, hint: 'required', selected: @village.id
       .invalid-feedback-modal
   .row
     .col.field

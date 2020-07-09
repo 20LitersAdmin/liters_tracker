@@ -2,14 +2,15 @@
 - distributed_label = @technology.name.include?("Train") ? '# Trained' : 'Installed'
 = simple_form_for report, remote: true, defaults: { input_html: { class: 'facility-form' }} do |f|
   = f.input :reportable_type, as: :hidden, input_html: { value: 'Facility' }
+  = f.input :reportable_id, as: :hidden
   = f.input :technology_id, as: :hidden, input_html: { value: @technology.id }
   .row
     .col-4.field
       = f.input :cell, collection: @cells, hint: 'Select to limit villages.'
     .col-4.field
-      = f.input :village, collection: [['Please select a cell','0']], disabled: 0, hint: 'Select to limit facilities.'
+      = f.input :village, collection: @villages, disabled: 0, hint: 'Select to limit facilities.'
     .col-4.field
-      = f.input :reportable_id, label: 'Facility', collection: [['Please select a village','0']], disabled: 0
+      = f.input :facility, collection: @facilities, disabled: 0, required: true, hint: 'required'
   .row
     .col-2.field
       = f.input :distributed, label: distributed_label
@@ -17,7 +18,7 @@
       .col-2.field
         = f.input :checked
     .col-3.field
-      = f.input :date, as: :string, input_html: { class: 'datetimepicker-input', autocomplete: 'off', data: { toggle: 'datetimepicker', target: '#report_date' } }
+      = f.input :date, as: :string, hint: 'required', input_html: { class: 'datetimepicker-input', autocomplete: 'off', data: { toggle: 'datetimepicker', target: '#report_date' } }
     - unless @technology.name.include?("Train")
       .col-3.field
         = f.input :people

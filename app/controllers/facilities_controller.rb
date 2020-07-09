@@ -66,10 +66,6 @@ class FacilitiesController < ApplicationController
         format.html { redirect_to @return_path, success: 'Facility was successfully created.' }
         format.js { render :facility_created }
       else
-        if @facility.village.nil?
-          flash[:danger] = 'No village was selected, please try again'
-          redirect_to new_facility_path and return
-        end
         # pre-populate select fields on error using current planable
         @district = @facility.district
         @sector = @facility.sector

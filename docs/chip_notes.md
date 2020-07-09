@@ -6,6 +6,8 @@
 
 0. New model tests in geographies (Report and Plan want to be able to call any geography)
 
+0. Sector#report forms have better geography error handling in views than Plans, Facilities forms. See `report_error.js.erb`
+
 1. Contracts/Plans architecture:
 - Plans#edit form will need some work in controller for geographies, right?
 
