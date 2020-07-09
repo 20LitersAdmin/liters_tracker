@@ -8,8 +8,8 @@
     %h3 New Plan
 
 = simple_form_for [@contract, @plan], defaults: { input_html: { class: 'plan-form' }} do |f|
-  = f.input :planable_id, as: :hidden
-  = f.input :planable_type, as: :hidden
+  = f.input :planable_id
+  = f.input :planable_type
 
   .row
     .col.field

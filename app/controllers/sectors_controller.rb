@@ -41,12 +41,14 @@ class SectorsController < ApplicationController
 
     @reports = @sector.related_reports.where(technology: @technology).between(@date.beginning_of_month, @date.end_of_month)
 
-    @cell_select = @sector.cells.select(:id, :name).order(:name)
-
     @report = Report.new(technology: @technology)
     @report.date = @date if @technology.scale == 'Family'
 
     @facility = Facility.new if @technology.scale == 'Community'
+    @cells = @sector.cells.order(:name).pluck(:name, :id)
+    @cell = Cell.new
+    @villages = [['Please select a Cell', '0']]
+    @village = Village.new
   end
 
   # GET /sectors/1

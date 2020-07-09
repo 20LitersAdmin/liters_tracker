@@ -35,15 +35,17 @@
 class LinkedSelect
   # main functions
   @updateChildSelectors = (trigger)->
-    target = findTarget(trigger)
     resetChildrenOptions(trigger)
     if trigger.val() > 0
+      target = findTarget(trigger)
       ajaxGeography(trigger, target)
-    else
 
   @assessPolymorphics = (trigger)->
+    # Only the Report and Plan models have polymorphic fields
+    return unless ['report', 'plan'].includes(modelName(trigger.attr('id')))
+
     if ['', '0'].includes(trigger.val())
-      findLowestSelectedOption()
+      findLowestSelectedOption(trigger)
     else
       setPolymorphics(trigger)
 
@@ -70,18 +72,10 @@ class LinkedSelect
     village: ['facility']
   }
 
-  refPlurals = {
-    districts: 'district'
-    sectors: 'sector'
-    cells: 'cell'
-    villages: 'village'
-    facilities: 'facility'
-    plans: 'plan'
-    reports: 'report'
-  }
-
   ajaxGeography = (trigger, target)->
-    parentType = parseId(trigger.attr('id')) + 's'
+    # response is an array: [{id: 'id', name: 'name'},{id: 'id', name: 'name'}]
+    # We can use `+ 's'` because all geographies with children pluralize by adding an 's'
+    parentType = geographyName(trigger.attr('id')) + 's'
     parentId = trigger.val()
     uri = '/' + parentType + '/' + parentId + '/children'
     $.ajax(
@@ -92,90 +86,65 @@ class LinkedSelect
   appendOptionLoop = (record, target)->
     target.append('<option value="' + record.id + '">' + record.name + '</option>')
 
-  controllerName = ()->
-    plural = $('body').attr('data-controller')
-    refPlurals[plural]
-
-  findLowestSelectedOption = ()->
-    setPolymorphics(findTargetFromName(targetName)) for targetName in refChildren['all']
+  findLowestSelectedOption = (trigger)->
+    targetModel = modelName(trigger.attr('id'))
+    setPolymorphics(findTargetIndirect(targetModel, targetGeo)) for targetGeo in refChildren['all']
 
   findTarget = (trigger)->
-    triggerId = parseId(trigger.attr('id'))
-    targetId = '#' + controllerName() + '_' + refChild[triggerId].toLowerCase()
+    targetId = '#' + modelName(trigger.attr('id')) + '_' + refChild[geographyName(trigger.attr('id'))].toLowerCase()
     target = $(targetId)
 
-  findTargetFromName = (name)->
-    $('#' + controllerName() + '_' + name)
+  findTargetIndirect = (modelName, geoName)->
+    target = $('#' + modelName + '_' + geoName)
 
-  parseId = (id) ->
-    controller = controllerName() + '_'
-    id.replace(controller, '')
+  geographyName = (id) ->
+    # from '#plan_facility', returns 'facility'
+    # from '#facility_village', returns 'village'
+    id.substring(id.indexOf('_')+1, id.length)
+
+  modelName = (id)->
+    # from '#plan_facility', returns 'plan'
+    # from '#facility_village', returns 'facility'
+    id.substring(0, id.indexOf('_'))
 
   prepareOptions = (target, records)->
+    # records is an array: [{id: 'id', name: 'name'},{id: 'id', name: 'name'}]
     target.html('')
     target.append('<option></option>')
     appendOptionLoop(record, target) for record in records
 
   resetChildrenOptions = (trigger)->
-    triggerId = parseId(trigger.attr('id'))
-    resetOptions(findTargetFromName(targetName)) for targetName in refChildren[triggerId]
+    geoName = geographyName(trigger.attr('id'))
+    targetModel = modelName(trigger.attr('id'))
+    resetOptions(findTargetIndirect(targetModel, targetGeo)) for targetGeo in refChildren[geoName]
 
   resetOptions = (target)->
-    return if target.length == 0 || ['', '0'].includes(target.val())
+    # skip if the target is not found or if the target is already in "default state",
+    # meaning it has an option with value '0', which is what the last line of this function adds
+    return if target.length == 0 || target.find('option[value=0]').length > 0
 
-    targetName = parseId(target.attr('id'))
+    targetGeo = geographyName(target.attr('id'))
     target.html('')
     target.append('<option></option>')
-    $(target).append('<option disabled="disabled" value="0">Please select a ' + refParent[targetName] + '</option>')
+    $(target).append('<option disabled="disabled" value="0">Please select a ' + refParent[targetGeo] + '</option>')
 
   setPolymorphics = (source)->
+    # Dont' set the polymorphic fields if the source field is being set to nil
+    # or if the source field is a District (the higest geography)
     return if ['', '0'].includes(source.val()) && !source.attr('id').includes('district')
 
-    typeLowercase = parseId(source.attr('id'))
+    typeLowercase = geographyName(source.attr('id'))
     type = typeLowercase[0].toUpperCase() + typeLowercase.substring(1)
     id = source.val()
-    polyName = '#' + controllerName() + '_' + controllerName()
+    polyName = '#' + modelName(source.attr('id')) + '_' + modelName(source.attr('id'))
     $(polyName + 'able_type').val(type)
     $(polyName + 'able_id').val(id)
 
 root              = exports ? this
 root.LinkedSelect = LinkedSelect
 
-  ## OLD VERSION
 
-  # resetOptions = (target)->
-  #   refParent = {
-  #     cell: 'sector',
-  #     village: 'cell',
-  #     reportable_id: 'village'
-  #   }
-  #   targetName = target.attr('id').substr(target.attr('id').indexOf('_')+1)
-  #   target.html('')
-  #   target.append('<option></option>')
-  #   $(target).append('<option disabled="disabled" value="0">Please select a ' + refParent[targetName] + '</option>')
-
-  # ajaxGeography = (parentType, parentId, target)->
-  #   # parentType = [sectors, cells, villages]
-  #   # parentId = int
-  #   # "/sectors/#{id}/children" returns cells
-  #   # "/cells/#{id}/children" returns villages
-  #   # "/villages/#{id}/children" returns facilities
-
-  #   uri = '/' + parentType + '/' + parentId + '/children'
-  #   $.ajax(
-  #     url: uri
-  #   ).done (response) ->
-  #     prepareOptions(target, response)
-
-  # appendOptionLoop = (record, target)->
-  #   target.append('<option value="' + record.id + '">' + record.name + '</option>')
-
-  # prepareOptions = (target, records)->
-  #   target.html('')
-  #   target.append('<option></option>')
-  #   appendOptionLoop(record, target) for record in records
-
-
+# Other places to be reformatted:
 
   # # called from facilities#new && sectors#report:facilities/_modal_form
   # $('#facility_cell').on 'change', ->
