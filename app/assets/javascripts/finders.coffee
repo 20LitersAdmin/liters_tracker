@@ -4,32 +4,29 @@
 
 ### Global linked-select fields for geography lookups
 ## Setup: Ensure that:
-# HTML Body tag has data-action and data-controller values. e.g.:
-#   <body data-action="show" data-controller="contracts">
+# 1. The parent form is ID'd in the following format: '#{action}_{model}'. e.g.:
+#   '#new_plan', '#edit_facility'
 #
-# Select fields are ID'd in the following format: '#{controller}_{geography}'. e.g.:
-#   '#contract_sector', '#plan_village'
+# 2. Select fields are ID'd in the following format: '#{model}_{geography}'. e.g.:
+#   '#plan_village', '#village_sector'
 #
-# All geography controllers (except the last child) have a `/children` collection method
-#   that returns the immediate children's name and id in a JSON colleciton. e.g.:
-#   class DistrictsController
-#     def children
-#       render json: @district.sectors.select(:id, :name).order(:name)
-#     end
-#   end
-#
-# For polymorphic models: form has hidden fields for the polymorphic attributes: [name, id], e.g.:
+# 3. For polymorphic models: form has hidden fields for the polymorphic attributes: [name, id], e.g.:
 #   = f.input :planable_id, as: :hidden
 #   = f.input :planable_type, as: :hidden
 #
 ## Usage:
 # Place these calls in the apropriate files. e.g.:
-# plans.coffee:
-# $('#plan_district').on 'change', ->
-#   # to update linked select fields
-#   LinkedSelect.updateChildSelectors($(this))
-#   # to update polymorphic hidden fields
-#   LinkedSelect.assessPolymorphics($(this))
+#   plans.coffee:
+#   $('#plan_district').on 'change', ->
+#     # to update linked select fields
+#     LinkedSelect.updateChildSelectors($(this))
+#     # to update polymorphic hidden fields
+#     LinkedSelect.assessPolymorphics($(this))
+#
+#   facilities.coffee:
+#   $('#facility_cell').on 'change', ->
+#     # to update linked select fields
+#     LinkedSelect.updateChildSelectors($(this))
 ###
 
 class LinkedSelect
@@ -77,6 +74,7 @@ class LinkedSelect
     # We can use `+ 's'` because all geographies with children pluralize by adding an 's'
     parentType = geographyName(trigger.attr('id')) + 's'
     parentId = trigger.val()
+    # all geographies except `facilities` have a route for `/children` that returns a JSON collection
     uri = '/' + parentType + '/' + parentId + '/children'
     $.ajax(
       url: uri
