@@ -3,6 +3,7 @@
 class District < ApplicationRecord
   include GeographyType
   include Rails.application.routes.url_helpers
+  require 'csv'
 
   belongs_to :country,    inverse_of: :districts
 
@@ -17,12 +18,43 @@ class District < ApplicationRecord
   validates_presence_of :name
   validates_uniqueness_of :gis_code, allow_nil: true
 
+  after_save :toggle_relations, if: -> { saved_change_to_hidden? }
+
+  scope :hidden, -> { where(hidden: true) }
+  scope :visible, -> { where(hidden: false) }
+
   def child_class
     'Sector'
   end
 
   def hierarchy
     [{ name: country.name, link: country_path(country) }]
+  end
+
+  def self.import(filepath)
+    ActiveRecord::Base.logger.silence do
+      @counter = 0
+      @first_count = District.all.size
+
+      CSV.foreach(filepath, headers: true) do |row|
+        @counter += 1
+
+        record = District.find_or_create_by(name: row['name'], gis_code: row['gis_code'], country_id: 1)
+
+        next if record.persisted?
+
+        record.hidden = true
+
+        next if record.save
+
+        puts "Failed to save: #{row}; #{record}: #{record.errors.messages}"
+      end
+    end
+
+    @last_count = District.all.size
+
+    puts "#{@counter} rows processed"
+    puts "#{@last_count - @first_count} records created."
   end
 
   def parent
@@ -51,5 +83,20 @@ class District < ApplicationRecord
          .or(Story.joins(:report).where("reports.reportable_type = 'Cell' AND reports.reportable_id IN (?)", cells.pluck(:id)))
          .or(Story.joins(:report).where("reports.reportable_type = 'Village' AND reports.reportable_id IN (?)", villages.pluck(:id)))
          .or(Story.joins(:report).where("reports.reportable_type = 'Facility' AND reports.reportable_id IN (?)", facilities.pluck(:id)))
+  end
+
+  private
+
+  def toggle_relations
+    # apply the same visibility to all children
+    sectors.update_all hidden: hidden
+    cells.update_all hidden: hidden
+    villages.update_all hidden: hidden
+
+    # if the record is now hidden, stop
+    return if hidden?
+
+    # ensure all ancestors are un-hidden
+    country.update_column(:hidden, false)
   end
 end

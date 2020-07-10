@@ -3,6 +3,7 @@
 class Village < ApplicationRecord
   include GeographyType
   include Rails.application.routes.url_helpers
+  require 'csv'
 
   belongs_to :cell,       inverse_of: :villages
 
@@ -18,12 +19,47 @@ class Village < ApplicationRecord
   validates_presence_of :name, :cell_id
   validates_uniqueness_of :gis_code, allow_blank: true
 
+  scope :hidden, -> { where(hidden: true) }
+  scope :visible, -> { where(hidden: false) }
+
+  # record was hidden, but is now visible
+  after_save :toggle_relations, if: -> { saved_change_to_hidden? && !hidden? }
+
   def child_class
     'Facility'
   end
 
   def hierarchy
     cell.hierarchy << { name: "#{cell.name} Cell", link: cell_path(cell) }
+  end
+
+  def self.import(filepath)
+    ActiveRecord::Base.logger.silence do
+      @counter = 0
+      @first_count = Village.all.size
+
+      CSV.foreach(filepath, headers: true) do |row|
+        @counter += 1
+        record = Village.find_or_create_by(name: row['name'], gis_code: row['gis_code'])
+
+        next if record.persisted?
+
+        # drop the last 2 digits off the record's GIS code to get the parent's GIS code
+        code = record.gis_code.to_s[0...record.gis_code.to_s.length - 2].to_i
+
+        record.cell = Cell.where(gis_code: code).first
+        record.hidden = true
+
+        next if record.save
+
+        logger.warn "Failed to save: #{row}; #{record}: #{record.errors.messages}"
+      end
+    end
+
+    @last_count = Village.all.size
+
+    puts "#{@counter} rows processed"
+    puts "#{@last_count - @first_count} records created."
   end
 
   def parent
@@ -53,5 +89,15 @@ class Village < ApplicationRecord
 
   def village
     self
+  end
+
+  private
+
+  def toggle_relations
+    # ensure all ancestors are un-hidden
+    cell.update_column(:hidden, false)
+    sector.update_column(:hidden, false)
+    district.update_column(:hidden, false)
+    country.update_column(:hidden, false)
   end
 end
