@@ -40,6 +40,9 @@ class District < ApplicationRecord
         @counter += 1
 
         record = District.find_or_create_by(name: row['name'], gis_code: row['gis_code'], country_id: 1)
+
+        next if record.persisted?
+
         record.hidden = true
 
         next if record.save

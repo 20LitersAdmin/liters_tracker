@@ -35,10 +35,11 @@ class Village < ApplicationRecord
 
   def self.import(filepath)
     ActiveRecord::Base.logger.silence do
-      counter = 0
-      first_count = Village.all.size
+      @counter = 0
+      @first_count = Village.all.size
 
       CSV.foreach(filepath, headers: true) do |row|
+        @counter += 1
         record = Village.find_or_create_by(name: row['name'], gis_code: row['gis_code'])
 
         next if record.persisted?
@@ -55,10 +56,10 @@ class Village < ApplicationRecord
       end
     end
 
-    last_count = Village.all.size
+    @last_count = Village.all.size
 
-    puts "#{counter} rows processed"
-    puts "#{last_count - first_count} records created."
+    puts "#{@counter} rows processed"
+    puts "#{@last_count - @first_count} records created."
   end
 
   def parent

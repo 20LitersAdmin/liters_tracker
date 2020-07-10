@@ -51,7 +51,6 @@ class Sector < ApplicationRecord
         next if record.save
 
         puts "Failed to save: #{row}; #{record}: #{record.errors.messages}"
-        byebug
       end
     end
 
