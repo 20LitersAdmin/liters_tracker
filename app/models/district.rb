@@ -31,10 +31,27 @@ class District < ApplicationRecord
     [{ name: country.name, link: country_path(country) }]
   end
 
-  def self.import(file)
-    CSV.foreach(file.path, headers: true) do |row|
-      District.where(row.to_hash).first_or_create
+  def self.import(filepath)
+    ActiveRecord::Base.logger.silence do
+      @counter = 0
+      @first_count = District.all.size
+
+      CSV.foreach(filepath, headers: true) do |row|
+        @counter += 1
+
+        record = District.find_or_create_by(name: row['name'], gis_code: row['gis_code'], country_id: 1)
+        record.hidden = true
+
+        next if record.save
+
+        puts "Failed to save: #{row}; #{record}: #{record.errors.messages}"
+      end
     end
+
+    @last_count = District.all.size
+
+    puts "#{@counter} rows processed"
+    puts "#{@last_count - @first_count} records created."
   end
 
   def parent

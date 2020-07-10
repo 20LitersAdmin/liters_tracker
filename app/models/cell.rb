@@ -32,19 +32,32 @@ class Cell < ApplicationRecord
     sector.hierarchy << { name: "#{sector.name} Sector", link: sector_path(sector) }
   end
 
-  def self.import(file)
-    CSV.foreach(file.path, headers: true) do |row|
-      record = Cell.where(row.to_hash).first_or_initialize
+  def self.import(filepath)
+    ActiveRecord::Base.logger.silence do
+      counter = 0
+      first_count = Cell.all.size
 
-      next if record.persisted?
+      CSV.foreach(filepath, headers: true) do |row|
+        record = Cell.find_or_create_by(name: row['name'], gis_code: row['gis_code'])
 
-      # drop the last 2 digits off the record's GIS code to get the parent's GIS code
-      code = record.gis_code.to_s[0...record.gis_code.length - 2].to_i
+        next if record.persisted?
 
-      record.sector = Sector.where(gis_code: code)
+        # drop the last 2 digits off the record's GIS code to get the parent's GIS code
+        code = record.gis_code.to_s[0...record.gis_code.to_s.length - 2].to_i
 
-      logger.warn "Failed to save: #{row}; #{record}: #{record.errors.messages}" unless record.save
+        record.sector = Sector.where(gis_code: code).first
+        record.hidden = true
+
+        next if record.save
+
+        logger.warn "Failed to save: #{row}; #{record}: #{record.errors.messages}"
+      end
     end
+
+    last_count = Cell.all.size
+
+    puts "#{counter} rows processed"
+    puts "#{last_count - first_count} records created."
   end
 
   def parent
