@@ -20,6 +20,9 @@ class Facility < ApplicationRecord
   scope :churches,     -> { where(category: 'Church') }
   scope :not_churches, -> { where.not(category: 'Church') }
 
+  scope :hidden, -> { where(hidden: true) }
+  scope :visible, -> { where(hidden: false) }
+
   after_save :update_hierarchy, if: -> { saved_change_to_village_id? }
 
   def cells
@@ -40,6 +43,10 @@ class Facility < ApplicationRecord
   def facilities
     # Report and Plan want to be able to call any geography
     parent&.facilities
+
+
+  def hierarchy
+    village.hierarchy << { name: "#{village.name} Village", link: village_path(village) }
   end
 
   def impact

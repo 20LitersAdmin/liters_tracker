@@ -1,6 +1,5 @@
 # CURRENT:
-0. Implementing the new global linked-select fields in finders.coffee
-- look for all `collection: ` references in views
+0. Load dashboard to a specific year && month
 
 0. New model tests in geographies (Report and Plan want to be able to call any geography)
 

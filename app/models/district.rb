@@ -3,6 +3,7 @@
 class District < ApplicationRecord
   include GeographyType
   include Rails.application.routes.url_helpers
+  require 'csv'
 
   belongs_to :country,    inverse_of: :districts
 
@@ -23,6 +24,10 @@ class District < ApplicationRecord
     # Report and Plan want to be able to call any geography
     nil
   end
+  after_save :toggle_relations, if: -> { saved_change_to_hidden? }
+
+  scope :hidden, -> { where(hidden: true) }
+  scope :visible, -> { where(hidden: false) }
 
   def child_class
     'Sector'
@@ -35,6 +40,32 @@ class District < ApplicationRecord
   def facility
     # Report and Plan want to be able to call any geography
     nil
+  end
+
+  def self.import(filepath)
+    ActiveRecord::Base.logger.silence do
+      @counter = 0
+      @first_count = District.all.size
+
+      CSV.foreach(filepath, headers: true) do |row|
+        @counter += 1
+
+        record = District.find_or_create_by(name: row['name'], gis_code: row['gis_code'], country_id: 1)
+
+        next if record.persisted?
+
+        record.hidden = true
+
+        next if record.save
+
+        puts "Failed to save: #{row}; #{record}: #{record.errors.messages}"
+      end
+    end
+
+    @last_count = District.all.size
+
+    puts "#{@counter} rows processed"
+    puts "#{@last_count - @first_count} records created."
   end
 
   def parent
@@ -83,5 +114,18 @@ class District < ApplicationRecord
   def village
     # Report and Plan want to be able to call any geography
     nil
+  private
+
+  def toggle_relations
+    # apply the same visibility to all children
+    sectors.update_all hidden: hidden
+    cells.update_all hidden: hidden
+    villages.update_all hidden: hidden
+
+    # if the record is now hidden, stop
+    return if hidden?
+
+    # ensure all ancestors are un-hidden
+    country.update_column(:hidden, false)
   end
 end

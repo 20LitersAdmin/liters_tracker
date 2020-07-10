@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_07_07_010045) do
+ActiveRecord::Schema.define(version: 2020_07_10_153438) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -46,8 +46,9 @@ ActiveRecord::Schema.define(version: 2020_07_07_010045) do
     t.integer "households"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.jsonb "hierarchy"
+    t.boolean "hidden", default: false, null: false
     t.index ["gis_code"], name: "index_cells_on_gis_code", unique: true
+    t.index ["hidden"], name: "index_cells_on_hidden"
     t.index ["sector_id"], name: "index_cells_on_sector_id"
   end
 
@@ -72,7 +73,9 @@ ActiveRecord::Schema.define(version: 2020_07_07_010045) do
     t.integer "households"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
+    t.boolean "hidden", default: false, null: false
     t.index ["gis_code"], name: "index_countries_on_gis_code"
+    t.index ["hidden"], name: "index_countries_on_hidden"
   end
 
   create_table "districts", force: :cascade do |t|
@@ -85,9 +88,10 @@ ActiveRecord::Schema.define(version: 2020_07_07_010045) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.bigint "country_id"
-    t.jsonb "hierarchy"
+    t.boolean "hidden", default: false, null: false
     t.index ["country_id"], name: "index_districts_on_country_id"
     t.index ["gis_code"], name: "index_districts_on_gis_code", unique: true
+    t.index ["hidden"], name: "index_districts_on_hidden"
   end
 
   create_table "facilities", force: :cascade do |t|
@@ -161,9 +165,10 @@ ActiveRecord::Schema.define(version: 2020_07_07_010045) do
     t.integer "households"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.jsonb "hierarchy"
+    t.boolean "hidden", default: false, null: false
     t.index ["district_id"], name: "index_sectors_on_district_id"
     t.index ["gis_code"], name: "index_sectors_on_gis_code", unique: true
+    t.index ["hidden"], name: "index_sectors_on_hidden"
   end
 
   create_table "stories", force: :cascade do |t|
@@ -257,9 +262,10 @@ ActiveRecord::Schema.define(version: 2020_07_07_010045) do
     t.integer "households"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.jsonb "hierarchy"
+    t.boolean "hidden", default: false, null: false
     t.index ["cell_id"], name: "index_villages_on_cell_id"
     t.index ["gis_code"], name: "index_villages_on_gis_code", unique: true
+    t.index ["hidden"], name: "index_villages_on_hidden"
   end
 
   add_foreign_key "active_storage_attachments", "active_storage_blobs", column: "blob_id"
