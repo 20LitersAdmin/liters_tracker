@@ -20,6 +20,9 @@ class Facility < ApplicationRecord
   scope :churches,     -> { where(category: 'Church') }
   scope :not_churches, -> { where.not(category: 'Church') }
 
+  scope :hidden, -> { where(hidden: true) }
+  scope :visible, -> { where(hidden: false) }
+
   def hierarchy
     village.hierarchy << { name: "#{village.name} Village", link: village_path(village) }
   end
