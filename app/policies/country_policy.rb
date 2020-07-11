@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-class DistrictPolicy
+class CountryPolicy
   attr_reader :user, :record
 
   def initialize(user, record)
@@ -10,6 +10,10 @@ class DistrictPolicy
 
   def index?
     @user
+  end
+
+  def hidden?
+    new?
   end
 
   def show?

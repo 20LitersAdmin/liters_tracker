@@ -119,6 +119,8 @@ class Sector < ApplicationRecord
     reload.cells.each do |c|
       c.reload.update_hierarchy(cascade: true)
     end
+  end
+
   private
 
   def toggle_relations

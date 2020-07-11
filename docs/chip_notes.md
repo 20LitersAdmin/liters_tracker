@@ -1,5 +1,23 @@
 # CURRENT:
-0. Load dashboard to a specific year && month
+0. Geographies now have visible / hidden scopes
+- Lots of `Record.all` need to be scoped to only show visible
+==
+- Views (*all* need work)
+-- edit / back buttons should be `class: small` on show views
+-- Add `hidden.html.haml` "index" views for all but Facility
+
+- Policies (all need hidden? except Facility)
+
+- Forms (need check_box for hidden)
+
+- Controllers:
+-- Add make_visible to `before_action :set_record`
+-- Flash messages on `show` when `@record.hidden?`
+-- Update record_params to include hidden
+-- Add `def hidden; end` action
+
+0. Dashboard
+- basic_stat_blocks aren't collapsing like they used to?
 
 0. New model tests in geographies (Report and Plan want to be able to call any geography)
 

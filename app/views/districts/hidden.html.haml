@@ -1,0 +1,23 @@
+-# frozen_string_literal: true
+.row
+  .col
+    %h1.left= "Hidden Districts"
+  .col.text-right
+    - if @show_visible
+      = link_to 'Show visible', districts_path, class: 'btn btn-outline-dark'
+
+.row
+  .col
+    %h5 Hidden places don't appear on reports or in select fields. Edit a place to make it visible.
+
+.row
+  %table.table.table-sm.table-striped
+    %thead.thead-dark
+      %tr
+        %th Name
+        %th
+    %tbody
+      -@districts.each do |district|
+        %tr
+          %td= link_to district.name, district_path(district)
+          %td= link_to 'Make Visible', make_visible_district_path(district), class: 'btn empty small'

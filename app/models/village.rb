@@ -121,6 +121,8 @@ class Village < ApplicationRecord
     reload.facilities.each do |f|
       f.reload.update_hierarchy
     end
+  end
+
   private
 
   def toggle_relations

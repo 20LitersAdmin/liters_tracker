@@ -1,12 +1,11 @@
 -# frozen_string_literal: true
-%nav.navbar.navbar-expand-lg.align-items-end#brandbar_nav
+%nav#brandbar_nav.navbar.navbar-expand-lg.navbar-dark
   =link_to 'https://20liters.org', class: 'navbar-brand' do
     = image_tag 'https://20liters.org/wp-content/themes/twenty-liters/library/images/logo.png', target: '_blank'
   %button.navbar-toggler{ data: { toggle: 'collapse', target: '#brandbar'}, aria: { controls: 'brandbar', expanded: 'false', label: 'Toggle'} }
     %span.navbar-toggler-icon
-
-  .collapse.navbar-collapse.text-right#brandbar
-    %ul.navbar-nav.ml-auto
+  #brandbar.collapse.navbar-collapse
+    %ul.navbar-nav.ml-auto.float-right
       %li.nav-item.fix-width-106
         =link_to 'About Us', 'https://20liters.org/about-us/', target: '_blank', class: 'nav-link'
       %li.nav-item.fix-width-106

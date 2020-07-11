@@ -1,15 +1,26 @@
 # frozen_string_literal: true
 
 class CountriesController < ApplicationController
-  before_action :set_country, only: %i[show edit update destroy]
+  before_action :set_country, only: %i[show edit update destroy make_visible]
 
   # GET /countries
   def index
-    @countries = Country.all
+    @countries = Country.visible
+
+    @show_hidden = Country.hidden.any?
+  end
+
+  def hidden
+    authorize @countries = Country.hidden
+
+    @show_visible = Country.visible.any?
   end
 
   # GET /countries/1
   def show
+    flash[:error] = "This country is currently hidden. Please #{view_context.link_to('edit', edit_country_path(@country)).html_safe} the record to make it visible."
+    flash[:html_safe] = true
+
     @earliest = form_date Report.earliest_date
     @latest =   form_date Report.latest_date
 
@@ -31,7 +42,7 @@ class CountriesController < ApplicationController
     @plans = @country.related_plans.between(@from, @to)
     @technologies = Technology.report_worthy
     @plan_date = human_date @plans.size.zero? ? nil : Contract.find(@plans.pluck(:contract_id).max).end_date
-    @districts = @country.districts.order(name: :asc)
+    @districts = @country.districts.visible.order(name: :asc)
   end
 
   # GET /countries/new
@@ -48,7 +59,7 @@ class CountriesController < ApplicationController
     @country = Country.new(country_params)
 
     if @country.save
-      redirect_to @country, notice: 'Country was successfully created.'
+      redirect_to @return_path, success: 'Country created.'
     else
       render :new
     end
@@ -57,7 +68,7 @@ class CountriesController < ApplicationController
   # PATCH/PUT /countries/1
   def update
     if @country.update(country_params)
-      redirect_to @country, notice: 'Country was successfully updated.'
+      redirect_to @return_path, success: 'Country updated.'
     else
       render :edit
     end
@@ -66,17 +77,30 @@ class CountriesController < ApplicationController
   # DELETE /countries/1
   def destroy
     @country.destroy
-    redirect_to countries_url, notice: 'Country was successfully destroyed.'
+    redirect_to @return_path, success: 'Country destroyed.'
+  end
+
+  def make_visible
+    @country.update(hidden: false)
+
+    redirect_to countries_path
   end
 
   private
-    # Use callbacks to share common setup or constraints between actions.
-    def set_country
-      @country = Country.find(params[:id])
-    end
 
-    # Only allow a trusted parameter "white list" through.
-    def country_params
-      params.require(:country).permit(:name, :gis_code, :latitude, :longitude, :population, :households)
-    end
+  # Use callbacks to share common setup or constraints between actions.
+  def set_country
+    authorize @country = Country.find(params[:id])
+  end
+
+  # Only allow a trusted parameter "white list" through.
+  def country_params
+    params.require(:country).permit(:name,
+                                    :gis_code,
+                                    :latitude,
+                                    :longitude,
+                                    :population,
+                                    :households,
+                                    :hidden)
+  end
 end

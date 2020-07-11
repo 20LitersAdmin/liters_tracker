@@ -21,6 +21,11 @@ body {
   }
 }
 
+main {
+  // allow Navbar collapse menu to hover over top
+  z-index: 2;
+}
+
 .fa {
   font-family: FontAwesome !important;
 }

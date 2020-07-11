@@ -23,20 +23,32 @@ Rails.application.routes.draw do
 
   resources :technologies
 
-  resources :countries
+  resources :countries do
+    get 'hidden', on: :collection
+    get 'make_visible', on: :member
+  end
+
   resources :districts do
+    get 'hidden', on: :collection
     get 'children', on: :member
+    get 'make_visible', on: :member
   end
   resources :sectors do
+    get 'hidden', on: :collection
     get 'select', on: :collection
     get 'report', on: :member
     get 'children', on: :member
+    get 'make_visible', on: :member
   end
   resources :cells do
+    get 'hidden', on: :collection
     get 'children', on: :member
+    get 'make_visible', on: :member
   end
   resources :villages do
+    get 'hidden', on: :collection
     get 'children', on: :member
+    get 'make_visible', on: :member
   end
   resources :facilities
 
@@ -52,6 +64,7 @@ Rails.application.routes.draw do
   resources :users
   get 'data', to: 'users#data', as: 'data'
   get 'data_filter', to: 'users#data_filter', as: 'data_filter'
+  get 'geography', to: 'users#geography', as: 'geography'
 
   get 'monthly', to: 'monthly#index'
   post 'monthly/redirector', to: 'monthly#redirector', as: 'monthly_redirector'

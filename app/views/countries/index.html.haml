@@ -1,9 +1,13 @@
 -# frozen_string_literal: true
-%div.container
-  %h1.left Listing Countries
+.row
+  .col
+    %h1.left= "Visible Countries"
+  .col.text-right
+    - if @show_hidden
+      = link_to 'Show hidden', hidden_countries_path, class: 'btn btn-outline-dark'
 
-%div.row
-  %table.table.table-striped.table-hover.table-sm.table-responsive-sm
+.row
+  %table.table.table-striped
     %thead.thead-dark
       %tr
         %th Name
@@ -20,5 +24,5 @@
           %td= country.households
           %td= link_to 'Edit', edit_country_path(country), class: 'btn yellow small'
 
-  %div.row
-    = link_to 'New Country', new_country_path
+  .row
+    = link_to 'New Country', new_country_path, class: 'btn yellow'

@@ -114,6 +114,8 @@ class District < ApplicationRecord
   def village
     # Report and Plan want to be able to call any geography
     nil
+  end
+
   private
 
   def toggle_relations

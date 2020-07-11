@@ -4,18 +4,18 @@
     %h2= "Data: #{@country.name}"
   .col-sm-3.text-center
     - if @by_tech
-      = link_to 'View by District', request.fullpath.gsub('&by_tech=true', '').gsub('?by_tech=true', '') , class: 'btn btn-outline-dark', id: 'dist_viewby'
+      = link_to 'View by District', request.fullpath.gsub('&by_tech=true', '').gsub('?by_tech=true', '') , class: 'btn btn-sm btn-outline-dark', id: 'dist_viewby'
     - else
-      = link_to 'View by Technology', @by_tech_rfp , class: 'btn btn-outline-dark', id: 'dist_viewby'
+      = link_to 'View by Technology', @by_tech_rfp , class: 'btn btn-sm btn-outline-dark', id: 'dist_viewby'
   .col-sm-3.text-center
     - if @skip_blanks
-      = link_to 'Show empty rows', request.fullpath.gsub('&skip_blanks=true', '').gsub('?skip_blanks=true', '') , class: 'btn btn-outline-dark', id: 'dist_skipblank'
+      = link_to 'Show empty rows', request.fullpath.gsub('&skip_blanks=true', '').gsub('?skip_blanks=true', '') , class: 'btn btn-sm btn-outline-dark', id: 'dist_skipblank'
     - else
-      = link_to 'Hide empty rows',  @skip_blanks_rfp, class: 'btn btn-outline-dark', id: 'dist_skipblank'
+      = link_to 'Hide empty rows',  @skip_blanks_rfp, class: 'btn btn-sm btn-outline-dark', id: 'dist_skipblank'
   .col-sm-2.text-right
     - if current_user.geography_manager?
-      = link_to 'Edit', edit_country_path(@country), class: 'btn yellow'
-    = link_to 'Back', @return_path, class: 'btn blue'
+      = link_to 'Edit', edit_country_path(@country), class: 'btn small yellow'
+    = link_to 'Back', @return_path, class: 'btn small blue'
 
 = render partial: 'shared/search', locals: { from: @from, to: @to, earliest: @earliest, latest: @latest }
 

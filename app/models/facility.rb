@@ -43,7 +43,7 @@ class Facility < ApplicationRecord
   def facilities
     # Report and Plan want to be able to call any geography
     parent&.facilities
-
+  end
 
   def hierarchy
     village.hierarchy << { name: "#{village.name} Village", link: village_path(village) }

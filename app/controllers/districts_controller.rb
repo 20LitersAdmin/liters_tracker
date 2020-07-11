@@ -1,11 +1,13 @@
 # frozen_string_literal: true
 
 class DistrictsController < ApplicationController
-  before_action :set_district, only: %i[show edit update destroy children]
+  before_action :set_district, only: %i[show edit update destroy children make_visible]
 
   # GET /districts
   def index
-    authorize @districts = District.all
+    authorize @districts = District.visible
+
+    @show_hidden = District.hidden.any?
 
     @earliest = form_date Report.earliest_date
     @latest =   form_date Report.latest_date
@@ -20,8 +22,18 @@ class DistrictsController < ApplicationController
     @plan_date = human_date @plans.size.zero? ? nil : Contract.find(contract_id).end_date
   end
 
+  def hidden
+    authorize @districts = District.hidden
+    @showing_hidden = true
+
+    @show_visible = Country.visible.any?
+  end
+
   # GET /districts/:id
   def show
+    flash[:error] = "This district is currently hidden. Please #{view_context.link_to('edit', edit_country_path(@country)).html_safe} the record to make it visible."
+    flash[:html_safe] = true
+
     @earliest = form_date Report.earliest_date
     @latest =   form_date Report.latest_date
 
@@ -98,6 +110,12 @@ class DistrictsController < ApplicationController
     render json: @district.sectors.select(:id, :name).order(:name)
   end
 
+  def make_visible
+    @district.update(hidden: false)
+
+    redirect_to districts_path
+  end
+
   private
 
   def set_district
@@ -105,6 +123,12 @@ class DistrictsController < ApplicationController
   end
 
   def district_params
-    params.require(:district).permit(:name, :gis_code, :latitude, :longitude, :population, :households)
+    params.require(:district).permit(:name,
+                                     :gis_code,
+                                     :latitude,
+                                     :longitude,
+                                     :population,
+                                     :households,
+                                     :hidden)
   end
 end

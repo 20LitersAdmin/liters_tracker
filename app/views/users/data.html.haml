@@ -48,7 +48,7 @@
         .card-body
           %h5.card-title Manage geography
           %p.card-text Districts, sectors, cells, villages
-          = link_to 'Go', districts_path, class: 'btn yellow'
+          = link_to 'Go', geography_path, class: 'btn yellow'
 
   - if @user.can_manage_technologies? || @user.admin?
     .col-sm-12.col-md-6.col-lg-3

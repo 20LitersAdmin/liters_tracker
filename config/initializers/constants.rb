@@ -16,6 +16,7 @@ module Constants
     US_NAMES = { 'Country' => 'Country', 'District' => 'Region', 'Sector' => 'State', 'Cell' => 'County', 'Village' => 'City', 'Facility' => 'Facility' }.freeze
     DISTRICT_CHILDREN = %w[Sector Cell Village Facility].freeze
     HIERARCHY = %w[Country District Sector Cell Village Facility].freeze
+    CONTROLLERS = %w[countries districts sectors cells villages facilities].freeze
   end
 
   class Technology

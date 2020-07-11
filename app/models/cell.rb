@@ -119,6 +119,8 @@ class Cell < ApplicationRecord
     reload.villages.each do |v|
       v.reload.update_hierarchy(cascade: true)
     end
+  end
+
   private
 
   def toggle_relations
