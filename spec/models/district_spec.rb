@@ -47,12 +47,14 @@ RSpec.describe District, type: :model do
 
   describe 'hierarchy' do
     it 'returns an array of hashes with name and link' do
-      hierarchy = district.hierarchy
+      district.save
+      hierarchy = district.reload.hierarchy
 
       expect(hierarchy.is_a?(Array)).to eq true
       expect(hierarchy[0].is_a?(Hash)).to eq true
-      expect(hierarchy[0][:name].present?).to eq true
-      expect(hierarchy[0][:link].present?).to eq true
+      expect(hierarchy[0]['parent_name'].present?).to eq true
+      expect(hierarchy[0]['parent_type'].present?).to eq true
+      expect(hierarchy[0]['link'].present?).to eq true
     end
   end
 
@@ -96,7 +98,8 @@ RSpec.describe District, type: :model do
         unrelated_plan_village
         unrelated_plan_facility
 
-        expect(district.related_plans.is_a?(ActiveRecord::Relation)).to eq true
+        expect(district.reload.related_plans.is_a?(ActiveRecord::Relation)).to eq true
+
         expect(district.related_plans.size).to eq(4)
 
         expect(district.related_plans).to include(plan_sector)
@@ -143,7 +146,7 @@ RSpec.describe District, type: :model do
         unrelated_report_village
         unrelated_report_facility
 
-        expect(district.related_reports.is_a?(ActiveRecord::Relation)).to eq true
+        expect(district.reload.related_reports.is_a?(ActiveRecord::Relation)).to eq true
         expect(district.related_reports.size).to eq(4)
 
         expect(district.related_reports).to include(report_sector)
@@ -173,7 +176,7 @@ RSpec.describe District, type: :model do
       report = FactoryBot.create(:report_sector, reportable: sector)
       story = FactoryBot.create(:story, report: report)
 
-      expect(district.related_stories).to include story
+      expect(district.reload.related_stories).to include story
     end
 
     it 'returns stories related to child cells' do

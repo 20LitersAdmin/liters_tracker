@@ -297,6 +297,8 @@ RSpec.describe Plan, type: :model do
   describe '#date' do
     context 'when plan has no date' do
       it 'returns the end_date of the related contract' do
+        plan.save
+
         expect(plan.read_attribute(:date)).to eq nil
         expect(plan.date).to eq plan.contract.end_date
       end

@@ -63,12 +63,14 @@ RSpec.describe Cell, type: :model do
 
   describe 'hierarchy' do
     it 'returns an array of hashes with name and link' do
+      cell.save
       hierarchy = cell.hierarchy
 
       expect(hierarchy.is_a?(Array)).to eq true
       expect(hierarchy[0].is_a?(Hash)).to eq true
-      expect(hierarchy[0][:name].present?).to eq true
-      expect(hierarchy[0][:link].present?).to eq true
+      expect(hierarchy[0]['parent_name'].present?).to eq true
+      expect(hierarchy[0]['parent_type'].present?).to eq true
+      expect(hierarchy[0]['link'].present?).to eq true
     end
   end
 
@@ -105,7 +107,7 @@ RSpec.describe Cell, type: :model do
         unrelated_plan_village
         unrelated_plan_facility
 
-        expect(cell.related_plans.is_a?(ActiveRecord::Relation)).to eq true
+        expect(cell.reload.related_plans.is_a?(ActiveRecord::Relation)).to eq true
         expect(cell.related_plans.size).to eq(2)
 
         expect(cell.related_plans).to include(plan_village)
@@ -143,7 +145,7 @@ RSpec.describe Cell, type: :model do
         unrelated_report_village
         unrelated_report_facility
 
-        expect(cell.related_reports.is_a?(ActiveRecord::Relation)).to eq true
+        expect(cell.reload.related_reports.is_a?(ActiveRecord::Relation)).to eq true
         expect(cell.related_reports.size).to eq(2)
 
         expect(cell.related_reports).to include(report_village)
@@ -163,7 +165,7 @@ RSpec.describe Cell, type: :model do
       report = FactoryBot.create(:report_cell, reportable: cell)
       story = FactoryBot.create(:story, report: report)
 
-      expect(cell.related_stories).to include story
+      expect(cell.reload.related_stories).to include story
     end
 
     it 'returns stories related to child villages' do
@@ -171,7 +173,7 @@ RSpec.describe Cell, type: :model do
       report = FactoryBot.create(:report_village, reportable: village)
       story = FactoryBot.create(:story, report: report)
 
-      expect(cell.related_stories).to include story
+      expect(cell.reload.related_stories).to include story
     end
 
     it 'returns stories related to child facilities' do
@@ -180,7 +182,7 @@ RSpec.describe Cell, type: :model do
       report = FactoryBot.create(:report_facility, reportable: facility)
       story = FactoryBot.create(:story, report: report)
 
-      expect(cell.related_stories).to include story
+      expect(cell.reload.related_stories).to include story
     end
   end
 

@@ -26,6 +26,10 @@ class Country < ApplicationRecord
     self
   end
 
+  def hierarchy
+    []
+  end
+
   def related_plans
     Plan.where(planable_type: 'Country', planable_id: id)
         .or(Plan.where(planable_type: 'District', planable_id: districts.pluck(:id)))

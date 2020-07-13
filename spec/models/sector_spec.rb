@@ -55,12 +55,14 @@ RSpec.describe Sector, type: :model do
 
   describe 'hierarchy' do
     it 'returns an array of hashes with name and link' do
+      sector.save
       hierarchy = sector.hierarchy
 
       expect(hierarchy.is_a?(Array)).to eq true
       expect(hierarchy[0].is_a?(Hash)).to eq true
-      expect(hierarchy[0][:name].present?).to eq true
-      expect(hierarchy[0][:link].present?).to eq true
+      expect(hierarchy[0]['parent_name'].present?).to eq true
+      expect(hierarchy[0]['parent_type'].present?).to eq true
+      expect(hierarchy[0]['link'].present?).to eq true
     end
   end
 
@@ -78,14 +80,14 @@ RSpec.describe Sector, type: :model do
     it 'returns plans directly related to the record' do
       plan = FactoryBot.create(:plan_sector, planable: sector)
 
-      expect(sector.related_plans).to include plan
+      expect(sector.reload.related_plans).to include plan
     end
 
     it 'returns plans related to child cells' do
       cell = FactoryBot.create(:cell, sector: sector)
       plan = FactoryBot.create(:plan_cell, planable: cell)
 
-      expect(sector.related_plans).to include plan
+      expect(sector.reload.related_plans).to include plan
     end
 
     it 'returns plans related to child villages' do
@@ -93,7 +95,7 @@ RSpec.describe Sector, type: :model do
       village = FactoryBot.create(:village, cell: cell)
       plan = FactoryBot.create(:plan_village, planable: village)
 
-      expect(sector.related_plans).to include plan
+      expect(sector.reload.related_plans).to include plan
     end
 
     it 'returns plans related to child facilities' do
@@ -102,7 +104,7 @@ RSpec.describe Sector, type: :model do
       facility = FactoryBot.create(:facility, village: village)
       plan = FactoryBot.create(:plan_facility, planable: facility)
 
-      expect(sector.related_plans).to include plan
+      expect(sector.reload.related_plans).to include plan
     end
   end
 
@@ -121,7 +123,7 @@ RSpec.describe Sector, type: :model do
       cell = FactoryBot.create(:cell, sector: sector)
       report = FactoryBot.create(:report_cell, reportable: cell)
 
-      expect(sector.related_reports).to include report
+      expect(sector.reload.related_reports).to include report
     end
 
     it 'returns reports related to child villages' do
@@ -129,7 +131,7 @@ RSpec.describe Sector, type: :model do
       village = FactoryBot.create(:village, cell: cell)
       report = FactoryBot.create(:report_village, reportable: village)
 
-      expect(sector.related_reports).to include report
+      expect(sector.reload.related_reports).to include report
     end
 
     it 'returns reports related to child facilities' do
@@ -138,7 +140,7 @@ RSpec.describe Sector, type: :model do
       facility = FactoryBot.create(:facility, village: village)
       report = FactoryBot.create(:report_facility, reportable: facility)
 
-      expect(sector.related_reports).to include report
+      expect(sector.reload.related_reports).to include report
     end
   end
 
@@ -151,7 +153,7 @@ RSpec.describe Sector, type: :model do
       report = FactoryBot.create(:report_sector, reportable: sector)
       story = FactoryBot.create(:story, report: report)
 
-      expect(sector.related_stories).to include story
+      expect(sector.reload.related_stories).to include story
     end
 
     it 'returns stories related to child cells' do
@@ -159,7 +161,7 @@ RSpec.describe Sector, type: :model do
       report = FactoryBot.create(:report_cell, reportable: cell)
       story = FactoryBot.create(:story, report: report)
 
-      expect(sector.related_stories).to include story
+      expect(sector.reload.related_stories).to include story
     end
 
     it 'returns stories related to child villages' do
@@ -168,7 +170,7 @@ RSpec.describe Sector, type: :model do
       report = FactoryBot.create(:report_village, reportable: village)
       story = FactoryBot.create(:story, report: report)
 
-      expect(sector.related_stories).to include story
+      expect(sector.reload.related_stories).to include story
     end
 
     it 'returns stories related to child facilities' do
@@ -178,12 +180,12 @@ RSpec.describe Sector, type: :model do
       report = FactoryBot.create(:report_facility, reportable: facility)
       story = FactoryBot.create(:story, report: report)
 
-      expect(sector.related_stories).to include story
+      expect(sector.reload.related_stories).to include story
     end
   end
 
   describe '#sector' do
-    it 'returns itself, because I need all Geography models to respond to record.cell' do
+    it 'returns itself, because I need all Geography models to respond to record.sector' do
       expect(sector.sector).to eq sector
     end
   end
