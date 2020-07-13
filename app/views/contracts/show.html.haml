@@ -1,22 +1,62 @@
 -# frozen_string_literal: true
-%p#notice= notice
+.row
+  .col-auto
+    %h1= "Contract ##{@contract.name}"
+  .col.text-right
+    = link_to 'Back', @return_path, class: 'btn empty'
 
-%p
-  %b Start date:
-  = @contract.start_date
-%p
-  %b End date:
-  = @contract.end_date
-%p
-  %b Budget:
-  = @contract.budget
-%p
-  %b Household goal:
-  = @contract.household_goal
-%p
-  %b People goal:
-  = @contract.people_goal
+.row.mt-3
+  .col
+    %table.table.table-striped.table-sm
+      %thead.thead-dark
+        %tr
+          %th Budget
+          %th Households
+          %th People
+          %th # of targets
+          %th # of plans
+          %th # of reports
+          %th
+      %tbody
+        %tr
+          %td= humanized_money_with_symbol @contract.budget
+          %td= human_number @contract.household_goal
+          %td= human_number @contract.people_goal
+          %td= human_number @contract.targets.size
+          %td= human_number @contract.plans.size
+          %td= human_number @contract.reports.size
+          %td= link_to 'Edit', edit_contract_path(@contract), class: 'btn blue small'
 
-= link_to 'Edit', edit_contract_path(@contract)
-\|
-= link_to 'Back', @return_path
+.row.mt-5
+  .col-12
+    %h3 Targets
+    %p Targets represent the number of technologies to be distributed/implemented in total for the MOU's time period. They are not specific to a geography and their deadline is always the end of the MOU.
+  .col-12
+    %table.table.table-striped.table-sm
+      %thead.thead-dark
+        %tr
+          %th Technology
+          %th.text-right Goal
+          %th.text-right People
+          %th
+      %tbody
+        = render partial: 'target', collection: @targets
+  - if @untargeted_technologies_exist
+    .col-12
+      = link_to 'Add New', new_contract_target_path(@contract), class: 'btn yellow'
+
+.row.mt-5
+  .col
+    %h3 Plans
+    %p Plans represent a detailed goal for which technology will be distributed/implemented in a specific area before a specific deadline.
+  .col-12
+    %table.table.table-striped.table-sm#plans-dttb{ data: { source: dttb_index_contract_plans_path(@contract, format: :json) } }
+      %thead.thead-dark
+        %tr
+          %th Technology
+          %th Location
+          %th Date
+          %th.text-right Goal
+          %th.text-right People
+          %th
+      %tbody

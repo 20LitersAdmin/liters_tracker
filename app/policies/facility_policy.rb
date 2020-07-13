@@ -9,8 +9,6 @@ class FacilityPolicy
   end
 
   def index?
-    raise ActiveRecord::RecordNotFound if @record.empty?
-
     @user
   end
 
@@ -19,7 +17,7 @@ class FacilityPolicy
   end
 
   def new?
-    @user&.admin? || @user&.can_manage_geography?
+    @user&.geography_manager?
   end
 
   def create?

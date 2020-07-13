@@ -65,12 +65,14 @@ RSpec.describe Facility, type: :model do
 
   describe 'hierarchy' do
     it 'returns an array of hashes with name and link' do
+      facility.save
       hierarchy = facility.hierarchy
 
       expect(hierarchy.is_a?(Array)).to eq true
       expect(hierarchy[0].is_a?(Hash)).to eq true
-      expect(hierarchy[0][:name].present?).to eq true
-      expect(hierarchy[0][:link].present?).to eq true
+      expect(hierarchy[0]['parent_name'].present?).to eq true
+      expect(hierarchy[0]['parent_type'].present?).to eq true
+      expect(hierarchy[0]['link'].present?).to eq true
     end
   end
 

@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
 class Report < ApplicationRecord
+  include Rails.application.routes.url_helpers
+
   belongs_to :technology, inverse_of: :reports
   belongs_to :user,       inverse_of: :reports
   belongs_to :contract,   inverse_of: :reports, optional: true
@@ -12,7 +14,7 @@ class Report < ApplicationRecord
   validates_presence_of :date, :year, :month
 
   # form fields for simple_form
-  attr_accessor :sector, :cell, :village
+  attr_accessor :sector, :cell, :village, :facility
 
   scope :only_districts,  -> { where(reportable_type: 'District') }
   scope :only_sectors,    -> { where(reportable_type: 'Sector') }
@@ -45,6 +47,8 @@ class Report < ApplicationRecord
   before_update :set_year_and_month_from_date, if: -> { date.present? && date_changed? }
   before_update :set_date_from_year_and_month, if: -> { year.present? && month.present? && (year_changed? || month_changed?) }
 
+  after_save :update_hierarchy, if: -> { saved_change_to_reportable_id? || saved_change_to_reportable_type? }
+
   def details
     if distributed&.positive?
       val = distributed
@@ -60,6 +64,22 @@ class Report < ApplicationRecord
       "#{ActionController::Base.helpers.pluralize(val, technology.name)} installed on #{date.strftime('%B, %d, %Y')}"
     end
   end
+
+  #############
+
+  def location
+    "#{reportable.name} #{reportable.class}"
+  end
+
+  def sector_name
+    reportable.sector.name || ''
+  end
+
+  def links
+    "<a class='btn yellow small' href='/reports/#{id}/edit'>Edit</a><br /><a data-confirm='Are you sure?' class='btn red small' rel='nofollow' data-method='delete' href='/reports/#{id}'>Delete</a>".html_safe
+  end
+
+  #############
 
   def self.related_facilities
     # return a collection of Facilities from a collection of Reports
@@ -183,5 +203,9 @@ class Report < ApplicationRecord
     return if id.zero?
 
     self.plan_id = id
+  end
+
+  def update_hierarchy
+    update_column(:hierarchy, reload.reportable.hierarchy)
   end
 end

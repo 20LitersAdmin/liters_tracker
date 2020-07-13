@@ -3,5 +3,6 @@
 - @plan_sub = sector.related_plans.between(@from, @to)
 %tr
   %td= link_to sector.name, sector_path(sector)
+  %td= sector.district.name
   %td.text-right= human_number @report_sub.map(&:impact).sum
   %td.text-right= human_number @plan_sub.sum(:people_goal)

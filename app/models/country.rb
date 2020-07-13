@@ -14,6 +14,9 @@ class Country < ApplicationRecord
   validates_presence_of :name
   validates_uniqueness_of :gis_code, allow_nil: true
 
+  scope :hidden, -> { where(hidden: true) }
+  scope :visible, -> { where(hidden: false) }
+
   def child_class
     'District'
   end
@@ -21,6 +24,10 @@ class Country < ApplicationRecord
   def country
     # see config/initializers/geography_type.rb
     self
+  end
+
+  def hierarchy
+    []
   end
 
   def related_plans

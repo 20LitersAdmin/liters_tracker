@@ -9,8 +9,6 @@ class TechnologyPolicy
   end
 
   def index?
-    raise ActiveRecord::RecordNotFound if @record.empty?
-
     @user
   end
 
@@ -19,7 +17,7 @@ class TechnologyPolicy
   end
 
   def new?
-    @user&.admin? || @user&.can_manage_technologies?
+    @user&.technology_manager?
   end
 
   def create?

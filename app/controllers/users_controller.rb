@@ -20,7 +20,9 @@ class UsersController < ApplicationController
     @global_impact = Report.distributions.sum(:impact)
   end
 
-  def
+  def geography
+    # a series of links to all types of geographies
+  end
 
   def index
     authorize @users = User.all.order(:lname)

@@ -1,0 +1,29 @@
+-# frozen_string_literal: true
+.row
+  .col-auto
+    %h1.left= "Hidden Cells"
+  .col.text-right
+    - if @show_visible
+      = link_to 'Show visible', cells_path, class: 'btn btn-outline-dark'
+
+.row
+  .col
+    %h5 Hidden places don't appear on reports or in select fields.
+    %h5 Click the button to make it visible (this will also make visible all Villages within this Cell).
+
+.row.mt-3
+  .col
+    %table.table.table-sm.table-striped#dttb_hidden-cells
+      %thead.thead-dark
+        %tr
+          %th Cell
+          %th Sector
+          %th District
+          %th
+      %tbody
+        -@cells.each do |cell|
+          %tr
+            %td= link_to cell.name, cell_path(cell)
+            %td= cell.sector.name
+            %td= cell.district.name
+            %td= link_to 'Make Visible', make_visible_cell_path(cell), class: 'btn empty small'

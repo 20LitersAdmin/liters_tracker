@@ -1,0 +1,25 @@
+-# frozen_string_literal: true
+.row
+  .col-auto
+    %h1.left= "Hidden Countries"
+  .col.text-right
+    - if @show_visible
+      = link_to 'Show visible', countries_path, class: 'btn btn-outline-dark'
+
+.row
+  .col
+    %h5 Hidden places don't appear on reports or in select fields.
+    %h5 Click the button to make it visible (this will also make visible all Districts, Sectors, Cells and Villages within this Country).
+
+.row.mt-3
+  .col
+    %table.table.table-striped#dttb_hidden-countries
+      %thead.thead-dark
+        %tr
+          %th Country
+          %th
+      %tbody
+        -@countries.each do |country|
+          %tr
+            %td= link_to country.name, country_path(country)
+            %td= link_to 'Make Visible', make_visible_country_path(country), class: 'btn empty small'

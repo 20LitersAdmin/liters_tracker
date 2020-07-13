@@ -1,8 +1,33 @@
 -# frozen_string_literal: true
-%h1 Editing plan
+.row
+  .col-auto
+    %h1= "Contract ##{@contract.name}"
+  .col.text-right
+    = link_to 'Back', @return_path, class: 'btn blue'
+  .col-12
+    %h3 Edit Plan
+    %h5= format_hierarchy @plan.hierarchy
+    %p If the Geography is incorrect, please delete this plan and re-create it.
 
-= render 'form'
 
-= link_to 'Show', @plan
-\|
-= link_to 'Back', @return_path
+-# frozen_string_literal: true
+= simple_form_for [@contract, @plan], defaults: { input_html: { class: 'plan-form' }} do |f|
+  - if @plan.errors.any?
+    = render partial: 'shared/form_errors', locals: { object: @plan }
+
+  .row
+    .col-md.field
+      = f.input :technology, collection: @technologies
+    .col.field
+      = f.input :goal
+    .col.field
+      = f.input :people_goal
+    .col.field
+      = f.input :date, as: :string, input_html: { class: 'datetimepicker-input', autocomplete: 'off', value: (@plan.date || @max_date), data: { mindate: @min_date, maxdate: @max_date, toggle: 'datetimepicker', target: '#plan_date' } }
+
+  .row.actions
+    .col
+      = f.button :submit, class: 'btn yellow'
+      = link_to 'Back', @return_path, class: 'btn blue'
+      = link_to 'Delete', contract_plan_path(@contract, @plan), method: :destroy, data: { confirm: 'Are you sure you want to DELETE this plan?' }, class: 'btn red'
+

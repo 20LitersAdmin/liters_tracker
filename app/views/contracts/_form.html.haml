@@ -1,22 +1,23 @@
 -# frozen_string_literal: true
-= form_for @contract do |f|
+= simple_form_for @contract do |f|
   - if @contract.errors.any?
     = render partial: 'shared/form_errors', locals: { object: @contract }
 
-  .field
-    = f.label :start_date
-    = f.date_select :start_date
-  .field
-    = f.label :end_date
-    = f.date_select :end_date
-  .field
-    = f.label :budget
-    = f.text_field :budget
-  .field
-    = f.label :household_goal
-    = f.number_field :household_goal
-  .field
-    = f.label :people_goal
-    = f.number_field :people_goal
-  .actions
-    = f.submit 'Save'
+  .row
+    .col.form-group
+      = f.input :start_date, as: :string, input_html: { class: 'datetimepicker-input', autocomplete: 'off', data: { toggle: 'datetimepicker', target: '#contract_start_date' } }
+    .col.form-group
+      = f.input :end_date, as: :string, input_html: { class: 'datetimepicker-input', autocomplete: 'off', data: { toggle: 'datetimepicker', target: '#contract_end_date' } }
+  .row
+    .col.field
+      = f.input :budget, as: :float
+    .col.field
+      = f.input :household_goal
+    .col.field
+      = f.input :people_goal
+  .row.actions
+    .col.text-center
+      = f.button :submit, class: 'btn yellow'
+      = link_to 'Cancel', @return_path, class: 'btn blue'
+      - if @contract.persisted? && current_user.admin?
+        = link_to 'Delete Contract', @contract, method: :delete, data: { confirm: 'Are you sure?' }, class: 'btn red'

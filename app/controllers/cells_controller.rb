@@ -1,17 +1,35 @@
 # frozen_string_literal: true
 
 class CellsController < ApplicationController
-  before_action :set_cell, only: %w[show edit update destroy children]
+  before_action :set_cell, only: %w[show edit update destroy children make_visible]
 
   # GET /cells
   # GET /cells.json
   def index
-    authorize @cells = Cell.all.order(:name)
+    authorize @cells = Cell.visible.order(:name)
+
+    @show_hidden = Cell.hidden.any?
+
+    @earliest = form_date Report.earliest_date
+    @latest =   form_date Report.latest_date
+
+    @from = params[:from].present? ? Date.parse(params[:from]) : @earliest
+    @to =   params[:to].present? ? Date.parse(params[:to]) : @latest
+  end
+
+  def hidden
+    authorize @cells = Cell.hidden.includes(:sector, :district).select(:id, :name, :sector_id).order(:name)
+    @show_visible = Cell.visible.any?
   end
 
   # GET /cells/1
   # GET /cells/1.json
   def show
+    if @cell.hidden?
+      flash[:error] = "This cell is currently hidden. Please #{view_context.link_to('edit', edit_cell_path(@cell)).html_safe} the record to make it visible."
+      flash[:html_safe] = true
+    end
+
     @earliest = form_date Report.earliest_date
     @latest =   form_date Report.latest_date
 
@@ -87,8 +105,15 @@ class CellsController < ApplicationController
 
   ## facilities#form and facilities#modal_form ajax
   ## sectors#reports ajax
+  ## plans#_form ajax
   def children
     render json: @cell.villages.select(:id, :name).order(:name)
+  end
+
+  def make_visible
+    @cell.update(hidden: false)
+
+    redirect_to cells_path
   end
 
   private
@@ -98,6 +123,12 @@ class CellsController < ApplicationController
   end
 
   def cell_params
-    params.require(:cell).permit(:name, :gis_code, :latitude, :longitude, :population, :households)
+    params.require(:cell).permit(:name,
+                                 :gis_code,
+                                 :latitude,
+                                 :longitude,
+                                 :population,
+                                 :households,
+                                 :hidden)
   end
 end

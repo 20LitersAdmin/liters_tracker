@@ -1,8 +1,11 @@
 -# frozen_string_literal: true
-%h1 Editing target
+.row
+  .col-auto
+    %h1= "Contract ##{@contract.name}"
+  .col.text-right
+    = link_to 'Back', @return_path, class: 'btn blue'
+  .col-12
+    %h3 Edit Target
+    %p To change the Technology, delete this target and create a new one.
 
 = render 'form'
-
-= link_to 'Show', @target
-\|
-= link_to 'Back', @return_path

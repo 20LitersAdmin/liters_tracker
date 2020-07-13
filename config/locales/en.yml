@@ -6,6 +6,8 @@ en:
     attributes:
       report:
         reportable: 'Geography'
+      plan:
+        planable: 'Geography'
     errors:
       models:
         report:
@@ -17,5 +19,9 @@ en:
         facility:
           attributes:
             village:
+              required: 'must be selected.'
+        plan:
+          attributes:
+            planable:
               required: 'must be selected.'
 

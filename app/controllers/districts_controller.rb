@@ -1,27 +1,33 @@
 # frozen_string_literal: true
 
 class DistrictsController < ApplicationController
-  before_action :set_district, only: %i[show edit update destroy]
+  before_action :set_district, only: %i[show edit update destroy children make_visible]
 
   # GET /districts
   def index
-    authorize @districts = District.all
+    authorize @districts = District.visible.order(:name)
+
+    @show_hidden = District.hidden.any?
 
     @earliest = form_date Report.earliest_date
     @latest =   form_date Report.latest_date
 
     @from = params[:from].present? ? Date.parse(params[:from]) : @earliest
     @to =   params[:to].present? ? Date.parse(params[:to]) : @latest
+  end
 
-    @reports = Report.between(@from, @to).order(date: :asc)
-    @plans = Plan.between(@from, @to)
-
-    contract_id = @plans.select(:contract_id).maximum(:contract_id)
-    @plan_date = human_date @plans.size.zero? ? nil : Contract.find(contract_id).end_date
+  def hidden
+    authorize @districts = District.hidden.includes(:country).select(:id, :name, :country_id).order(:name)
+    @show_visible = District.visible.any?
   end
 
   # GET /districts/:id
   def show
+    if @district.hidden?
+      flash[:error] = "This district is currently hidden. Please #{view_context.link_to('edit', edit_district_path(@district)).html_safe} the record to make it visible."
+      flash[:html_safe] = true
+    end
+
     @earliest = form_date Report.earliest_date
     @latest =   form_date Report.latest_date
 
@@ -91,6 +97,19 @@ class DistrictsController < ApplicationController
     end
   end
 
+  ## facilities#_form ajax
+  ## plans#_form ajax
+  ## sectors#report ajax
+  def children
+    render json: @district.sectors.select(:id, :name).order(:name)
+  end
+
+  def make_visible
+    @district.update(hidden: false)
+
+    redirect_to districts_path
+  end
+
   private
 
   def set_district
@@ -98,6 +117,12 @@ class DistrictsController < ApplicationController
   end
 
   def district_params
-    params.require(:district).permit(:name, :gis_code, :latitude, :longitude, :population, :households)
+    params.require(:district).permit(:name,
+                                     :gis_code,
+                                     :latitude,
+                                     :longitude,
+                                     :population,
+                                     :households,
+                                     :hidden)
   end
 end

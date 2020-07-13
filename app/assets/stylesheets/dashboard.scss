@@ -13,13 +13,14 @@
 }
 
 #brandbar {
+  z-index: 3;
   .nav-item {
     margin: 0 8px;
 
     a {
       opacity: .8;
       font-weight: 700;
-      font-size: 16px;
+      font-size: 14px;
       line-height: 24px;
       text-align: center;
       padding: 8px 12px;
@@ -73,6 +74,29 @@
   }
 }
 
+.basic-stat-block {
+  .card {
+    border-radius: 0 !important;
+    padding: 10px 10px;
+    margin: 3%;
+    border: none;
+    min-height: 140px;
+  }
+
+  .card-title {
+    margin-top: 20px;
+    font-size: 2em;
+    font-weight: bold;
+  }
+
+  .card-subtitle {
+    margin-bottom: -20px;
+    font-weight: bold;
+    text-transform: uppercase;
+    line-height: 18px;
+  }
+}
+
 #month_nav {
   a {
     color: $grey;
@@ -81,23 +105,6 @@
     &:hover {
       border-bottom: 2px solid $yellow;
     }
-  }
-}
-
-.basic-stat-block {
-  .card {
-    border-radius: 0 !important;
-    margin: 20px 0px;
-
-
-  }
-
-  .card-title {
-    margin-top: 20px;
-  }
-
-  .card-subtitle {
-    margin-bottom: -20px;
   }
 }
 
@@ -165,6 +172,14 @@
 @media (max-width: 768px) {
   .card-caption h4 {
     font-size: 1rem;
+  }
+}
+
+@media (max-width: 991px) {
+  #brandbar ul {
+    background-color: $transparent-grey;
+    padding: 6px;
+    border-radius: 2px;
   }
 }
 

@@ -1,0 +1,31 @@
+-# frozen_string_literal: true
+.row
+  .col-auto
+    %h1.left= "Hidden Villages"
+  .col.text-right
+    - if @show_visible
+      = link_to 'Show visible', villages_path, class: 'btn btn-outline-dark'
+
+.row
+  .col.mb-3
+    %h5 Hidden villages don't appear on reports or in select fields.
+    %h5 Click the button to make a village visible.
+
+.row.mt-3
+  .col
+    %table.table.table-sm.table-striped#dttb_hidden-villages
+      %thead.thead-dark
+        %tr
+          %th Village
+          %th Cell
+          %th Sector
+          %th District
+          %th
+      %tbody
+        -@villages.each do |village|
+          %tr
+            %td= link_to village.name, village_path(village)
+            %td= village.cell.name
+            %td= village.sector.name
+            %td= village.district.name
+            %td= link_to 'Make Visible', make_visible_village_path(village), class: 'btn empty small'

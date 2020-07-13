@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_07_10_153438) do
+ActiveRecord::Schema.define(version: 2020_07_10_160045) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -47,6 +47,7 @@ ActiveRecord::Schema.define(version: 2020_07_10_153438) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.boolean "hidden", default: false, null: false
+    t.jsonb "hierarchy"
     t.index ["gis_code"], name: "index_cells_on_gis_code", unique: true
     t.index ["hidden"], name: "index_cells_on_hidden"
     t.index ["sector_id"], name: "index_cells_on_sector_id"
@@ -89,6 +90,7 @@ ActiveRecord::Schema.define(version: 2020_07_10_153438) do
     t.datetime "updated_at", null: false
     t.bigint "country_id"
     t.boolean "hidden", default: false, null: false
+    t.jsonb "hierarchy"
     t.index ["country_id"], name: "index_districts_on_country_id"
     t.index ["gis_code"], name: "index_districts_on_gis_code", unique: true
     t.index ["hidden"], name: "index_districts_on_hidden"
@@ -105,6 +107,7 @@ ActiveRecord::Schema.define(version: 2020_07_10_153438) do
     t.bigint "village_id", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.jsonb "hierarchy"
     t.index ["village_id"], name: "index_facilities_on_village_id"
   end
 
@@ -118,6 +121,7 @@ ActiveRecord::Schema.define(version: 2020_07_10_153438) do
     t.integer "planable_id"
     t.string "planable_type"
     t.date "date"
+    t.jsonb "hierarchy"
     t.index ["contract_id", "technology_id", "planable_id", "planable_type"], name: "idx_has_many_reports", unique: true
     t.index ["contract_id"], name: "index_plans_on_contract_id"
     t.index ["created_at"], name: "index_plans_on_created_at"
@@ -143,6 +147,7 @@ ActiveRecord::Schema.define(version: 2020_07_10_153438) do
     t.integer "year"
     t.integer "month"
     t.decimal "hours", precision: 5, scale: 2, default: "0.0"
+    t.jsonb "hierarchy"
     t.index ["contract_id", "technology_id", "reportable_id", "reportable_type"], name: "idx_belongs_to_plan"
     t.index ["contract_id"], name: "index_reports_on_contract_id"
     t.index ["date"], name: "index_reports_on_date"
@@ -163,6 +168,7 @@ ActiveRecord::Schema.define(version: 2020_07_10_153438) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.boolean "hidden", default: false, null: false
+    t.jsonb "hierarchy"
     t.index ["district_id"], name: "index_sectors_on_district_id"
     t.index ["gis_code"], name: "index_sectors_on_gis_code", unique: true
     t.index ["hidden"], name: "index_sectors_on_hidden"
@@ -260,6 +266,7 @@ ActiveRecord::Schema.define(version: 2020_07_10_153438) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.boolean "hidden", default: false, null: false
+    t.jsonb "hierarchy"
     t.index ["cell_id"], name: "index_villages_on_cell_id"
     t.index ["gis_code"], name: "index_villages_on_gis_code", unique: true
     t.index ["hidden"], name: "index_villages_on_hidden"

@@ -49,12 +49,14 @@ RSpec.describe Village, type: :model do
 
   describe 'hierarchy' do
     it 'returns an array of hashes with name and link' do
+      village.save
       hierarchy = village.hierarchy
 
       expect(hierarchy.is_a?(Array)).to eq true
       expect(hierarchy[0].is_a?(Hash)).to eq true
-      expect(hierarchy[0][:name].present?).to eq true
-      expect(hierarchy[0][:link].present?).to eq true
+      expect(hierarchy[0]['parent_name'].present?).to eq true
+      expect(hierarchy[0]['parent_type'].present?).to eq true
+      expect(hierarchy[0]['link'].present?).to eq true
     end
   end
 
@@ -82,7 +84,7 @@ RSpec.describe Village, type: :model do
       related_plan = FactoryBot.create(:plan_facility, planable: related_facility)
       unrelated_plan = FactoryBot.create(:plan_facility)
 
-      expect(village.related_plans).to include related_plan
+      expect(village.reload.related_plans).to include related_plan
       expect(village.related_plans).not_to include unrelated_plan
     end
   end
@@ -101,7 +103,7 @@ RSpec.describe Village, type: :model do
       related_report = FactoryBot.create(:report_facility, reportable: related_facility)
       unrelated_report = FactoryBot.create(:report_facility)
 
-      expect(village.related_reports).to include related_report
+      expect(village.reload.related_reports).to include related_report
       expect(village.related_reports).not_to include unrelated_report
     end
   end
@@ -122,7 +124,7 @@ RSpec.describe Village, type: :model do
       related_story = FactoryBot.create(:story, report: related_report)
       unrelated_story = FactoryBot.create(:story)
 
-      expect(village.related_stories).to include related_story
+      expect(village.reload.related_stories).to include related_story
       expect(village.related_stories).not_to include unrelated_story
     end
   end

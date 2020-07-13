@@ -21,6 +21,7 @@
 //= require moment
 //= require tempusdominus-bootstrap-4.js
 //= require tinymce
+//= require finders
 //= require_tree .
 
 function getParameterByName(name, url) {
@@ -42,3 +43,18 @@ function actionMatches(actions_ary) {
   var action = $('body').data('action');
   return actions_ary.indexOf(action) !== -1;
 }
+
+// Dashboard#index
+function sizeStatsBlocks() {
+    var t, e = jQuery(".basic-stat-block");
+    t = 1030 < window.innerWidth ? 6 : 3;
+    var n = e.length / t
+      , r = Math.floor(n)
+      , i = r * t - 1
+      , o = e.length - t * r
+      , a = 100 / t + "%"
+      , s = 100 / o + "%";
+    e.each(function(t) {
+        t <= i ? jQuery(this).css("width", a) : jQuery(this).css("width", s)
+    })
+};

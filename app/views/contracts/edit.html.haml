@@ -1,8 +1,8 @@
 -# frozen_string_literal: true
-%h1 Editing contract
+.row
+  .col
+    %h1 Edit contract
+  .col.text-right
+    = link_to 'Back', @return_path, class: 'btn blue'
 
 = render 'form'
-
-= link_to 'Show', @contract
-\|
-= link_to 'Back', @return_path

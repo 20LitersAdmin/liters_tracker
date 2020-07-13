@@ -1,21 +1,25 @@
 # CURRENT:
-0. ImportService:
-Cells says none create
+Sandardize: Show views
+- cell#show has `hierarchy_with_links`
+- edit / back buttons should be `class: small` on show views
 
-0. Load dashboard to a specific year && month
+- Forms (need check_box for hidden)
 
-0. Feature specs
+- Controllers:
+-- Add make_visible to `before_action :set_record`
+-- Flash messages on `show` when `@record.hidden?`
+-- Update record_params to include hidden
+-- Add `def hidden; end` action
 
-0. Geography navigation:
-- links to technologies contain no geography filter (should they?)
+0. Dashboard
+- basic_stat_blocks aren't collapsing like they used to?
 
-1. Plans architecture:
-- Plan form
--- geography: contracts/{:id}/plans
--- technology: technologies/{:id}/plans
+0. New model tests in geographies (Report and Plan want to be able to call any geography)
 
-1. User permissions
-- `(current_user.can_manage_contracts? || current_user.admin?)` in views should be simplified to `current_user.contract_manager?`
+0. Sector#report forms have better geography error handling in views than Plans, Facilities forms. See `report_error.js.erb`
+
+1. Contracts/Plans architecture:
+- Plans#edit form will need some work in controller for geographies, right?
 
 2. What about un-met plans?
 - Help Rebero see work to be accomplished by Sector
@@ -24,21 +28,11 @@ Cells says none create
 - Need to re-assign reports before deleting facility
 - or create a Merge function?
 
-4. technology_path(:id)
-- Add Plan button does nothing
-
-5. Feature tests
-
-# Creating/Updating Targets
-
-# Creating/Updating Plans
-* Copy the sector/select && sector/#id/report process
+# Geography index views: I removed total rows for speed
+- If we want totals: https://datatables.net/examples/advanced_init/footer_callback.html
 
 # Forms
-- Contract form
 - Tech form
-- Target form
-
 
 # Geography forms (also need a chooser view)
 - Country form
@@ -49,8 +43,6 @@ Cells says none create
 
 # Indexes need:
 - Facilities: datatables (replace will_paginate)
-- Reports: datatables (replace will_paginate)
-- all geographies: datatables (replace will_paginate)
 
 # Shows need:
 - Facility: reports / plans

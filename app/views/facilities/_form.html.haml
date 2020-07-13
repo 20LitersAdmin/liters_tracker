@@ -1,5 +1,4 @@
 -# frozen_string_literal: true
-
 = simple_form_for facility do |f|
   - if facility.errors.any?
     = render partial: 'shared/form_errors', locals: { object: facility }
@@ -13,18 +12,14 @@
     .col.field
       = f.input :description, as: :text
   .row
-    - if facility.new_record?
-      .col.field
-        = f.input :sector, collection: @sectors, hint: 'Select to limit cells.'
-      .col.field
-        = f.input :cell, collection: [['Please select a sector', '0']], disabled: 0, hint: 'Select to limit villages.'
-      .col.field
-        = f.input :village, collection: [['Please select a cell','0']], disabled: 0
-    - else
-      .col.field
-        = f.input :sector, collection: @sectors, selected: facility.sector.id
-      .col.field
-        = f.input :village, collection: facility.sector.villages.select(:name, :id).order(:name), selected: facility.village.id
+    .col.field
+      = f.input :district, collection: @districts, include_blank: true, selected: @district&.id
+    .col.field
+      = f.input :sector, collection: @sectors, disabled: 0, include_blank: true, selected: @sector&.id
+    .col.field
+      = f.input :cell, collection: @cells, disabled: 0, include_blank: true, selected: @cell&.id
+    .col.field
+      = f.input :village_id, collection: @villages, disabled: 0, include_blank: true, selected: @village&.id
   .row
     .col.field
       = f.input :population
@@ -36,7 +31,8 @@
     .col.field
       = f.input :longitude, hint: 'like 30.0912883'
   .row.my-3.actions
-    .col.text-left
-      = link_to 'Back', @return_path, class: 'btn yellow'
-    .col.text-right
+    .col
       = f.button :submit, class: 'btn yellow'
+      = link_to 'Back', @return_path, class: 'btn blue'
+      - if @facility.persisted?
+        = link_to 'Delete', facility_path(@facility), method: :destroy, data: { confirm: 'Are you sure you want to DELETE this facility?' }, class: 'btn red'

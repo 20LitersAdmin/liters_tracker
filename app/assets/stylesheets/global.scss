@@ -21,6 +21,11 @@ body {
   }
 }
 
+main {
+  // allow Navbar collapse menu to hover over top
+  z-index: 2;
+}
+
 .fa {
   font-family: FontAwesome !important;
 }
@@ -266,10 +271,8 @@ table {
   }
 }
 
-.badge {
-  @at-root #{selector-unify(&, "a")} {
-    &:visited {
-      color: inherit;
-    }
-  }
+// Datatables with text-right headers interfere with sorting links
+// Datatables adds the 'dataTable' class to the table, how nice!
+table.dataTable .text-right {
+  padding-right: 30px !important;
 }

@@ -50,9 +50,37 @@ $(document).on('preInit.dt', function(e, settings) {
 
 
 // init on turbolinks load
+// Global dataTables can be initialized using #dttb-{name}
+// For custom dataTables, use #{name}-dttb
 $(document).on('turbolinks:load', function() {
   if (!$.fn.DataTable.isDataTable("table[id^=dttb]")) {
-    $("table[id^=dttb-]").DataTable();
+    $("table[id^=dttb-]").DataTable( {
+      language: {
+        paginate: {
+          first: "&#8676",
+          previous: "&#8592",
+          next: "&#8594",
+          last: "&#8677"
+        }
+      }
+    });
+    $("table[id^=dttb_hidden-]").DataTable( {
+      lengthMenu: [[25, 50, 100, -1], [25, 50, 100, "All"] ],
+      order: [0, 'asc'],
+      columnDefs: [ {
+        "searchable": false,
+        "orderable": false,
+        "targets": [-1]
+      } ],
+      language: {
+        paginate: {
+          first: "&#8676",
+          previous: "&#8592",
+          next: "&#8594",
+          last: "&#8677"
+        }
+      }
+    });
     $("table[id^=dttb_btn0-]").DataTable( {
       order: [1, 'asc'],
       columnDefs: [ {

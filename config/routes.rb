@@ -10,31 +10,45 @@ Rails.application.routes.draw do
 
   get 'stats', to: 'dashboard#stats_json', as: 'stats'
 
-  resources :reports
+  resources :reports, except: %i[new] do
+    get 'dttb_index', on: :collection
+  end
 
   resources :contracts do
-    resources :plans
+    resources :targets, only: %i[new create edit update destroy]
+    resources :plans do
+      get 'dttb_index', on: :collection
+    end
   end
 
-  resources :plans
-  resources :targets
+  resources :technologies
 
-  resources :technologies do
-    resources :plans
+  resources :countries do
+    get 'hidden', on: :collection
+    get 'make_visible', on: :member
   end
 
-  resources :countries
-  resources :districts
+  resources :districts do
+    get 'hidden', on: :collection
+    get 'children', on: :member
+    get 'make_visible', on: :member
+  end
   resources :sectors do
+    get 'hidden', on: :collection
     get 'select', on: :collection
     get 'report', on: :member
     get 'children', on: :member
+    get 'make_visible', on: :member
   end
   resources :cells do
+    get 'hidden', on: :collection
     get 'children', on: :member
+    get 'make_visible', on: :member
   end
   resources :villages do
+    get 'hidden', on: :collection
     get 'children', on: :member
+    get 'make_visible', on: :member
   end
   resources :facilities
 
@@ -50,6 +64,7 @@ Rails.application.routes.draw do
   resources :users
   get 'data', to: 'users#data', as: 'data'
   get 'data_filter', to: 'users#data_filter', as: 'data_filter'
+  get 'geography', to: 'users#geography', as: 'geography'
 
   get 'monthly', to: 'monthly#index'
   post 'monthly/redirector', to: 'monthly#redirector', as: 'monthly_redirector'

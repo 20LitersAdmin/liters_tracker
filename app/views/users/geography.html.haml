@@ -1,0 +1,37 @@
+.row
+  .col
+    %h3 Manage Geography
+
+
+.row
+  %table.table.table-striped
+    %thead.thead-dark
+      %tr
+        %th Geography
+        %th Show visible
+        %th Show hidden
+    %tbody
+      %tr
+        %td Countries
+        %td= link_to 'All Visible', countries_path, class: 'btn yellow'
+        %td= link_to 'All Hidden', hidden_countries_path, class: 'btn empty'
+      %tr
+        %td Districts
+        %td= link_to 'All Visible', districts_path, class: 'btn yellow'
+        %td= link_to 'All Hidden', hidden_districts_path, class: 'btn empty'
+      %tr
+        %td Sectors
+        %td= link_to 'All Visible', sectors_path, class: 'btn yellow'
+        %td= link_to 'All Hidden', hidden_sectors_path, class: 'btn empty'
+      %tr
+        %td Cells
+        %td= link_to 'All Visible', cells_path, class: 'btn yellow'
+        %td= link_to 'All Hidden', hidden_cells_path, class: 'btn empty'
+      %tr
+        %td Villages
+        %td= link_to 'All Visible', villages_path, class: 'btn yellow'
+        %td= link_to 'All Hidden', hidden_villages_path, class: 'btn empty'
+      %tr
+        %td Facilities
+        %td= link_to 'All Visible', facilities_path, class: 'btn yellow'
+        %td

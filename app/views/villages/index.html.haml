@@ -1,39 +1,22 @@
 -# frozen_string_literal: true
 .row.mb-3
-  .col-sm-4
-    %h4 Data: All Villages
-  .col-sm-3.text-center
-    = link_to 'All Sectors', sectors_path, class: 'btn yellow'
-  .col-sm-3.text-center
-    - if @skip_blanks
-      = link_to 'Show empty rows', request.fullpath.gsub('&skip_blanks=true', '').gsub('?skip_blanks=true', '') , class: 'btn btn-outline-dark', id: 'vill_skipblank'
-    - else
-      = link_to 'Hide empty rows',  @skip_blanks_rfp, class: 'btn btn-outline-dark', id: 'vill_skipblank'
+  .col-sm-8
+    %h1 Villages
   .col-sm-2.text-right
-    - if current_user.can_manage_geography? || current_user.admin?
-      = link_to 'New', new_village_path, class: 'btn yellow'
-    = link_to 'Back', @return_path, class: 'btn blue'
+    - if @show_hidden
+      = link_to 'Show hidden', hidden_villages_path, class: 'btn btn-outline-dark small'
+  .col-sm-2.text-right
+    = link_to 'New', new_village_path, class: 'btn yellow small'
+    = link_to 'Back', @return_path, class: 'btn blue small'
 
 = render partial: 'shared/search', locals: { from: @from, to: @to, earliest: @earliest, latest: @latest }
 
-%table.table.table-striped#dttb_btn0-villages
+%table.table.table-striped.table-sm#dttb-villages
   %thead
     %tr
-      %th
       %th Village
       %th Sector
-      %th.text-center Pop / HH
-      %th.text-center Dist / Checked
       %th.text-right People served
-      %th.text-right= "People goal (by #{@plan_date})"
-  %tfoot
-    %tr
-      %th
-      %th Grand Total
-      %th
-      %th.text-center= @gttl_pop_hh
-      %th.text-center= @gttl_dist_chk
-      %th.text-right= human_number @reports.map(&:impact).sum
-      %th.text-right= human_number @plans.sum(:people_goal)
+      %th.text-right People goal
   %tbody
     = render @villages

@@ -1,16 +1,8 @@
 -# frozen_string_literal: true
 - @report_sub = village.related_reports.between(@from, @to)
 - @plan_sub = village.related_plans.between(@from, @to)
-- @reps_dist_chk = @report_sub.pluck(:distributed, :checked)
-- @ttl_dist = @reps_dist_chk.map { |rep| rep[0] }.compact.sum
-- @ttl_chk = @reps_dist_chk.map { |rep| rep[1] }.compact.sum
-- @ttl_dist_chk = human_number(@ttl_dist) + ' / ' + human_number(@ttl_chk)
-- return if @plan_sub.blank? && @report_sub.blank? && @skip_blanks
 %tr
-  %td= link_to 'Add Report', '#', class: 'btn yellow btn-sm'
   %td= link_to village.name, village_path(village)
   %td= village.sector.name
-  %td.text-center= village.pop_hh
-  %td.text-center= @ttl_dist_chk
   %td.text-right= human_number @report_sub.map(&:impact).sum
   %td.text-right= human_number @plan_sub.sum(:people_goal)

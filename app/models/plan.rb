@@ -9,6 +9,9 @@ class Plan < ApplicationRecord
 
   has_many :reports, inverse_of: :plan
 
+  # form fields for _form
+  attr_accessor :district, :sector, :cell, :village, :facility
+
   scope :between,         ->(from, to) { joins(:contract).where('contracts.end_date >= ? AND contracts.start_date <= ?', from, to) }
   scope :current,         -> { where(contract_id: Contract.current) }
   scope :nearest_to_date, ->(date) { joins(:contract).where('contracts.end_date >= ?', date).order(:created_at) }
@@ -22,13 +25,22 @@ class Plan < ApplicationRecord
   scope :without_reports,         -> { left_outer_joins(:reports).where(reports: { id: nil }) }
   scope :with_reports_incomplete, -> { joins(:reports).group('plans.id').having('plans.goal > SUM(reports.distributed)').select('plans.*') }
 
+  before_validation :add_error_to_district_field, if: -> { planable_type.blank? || planable_id.blank? }
+
   after_save :find_reports
+  after_save :update_hierarchy, if: -> { saved_change_to_planable_id? || saved_change_to_planable_type? }
 
   def self.incomplete
     ary = []
     ary << Plan.without_reports.pluck(:id)
     ary << Plan.with_reports_incomplete.pluck(:id)
     Plan.where(id: ary.flatten)
+  end
+
+  def complete?
+    return false unless reports.any?
+
+    (goal || 0) <= (reports.sum(:distributed) || 0)
   end
 
   def picture
@@ -39,12 +51,14 @@ class Plan < ApplicationRecord
     "#{ActionController::Base.helpers.pluralize(goal, technology.name)} for #{people_goal} people by #{date.strftime('%m/%d/%Y')}"
   end
 
-  def complete?
-    (goal || 0) <= (reports.sum(:distributed) || 0)
+  def date
+    return unless self.persisted?
+
+    read_attribute(:date) || contract.end_date
   end
 
-  def date
-    read_attribute(:date) || contract.end_date
+  def links
+    "<a class='btn blue small' href='/contracts/#{contract_id}/plans/#{id}/edit'>Edit</a> <a data-confirm='Are you sure?' class='btn red small' rel='nofollow' data-method='delete' href='/contracts/#{contract_id}/reports/#{id}'>Delete</a>".html_safe
   end
 
   def self.related_facilities
@@ -113,6 +127,10 @@ class Plan < ApplicationRecord
 
   private
 
+  def add_error_to_district_field
+    errors.add(:district, ': No geography selected')
+  end
+
   def find_reports
     # edge case: reports have been created without a plan_id
     # add plan_id to these records once an applicable plan is created
@@ -124,5 +142,9 @@ class Plan < ApplicationRecord
 
     # reps.each { |rep| rep.update_column(:plan_id, id) } if reps.any?
     reps.update_all(plan_id: id) if reps.any?
+  end
+
+  def update_hierarchy
+    update_column(:hierarchy, reload.planable.hierarchy)
   end
 end

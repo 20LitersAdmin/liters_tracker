@@ -1,0 +1,3 @@
+{"recordsTotal": <%= @reports.size %>,"recordsFiltered": <%= @reports.size %>,"data": [
+  <% @reports.each do |report| %>{"date": "<%= report.date %>","location": "<%= report.location %>","sector": "<%= report.sector_name %>","tech": "<%= report.technology.short_name %>","dist": "<%= human_number report.distributed %>","checked": "<%= human_number report.checked %>","ppl": "<%= human_number report.people %>","hrs": "<%= human_number report.hours %>","impact": "<%= human_number report.impact %>","author": "<%= report.user.name %>","links": "<%= report.links %>"}<%= "," unless report == @reports.last %><% end %>]}
+

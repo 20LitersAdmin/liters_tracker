@@ -12,8 +12,6 @@
         %th Households
         %th Category
         %th
-        %th
-        %th
 
     %tbody
       - @facilities.each do |facility|
@@ -24,9 +22,9 @@
           %td= facility.population
           %td= facility.households
           %td= facility.category
-          %td= link_to 'Show', facility, class: 'btn yellow'
-          %td= link_to 'Edit', edit_facility_path(facility), class: 'btn blue'
-          %td= link_to 'Delete', facility, method: :delete, class: 'btn red', data: { confirm: 'Are you sure?' }
+          %td
+            = link_to 'Show', facility, class: 'btn yellow small'
+            = link_to 'Edit', edit_facility_path(facility), class: 'btn blue small'
 
   .row.justify-content-center.align-self-center
     .col-2

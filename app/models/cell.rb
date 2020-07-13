@@ -19,6 +19,16 @@ class Cell < ApplicationRecord
   validates_presence_of :name, :sector_id
   validates_uniqueness_of :gis_code, allow_blank: true
 
+  after_save :update_hierarchy, if: -> { saved_change_to_sector_id? }
+
+  def cell
+    self
+  end
+
+  def cells
+    # Report and Plan want to be able to call any geography
+    parent&.cells
+  end
   after_save :toggle_relations, if: -> { saved_change_to_hidden? }
 
   scope :hidden, -> { where(hidden: true) }
@@ -28,8 +38,14 @@ class Cell < ApplicationRecord
     'Village'
   end
 
-  def hierarchy
-    sector.hierarchy << { name: "#{sector.name} Sector", link: sector_path(sector) }
+  def districts
+    # Report and Plan want to be able to call any geography
+    district&.parent&.districts
+  end
+
+  def facility
+    # Report and Plan want to be able to call any geography
+    nil
   end
 
   def self.import(filepath)
@@ -83,13 +99,26 @@ class Cell < ApplicationRecord
          .or(Story.joins(:report).where("reports.reportable_type = 'Facility' AND reports.reportable_id IN (?)", facilities.pluck(:id)))
   end
 
-  def cell
-    self
+  def sectors
+    # Report and Plan want to be able to call any geography
+    sector&.parent&.sectors
   end
 
   def village
-    # some views assume all reports are at the village level
+    # Report and Plan want to be able to call any geography
     nil
+  end
+
+  def update_hierarchy(cascade: false)
+    parent_hierarchy = sector.hierarchy
+
+    update_column(:hierarchy, parent_hierarchy << { parent_name: sector.name, parent_type: sector.class.to_s, link: sector_path(sector) })
+
+    return unless cascade || saved_change_to_sector_id?
+
+    reload.villages.each do |v|
+      v.reload.update_hierarchy(cascade: true)
+    end
   end
 
   private

@@ -1,0 +1,7 @@
+-# frozen_string_literal: true
+- @report_sub = country.related_reports.between(@from, @to)
+- @plan_sub = country.related_plans.between(@from, @to)
+%tr
+  %td= link_to country.name, country_path(country)
+  %td.text-right= human_number @report_sub.map(&:impact).sum
+  %td.text-right= human_number @plan_sub.sum(:people_goal)

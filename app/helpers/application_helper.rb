@@ -5,23 +5,17 @@ module ApplicationHelper
     Constants::Application::BOOTSTRAP_CLASSES[flash_type.to_sym] || flash_type.to_s
   end
 
-  def hierarchy(geography)
+  def format_hierarchy(array_of_hashes, slim: false, links: false)
     str = ''
 
-    geography.hierarchy.each do |geo|
-      str += geo[:name]
-      str += ' > ' unless geo == geography.hierarchy.last
-    end
+    array_of_hashes.each do |geo|
+      geo.symbolize_keys!
 
-    str
-  end
+      next if slim && geo[:parent_type] == 'Country'
 
-  def hierarchy_with_links(geography)
-    str = ''
-
-    geography.hierarchy.each do |geo|
-      str += link_to geo[:name], geo[:link]
-      str += ' > ' unless geo == geography.hierarchy.last
+      geo_name = slim ? geo[:parent_name] : "#{geo[:parent_name]} #{geo[:parent_type]}"
+      str += links ? link_to(geo_name, geo[:link]) : geo_name
+      str += ' > ' unless geo == array_of_hashes.last
     end
 
     str.html_safe
@@ -57,10 +51,16 @@ module ApplicationHelper
 
   def flash_messages(_opts = {})
     flash.each do |msg_type, message|
+      next if msg_type == 'html_safe'
+
       concat(
         content_tag(:div, message, class: "alert alert-#{bootstrap_class_for(msg_type)} alert-dismissable fade show", role: 'alert') do
           concat content_tag(:button, 'x', class: 'close', data: { dismiss: 'alert' })
-          concat message
+          if flash[:html_safe]
+            concat message.html_safe
+          else
+            concat message
+          end
         end
       )
     end

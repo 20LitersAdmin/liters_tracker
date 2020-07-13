@@ -1,6 +1,41 @@
 -# frozen_string_literal: true
-%h1 New plan
+.row
+  .col-auto
+    %h1= "Contract ##{@contract.name}"
+  .col.text-right
+    = link_to 'Back', @return_path, class: 'btn blue'
+  .col-12
+    %h3 New Plan
 
-= render 'form'
+= simple_form_for [@contract, @plan], defaults: { input_html: { class: 'plan-form' }} do |f|
+  = f.input :planable_id, as: :hidden
+  = f.input :planable_type, as: :hidden
 
-= link_to 'Back', @return_path
+  .row
+    .col.field
+      = f.input :district, collection: @districts, include_blank: true, selected: @district&.id
+    .col.field
+      = f.input :sector, collection: @sectors, disabled: 0, include_blank: true, selected: @sector&.id
+    .col.field
+      = f.input :cell, collection: @cells, disabled: 0, include_blank: true, selected: @cell&.id
+  .row
+    .col.field
+      = f.input :village, collection: @villages, disabled: 0, include_blank: true, selected: @village&.id
+    .col.field
+      = f.input :facility, collection: @facilities, disabled: 0, include_blank: true, selected: @facility&.id
+
+  .row
+    .col-md.field
+      = f.input :technology, collection: @technologies
+    .col.field
+      = f.input :goal
+    .col.field
+      = f.input :people_goal
+
+  .row
+    .col.field
+      = f.input :date, as: :string, input_html: { class: 'datetimepicker-input', autocomplete: 'off', value: @max_date, data: { mindate: @min_date, maxdate: @max_date, toggle: 'datetimepicker', target: '#plan_date' } }
+
+  .actions
+    = f.button :submit, class: 'btn yellow skinny btn-match-field-height'
+

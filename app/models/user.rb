@@ -17,6 +17,9 @@ class User < ApplicationRecord
   validates :email, presence: true, uniqueness: true
   validates_inclusion_of :admin, in: [true, false]
 
+  alias_attribute :reports_manager?, :report_manager?
+  alias_attribute :contracts_manager?, :contract_manager?
+
   scope :admins,              -> { where(admin: true) }
   scope :report_managers,     -> { admins.or(where(can_manage_reports: true)) }
   scope :geography_managers,  -> { admins.or(where(can_manage_geography: true)) }

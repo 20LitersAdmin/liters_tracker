@@ -3,14 +3,17 @@
 class ReportsController < ApplicationController
   before_action :set_report, only: %i[show edit update destroy]
 
-  def index
-    authorize @reports = Report.order(date: :desc).paginate(page: params[:page], per_page: params[:per_page] || 20)
-  end
+  def index; end
 
   def show; end
 
-  def new
-    authorize @report = Report.new
+  def dttb_index
+    authorize @reports = Report.includes(:technology).includes(:user).order(date: :desc)
+
+    respond_to do |format|
+      format.html
+      format.json { render 'index.json' }
+    end
   end
 
   def edit
@@ -20,6 +23,7 @@ class ReportsController < ApplicationController
   end
 
   def create
+    # Sectors#report forms submit to this action as AJAX
     # check for duplicates first
     authorize @report = Report.where(dup_matching_params).first_or_initialize
 

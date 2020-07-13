@@ -8,9 +8,7 @@ class PlanPolicy
     @record = record
   end
 
-  def index?
-    raise ActiveRecord::RecordNotFound if @record.empty?
-
+  def dttb_index?
     @user
   end
 
@@ -19,7 +17,7 @@ class PlanPolicy
   end
 
   def new?
-    @user&.admin? || @user&.can_manage_contracts?
+    @user&.contract_manager?
   end
 
   def create?

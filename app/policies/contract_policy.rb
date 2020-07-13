@@ -9,8 +9,10 @@ class ContractPolicy
   end
 
   def index?
-    raise ActiveRecord::RecordNotFound if @record.empty?
+    @user
+  end
 
+  def dttb_index?
     @user
   end
 
@@ -19,7 +21,7 @@ class ContractPolicy
   end
 
   def new?
-    @user&.admin? || @user&.can_manage_contracts?
+    @user&.contract_manager?
   end
 
   def create?
