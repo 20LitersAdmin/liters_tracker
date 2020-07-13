@@ -5,14 +5,13 @@ class CountriesController < ApplicationController
 
   # GET /countries
   def index
-    @countries = Country.visible
+    @countries = Country.visible.order(:name)
 
     @show_hidden = Country.hidden.any?
   end
 
   def hidden
-    authorize @countries = Country.hidden
-
+    authorize @countries = Country.hidden.order(:name)
     @show_visible = Country.visible.any?
   end
 

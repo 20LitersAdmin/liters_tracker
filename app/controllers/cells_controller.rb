@@ -1,12 +1,17 @@
 # frozen_string_literal: true
 
 class CellsController < ApplicationController
-  before_action :set_cell, only: %w[show edit update destroy children]
+  before_action :set_cell, only: %w[show edit update destroy children make_visible]
 
   # GET /cells
   # GET /cells.json
   def index
-    authorize @cells = Cell.all.order(:name)
+    authorize @cells = Cell.visible.order(:name)
+  end
+
+  def hidden
+    authorize @cells = Cell.hidden.includes(:sector, :district).select(:id, :name, :sector_id).order(:name)
+    @show_visible = Cell.visible.any?
   end
 
   # GET /cells/1
@@ -92,6 +97,12 @@ class CellsController < ApplicationController
     render json: @cell.villages.select(:id, :name).order(:name)
   end
 
+  def make_visible
+    @cell.update(hidden: false)
+
+    redirect_to cells_path
+  end
+
   private
 
   def set_cell
@@ -99,6 +110,12 @@ class CellsController < ApplicationController
   end
 
   def cell_params
-    params.require(:cell).permit(:name, :gis_code, :latitude, :longitude, :population, :households)
+    params.require(:cell).permit(:name,
+                                 :gis_code,
+                                 :latitude,
+                                 :longitude,
+                                 :population,
+                                 :households,
+                                 :hidden)
   end
 end

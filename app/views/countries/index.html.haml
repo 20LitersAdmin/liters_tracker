@@ -1,10 +1,14 @@
 -# frozen_string_literal: true
 .row
-  .col
-    %h1.left= "Visible Countries"
-  .col.text-right
+  .col-sm-8
+    %h1.left= "Countries"
+  .col-sm-2.text-right
     - if @show_hidden
       = link_to 'Show hidden', hidden_countries_path, class: 'btn btn-outline-dark'
+  .col-sm-2.text-right
+    - if current_user.geography_manager?
+      = link_to 'New', new_district_path, class: 'btn yellow'
+    = link_to 'Back', @return_path, class: 'btn blue'
 
 .row
   %table.table.table-striped
@@ -23,6 +27,3 @@
           %td= country.population
           %td= country.households
           %td= link_to 'Edit', edit_country_path(country), class: 'btn yellow small'
-
-  .row
-    = link_to 'New Country', new_country_path, class: 'btn yellow'

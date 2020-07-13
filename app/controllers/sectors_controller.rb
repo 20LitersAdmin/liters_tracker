@@ -1,11 +1,11 @@
 # frozen_string_literal: true
 
 class SectorsController < ApplicationController
-  before_action :set_sector, only: %w[show edit update destroy report children]
+  before_action :set_sector, only: %w[show edit update destroy report children make_visible]
 
   # GET /sectors
   def index
-    authorize @sectors = Sector.all.order(:name)
+    authorize @sectors = Sector.visible.order(:name)
 
     @earliest = form_date Report.earliest_date
     @latest =   form_date Report.latest_date
@@ -19,8 +19,13 @@ class SectorsController < ApplicationController
     @plan_date = human_date @plans.size.zero? ? nil : Contract.find(@plans.pluck(:contract_id).max).end_date
   end
 
+  def hidden
+    authorize @sectors = Sector.hidden.includes(:district).select(:id, :name, :district_id).order(:name)
+    @show_visible = Sector.visible.any?
+  end
+
   def select
-    authorize @sectors = Sector.all.order(:name)
+    authorize @sectors = Sector.visible.order(:name)
     @technologies = Technology.report_worthy.order(:short_name)
 
     @date = params[:date].present? ? Date.parse(params[:date]) : Date.today.beginning_of_month - 1.month
@@ -134,6 +139,12 @@ class SectorsController < ApplicationController
     render json: @sector.cells.select(:id, :name).order(:name)
   end
 
+  def make_visible
+    @sector.update(hidden: false)
+
+    redirect_to sectors_path
+  end
+
   private
 
   def set_sector
@@ -146,6 +157,7 @@ class SectorsController < ApplicationController
                                    :latitude,
                                    :longitude,
                                    :population,
-                                   :households)
+                                   :households,
+                                   :hidden)
   end
 end

@@ -115,7 +115,7 @@ class FacilitiesController < ApplicationController
   end
 
   def set_sector_collection
-    @sectors = Sector.all.select(:name, :id).order(:name)
+    @sectors = Sector.visible.select(:name, :id).order(:name)
   end
 
   def facility_params

@@ -1,14 +1,19 @@
 # CURRENT:
 0. Geographies now have visible / hidden scopes
-- Lots of `Record.all` need to be scoped to only show visible
 ==
 - Views (*all* need work)
+-- cell#show has `hierarchy_with_links`
 -- edit / back buttons should be `class: small` on show views
 -- Add `hidden.html.haml` "index" views for all but Facility
 
 - Policies (all need hidden? except Facility)
 
 - Forms (need check_box for hidden)
+
+- Hidden indexes need DataTables:
+- Sectors
+- Cells
+- Villages
 
 - Controllers:
 -- Add make_visible to `before_action :set_record`

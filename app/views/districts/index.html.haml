@@ -3,9 +3,9 @@
   .col-sm-8
     %h1.left= "#{'Hidden' if @showing_hidden} Districts"
   .col-sm-2.text-right
-    = link_to 'All Countries', countries_path, class: 'btn yellow'
+    = link_to 'Show hidden', hidden_districts_path, class: 'btn btn-outline-dark'
   .col-sm-2.text-right
-    - if current_user.report_manager?
+    - if current_user.geography_manager?
       = link_to 'New', new_district_path, class: 'btn yellow'
     = link_to 'Back', @return_path, class: 'btn blue'
 

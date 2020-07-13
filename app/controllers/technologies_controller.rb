@@ -46,7 +46,7 @@ class TechnologiesController < ApplicationController
       @targets = Target.where(contract: @mous).where(technology: @technology)
       @target_date = @targets.last&.date
     else
-      @sectors = Sector.all
+      @sectors = Sector.visible
       @plans = Plan.where(technology: @technology).between(@from, @to)
       @plan_date = human_date @plans.last&.date
     end

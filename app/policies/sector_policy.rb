@@ -47,4 +47,12 @@ class SectorPolicy
   def children?
     new?
   end
+
+  def hidden?
+    new?
+  end
+
+  def make_visible?
+    new?
+  end
 end

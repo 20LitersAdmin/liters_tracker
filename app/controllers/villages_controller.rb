@@ -1,11 +1,11 @@
 # frozen_string_literal: true
 
 class VillagesController < ApplicationController
-  before_action :set_village, only: %w[show edit update destroy children]
+  before_action :set_village, only: %w[show edit update destroy children make_visible]
 
   # GET /villages
   def index
-    authorize @villages = Village.all.order(:name)
+    authorize @villages = Village.visible.order(:name)
 
     @earliest = form_date Report.earliest_date
     @latest =   form_date Report.latest_date
@@ -33,6 +33,11 @@ class VillagesController < ApplicationController
 
     @searchbar_hidden_fields = [{ name: 'skip_blanks', value: 'true' }] if @skip_blanks
     @contract_search_param_add = @skip_blanks ? '&skip_blanks=true' : ''
+  end
+
+  def hidden
+    authorize @villages = Village.hidden.includes(:cell, :sector, :district).select(:id, :name, :cell_id).order(:name)
+    @show_visible = Village.visible.any?
   end
 
   # GET /villages/1
@@ -113,6 +118,12 @@ class VillagesController < ApplicationController
     render json: @village.facilities.select(:id, :name).order(:name)
   end
 
+  def make_visible
+    @village.update(hidden: false)
+
+    redirect_to villages_path
+  end
+
   private
 
   def set_village
@@ -120,6 +131,12 @@ class VillagesController < ApplicationController
   end
 
   def village_params
-    params.require(:village).permit(:name, :gis_code, :latitude, :longitude, :population, :households)
+    params.require(:village).permit(:name,
+                                    :gis_code,
+                                    :latitude,
+                                    :longitude,
+                                    :population,
+                                    :households,
+                                    :hidden)
   end
 end

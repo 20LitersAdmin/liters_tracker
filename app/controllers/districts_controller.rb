@@ -5,7 +5,7 @@ class DistrictsController < ApplicationController
 
   # GET /districts
   def index
-    authorize @districts = District.visible
+    authorize @districts = District.visible.order(:name)
 
     @show_hidden = District.hidden.any?
 
@@ -23,10 +23,8 @@ class DistrictsController < ApplicationController
   end
 
   def hidden
-    authorize @districts = District.hidden
-    @showing_hidden = true
-
-    @show_visible = Country.visible.any?
+    authorize @districts = District.hidden.includes(:country).select(:id, :name, :country_id).order(:name)
+    @show_visible = District.visible.any?
   end
 
   # GET /districts/:id
