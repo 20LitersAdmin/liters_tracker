@@ -17,8 +17,10 @@ class CountriesController < ApplicationController
 
   # GET /countries/1
   def show
-    flash[:error] = "This country is currently hidden. Please #{view_context.link_to('edit', edit_country_path(@country)).html_safe} the record to make it visible."
-    flash[:html_safe] = true
+    if @country.hidden?
+      flash[:error] = "This country is currently hidden. Please #{view_context.link_to('edit', edit_country_path(@country)).html_safe} the record to make it visible."
+      flash[:html_safe] = true
+    end
 
     @earliest = form_date Report.earliest_date
     @latest =   form_date Report.latest_date

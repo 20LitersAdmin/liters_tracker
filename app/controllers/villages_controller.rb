@@ -42,6 +42,11 @@ class VillagesController < ApplicationController
 
   # GET /villages/1
   def show
+    if @village.hidden?
+      flash[:error] = "This village is currently hidden. Please #{view_context.link_to('edit', edit_village_path(@village)).html_safe} the record to make it visible."
+      flash[:html_safe] = true
+    end
+
     @earliest = form_date Report.earliest_date
     @latest =   form_date Report.latest_date
 

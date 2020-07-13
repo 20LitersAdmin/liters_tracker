@@ -17,6 +17,11 @@ class CellsController < ApplicationController
   # GET /cells/1
   # GET /cells/1.json
   def show
+    if @cell.hidden?
+      flash[:error] = "This cell is currently hidden. Please #{view_context.link_to('edit', edit_cell_path(@cell)).html_safe} the record to make it visible."
+      flash[:html_safe] = true
+    end
+
     @earliest = form_date Report.earliest_date
     @latest =   form_date Report.latest_date
 

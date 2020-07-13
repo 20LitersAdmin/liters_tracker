@@ -1,13 +1,14 @@
 -# frozen_string_literal: true
 .row.mb-3
   .col-sm-8
-    %h1.left= "#{'Hidden' if @showing_hidden} Districts"
+    %h1 Districts
   .col-sm-2.text-right
-    = link_to 'Show hidden', hidden_districts_path, class: 'btn btn-outline-dark'
+    - if @show_hidden && current_user.geography_manager?
+      = link_to 'Show hidden', hidden_districts_path, class: 'btn btn-outline-dark small'
   .col-sm-2.text-right
     - if current_user.geography_manager?
-      = link_to 'New', new_district_path, class: 'btn yellow'
-    = link_to 'Back', @return_path, class: 'btn blue'
+      = link_to 'New', new_district_path, class: 'btn yellow small'
+    = link_to 'Back', @return_path, class: 'btn blue small'
 
 = render partial: 'shared/search', locals: { from: @from, to: @to, earliest: @earliest, latest: @latest }
 

@@ -6,6 +6,9 @@
 -- edit / back buttons should be `class: small` on show views
 -- Add `hidden.html.haml` "index" views for all but Facility
 
+Standardize: Index views
+- links to show hidden
+
 - Policies (all need hidden? except Facility)
 
 - Forms (need check_box for hidden)

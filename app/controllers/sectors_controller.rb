@@ -62,6 +62,11 @@ class SectorsController < ApplicationController
 
   # GET /sectors/1
   def show
+    if @sector.hidden?
+      flash[:error] = "This sector is currently hidden. Please #{view_context.link_to('edit', edit_sector_path(@sector)).html_safe} the record to make it visible."
+      flash[:html_safe] = true
+    end
+
     @earliest = form_date Report.earliest_date
     @latest =   form_date Report.latest_date
 

@@ -10,7 +10,7 @@
     = javascript_include_tag 'application', 'data-turbolinks-track': 'reload'
     = javascript_include_tag 'https://20liters.kindful.com/embeds/743a7d01-5726-491f-aaf2-fbbc15da826a/init.js', 'data-embed-id': '743a7d01-5726-491f-aaf2-fbbc15da826a', 'data-lookup-type': 'jquery-selector', 'data-lookup-value': '#kindful_plugin', 'data-styles-off': true
     = render 'shared/icons'
-  %body
+  %body{'data-controller': 'dashboard' }
     =render 'header', locals: { title: @title, subtitle: @subtitle }
     %main
       = yield
