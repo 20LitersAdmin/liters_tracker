@@ -1,22 +1,9 @@
 # CURRENT:
-0. Geographies now have visible / hidden scopes
-==
-- Views (*all* need work)
--- cell#show has `hierarchy_with_links`
--- edit / back buttons should be `class: small` on show views
--- Add `hidden.html.haml` "index" views for all but Facility
-
-Standardize: Index views
-- links to show hidden
-
-- Policies (all need hidden? except Facility)
+Sandardize: Show views
+- cell#show has `hierarchy_with_links`
+- edit / back buttons should be `class: small` on show views
 
 - Forms (need check_box for hidden)
-
-- Hidden indexes need DataTables:
-- Sectors
-- Cells
-- Villages
 
 - Controllers:
 -- Add make_visible to `before_action :set_record`
@@ -40,6 +27,9 @@ Standardize: Index views
 3. Deleting a (duplicate) Facility that has associated Reports:
 - Need to re-assign reports before deleting facility
 - or create a Merge function?
+
+# Geography index views: I removed total rows for speed
+- If we want totals: https://datatables.net/examples/advanced_init/footer_callback.html
 
 # Forms
 - Tech form

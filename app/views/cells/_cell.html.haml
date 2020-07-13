@@ -1,0 +1,8 @@
+-# frozen_string_literal: true
+- @report_sub = cell.related_reports.between(@from, @to)
+- @plan_sub = cell.related_plans.between(@from, @to)
+%tr
+  %td= link_to cell.name, cell_path(cell)
+  %td= cell.sector.name
+  %td.text-right= human_number @report_sub.map(&:impact).sum
+  %td.text-right= human_number @plan_sub.sum(:people_goal)

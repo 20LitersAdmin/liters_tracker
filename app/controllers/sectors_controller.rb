@@ -7,16 +7,13 @@ class SectorsController < ApplicationController
   def index
     authorize @sectors = Sector.visible.order(:name)
 
+    @show_hidden = Sector.hidden.any?
+
     @earliest = form_date Report.earliest_date
     @latest =   form_date Report.latest_date
 
     @from = params[:from].present? ? Date.parse(params[:from]) : @earliest
     @to =   params[:to].present? ? Date.parse(params[:to]) : @latest
-
-    @reports = Report.where(date: @from..@to).order(date: :asc)
-    @plans = Plan.between(@from, @to)
-
-    @plan_date = human_date @plans.size.zero? ? nil : Contract.find(@plans.pluck(:contract_id).max).end_date
   end
 
   def hidden

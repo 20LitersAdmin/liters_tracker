@@ -19,7 +19,7 @@
     .col.field
       = f.input :cell, collection: @cells, disabled: 0, include_blank: true, selected: @cell&.id
     .col.field
-      = f.input :village, collection: @villages, disabled: 0, include_blank: true, selected: @village&.id
+      = f.input :village_id, collection: @villages, disabled: 0, include_blank: true, selected: @village&.id
   .row
     .col.field
       = f.input :population
@@ -31,7 +31,8 @@
     .col.field
       = f.input :longitude, hint: 'like 30.0912883'
   .row.my-3.actions
-    .col.text-left
-      = link_to 'Back', @return_path, class: 'btn yellow'
-    .col.text-right
+    .col
       = f.button :submit, class: 'btn yellow'
+      = link_to 'Back', @return_path, class: 'btn blue'
+      - if @facility.persisted?
+        = link_to 'Delete', facility_path(@facility), method: :destroy, data: { confirm: 'Are you sure you want to DELETE this facility?' }, class: 'btn red'

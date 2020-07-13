@@ -7,6 +7,14 @@ class CellsController < ApplicationController
   # GET /cells.json
   def index
     authorize @cells = Cell.visible.order(:name)
+
+    @show_hidden = Cell.hidden.any?
+
+    @earliest = form_date Report.earliest_date
+    @latest =   form_date Report.latest_date
+
+    @from = params[:from].present? ? Date.parse(params[:from]) : @earliest
+    @to =   params[:to].present? ? Date.parse(params[:to]) : @latest
   end
 
   def hidden

@@ -1,32 +1,22 @@
 -# frozen_string_literal: true
 .row.mb-3
-  .col-8
-    %h1 All Cells
-  .col-4.text-right
-    = link_to 'New', new_cell_path, class: 'btn yellow'
+  .col-sm-8
+    %h1 Cells
+  .col-sm-2.text-right
+    - if @show_hidden
+      = link_to 'Show hidden', hidden_cells_path, class: 'btn btn-outline-dark small'
+  .col-sm-2.text-right
+    = link_to 'New', new_cell_path, class: 'btn yellow small'
+    = link_to 'Back', @return_path, class: 'btn blue small'
 
-.row
-  .col
-    %table.table.table-striped
-      %thead
-        %tr
-          %th Name
-          %th Sector
-          %th District
-          %th Gis ID
-          %th Population
-          %th Households
-          %th
-          %th
+= render partial: 'shared/search', locals: { from: @from, to: @to, earliest: @earliest, latest: @latest }
 
-      %tbody
-        - @cells.each do |cell|
-          %tr
-            %td= link_to cell.name, cell
-            %td= cell.sector.name
-            %td= cell.district.name
-            %td= cell.gis_code
-            %td.text-right= human_number cell.population
-            %td.text-right= human_number cell.households
-            %td= link_to 'Edit', edit_cell_path(cell), class: 'btn empty'
-            %td= link_to 'Delete', cell, method: :delete, data: { confirm: 'Are you sure?' }, class: 'btn red'
+%table.table.table-striped.table-sm#dttb-cells
+  %thead
+    %tr
+      %th Cell
+      %th Sector
+      %th.text-right People served
+      %th.text-right People goal
+  %tbody
+    = render @cells

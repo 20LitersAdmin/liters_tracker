@@ -1,9 +1,7 @@
 $(document).on 'turbolinks:load', ->
-  return unless controllerMatches(['dashboard'])
-
-  sizeStatsBlocks()
+  if controllerMatches(['dashboard', 'users'])
+    sizeStatsBlocks()
 
 $(window).on 'resize', ->
-  return unless controllerMatches(['dashboard'])
-
-  sizeStatsBlocks()
+  if controllerMatches(['dashboard', 'users'])
+    sizeStatsBlocks()

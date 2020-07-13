@@ -2,27 +2,21 @@
 .row.mb-3
   .col-sm-8
     %h1 Countries
-  - if @show_hidden
-    .col-sm-2.text-right
+  .col-sm-2.text-right
+    - if @show_hidden
       = link_to 'Show hidden', hidden_countries_path, class: 'btn btn-outline-dark small'
   .col-sm-2.text-right
     = link_to 'New', new_district_path, class: 'btn yellow small'
     = link_to 'Back', @return_path, class: 'btn blue small'
 
+= render partial: 'shared/search', locals: { from: @from, to: @to, earliest: @earliest, latest: @latest }
+
 .row
   %table.table.table-striped
     %thead.thead-dark
       %tr
-        %th Name
-        %th Gis code
-        %th Population
-        %th Households
-        %th
+        %th Country
+        %th.text-right People served
+        %th.text-right People goal
     %tbody
-      -@countries.each do |country|
-        %tr
-          %td= link_to country.name, country_path(country)
-          %td= country.gis_code
-          %td= country.population
-          %td= country.households
-          %td= link_to 'Edit', edit_country_path(country), class: 'btn yellow small'
+      = render @countries

@@ -7,32 +7,13 @@ class VillagesController < ApplicationController
   def index
     authorize @villages = Village.visible.order(:name)
 
+    @show_hidden = Village.hidden.any?
+
     @earliest = form_date Report.earliest_date
     @latest =   form_date Report.latest_date
 
     @from = params[:from].present? ? Date.parse(params[:from]) : @earliest
     @to =   params[:to].present? ? Date.parse(params[:to]) : @latest
-
-    @reports = Report.where(date: @from..@to).order(date: :asc)
-    @plans = Plan.between(@from, @to)
-
-    @plan_date = human_date @plans.size.zero? ? nil : Contract.find(@plans.pluck(:contract_id).max).end_date
-
-    @pop_hh_ary = @villages.pluck(:population, :households)
-    @gttl_pop = @pop_hh_ary.map { |vil| vil[0] }.compact.sum
-    @gttl_hh = @pop_hh_ary.map { |vil| vil[1] }.compact.sum
-    @gttl_pop_hh = view_context.number_with_delimiter(@gttl_pop, delimiter: ',') + ' / ' + view_context.number_with_delimiter(@gttl_hh, delimiter: ',')
-
-    @a_reps_dist_chk = @reports.pluck(:distributed, :checked)
-    @gttl_dist = @a_reps_dist_chk.map { |rep| rep[0] }.compact.sum
-    @gttl_chk = @a_reps_dist_chk.map { |rep| rep[1] }.compact.sum
-    @gttl_dist_chk = view_context.number_with_delimiter(@gttl_dist, delimiter: ',') + ' / ' + view_context.number_with_delimiter(@gttl_chk, delimiter: ',')
-
-    @skip_blanks = params[:skip_blanks].present?
-    @skip_blanks_rfp = request.fullpath.include?('?') ? request.fullpath + '&skip_blanks=true' : request.fullpath + '?skip_blanks=true'
-
-    @searchbar_hidden_fields = [{ name: 'skip_blanks', value: 'true' }] if @skip_blanks
-    @contract_search_param_add = @skip_blanks ? '&skip_blanks=true' : ''
   end
 
   def hidden

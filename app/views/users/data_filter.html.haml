@@ -8,6 +8,12 @@
   .col-sm-12.col-md-6.col-lg-3
     .card.my-2
       .card-body.text-center
+        %h5.card-title By Month
+        = link_to 'Go', monthly_path, class: 'btn yellow'
+
+  .col-sm-12.col-md-6.col-lg-3
+    .card.my-2
+      .card-body.text-center
         %h5.card-title By Geography
         = link_to 'Go', sectors_path, class: 'btn yellow'
 
@@ -23,8 +29,3 @@
         %h5.card-title By Technology
         = link_to 'Go', technologies_path, class: 'btn yellow'
 
-  .col-sm-12.col-md-6.col-lg-3
-    .card.my-2
-      .card-body.text-center
-        %h5.card-title By Month
-        = link_to 'Go', monthly_path, class: 'btn yellow'
