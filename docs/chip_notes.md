@@ -1,15 +1,8 @@
 # CURRENT:
 Sandardize: Show views
-- cell#show has `hierarchy_with_links`
 - edit / back buttons should be `class: small` on show views
 
 - Forms (need check_box for hidden)
-
-- Controllers:
--- Add make_visible to `before_action :set_record`
--- Flash messages on `show` when `@record.hidden?`
--- Update record_params to include hidden
--- Add `def hidden; end` action
 
 0. Dashboard
 - basic_stat_blocks aren't collapsing like they used to?
