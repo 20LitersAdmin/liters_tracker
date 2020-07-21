@@ -1,4 +1,12 @@
 # CURRENT:
+Related stories:
+- shows the previous story (1 click ago)
+
+Monthly report: Community Engagement reports:
+Says: [ Sector  Cell  Village Distributed Checked People served ]
+Should say: [ Sector  Cell  Village People Hours Impact ]
+
+>>>>>>> Stashed changes
 Sandardize: Show views
 - edit / back buttons should be `class: small` on show views
 
