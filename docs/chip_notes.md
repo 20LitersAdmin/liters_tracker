@@ -1,4 +1,8 @@
 # CURRENT:
+Monthly report: Community Engagement reports:
+Says: [ Sector  Cell  Village Distributed Checked People served ]
+Should say: [ Sector  Cell  Village People Hours Impact ]
+
 Sandardize: Show views
 - edit / back buttons should be `class: small` on show views
 
