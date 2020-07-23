@@ -19,7 +19,7 @@
     .col.field
       = f.input :cell, collection: @cells, disabled: 0, include_blank: true, selected: @cell&.id
     .col.field
-      = f.input :village_id, collection: @villages, disabled: 0, include_blank: true, selected: @village&.id
+      = f.input :village, collection: @villages, disabled: 0, include_blank: true, selected: @village&.id
   .row
     .col.field
       = f.input :population
