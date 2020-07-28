@@ -133,11 +133,17 @@
   }
 }
 
-#story_column .card:hover {
-  color: $grey;
-  background-color: #f8f8f8;
-  box-shadow: 0 0 18px #888;
-  text-decoration: none;
+#story_column .card {
+  margin-top: 18px;
+  margin-bottom: 18px;
+  border: none;
+
+  &:hover {
+    color: $grey;
+    background-color: #f8f8f8;
+    box-shadow: 0 0 18px #888;
+    text-decoration: none;
+  }
 }
 
 .card-caption {
