@@ -1,3 +1,5 @@
 toolbar:
-  - bold italic underline | copy paste | undo redo
+  - bold italic underline link | copy paste | undo redo
+plugins:
+  - link
 menubar: false
