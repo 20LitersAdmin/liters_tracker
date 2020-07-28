@@ -15,7 +15,7 @@ class StoriesController < ApplicationController
     @title = @story.title
     @reporter = @report.user.name
     @subtitle = "Reported by #{@reporter}"
-    @related_stories = @story.related(3)
+    @related_stories = @story.related(limit: 5, except: session[:previous_stories])
 
     @hierarchy = @story.report.hierarchy
     @technology = @story.technology

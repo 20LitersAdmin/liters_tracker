@@ -66,17 +66,20 @@ class Story < ApplicationRecord
 
   # returns a set number of related stories. This is used on Storise#show view.
   # stories are related to each other by technology, sector and date
-  def related(limit = nil)
+  def related(limit: nil, except: [])
     ilimit = limit.to_i
+
+    # except is passed from application_controller#save_previous_story
+    except << id if except.empty?
 
     id_ary = []
     # related by technology
-    id_ary << Story.joins(:report).where.not(id: id).where('reports.technology_id = ?', report.technology_id).pluck(:id)
+    id_ary << Story.joins(:report).where.not(id: except).where('reports.technology_id = ?', report.technology_id).pluck(:id)
     # related by sector
     # only if report.reportable is a sector or below
-    id_ary << report.reportable.sector.related_stories.where.not(id: id).pluck(:id) if Constants::Geography::DISTRICT_CHILDREN.include?(report.reportable_type)
+    id_ary << report.reportable.sector.related_stories.where.not(id: except).pluck(:id) if Constants::Geography::DISTRICT_CHILDREN.include?(report.reportable_type)
     # related by date
-    id_ary << Story.joins(:report).where.not(id: id).where('reports.date = ?', report.date).pluck(:id)
+    id_ary << Story.joins(:report).where.not(id: except).where('reports.date = ?', report.date).pluck(:id)
 
     if (id_ary.flatten.uniq.size + ilimit).zero?
       # Return an empty set if limit is nil && no related stories are found

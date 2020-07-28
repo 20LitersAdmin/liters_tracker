@@ -1,5 +1,10 @@
 -# frozen_string_literal: true
-%h1= "Edit report for #{@geography.name} #{@geography.class}"
+- if current_user.geography_manager?
+  %h1
+    Edit report for
+    %span= link_to("#{@geography.name} #{@geography.class}", polymorphic_path(@geography))
+- else
+  %h1= "Edit report for #{@geography.name} #{@geography.class}"
 %p= format_hierarchy @geography.hierarchy
 %p= "Submitted by #{@report.user.name}"
 

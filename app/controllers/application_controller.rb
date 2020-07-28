@@ -10,9 +10,30 @@ class ApplicationController < ActionController::Base
   before_action :store_user_location!, if: :storable_user_location?
 
   after_action :save_old_params
+  after_action :clear_previous_stories
   before_action :set_return_path
+  before_action :save_previous_story
 
   private
+
+  def save_previous_story
+    # save the IDs of visited stories so they can be excluded from Story#related
+    return unless url_params[:controller] == 'stories' && url_params[:action] == 'show'
+
+    # create the hash if it doesn't exist
+    session[:previous_stories] ||= []
+
+    id = url_params[:id].to_i
+
+    # save the current story's id into the hash
+    session[:previous_stories] << id unless session[:previous_stories].include?(id)
+  end
+
+  def clear_previous_stories
+    return unless url_params[:controller] == 'dashboard' && url_params[:action] == 'index'
+
+    session[:previous_stories] = []
+  end
 
   # Its important that the location is NOT stored if:
   # - The request method is not GET (non idempotent)

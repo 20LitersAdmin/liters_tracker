@@ -70,8 +70,8 @@ class FacilitiesController < ApplicationController
     authorize @facility = Facility.new(facility_params)
 
     # params[:facility][:village] is coming through like "2", so it must be set separately
-    # otherwise, I have to use :village_id on all the forms and that's annoying.
-    # @facility.village = Village.find(params[:facility][:village]) if params[:facility][:village].present?
+    # otherwise, I have to use :village_id which breaks the finders.coffee universal lookup.
+    @facility.village_id = params[:facility][:village] unless facility_params[:village_id]
 
     respond_to do |format|
       if @facility.save
@@ -99,16 +99,22 @@ class FacilitiesController < ApplicationController
   # PATCH/PUT /facilities/1
   # PATCH/PUT /facilities/1.json
   def update
-    byebug
-    # respond_to do |format|
-    #   if @facility.update(facility_params)
-    #     format.html { redirect_to @facility, notice: 'Facility updated.' }
-    #     format.json { render :show, status: :ok, location: @facility }
-    #   else
-    #     format.html { render :edit }
-    #     format.json { render json: @facility.errors, status: :unprocessable_entity }
-    #   end
-    # end
+    authorize @facility
+
+    # params[:facility][:village] is coming through like "2", so it must be set separately
+    # otherwise, I have to use :village_id which breaks the finders.coffee universal lookup.
+    @facility.assign_attributes(facility_params)
+    @facility.village_id = params[:facility][:village] unless facility_params[:village_id]
+
+    respond_to do |format|
+      if @facility.save
+        format.html { redirect_to @facility, notice: 'Facility updated.' }
+        format.json { render :show, status: :ok, location: @facility }
+      else
+        format.html { render :edit }
+        format.json { render json: @facility.errors, status: :unprocessable_entity }
+      end
+    end
   end
 
   # DELETE /facilities/1

@@ -199,7 +199,7 @@ RSpec.describe Story, type: :model do
       end
 
       expect(Story.all.size).to eq 6
-      expect(story.related(3).size).to eq 3
+      expect(story.related(limit: 3).size).to eq 3
     end
 
     it 'returns an empty set if limit is nil and no related stories are found' do
