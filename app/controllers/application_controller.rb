@@ -1,3 +1,4 @@
+
 # frozen_string_literal: true
 
 class ApplicationController < ActionController::Base
@@ -108,6 +109,6 @@ class ApplicationController < ActionController::Base
   end
 
   def url_params
-    params.permit(:controller, :action, :year, :month, :id, :date, :tech)
+    params.permit(:controller, :action, :year, :month, :id, :date, :tech, :sect)
   end
 end

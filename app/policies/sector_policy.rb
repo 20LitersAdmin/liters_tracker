@@ -17,11 +17,11 @@ class SectorPolicy
   end
 
   def select?
-    new?
+    @user&.report_manager?
   end
 
   def report?
-    @user
+    select?
   end
 
   def new?

@@ -39,4 +39,12 @@ class ContractPolicy
   def destroy?
     @user&.admin?
   end
+
+  def select?
+    new?
+  end
+
+  def plan?
+    new?
+  end
 end

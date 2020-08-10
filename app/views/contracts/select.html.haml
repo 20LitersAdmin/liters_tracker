@@ -1,0 +1,34 @@
+-# frozen_string_literal: true
+.row
+  .col-10
+    %h1= "Submit a plan for MOU ##{@contract.name}"
+  .col-2
+    = link_to 'Back', @return_path, class: 'btn btn-outline-secondary'
+
+.row
+  .col-12
+    %h3 1. Select plan date:
+  #date-chooser.col-12
+    .row.justify-content-center
+      .col-auto
+        = select_month(@date, {}, class: 'form-control')
+      .col-auto
+        = select_year(@date, { start_year: @earliest_year, end_year: @latest_year }, class: 'form-control')
+.row
+  .col-12
+    %h3 2. Select a technology by sector:
+  #sector-chooser.col-12
+    %table.table.table-striped
+      %thead
+        %tr
+          %th Name
+          %th District
+          - @technologies.size.times do
+            %th
+      %tbody
+        - @sectors.each do |sector|
+          %tr
+            %td= sector.name
+            %td= sector.district.name
+            - @technologies.each do |tech|
+              %td= link_to tech.short_name, plan_contract_path(@contract, tech: tech.id, date: @date, sect: sector.id), class: 'btn blue', data: { finder: 'tech-report-btn' }

@@ -3,7 +3,7 @@
 # You can use CoffeeScript in this file: http://coffeescript.org/
 
 $(document).on 'turbolinks:load', ->
-  return unless controllerMatches(['sectors']) &&
+  return unless controllerMatches(['sectors', 'contracts']) &&
     actionMatches(['select'])
 
   updateButtonDates = (val) ->

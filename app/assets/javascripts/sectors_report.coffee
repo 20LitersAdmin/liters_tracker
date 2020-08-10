@@ -1,6 +1,4 @@
-# Place all the behaviors and hooks related to the matching controller here.
-# All this logic will automatically be available in application.js.
-# You can use CoffeeScript in this file: http://coffeescript.org/
+# LinkedSelect is Global Linked Select field, comes from finders.coffee
 
 $(document).on 'turbolinks:load', ->
   return unless controllerMatches(['sectors']) &&
@@ -44,6 +42,7 @@ $(document).on 'turbolinks:load', ->
       .remove()
       .draw()
 
+  # TODO: This can be removed, right??
   # _village_form && _facility_form: setting polymorphic reportable_type and reportable_id
   setPolymorphic = (type, id) ->
     $('#report_reportable_type.village-form').val(type)
@@ -64,12 +63,6 @@ $(document).on 'turbolinks:load', ->
       # if they're both blank, clear the fields
       setPolymorphic('','')
 
-
-  # $('#report_cell.village-form').on 'change', ->
-  #   selectLogic()
-
-  # $('#report_village.village-form').on 'change', ->
-  #   selectLogic()
 
   # _facility_form
   $('#report_cell').on 'change', ->
@@ -95,5 +88,3 @@ $(document).on 'turbolinks:load', ->
       LinkedSelect.clearPolymorphics($(this), 'id')
     else
       LinkedSelect.forcePolymorphics($(this), 'id')
-
-#facilities/_modal_form

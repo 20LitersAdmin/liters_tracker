@@ -1,9 +1,17 @@
 # CURRENT:
-Related stories:
-- shows the previous story (1 click ago)
-Monthly report: Community Engagement reports:
-Says: [ Sector  Cell  Village Distributed Checked People served ]
-Should say: [ Sector  Cell  Village People Hours Impact ]
+0. Contracts/:id/plan is ready to test form submission to Plans#create
+
+# NEXT:
+0. Contract/:id/plan should show existing plans by sector
+
+
+0. Plans#new.html is dead, right?
+
+0. SectorsReport.coffee: shouldn't need setPolymorphic or selectLogic, handled by finders.coffee. Try removing and see what happens.
+
+0. Monthly report: Community Engagement reports:
+- Says: [ Sector  Cell  Village Distributed Checked People served ]
+- Should say: [ Sector  Cell  Village People Hours Impact ]
 
 Sandardize: Show views
 - edit / back buttons should be `class: small` on show views
