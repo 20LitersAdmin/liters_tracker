@@ -4,7 +4,6 @@
 # NEXT:
 0. Contract/:id/plan should show existing plans by sector
 
-
 0. Plans#new.html is dead, right?
 
 0. SectorsReport.coffee: shouldn't need setPolymorphic or selectLogic, handled by finders.coffee. Try removing and see what happens.
@@ -15,7 +14,6 @@
 
 Sandardize: Show views
 - edit / back buttons should be `class: small` on show views
-
 - Forms (need check_box for hidden)
 
 0. Dashboard
