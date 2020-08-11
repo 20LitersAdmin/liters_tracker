@@ -49,7 +49,9 @@ class Plan < ApplicationRecord
   end
 
   def title
-    "#{ActionController::Base.helpers.pluralize(goal, technology.name)} for #{people_goal} people by #{date.strftime('%m/%d/%Y')}"
+    by_date = date || contract.end_date
+
+    "#{ActionController::Base.helpers.pluralize(goal, technology.name)} for #{people_goal} people by #{by_date.strftime('%m/%d/%Y')}"
   end
 
   # this is a terrible idea

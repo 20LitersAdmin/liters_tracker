@@ -13,7 +13,7 @@ class Contract < ApplicationRecord
 
   scope :between, ->(from, to) { where('end_date >= ? AND start_date <= ?', from, to) }
 
-  before_save :set_name
+  after_save :set_name
   after_create :find_reports
 
   def url_params
@@ -31,6 +31,6 @@ class Contract < ApplicationRecord
   end
 
   def set_name
-    self.name = "#{id}: #{start_date.strftime('%m/%Y')} - #{end_date.strftime('%m/%Y')}"
+    update_column(:name, "#{id}: #{start_date.strftime('%m/%Y')} - #{end_date.strftime('%m/%Y')}")
   end
 end
