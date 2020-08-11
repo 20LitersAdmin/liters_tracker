@@ -10,14 +10,14 @@
   A. form has hidden fields for the polymorphic attributes: [name, id], e.g.:
     = f.input :planable_id, as: :hidden
     = f.input :planable_type, as: :hidden (_type can be skipped and set in the controller if needed)
-  B. If a specific geography is required, it is tagged as such, e.g.:
+  B. If a specific geography is required, it is tagged as 'required' on the form field, e.g.:
     Reports related to a 'Community' technology have to be tied to a Facility
 
 ## Usage:
 Place these calls in the apropriate files.
 
 LinkedSelect.updateChildSelectors($(this)):
-- Finds the next child geography select field and populate its
+- Finds the next child geography select field and populates it
 
 LinkedSelect.assessPolymorphics($(this)):
 - Decides what to put in the polymorphic fields

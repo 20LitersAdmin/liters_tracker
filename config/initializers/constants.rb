@@ -8,7 +8,7 @@ module Constants
       error: 'danger',
       warning: 'warning',
       alert: 'warning',
-      notice: 'secondary'
+      notice: 'success'
     }.freeze
   end
 

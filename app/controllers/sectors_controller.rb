@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 class SectorsController < ApplicationController
-  before_action :set_sector, only: %w[show edit update destroy report children make_visible]
+  before_action :set_sector, only: %w[show edit update destroy report plan children make_visible]
 
   # GET /sectors
   def index
@@ -21,6 +21,7 @@ class SectorsController < ApplicationController
     @show_visible = Sector.visible.any?
   end
 
+  # sector selection for reports
   def select
     authorize @sectors = Sector.visible.order(:name)
     @technologies = Technology.report_worthy.order(:short_name)

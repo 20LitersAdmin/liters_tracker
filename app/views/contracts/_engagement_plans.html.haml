@@ -1,0 +1,16 @@
+-# frozen_string_literal: true
+%table.table.table-striped.table-sm.table-hover#dttb_contract_plans
+  %thead.thead-dark
+    %tr
+      %th Site
+      %th Type
+      %th Location
+      %th.text-center Population
+      %th.text-center Goal
+      %th.text-center People Goal
+      %th.text-center Date
+      %th
+      %th
+    %tbody
+      = render partial: 'contracts/engagement_plan', collection: @plans
+

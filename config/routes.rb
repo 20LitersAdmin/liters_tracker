@@ -16,9 +16,11 @@ Rails.application.routes.draw do
 
   resources :contracts do
     resources :targets, only: %i[new create edit update destroy]
-    resources :plans do
+    resources :plans, except: %i[new index] do
       get 'dttb_index', on: :collection
     end
+    get 'select', on: :member # sector selection for plans
+    get 'plan', on: :member
   end
 
   resources :technologies
@@ -35,7 +37,7 @@ Rails.application.routes.draw do
   end
   resources :sectors do
     get 'hidden', on: :collection
-    get 'select', on: :collection
+    get 'select', on: :collection # sector selection for reports
     get 'report', on: :member
     get 'children', on: :member
     get 'make_visible', on: :member

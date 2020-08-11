@@ -1,0 +1,17 @@
+-# frozen_string_literal: true
+= simple_form_for [@contract, plan], remote: true, defaults: { input_html: { class: 'village-form' }} do |f|
+  = f.input :planable_type, as: :hidden, input_html: { value: 'Village' }
+  = f.input :planable_id, as: :hidden
+  = f.input :technology_id, as: :hidden
+  = f.input :date, as: :hidden, input_html: { value: @date }
+  .row
+    .col-6.col-md-3.field
+      = f.input :cell, collection: @cells, hint: 'Select to limit villages.'
+    .col-6.col-md-4.field
+      = f.input :village, collection: @villages, disabled: 0, required: true, hint: 'required'
+    .col-4.col-md-2.field
+      = f.input :goal
+    .col-4.col-md-2.field
+      = f.input :people_goal
+    .col-4.col-md-1.field
+      = f.button :submit, 'Save', class: 'btn yellow skinny btn-match-field-height', id: 'village_submit_plan'

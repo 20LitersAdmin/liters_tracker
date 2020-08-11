@@ -1,0 +1,52 @@
+// for contracts#plan:_village_form && _facility_for
+// remove any 'is-invalid' css tags
+$('.is-invalid').removeClass('is-invalid');
+
+// clear out the visible form fields on _village_form and _facility_form
+$('form#new_plan').find('select#plan_cell').val('');
+$('form#new_plan').find('select#plan_village').val('');
+$('form#new_plan').find('select#plan_facility').val('');
+$('form#new_plan').find('input#plan_goal').val('');
+$('form#new_plan').find('input#plan_people_goal').val('');
+
+// clear out the planable hidden fields on _village_form ONLY
+$('form#new_plan').find('input#plan_planable_id.village-form').val('');
+$('form#new_plan').find('input#plan_planable_type.village-form').val('');
+
+// clear out the datetimepicker
+$('form#new_plan').find('input#plan_date.datetimepicker-input').val('');
+
+// destroy the existing DataTable
+$("table#dttb_contract_plans").DataTable().destroy();
+
+// destroy the table container
+$('#contract_plans_container').html('');
+
+// re-create the table using the correct partial:  _engagement_plans || _family_plans || _community_plans
+$("#contract_plans_container").html("<%= j render partial: @partial %>");
+
+// re-init the DataTable
+$("table#dttb_contract_plans").DataTable({
+  order: [ 0, 'asc' ],
+  columnDefs: [ {
+    "searchable": false,
+    "orderable": false,
+    "targets": [-1, -2]
+  } ],
+  pagingType: 'full_numbers',
+  language: {
+    paginate: {
+      first: "&#8676",
+      previous: "&#8592",
+      next: "&#8594",
+      last: "&#8677"
+    }
+  }
+});
+
+// remove any old flashes
+$('div.alert.alert-dismissable').remove();
+// fake the flash[:success]
+$('main.container').prepend("<div class='alert alert-success alert-dismissable fade show' role='alert'><button class='close' data-dismiss='alert'>x</button><%= @persistence %></div>")
+// navigate to the top of the page so you can see the flash message
+window.scrollTo(0, 0);

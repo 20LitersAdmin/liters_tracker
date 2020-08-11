@@ -18,7 +18,7 @@
     %main.container
       = flash_messages
       = yield
-      - if Constants::Geography::CONTROLLERS.include?(controller_name)
-        .row
-          .col.text-right
-            = link_to 'Back to geography', geography_path, class: 'btn btn-sm blue'
+      / - if Constants::Geography::CONTROLLERS.include?(controller_name)
+      /   .row
+      /     .col.text-right
+      /       = link_to 'Back to geography', geography_path, class: 'btn btn-sm blue'

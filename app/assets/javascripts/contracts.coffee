@@ -4,7 +4,7 @@
 
 $(document).on 'turbolinks:load', ->
   return unless controllerMatches(['contracts']) &&
-    actionMatches(['new', 'edit', 'show'])
+    actionMatches(['new', 'edit', 'show', 'plan'])
 
   # init datetimepickers
   $('.datetimepicker-input').datetimepicker({

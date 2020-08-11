@@ -1,13 +1,19 @@
-# CURRENT:
-Related stories:
-- shows the previous story (1 click ago)
-Monthly report: Community Engagement reports:
-Says: [ Sector  Cell  Village Distributed Checked People served ]
-Should say: [ Sector  Cell  Village People Hours Impact ]
+# NEXT COMMIT:
+0. rails db:migrate # for Contract#name addition
+0. HierarchyResetService.update_plans!
+0. HierarchyResetService.update_reports!
+
+# NEXT:
+0. Plans#new.html is dead, right?
+
+0. SectorsReport.coffee: shouldn't need setPolymorphic or selectLogic, handled by finders.coffee. Try removing and see what happens.
+
+0. Monthly report: Community Engagement reports:
+- Says: [ Sector  Cell  Village Distributed Checked People served ]
+- Should say: [ Sector  Cell  Village People Hours Impact ]
 
 Sandardize: Show views
 - edit / back buttons should be `class: small` on show views
-
 - Forms (need check_box for hidden)
 
 0. Dashboard

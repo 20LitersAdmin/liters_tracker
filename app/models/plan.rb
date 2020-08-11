@@ -25,7 +25,8 @@ class Plan < ApplicationRecord
   scope :without_reports,         -> { left_outer_joins(:reports).where(reports: { id: nil }) }
   scope :with_reports_incomplete, -> { joins(:reports).group('plans.id').having('plans.goal > SUM(reports.distributed)').select('plans.*') }
 
-  before_validation :add_error_to_district_field, if: -> { planable_type.blank? || planable_id.blank? }
+  before_validation :add_error_to_geography_fields, if: -> { planable_type.blank? || planable_id.blank? }
+  before_destroy :unlink_reports
 
   after_save :find_reports
   after_save :update_hierarchy, if: -> { saved_change_to_planable_id? || saved_change_to_planable_type? }
@@ -48,14 +49,15 @@ class Plan < ApplicationRecord
   end
 
   def title
-    "#{ActionController::Base.helpers.pluralize(goal, technology.name)} for #{people_goal} people by #{date.strftime('%m/%d/%Y')}"
+    by_date = date || contract.end_date
+
+    "#{ActionController::Base.helpers.pluralize(goal, technology.name)} for #{people_goal} people by #{by_date.strftime('%m/%d/%Y')}"
   end
 
-  def date
-    return unless self.persisted?
-
-    read_attribute(:date) || contract.end_date
-  end
+  # this is a terrible idea
+  # def date
+  #   read_attribute(:date) || contract.end_date
+  # end
 
   def links
     "<a class='btn blue small' href='/contracts/#{contract_id}/plans/#{id}/edit'>Edit</a> <a data-confirm='Are you sure?' class='btn red small' rel='nofollow' data-method='delete' href='/contracts/#{contract_id}/reports/#{id}'>Delete</a>".html_safe
@@ -127,8 +129,12 @@ class Plan < ApplicationRecord
 
   private
 
-  def add_error_to_district_field
+  def add_error_to_geography_fields
     errors.add(:district, ': No geography selected')
+    errors.add(:sector, ': No geography selected')
+    errors.add(:cell, ': No geography selected')
+    errors.add(:village, ': No geography selected')
+    errors.add(:facility, ': No geography selected')
   end
 
   def find_reports
@@ -139,12 +145,16 @@ class Plan < ApplicationRecord
                         technology_id: technology_id,
                         reportable_id: planable_id,
                         reportable_type: planable_type)
-
-    # reps.each { |rep| rep.update_column(:plan_id, id) } if reps.any?
     reps.update_all(plan_id: id) if reps.any?
   end
 
+  def unlink_reports
+    reports.update_all(plan_id: nil)
+  end
+
   def update_hierarchy
+    return unless planable.present?
+
     update_column(:hierarchy, reload.planable.hierarchy)
   end
 end

@@ -28,8 +28,13 @@
           %td= link_to 'Edit', edit_contract_path(@contract), class: 'btn blue small'
 
 .row.mt-5
-  .col-12
+  .col
     %h3 Targets
+  - if @untargeted_technologies_exist
+    .col.text-right
+      = link_to 'Add Target', new_contract_target_path(@contract), class: 'btn yellow'
+.row
+  .col
     %p Targets represent the number of technologies to be distributed/implemented in total for the MOU's time period. They are not specific to a geography and their deadline is always the end of the MOU.
   .col-12
     %table.table.table-striped.table-sm
@@ -41,13 +46,14 @@
           %th
       %tbody
         = render partial: 'target', collection: @targets
-  - if @untargeted_technologies_exist
-    .col-12
-      = link_to 'Add New', new_contract_target_path(@contract), class: 'btn yellow'
 
 .row.mt-5
   .col
     %h3 Plans
+  .col.text-right
+    = link_to 'Add Plan', select_contract_path(@contract), class: 'btn yellow'
+.row
+  .col
     %p Plans represent a detailed goal for which technology will be distributed/implemented in a specific area before a specific deadline.
   .col-12
     %table.table.table-striped.table-sm#plans-dttb{ data: { source: dttb_index_contract_plans_path(@contract, format: :json) } }

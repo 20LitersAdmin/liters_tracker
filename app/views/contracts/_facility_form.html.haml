@@ -1,0 +1,22 @@
+-# frozen_string_literal: true
+- distributed_label = @technology.name.include?("Train") ? '# Trained' : 'Installed'
+= simple_form_for [@contract, plan], remote: true, defaults: { input_html: { class: 'facility-form' }} do |f|
+  = f.input :planable_type, as: :hidden, input_html: { value: 'Facility' }
+  = f.input :planable_id, as: :hidden
+  = f.input :technology_id, as: :hidden
+  .row
+    .col-6.col-md-4.field
+      = f.input :cell, collection: @cells, hint: 'Select to limit villages.'
+    .col-6.col-md-4.field
+      = f.input :village, collection: @villages, disabled: 0, hint: 'Select to limit facilities.'
+    .col-12.col-md-4.field
+      = f.input :facility, collection: @facilities, disabled: 0, required: true, hint: 'required'
+  .row
+    .col-12.col-md-4.field
+      = f.input :date, as: :string, hint: 'required', input_html: { class: 'datetimepicker-input', autocomplete: 'off', data: { toggle: 'datetimepicker', target: '#plan_date' } }
+    .col-4.col-md-3.field
+      = f.input :goal
+    .col-4.col-md-4.field
+      = f.input :people_goal
+    .col-4.col-md-1.field.text-right
+      = f.button :submit, 'Save', class: 'btn yellow skinny btn-match-field-height', id: 'facility_submit_plan'

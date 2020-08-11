@@ -30,14 +30,11 @@ class ReportsController < ApplicationController
     @report.assign_attributes(report_params)
     @report.user = current_user
 
-    @persistence = @report.new_record? ? 'Report was successfully created.' : 'A matching report was found and updated.'
+    @persistence = @report.new_record? ? 'Report created.' : 'A matching report was found and updated.'
 
     respond_to do |format|
       if @report.save
-        format.html do
-          flash[:success] = @persistence
-          redirect_to @return_path
-        end
+        format.html { redirect_to @return_path, notice: @persistence }
         format.json { render :show, status: :created, location: @report }
         format.js do
           @technology = @report.technology
@@ -59,7 +56,7 @@ class ReportsController < ApplicationController
     respond_to do |format|
       if @report.update(report_params)
         format.html do
-          flash[:success] = 'Report was successfully edited.'
+          flash[:success] = 'Report edited.'
           redirect_to @return_path
         end
         format.json { render :show, status: :ok, location: @report }
@@ -74,11 +71,11 @@ class ReportsController < ApplicationController
   # DELETE /reports/1
   # DELETE /reports/1.json
   def destroy
-    @report.destroy
+    authorize @report.destroy
 
     respond_to do |format|
       format.html do
-        flash[:notice] = 'Report was successfully deleted.'
+        flash[:notice] = 'Report deleted.'
         redirect_to @return_path
       end
       format.json { head :no_content }

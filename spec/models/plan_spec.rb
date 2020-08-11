@@ -244,6 +244,8 @@ RSpec.describe Plan, type: :model do
     end
 
     it 'inlcudes the date' do
+      plan.date = Date.today
+
       expect(plan.title).to include("by #{plan.date.strftime('%m/%d/%Y')}")
     end
   end
@@ -291,25 +293,6 @@ RSpec.describe Plan, type: :model do
 
       expect(plan2.complete?).to eq false
       expect(plan3.complete?).to eq false
-    end
-  end
-
-  describe '#date' do
-    context 'when plan has no date' do
-      it 'returns the end_date of the related contract' do
-        plan.save
-
-        expect(plan.read_attribute(:date)).to eq nil
-        expect(plan.date).to eq plan.contract.end_date
-      end
-    end
-
-    context 'when plan has a date' do
-      it 'returns the date, not the contract end_date' do
-        plan.date = Date.today
-        expect(plan.date).to eq plan.date
-        expect(plan.date).not_to eq plan.contract.end_date
-      end
     end
   end
 

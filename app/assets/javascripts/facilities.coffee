@@ -1,6 +1,6 @@
 $(document).on 'turbolinks:load', ->
-  return unless controllerMatches(['facilities', 'sectors']) &&
-    actionMatches(['new', 'edit', 'create', 'update', 'report'])
+  return unless controllerMatches(['facilities', 'sectors', 'contracts']) &&
+    actionMatches(['new', 'edit', 'create', 'update', 'report', 'plan'])
 
   $('#facility_district').on 'change', ->
     LinkedSelect.updateChildSelectors($(this))

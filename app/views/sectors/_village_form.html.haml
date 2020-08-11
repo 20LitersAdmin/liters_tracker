@@ -3,7 +3,7 @@
   = f.input :reportable_type, as: :hidden, input_html: { value: 'Village' }
   = f.input :reportable_id, as: :hidden
   = f.input :technology_id, as: :hidden
-  = f.input :date, as: :hidden
+  = f.input :date, as: :hidden, input_html: { value: @date }
   .row
     .col-6.col-md-2.field
       = f.input :cell, collection: @cells, hint: 'Select to limit villages.'
