@@ -23,25 +23,14 @@ $(document).on 'turbolinks:load', ->
     }
   })
 
-  # init datatables
 
-  # sort reports_villages by cell and village
-  # $("table#dttb_sector_reports").DataTable
-  #   order: [[ 0, 'asc' ], [ 1, 'asc' ]],
-  #   columnDefs: [ {
-  #     "searchable": false,
-  #     "orderable": false,
-  #     "targets": [-1, -2]
-  #   } ]
-
-
-  # existing reports delete button:
+  # existing plans delete button:
   # remove the deleted row from the table views using DataTables API
-  # $(document).on 'ajax:success', '.contract-plan-delete', ->
-  #   $('#dttb_contract_plans').DataTable()
-  #     .row( $(this).parents('tr') )
-  #     .remove()
-  #     .draw()
+  $(document).on 'ajax:success', '.contract-plan-delete', ->
+    $('#dttb_contract_plans').DataTable()
+      .row( $(this).parents('tr') )
+      .remove()
+      .draw()
 
 
   # _facility_form

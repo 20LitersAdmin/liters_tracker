@@ -59,7 +59,7 @@ class PlansController < ApplicationController
 
     # respond_to do |format|
     #   if @plan.save
-    #     format.html { redirect_to @plan, notice: 'Plan was successfully created.' }
+    #     format.html { redirect_to @plan, notice: 'Plan created.' }
     #     format.json { render :show, status: :created, location: @plan }
     #   else
     #     #fail
@@ -72,7 +72,7 @@ class PlansController < ApplicationController
   def update
     respond_to do |format|
       if @plan.update(plan_params)
-        format.html { redirect_to @plan, notice: 'Plan was successfully updated.' }
+        format.html { redirect_to @plan, notice: 'Plan updated.' }
         format.json { render :show, status: :ok, location: @plan }
       else
         format.html { render :edit }
@@ -85,9 +85,14 @@ class PlansController < ApplicationController
   # DELETE /plans/1.json
   def destroy
     authorize @plan.destroy
+
     respond_to do |format|
-      format.html { redirect_to plans_url, notice: 'Plan was successfully destroyed.' }
+      format.html do
+        flash[:notice] = 'Plan deleted.'
+        redirect_to @return_path
+      end
       format.json { head :no_content }
+      format.js { render :plan_destroyed }
     end
   end
 

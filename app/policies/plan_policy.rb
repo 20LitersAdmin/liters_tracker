@@ -33,6 +33,6 @@ class PlanPolicy
   end
 
   def destroy?
-    @user&.admin?
+    new?
   end
 end

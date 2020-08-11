@@ -9,34 +9,34 @@ class ReportPolicy
   end
 
   def index?
-    @user.report_manager?
+    @user
   end
 
   def dttb_index?
-    @user.report_manager?
+    @user
   end
 
   def show?
-    @user.report_manager?
+    @user
   end
 
   def new?
-    show?
+    @user&.report_manager?
   end
 
   def create?
-    show?
+    new?
   end
 
   def edit?
-    show?
+    new?
   end
 
   def update?
-    show?
+    new?
   end
 
   def destroy?
-    show?
+    new?
   end
 end

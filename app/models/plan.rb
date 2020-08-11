@@ -26,6 +26,7 @@ class Plan < ApplicationRecord
   scope :with_reports_incomplete, -> { joins(:reports).group('plans.id').having('plans.goal > SUM(reports.distributed)').select('plans.*') }
 
   before_validation :add_error_to_district_field, if: -> { planable_type.blank? || planable_id.blank? }
+  before_destroy :unlink_reports
 
   after_save :find_reports
   after_save :update_hierarchy, if: -> { saved_change_to_planable_id? || saved_change_to_planable_type? }
@@ -142,6 +143,10 @@ class Plan < ApplicationRecord
 
     # reps.each { |rep| rep.update_column(:plan_id, id) } if reps.any?
     reps.update_all(plan_id: id) if reps.any?
+  end
+
+  def unlink_reports
+    reports.update_all(plan_id: nil)
   end
 
   def update_hierarchy
