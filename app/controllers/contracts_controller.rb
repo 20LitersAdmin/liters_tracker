@@ -15,8 +15,6 @@ class ContractsController < ApplicationController
     @targets = @contract.targets.joins(:technology).order('technologies.name ASC')
 
     @untargeted_technologies_exist = (Technology.all.pluck(:id) - @contract.targets.pluck(:technology_id)).any?
-
-    @plans = @contract.plans.includes(:technology).order(date: :asc)
   end
 
   # GET /contracts/new

@@ -145,6 +145,8 @@ class Plan < ApplicationRecord
   end
 
   def update_hierarchy
+    return unless planable.present?
+
     update_column(:hierarchy, reload.planable.hierarchy)
   end
 end

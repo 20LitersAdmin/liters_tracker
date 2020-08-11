@@ -1,6 +1,14 @@
 # CURRENT:
 0. Contracts/:id/plan is ready to test form submission to Plans#create
 0. Contract/:id/plan should show existing plans by sector
+- DONE: _community_plans && _community_plan
+- _facility_plans && _facility_plan
+- _engagement_plans && engagement_plan
+-
+
+# NEXT COMMIT:
+0. HierarchyResetService.update_plans!
+0. HierarchyResetService.update_reports!
 
 # NEXT:
 0. Plans#new.html is dead, right?

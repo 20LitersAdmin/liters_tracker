@@ -4,7 +4,7 @@
 
 $(document).on 'turbolinks:load', ->
   return unless controllerMatches(['contracts']) &&
-    actionMatches(['new', 'edit', 'show'])
+    actionMatches(['new', 'edit', 'show', 'plan'])
 
   # init datetimepickers
   $('.datetimepicker-input').datetimepicker({
@@ -36,6 +36,25 @@ $(document).on 'turbolinks:load', ->
       {data: 'people'}
       {data: 'links'}
     ]
+    pagingType: 'full_numbers'
+    language: {
+      paginate: {
+        first: "&#8676",
+        previous: "&#8592",
+        next: "&#8594",
+        last: "&#8677"
+      }
+    }
+
+  # dttb_community_plans on Contracts#plan
+  $('table#dttb_contract_plans').dataTable
+    lengthMenu: [[50, 100, 500, -1], [50, 100, 500, "All"] ]
+    order: [0, 'asc']
+    columnDefs: [ {
+      "searchable": false,
+      "orderable": false,
+      "targets": [-1, -2]
+    } ]
     pagingType: 'full_numbers'
     language: {
       paginate: {

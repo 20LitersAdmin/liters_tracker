@@ -109,6 +109,18 @@ class ApplicationController < ActionController::Base
   end
 
   def url_params
-    params.permit(:controller, :action, :year, :month, :id, :date, :tech, :sect, :facility, :cell, :village)
+    params.permit(
+      :action,
+      :cell,
+      :controller,
+      :date,
+      :facility,
+      :id,
+      :month,
+      :sect,
+      :tech,
+      :village,
+      :year
+    )
   end
 end

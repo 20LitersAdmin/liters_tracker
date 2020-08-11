@@ -65,8 +65,6 @@ class Report < ApplicationRecord
     end
   end
 
-  #############
-
   def location
     "#{reportable.name} #{reportable.class}"
   end
@@ -78,8 +76,6 @@ class Report < ApplicationRecord
   def links
     "<a class='btn yellow small' href='/reports/#{id}/edit'>Edit</a><br /><a data-confirm='Are you sure?' class='btn red small' rel='nofollow' data-method='delete' href='/reports/#{id}'>Delete</a>".html_safe
   end
-
-  #############
 
   def self.related_facilities
     # return a collection of Facilities from a collection of Reports
@@ -206,6 +202,8 @@ class Report < ApplicationRecord
   end
 
   def update_hierarchy
+    return unless reportable.present?
+
     update_column(:hierarchy, reload.reportable.hierarchy)
   end
 end
