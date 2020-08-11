@@ -8,5 +8,5 @@
   %td.text-center= human_number community_plan.goal
   %td.text-center= human_number community_plan.people_goal
   %td.text-center= human_date community_plan.date
-  %td= link_to 'Edit', edit_report_path(community_plan), class: 'btn yellow small'
+  %td= link_to 'Edit', edit_contract_plan_path(@contract, community_plan), class: 'btn yellow small'
   %td= link_to 'Delete', contract_plan_path(@contract, community_plan), method: :delete, class: 'btn red small contract-plan-delete', remote: true, data: { confirm: 'Are you sure you want to DELETE the plan?' }

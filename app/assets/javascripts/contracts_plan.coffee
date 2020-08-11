@@ -18,10 +18,28 @@ $(document).on 'turbolinks:load', ->
     maxDate: last,
     viewDate: date.startOf('month'),
     widgetPositioning: {
-      horizontal: 'auto'
+      horizontal: 'auto',
       vertical: 'bottom'
     }
   })
+
+  # init dttb_community_plans on Contracts#plan
+  $('table#dttb_contract_plans').dataTable
+    order: [0, 'asc'],
+    columnDefs: [ {
+      "searchable": false,
+      "orderable": false,
+      "targets": [-1, -2]
+    } ],
+    pagingType: 'full_numbers'
+    language: {
+      paginate: {
+        first: "&#8676",
+        previous: "&#8592",
+        next: "&#8594",
+        last: "&#8677"
+      }
+    }
 
 
   # existing plans delete button:

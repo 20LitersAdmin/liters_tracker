@@ -1,7 +1,7 @@
 -# frozen_string_literal: true
 .row
   .col-auto
-    %h1= "Contract ##{@contract.name}"
+    %h1= @plan.title
   .col.text-right
     = link_to 'Back', @return_path, class: 'btn blue'
   .col-12
@@ -16,8 +16,10 @@
     = render partial: 'shared/form_errors', locals: { object: @plan }
 
   .row
-    .col-md.field
-      = f.input :technology, collection: @technologies
+    .col-md-6.field
+      = f.input :contract, collection: @contracts, selected: @plan.contract.id
+    .col-md-6.field
+      = f.input :technology, collection: @technologies, selected: @plan.technology.id
     .col.field
       = f.input :goal
     .col.field

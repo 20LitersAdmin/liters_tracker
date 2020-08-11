@@ -34,6 +34,7 @@ $(document).on 'turbolinks:load', ->
     }
   })
 
+
   # existing reports delete button:
   # remove the deleted row from the table views using DataTables API
   $(document).on 'ajax:success', '.sector-report-delete', ->
@@ -41,28 +42,6 @@ $(document).on 'turbolinks:load', ->
       .row( $(this).parents('tr') )
       .remove()
       .draw()
-
-  # TODO: This can be removed, right??
-  # _village_form && _facility_form: setting polymorphic reportable_type and reportable_id
-  setPolymorphic = (type, id) ->
-    $('#report_reportable_type.village-form').val(type)
-    $('#report_reportable_id.village-form').val(id)
-
-  selectLogic = () ->
-    # don't forget: when #report_cell is un-set, #report_village gets reset by finders.coffee
-    cell_val = $('#report_cell.village-form').val()
-    vill_val = $('#report_village.village-form').val()
-
-    if vill_val != ''
-      # if #report_village has a value, always use that
-      setPolymorphic('Village', vill_val)
-    else if cell_val != ''
-      # if #report_village is blank, but #report_cell has a value, use that
-      setPolymorphic('Cell', cell_val)
-    else
-      # if they're both blank, clear the fields
-      setPolymorphic('','')
-
 
   # _facility_form
   $('#report_cell').on 'change', ->

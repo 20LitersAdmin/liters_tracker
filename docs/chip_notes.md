@@ -1,10 +1,5 @@
-# CURRENT:
-0. Contracts/:id/plan is ready to test form submission to Plans#create
-- Plan can be deleted
-- Plan can be added
-- Plan can be edited
-
 # NEXT COMMIT:
+0. rails db:migrate # for Contract#name addition
 0. HierarchyResetService.update_plans!
 0. HierarchyResetService.update_reports!
 

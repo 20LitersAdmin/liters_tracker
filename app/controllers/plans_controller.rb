@@ -43,7 +43,8 @@ class PlansController < ApplicationController
 
   # GET /plans/1/edit
   def edit
-    @technologies = Technology.report_worthy.pluck(:name, :id)
+    @contracts = Contract.all.order(:name).pluck(:name, :id)
+    @technologies = Technology.report_worthy.order(:name).pluck(:name, :id)
     @min_date = @contract.start_date
     @max_date = @contract.end_date
   end
@@ -51,20 +52,31 @@ class PlansController < ApplicationController
   # POST /plans
   # POST /plans.json
   def create
-    # check for duplicates!!
-    # mimic reports#create for js response
-    authorize @plan = Plan.new(plan_params)
+    authorize @plan = Plan.where(dup_matching_params).first_or_initialize
 
-    byebug
+    @plan.assign_attributes(plan_params)
+    @plan.contract_id = params[:contract_id].to_i
 
-    # respond_to do |format|
-    #   if @plan.save
-    #     format.html { redirect_to @plan, notice: 'Plan created.' }
-    #     format.json { render :show, status: :created, location: @plan }
-    #   else
-    #     #fail
-    #   end
-    # end
+    @persistence = @plan.new_record? ? 'Plan created.' : 'A matching plan was found and updated.'
+
+    respond_to do |format|
+      if @plan.save
+        format.html { redirect_to @return_path, notice: @persistence }
+        format.json { render :show, status: :created, location: @plan }
+        format.js do
+          @technology = @plan.technology
+          @partial = "contracts/#{@technology.type}_plans"
+          @sector = @plan.planable.sector
+          @plans = @sector.related_plans.where(technology: @technology).nearest_to_date(@plan.date)
+
+          render :plan_created
+        end
+      else
+        format.html { render :new }
+        format.json { render json: @plan.errors, status: :unprocessable_entity }
+        format.js { render :plan_error }
+      end
+    end
   end
 
   # PATCH/PUT /plans/1
@@ -72,7 +84,7 @@ class PlansController < ApplicationController
   def update
     respond_to do |format|
       if @plan.update(plan_params)
-        format.html { redirect_to @plan, notice: 'Plan updated.' }
+        format.html { redirect_to @return_path, notice: 'Plan updated.' }
         format.json { render :show, status: :ok, location: @plan }
       else
         format.html { render :edit }
@@ -114,5 +126,12 @@ class PlansController < ApplicationController
                                  :planable_type,
                                  :planable_id,
                                  :date)
+  end
+
+  def dup_matching_params
+    params.require(:plan).permit(:date,
+                                 :technology_id,
+                                 :planable_id,
+                                 :planable_type)
   end
 end

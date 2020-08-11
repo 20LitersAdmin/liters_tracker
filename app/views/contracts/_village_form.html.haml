@@ -3,7 +3,7 @@
   = f.input :planable_type, as: :hidden, input_html: { value: 'Village' }
   = f.input :planable_id, as: :hidden
   = f.input :technology_id, as: :hidden
-  = f.input :date, as: :hidden
+  = f.input :date, as: :hidden, input_html: { value: @date }
   .row
     .col-6.col-md-3.field
       = f.input :cell, collection: @cells, hint: 'Select to limit villages.'

@@ -89,7 +89,7 @@ class ContractsController < ApplicationController
     @date = params[:date].present? ? Date.parse(params[:date]) : Date.today.beginning_of_month + 1.month
     @plans = @sector.related_plans.where(technology: @technology).nearest_to_date(@date)
 
-    @plan = Plan.new(technology: @technology)
+    @plan = Plan.new(technology: @technology, date: @date)
 
     @cells = @sector.cells.order(:name).pluck(:name, :id)
     @cell = Cell.new

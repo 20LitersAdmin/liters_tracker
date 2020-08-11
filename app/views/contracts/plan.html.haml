@@ -8,21 +8,21 @@
   .col-2.text-right
     =link_to 'Back', @return_path, class: 'btn yellow'
 
-.row#sector_form
+.row#contract_form
   .col-12
     %h5 Create a new plan:
   .col-12
-    = render partial: "#{@technology.type_for_form}_form", locals: { plan: @plan }
+    = render partial: "contracts/#{@technology.type_for_form}_form", locals: { plan: @plan }
 
 - if @technology.scale == 'Community'
   .row.justify-content-end
     .col-auto= link_to 'Add New Facility', '#', id: 'facility-trigger', class: 'btn blue', data: { toggle:  "modal", target: '#new_facility_modal' }
 
-.row#sector_plans
+.row#contract_plans
   .col-12
     %h5 Existing plans:
-  .col-12#sector_plans_container
-    = render partial: "#{@technology.type}_plans"
+  .col-12#contract_plans_container
+    = render partial: "contracts/#{@technology.type}_plans"
 
 - if @technology.scale == 'Community'
   .modal.fade#new_facility_modal{tabindex: '-1', role: 'dialog', 'aria-labelledby': 'newFacilityLabel', 'aria-hidden': 'true' }

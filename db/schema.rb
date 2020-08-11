@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_07_10_160045) do
+ActiveRecord::Schema.define(version: 2020_08_11_144153) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -61,6 +61,7 @@ ActiveRecord::Schema.define(version: 2020_07_10_160045) do
     t.integer "people_goal"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.string "name"
     t.index ["end_date", "start_date"], name: "between_end_start_dates"
     t.index ["end_date"], name: "index_contracts_on_end_date"
   end

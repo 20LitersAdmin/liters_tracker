@@ -34,10 +34,7 @@ class ReportsController < ApplicationController
 
     respond_to do |format|
       if @report.save
-        format.html do
-          flash[:success] = @persistence
-          redirect_to @return_path
-        end
+        format.html { redirect_to @return_path, notice: @persistence }
         format.json { render :show, status: :created, location: @report }
         format.js do
           @technology = @report.technology
