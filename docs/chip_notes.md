@@ -1,9 +1,8 @@
 # CURRENT:
 0. Contracts/:id/plan is ready to test form submission to Plans#create
-
-# NEXT:
 0. Contract/:id/plan should show existing plans by sector
 
+# NEXT:
 0. Plans#new.html is dead, right?
 
 0. SectorsReport.coffee: shouldn't need setPolymorphic or selectLogic, handled by finders.coffee. Try removing and see what happens.

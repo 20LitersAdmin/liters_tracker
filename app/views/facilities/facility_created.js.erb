@@ -3,7 +3,7 @@
 // remove any 'is-invalid' css tags
 $('.is-invalid').removeClass('is-invalid');
 
-// clear out the sectors#report:facility/_modal_form fields
+// clear out the facility/_modal_form fields
 $('form#new_facility').find('input[type!="submit"]').val('')
 $('form#new_facility').find('textarea').val('')
 $('form#new_facility').find('select').find('option:first').attr('selected', 'selected')
@@ -16,9 +16,11 @@ $('#new_facility_modal').modal('hide');
 
 // set the polymorphic automatically in the form
 $('#report_reportable_id').val("<%= @facility.id %>");
+$('#plan_planable_id').val("<%= @facility.id %>");
 
 // select the geography automatically in the form
 $('#report_cell').val("<%= @facility.cell.id %>");
+$('#plan_cell').val("<%= @facility.cell.id %>");
 
 $('#report_village').html('');
 $('#report_village').append('<option></option>');
@@ -29,3 +31,13 @@ $('#report_facility').html('');
 $('#report_facility').append('<option></option>');
 $('#report_facility').append(new Option("<%= @facility.name %>", "<%= @facility.id %>"));
 $('#report_facility').val("<%= @facility.id %>");
+
+$('#plan_village').html('');
+$('#plan_village').append('<option></option>');
+$('#plan_village').append(new Option("<%= @facility.village.name %>", "<%= @facility.village.id %>"));
+$('#plan_village').val("<%= @facility.village.id %>");
+
+$('#plan_facility').html('');
+$('#plan_facility').append('<option></option>');
+$('#plan_facility').append(new Option("<%= @facility.name %>", "<%= @facility.id %>"));
+$('#plan_facility').val("<%= @facility.id %>");
