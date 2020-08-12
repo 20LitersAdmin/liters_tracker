@@ -4,7 +4,6 @@
 - Engagement Tech plans: Form says "Goal", should say "Hours"?, or add Plan#hours to db?
 
 # NEXT:
-0. "Need helo?" on /data
 0. Plans#new.html is dead, right?
 0. Monthly report: Community Engagement reports:
 - Says: [ Sector  Cell  Village Distributed Checked People served ]

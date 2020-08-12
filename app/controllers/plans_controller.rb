@@ -2,7 +2,7 @@
 
 class PlansController < ApplicationController
   before_action :set_plan, only: %i[edit update destroy]
-  before_action :set_contract, only: %i[edit new create dttb_index]
+  before_action :set_contract, only: %i[edit create dttb_index]
 
   def dttb_index
     authorize @plans = @contract.plans.includes(:technology).order(date: :asc)
@@ -17,29 +17,6 @@ class PlansController < ApplicationController
   # GET /plans/1.json
   def show
   end
-
-  # GET /plans/new
-  # def new
-  #   authorize @plan = Plan.new
-
-  #   @technologies = Technology.report_worthy.pluck(:name, :id)
-  #   @min_date = @contract.start_date
-  #   @max_date = @contract.end_date
-
-  #   # "blank" geographies for selected values on select fields
-  #   @district = District.new
-  #   @sector = Sector.new
-  #   @cell = Cell.new
-  #   @village = Village.new
-  #   @facility = Facility.new
-
-  #   # default collections
-  #   @districts = District.order(:name)
-  #   @sectors = [['Please select a District', '0']]
-  #   @cells = [['Please select a Sector', '0']]
-  #   @villages = [['Please select a Cell', '0']]
-  #   @facilities = [['Please select a Village', '0']]
-  # end
 
   # GET /plans/1/edit
   def edit
