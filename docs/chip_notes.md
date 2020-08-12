@@ -1,10 +1,19 @@
+# CURRENT:
+JSON similar facilities for Facilities#reassign:
+- Facility#similar_by_name: Need to drop ['of', 'for', '-', '/', '(', ')', ',', 'Liter']
+
 # PLANS:
 - Community Tech plans MUST be associated with a Facility, but shouldn't have to be?
 - Family Tech plans MUST be associated with a Village (but maybe could be generalized to a cell?)
 - Engagement Tech plans: Form says "Goal", should say "Hours"?, or add Plan#hours to db?
 
 # NEXT:
-0. Plans#new.html is dead, right?
+3. Deleting a (duplicate) Facility that has associated Reports:
+- Need to re-assign reports before deleting facility
+- or create a Merge function?
+
+0. Facilities#index needs dttb instead of paginate
+
 0. Monthly report: Community Engagement reports:
 - Says: [ Sector  Cell  Village Distributed Checked People served ]
 - Should say: [ Sector  Cell  Village People Hours Impact ]
@@ -20,9 +29,6 @@ Sandardize: Show views
 2. What about un-met plans?
 - Help Rebero see work to be accomplished by Sector
 
-3. Deleting a (duplicate) Facility that has associated Reports:
-- Need to re-assign reports before deleting facility
-- or create a Merge function?
 
 # OVERALL CUSTOM REPORTS VIEW:
 - Use Cornerstone Trust grant report as a sample

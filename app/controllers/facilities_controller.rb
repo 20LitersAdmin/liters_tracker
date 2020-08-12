@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 class FacilitiesController < ApplicationController
-  before_action :set_facility, only: %i[show edit update destroy]
+  before_action :set_facility, only: %i[show edit update destroy reassign matcher]
   before_action :set_sector_collection, only: %i[new edit update create]
 
   # GET /facilities
@@ -108,7 +108,7 @@ class FacilitiesController < ApplicationController
 
     respond_to do |format|
       if @facility.save
-        format.html { redirect_to @facility, notice: 'Facility updated.' }
+        format.html { redirect_to @return_path, notice: 'Facility updated.' }
         format.json { render :show, status: :ok, location: @facility }
       else
         format.html { render :edit }
@@ -120,11 +120,26 @@ class FacilitiesController < ApplicationController
   # DELETE /facilities/1
   # DELETE /facilities/1.json
   def destroy
-    authorize @facility.destroy
+    redirect_to reassign_facility_path(@facility) and return if @facility.reports.any? || @facility.plans.any?
+
+    # authorize @facility.destroy
     respond_to do |format|
-      format.html { redirect_to facilities_url, notice: 'Facility destroyed.' }
+      format.html { redirect_to @return_path, notice: 'Facility destroyed.' }
       format.json { head :no_content }
     end
+  end
+
+  def reassign
+    authorize @facility
+
+    @reports = @facility.reports
+    @plans = @facility.plans
+  end
+
+  # POST /facilities/1/matcher.json
+  def similar
+    # takes a JSON form submission and returns a JSON list of similar facilities (name, id, hierarchy)
+    authorize @facility.similar_by_name
   end
 
   private

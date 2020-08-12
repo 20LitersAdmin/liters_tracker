@@ -20,9 +20,6 @@ class Facility < ApplicationRecord
   scope :churches,     -> { where(category: 'Church') }
   scope :not_churches, -> { where.not(category: 'Church') }
 
-  scope :hidden, -> { where(hidden: true) }
-  scope :visible, -> { where(hidden: false) }
-
   after_save :update_hierarchy, if: -> { saved_change_to_village_id? }
 
   def cells
@@ -74,6 +71,22 @@ class Facility < ApplicationRecord
     sector&.parent&.sectors
   end
 
+  def similar_by_name
+    # split the downcased name by word, then remove any category words from the array
+    # category words are too common to try and match against
+    split = name.downcase.split(' ') - Constants::Facility::CATEGORY.map(&:downcase)
+
+    return unless split.any?
+
+    id_ary = []
+
+    split.each do |frag|
+      id_ary << Facility.where('name ~* ?', frag).pluck(:id)
+    end
+
+    Facility.find(id_ary.flatten.uniq).order(:name).pluck(:name, :id, :hierarchy)
+  end
+
   def update_hierarchy
     update_column(:hierarchy, village.hierarchy << { parent_name: village.name, parent_type: village.class.to_s, link: village_path(village) })
 
@@ -84,4 +97,6 @@ class Facility < ApplicationRecord
     # Report and Plan want to be able to call any geography
     village&.parent&.villages
   end
+
+  private
 end

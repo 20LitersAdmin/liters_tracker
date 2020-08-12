@@ -33,6 +33,14 @@ class FacilityPolicy
   end
 
   def destroy?
-    @user&.admin?
+    new?
+  end
+
+  def reassign?
+    new?
+  end
+
+  def similar?
+    new?
   end
 end

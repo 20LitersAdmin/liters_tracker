@@ -1,0 +1,30 @@
+-# frozen_string_literal: true
+.row
+  .col
+    %h2 Facility cannot be deleted
+    %p Until all associated Reports and Plans have been reassigned.
+
+.row.mb-5
+  .col-12
+    %h3= @facility.name
+  .col-12
+    %p= format_hierarchy @facility.hierarchy, links: true
+
+- if @reports.any?
+  .row
+    .col
+      %h5 Reports
+
+
+- if @plans.any?
+  .row
+    .col
+      %h5 Plans
+
+
+.row
+  .col-6.text-right
+    = link_to 'Cancel', @return_path, class: 'btn yellow'
+  .col-6
+    = link_to 'Delete Facility', facility_path(@facility), method: :delete, data: { confirm: 'Are you sure you want to DELETE this facility?' }, class: 'btn red'
+
