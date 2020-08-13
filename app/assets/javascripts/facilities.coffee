@@ -15,6 +15,7 @@ $(document).on 'turbolinks:load', ->
     LinkedSelect.updateChildSelectors($(this))
 
 
+  # Facilities#reassign
   $('table#dttb_reassign_facilities').DataTable
     columnDefs: [ {
       "searchable": false,
