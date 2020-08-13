@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 class FacilitiesController < ApplicationController
-  before_action :set_facility, only: %i[show edit update destroy reassign matcher]
+  before_action :set_facility, only: %i[show edit update destroy reassign reassign_to]
   before_action :set_sector_collection, only: %i[new edit update create]
 
   # GET /facilities
@@ -122,7 +122,10 @@ class FacilitiesController < ApplicationController
   def destroy
     redirect_to reassign_facility_path(@facility) and return if @facility.reports.any? || @facility.plans.any?
 
-    # authorize @facility.destroy
+    # break the reassign / reassign_to loop
+    @return_path = facilities_path if @return_path.include? 'reassign'
+
+    authorize @facility.destroy
     respond_to do |format|
       format.html { redirect_to @return_path, notice: 'Facility destroyed.' }
       format.json { head :no_content }
@@ -134,12 +137,24 @@ class FacilitiesController < ApplicationController
 
     @reports = @facility.reports
     @plans = @facility.plans
+
+    if @reports.any? || @plans.any?
+      @facilities = @facility.similar_by_name.select(:name, :id, :hierarchy)
+      render :reassign
+    else
+      render :can_be_deleted
+    end
   end
 
-  # POST /facilities/1/matcher.json
-  def similar
-    # takes a JSON form submission and returns a JSON list of similar facilities (name, id, hierarchy)
-    authorize @facility.similar_by_name
+  def reassign_to
+    authorize @facility
+
+    @to_facility = Facility.find(params[:to])
+
+    @facility.reports.update_all(reportable_id: @to_facility.id) if @facility.reports.any?
+    @facility.plans.update_all(planable_id: @to_facility.id) if @facility.plans.any?
+
+    redirect_to reassign_facility_path(@facility)
   end
 
   private

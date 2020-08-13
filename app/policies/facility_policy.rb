@@ -40,7 +40,7 @@ class FacilityPolicy
     new?
   end
 
-  def similar?
+  def reassign_to?
     new?
   end
 end

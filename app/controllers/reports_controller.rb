@@ -74,10 +74,7 @@ class ReportsController < ApplicationController
     authorize @report.destroy
 
     respond_to do |format|
-      format.html do
-        flash[:notice] = 'Report deleted.'
-        redirect_to @return_path
-      end
+      format.html { redirect_to @return_path, notice: 'Report deleted.' }
       format.json { head :no_content }
       format.js { render :report_destroyed }
     end

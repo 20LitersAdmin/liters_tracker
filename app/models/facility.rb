@@ -72,9 +72,8 @@ class Facility < ApplicationRecord
   end
 
   def similar_by_name
-    # split the downcased name by word, then remove any category words from the array
-    # category words are too common to try and match against
-    split = name.downcase.split(' ') - Constants::Facility::CATEGORY.map(&:downcase)
+    # split the downcased name by word, then remove any non-letter words from the array
+    split = name.downcase.gsub(/[^a-z ]/, '').split(' ') - Constants::Facility::NAME_STRIP
 
     return unless split.any?
 
@@ -84,7 +83,8 @@ class Facility < ApplicationRecord
       id_ary << Facility.where('name ~* ?', frag).pluck(:id)
     end
 
-    Facility.find(id_ary.flatten.uniq).order(:name).pluck(:name, :id, :hierarchy)
+    final_ary = id_ary.flatten.uniq - [id]
+    Facility.where(id: final_ary).order(:name)
   end
 
   def update_hierarchy
@@ -97,6 +97,4 @@ class Facility < ApplicationRecord
     # Report and Plan want to be able to call any geography
     village&.parent&.villages
   end
-
-  private
 end

@@ -54,7 +54,7 @@ Rails.application.routes.draw do
   end
   resources :facilities do
     get 'reassign', on: :member
-    get 'simiar', on: :member
+    get 'reassign_to', on: :member
   end
 
   resources :stories do

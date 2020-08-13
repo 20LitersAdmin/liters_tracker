@@ -4,27 +4,49 @@
     %h2 Facility cannot be deleted
     %p Until all associated Reports and Plans have been reassigned.
 
-.row.mb-5
+.row.mt-2
   .col-12
     %h3= @facility.name
   .col-12
     %p= format_hierarchy @facility.hierarchy, links: true
 
-- if @reports.any?
-  .row
-    .col
-      %h5 Reports
+- if @facility.reports.any?
+  .row.mt-1
+    .col-12
+      %h5= "Facility has #{pluralize(@facility.reports.size, 'report')}:"
+    .col-12
+      %ul
+        - @facility.reports.each do |rep|
+          %li= "#{rep.details} [#{link_to 'Edit', edit_report_path(rep), target: '_blank'} | #{link_to 'Delete', report_path(rep), method: :delete, data: { confirm: 'Are you sure you want to DELETE this report?' }}]".html_safe
 
+- if @facility.plans.any?
+  .row.mt-1
+    .col-12
+      %h5= "Facility has #{pluralize(@facility.plans.size, 'plan')}"
+    .col-12
+      %ul
+        - @facility.plans.each do |plan|
+          %li= "#{plan.title} [#{link_to 'Edit', edit_contract_plan_path(plan.contract, plan), target: '_blank'} | #{link_to 'Delete', contract_plan_path(plan.contract, plan), method: :delete, data: { confirm: 'Are you sure you want to DELETE this plan?' }}]".html_safe
 
-- if @plans.any?
-  .row
-    .col
-      %h5 Plans
+.row.mt-5
+  .col-12
+    %h5 Similar Facilities:
+    %p Reassign associated reports and plans to an existing facility.
+  .col-12
+    %table.table.table-striped.table-sm#dttb_reassign_facilities
+      %thead.thead-dark
+        %tr
+          %th Name
+          %th Location
+          %th
+      %tbody
+        - @facilities.each do |fac|
+          %tr
+            %td= fac.name
+            %td= format_hierarchy fac.hierarchy, slim: true
+            %td.text-center= link_to 'Reassign', reassign_to_facility_path(@facility, to: fac.id), class: 'btn empty small'
 
-
-.row
-  .col-6.text-right
+.row.mt-5
+  .col-12
     = link_to 'Cancel', @return_path, class: 'btn yellow'
-  .col-6
-    = link_to 'Delete Facility', facility_path(@facility), method: :delete, data: { confirm: 'Are you sure you want to DELETE this facility?' }, class: 'btn red'
 

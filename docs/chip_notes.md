@@ -1,18 +1,14 @@
-# CURRENT:
-JSON similar facilities for Facilities#reassign:
-- Facility#similar_by_name: Need to drop ['of', 'for', '-', '/', '(', ')', ',', 'Liter']
-
 # PLANS:
 - Community Tech plans MUST be associated with a Facility, but shouldn't have to be?
 - Family Tech plans MUST be associated with a Village (but maybe could be generalized to a cell?)
 - Engagement Tech plans: Form says "Goal", should say "Hours"?, or add Plan#hours to db?
 
 # NEXT:
-3. Deleting a (duplicate) Facility that has associated Reports:
-- Need to re-assign reports before deleting facility
-- or create a Merge function?
+0. Facilities#index needs dttb ajax instead of paginate / like Reports#dttb_index
 
-0. Facilities#index needs dttb instead of paginate
+0. Forms could have geography selects (with Global Linked Selects)
+- Reports#edit
+- Plans#edit
 
 0. Monthly report: Community Engagement reports:
 - Says: [ Sector  Cell  Village Distributed Checked People served ]

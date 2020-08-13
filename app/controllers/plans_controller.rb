@@ -76,10 +76,7 @@ class PlansController < ApplicationController
     authorize @plan.destroy
 
     respond_to do |format|
-      format.html do
-        flash[:notice] = 'Plan deleted.'
-        redirect_to @return_path
-      end
+      format.html { redirect_to @return_path, notice: 'Plan deleted.' }
       format.json { head :no_content }
       format.js { render :plan_destroyed }
     end
