@@ -63,16 +63,42 @@ RSpec.describe Facility, type: :model do
     end
   end
 
-  describe 'hierarchy' do
-    it 'returns an array of hashes with name and link' do
+  describe '#cells' do
+    it 'returns sibling cells of the same sector' do
       facility.save
-      hierarchy = facility.hierarchy
+      3.times do
+        FactoryBot.create(:cell, sector: facility.sector)
+      end
 
-      expect(hierarchy.is_a?(Array)).to eq true
-      expect(hierarchy[0].is_a?(Hash)).to eq true
-      expect(hierarchy[0]['parent_name'].present?).to eq true
-      expect(hierarchy[0]['parent_type'].present?).to eq true
-      expect(hierarchy[0]['link'].present?).to eq true
+      expect(facility.cells.size).to eq 4
+    end
+  end
+
+  describe '#districts' do
+    it 'returns sibling cells of the same country' do
+      facility.save
+      3.times do
+        FactoryBot.create(:district, country: facility.country)
+      end
+
+      expect(facility.districts.size).to eq 4
+    end
+  end
+
+  describe '#facility' do
+    it 'returns itself, because I need all Geography models to respond to record.facility' do
+      expect(facility.facility).to eq facility
+    end
+  end
+
+  describe '#facilities' do
+    it 'returns sibling records of the same village' do
+      facility.save
+      3.times do
+        FactoryBot.create(:facility, village: facility.village)
+      end
+
+      expect(facility.facilities.size).to eq 4
     end
   end
 
@@ -89,6 +115,37 @@ RSpec.describe Facility, type: :model do
     end
   end
 
+  describe '#parent' do
+    it 'returns the parent record' do
+      expect(facility.parent.class).to eq Village
+      expect(facility.parent).to eq facility.village
+    end
+  end
+
+  describe '#related_reports' do
+    it 'returns reports, because I need all Geography models to respond to record.related_reports' do
+      facility.save
+      3.times do
+        FactoryBot.create(:report_facility, reportable: facility)
+      end
+
+      expect(facility.related_reports.size).to eq 3
+      expect(facility.related_reports).to eq facility.reports
+    end
+  end
+
+  describe '#related_plans' do
+    it 'returns plans, because I need all Geography models to respond to record.related_plans' do
+      facility.save
+      3.times do
+        FactoryBot.create(:plan_facility, planable: facility)
+      end
+
+      expect(facility.related_plans.size).to eq 3
+      expect(facility.related_plans).to eq facility.plans
+    end
+  end
+
   describe '#related_stories' do
     it 'returns stories related to the given record' do
       facility.save
@@ -99,15 +156,78 @@ RSpec.describe Facility, type: :model do
     end
   end
 
-  describe '#facility' do
-    it 'returns itself because all geographies need to respond to all types of geography' do
-      expect(facility.facility).to eq facility
+  describe '#sectors' do
+    it 'returns the sibling records of the same district' do
+      facility.save
+      3.times do
+        FactoryBot.create(:sector, district: facility.district)
+      end
+
+      expect(facility.sectors.size).to eq 4
     end
   end
 
-  describe '#parent' do
-    it 'returns the parent village' do
-      expect(facility.parent).to eq facility.village
+  describe '#similar_by_name' do
+    before :each do
+      facility.name = 'key word church clinic school'
+      facility.save
+    end
+
+    it 'returns a group of facilities that share a common name word' do
+      similar1 = FactoryBot.create(:facility, name: 'place name key')
+      similar2 = FactoryBot.create(:facility, name: 'word to your mother')
+      similar3 = FactoryBot.create(:facility, name: 'sword in the keystone')
+
+      expect(facility.similar_by_name).to include similar1
+      expect(facility.similar_by_name).to include similar2
+      expect(facility.similar_by_name).to include similar3
+    end
+
+    it 'ignores words found in Constants::Facility::NAME_STRIP' do
+      dissimilar1 = FactoryBot.create(:facility, name: 'place name church')
+      dissimilar2 = FactoryBot.create(:facility, name: 'school your mother')
+      dissimilar3 = FactoryBot.create(:facility, name: 'a clinic for doctors only')
+
+      expect(facility.similar_by_name).not_to include dissimilar1
+      expect(facility.similar_by_name).not_to include dissimilar2
+      expect(facility.similar_by_name).not_to include dissimilar3
+    end
+  end
+
+  describe '#update_hierarchy' do
+    before :all do
+      @village = FactoryBot.create(:village)
+    end
+
+    it 'is called from after_save' do
+      expect(facility).to receive(:update_hierarchy)
+
+      facility.save
+    end
+
+    it 'is called if village_id changes' do
+      expect(facility).to receive(:update_hierarchy)
+
+      facility.update(village: @village)
+    end
+
+    it 'is not called if village_id doesn\'t change' do
+      facility.save
+
+      expect(facility).not_to receive(:update_hierarchy)
+
+      facility.update(name: 'new name')
+    end
+  end
+
+  describe '#villages' do
+    it 'returns the sibling records of the same cell' do
+      facility.save
+      3.times do
+        FactoryBot.create(:village, cell: facility.cell)
+      end
+
+      expect(facility.villages.size).to eq 4
     end
   end
 end
