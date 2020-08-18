@@ -20,9 +20,6 @@ class Facility < ApplicationRecord
   scope :churches,     -> { where(category: 'Church') }
   scope :not_churches, -> { where.not(category: 'Church') }
 
-  scope :hidden, -> { where(hidden: true) }
-  scope :visible, -> { where(hidden: false) }
-
   after_save :update_hierarchy, if: -> { saved_change_to_village_id? }
 
   def cells
@@ -72,6 +69,22 @@ class Facility < ApplicationRecord
   def sectors
     # Report and Plan want to be able to call any geography
     sector&.parent&.sectors
+  end
+
+  def similar_by_name
+    # split the downcased name by word, then remove any non-letter words from the array
+    split = name.downcase.gsub(/[^a-z ]/, '').split(' ') - Constants::Facility::NAME_STRIP
+
+    return unless split.any?
+
+    id_ary = []
+
+    split.each do |frag|
+      id_ary << Facility.where('name ~* ?', frag).pluck(:id)
+    end
+
+    final_ary = id_ary.flatten.uniq - [id]
+    Facility.where(id: final_ary).order(:name)
   end
 
   def update_hierarchy

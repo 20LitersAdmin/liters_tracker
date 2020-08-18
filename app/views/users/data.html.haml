@@ -77,7 +77,7 @@
   .col-sm-12.col-md-6.col-lg-3
     .card.my-2
       .card-body
-        %h5.card-title Need helo?
+        %h5.card-title Need help?
         %p.card-text Talk to an administrator
         - @admins.each do |admin|
           = link_to 'Email ' + admin.fname, 'mailto:' + admin.email, class: 'btn yellow', target: '_blank'

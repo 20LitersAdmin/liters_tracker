@@ -35,4 +35,4 @@
       = f.button :submit, class: 'btn yellow'
       = link_to 'Back', @return_path, class: 'btn blue'
       - if @facility.persisted?
-        = link_to 'Delete', facility_path(@facility), method: :destroy, data: { confirm: 'Are you sure you want to DELETE this facility?' }, class: 'btn red'
+        = link_to 'Delete', facility_path(@facility), method: :delete, data: { confirm: 'Are you sure you want to DELETE this facility?' }, class: 'btn red'

@@ -1,0 +1,15 @@
+-# frozen_string_literal: true
+.row
+  .col
+    %h2 Facility can now be deleted
+    %p Facility has no associated reports or plans
+
+.row.mt-2
+  .col-12
+    %h3= @facility.name
+  .col-12
+    %p= format_hierarchy @facility.hierarchy, links: true
+
+.row.mt-2
+  .col-12
+    = link_to 'Delete Facility', facility_path(@facility), method: :delete, data: { confirm: 'Are you sure you want to DELETE this facility?' }, class: 'btn red'

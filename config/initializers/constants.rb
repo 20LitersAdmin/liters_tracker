@@ -25,6 +25,16 @@ module Constants
 
   class Facility
     CATEGORY = %w[Church Clinic School Other].freeze
+    NAME_STRIP = %w[
+      church
+      clinic
+      for
+      of
+      school
+      other
+      i
+      ii
+    ].freeze
   end
 
   class Contract

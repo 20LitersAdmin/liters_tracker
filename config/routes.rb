@@ -52,7 +52,10 @@ Rails.application.routes.draw do
     get 'children', on: :member
     get 'make_visible', on: :member
   end
-  resources :facilities
+  resources :facilities do
+    get 'reassign', on: :member
+    get 'reassign_to', on: :member
+  end
 
   resources :stories do
     get 'image', on: :member
