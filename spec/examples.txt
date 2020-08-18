@@ -41,6 +41,8 @@ example_id                                | status  | run_time        |
 ./spec/models/contract_spec.rb[1:5:1]     | passed  | 0.0056 seconds  |
 ./spec/models/contract_spec.rb[1:6:1]     | passed  | 0.2965 seconds  |
 ./spec/models/contract_spec.rb[1:6:2]     | passed  | 0.77524 seconds |
+./spec/models/contract_spec.rb[1:7:1]     | passed  | 0.01276 seconds |
+./spec/models/contract_spec.rb[1:7:2]     | passed  | 0.10142 seconds |
 ./spec/models/country_spec.rb[1:1:1:1]    | passed  | 0.00237 seconds |
 ./spec/models/country_spec.rb[1:1:2:1]    | passed  | 0.00153 seconds |
 ./spec/models/country_spec.rb[1:1:2:2]    | passed  | 0.00644 seconds |

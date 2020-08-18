@@ -116,4 +116,20 @@ RSpec.describe Contract, type: :model do
       expect(Report.where(contract_id: contract.id).size).to eq 3
     end
   end
+
+  fdescribe '#set_name' do
+    it 'is called from after_save' do
+      expect(contract).to receive(:set_name)
+
+      contract.save
+    end
+
+    it 'updates the name column' do
+      expect(contract.name).to eq nil
+
+      contract.save
+
+      expect(contract.name).not_to eq nil
+    end
+  end
 end
