@@ -20,8 +20,19 @@ example_id                                | status  | run_time        |
 ./spec/models/cell_spec.rb[1:12:1]        | unknown |                 |
 ./spec/models/cell_spec.rb[1:12:2]        | unknown |                 |
 ./spec/models/cell_spec.rb[1:12:3]        | unknown |                 |
-./spec/models/cell_spec.rb[1:13:1]        | passed  | 0.21857 seconds |
+./spec/models/cell_spec.rb[1:13:1]        | passed  | 0.31901 seconds |
 ./spec/models/cell_spec.rb[1:14:1]        | unknown |                 |
+./spec/models/cell_spec.rb[1:15:1]        | passed  | 0.10324 seconds |
+./spec/models/cell_spec.rb[1:15:2]        | passed  | 0.01599 seconds |
+./spec/models/cell_spec.rb[1:15:3]        | passed  | 0.0308 seconds  |
+./spec/models/cell_spec.rb[1:15:4:1]      | passed  | 0.03113 seconds |
+./spec/models/cell_spec.rb[1:15:4:2]      | passed  | 0.0265 seconds  |
+./spec/models/cell_spec.rb[1:15:5:1]      | passed  | 2.67 seconds    |
+./spec/models/cell_spec.rb[1:16:1]        | passed  | 0.19839 seconds |
+./spec/models/cell_spec.rb[1:16:2]        | passed  | 0.02208 seconds |
+./spec/models/cell_spec.rb[1:16:3:1]      | passed  | 0.06896 seconds |
+./spec/models/cell_spec.rb[1:16:4:1]      | passed  | 0.05152 seconds |
+./spec/models/cell_spec.rb[1:16:4:2]      | passed  | 0.03767 seconds |
 ./spec/models/contract_spec.rb[1:1:1]     | passed  | 0.0022 seconds  |
 ./spec/models/contract_spec.rb[1:1:2]     | passed  | 0.0036 seconds  |
 ./spec/models/contract_spec.rb[1:2:1]     | passed  | 0.01759 seconds |

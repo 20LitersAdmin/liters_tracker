@@ -116,8 +116,8 @@ class Cell < ApplicationRecord
 
     return unless cascade || saved_change_to_sector_id?
 
-    reload.villages.each do |v|
-      v.reload.update_hierarchy(cascade: true)
+    reload.villages.each do |vill|
+      vill.update_hierarchy(cascade: true)
     end
   end
 

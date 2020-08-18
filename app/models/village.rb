@@ -118,9 +118,7 @@ class Village < ApplicationRecord
 
     return unless cascade || saved_change_to_cell_id?
 
-    reload.facilities.each do |f|
-      f.reload.update_hierarchy
-    end
+    reload.facilities.each(&:update_hierarchy)
   end
 
   private
