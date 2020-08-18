@@ -297,11 +297,15 @@ RSpec.describe Cell, type: :model do
       it 'does not update the hierarchy of the record\'s desecedants' do
         cell.save
         vill1 = FactoryBot.create(:village, cell: cell)
+
+        first_hierarchy = vill1.hierarchy
+
         cell.sector = @sector
-
-        expect(vill1).not_to receive(:update_hierarchy)
-
         cell.update_hierarchy
+
+        second_hierarchy = vill1.reload.hierarchy
+
+        expect(first_hierarchy).to eq second_hierarchy
       end
     end
 
