@@ -55,22 +55,74 @@ RSpec.describe Cell, type: :model do
     end
   end
 
-  describe 'child_class' do
+  describe 'has scopes on:' do
+    before :each do
+      3.times do
+        FactoryBot.create(:cell, hidden: true)
+        FactoryBot.create(:cell, hidden: false)
+      end
+    end
+
+    context 'hidden' do
+      it 'returns only cells where hidden is set to true' do
+        expect(Cell.hidden.size).to eq 3
+      end
+    end
+
+    context 'visible' do
+      it 'returns only cells where hidden is set to false' do
+        expect(Cell.visible.size).to eq 3
+      end
+    end
+  end
+
+  describe '#cell' do
+    it 'returns itself, because I need all Geography models to respond to record.cell' do
+      expect(cell.cell).to eq cell
+    end
+  end
+
+  describe '#cells' do
+    it 'returns sibling cells of the same sector' do
+      cell.save
+      3.times do
+        FactoryBot.create(:cell, sector: cell.sector)
+      end
+
+      expect(cell.cells.size).to eq 4
+    end
+  end
+
+  describe '#child_class' do
     it 'returns "Village"' do
       expect(cell.child_class).to eq 'Village'
     end
   end
 
-  describe 'hierarchy' do
-    it 'returns an array of hashes with name and link' do
-      cell.save
-      hierarchy = cell.hierarchy
+  describe '#districts' do
+    it 'returns siblings of the cell\'s districts' do
+      3.times do
+        FactoryBot.create(:district, country: cell.district.country)
+        FactoryBot.create(:district)
+      end
 
-      expect(hierarchy.is_a?(Array)).to eq true
-      expect(hierarchy[0].is_a?(Hash)).to eq true
-      expect(hierarchy[0]['parent_name'].present?).to eq true
-      expect(hierarchy[0]['parent_type'].present?).to eq true
-      expect(hierarchy[0]['link'].present?).to eq true
+      expect(District.all.size).to eq 7
+      expect(cell.districts.size).to eq 4
+    end
+  end
+
+  describe '#facility' do
+    it 'returns nil' do
+      expect(cell.facility).to eq nil
+    end
+  end
+
+  describe 'self.import' do
+    it 'imports records from a CSV file' do
+      FactoryBot.create(:sector, gis_code: 1101)
+      filepath = Rails.root.join 'spec/fixtures/files/rw_cells.csv'
+
+      expect { Cell.import(filepath) }.to output(/3 records created./).to_stdout
     end
   end
 
@@ -186,15 +238,50 @@ RSpec.describe Cell, type: :model do
     end
   end
 
-  describe '#cell' do
-    it 'returns itself, because I need all Geography models to respond to record.cell' do
-      expect(cell.cell).to eq cell
+  describe '#sectors' do
+    fit 'returns the siblings of the cell\'s parent sector' do
+      3.times do
+        FactoryBot.create(:sector, district: cell.sector.district)
+        FactoryBot.create(:sector)
+      end
+
+      expect(Sector.all.size).to eq 7
+      expect(cell.sectors.size).to eq 4
     end
   end
 
   describe '#village' do
     it 'returns nil' do
       expect(cell.village).to eq nil
+    end
+  end
+
+  describe '#update_hierarchy' do
+    pending 'is called from after_save'
+    pending 'is only called if sector_id changes'
+
+    context 'when cascade: false' do
+      pending 'updates the hierarchy of the record'
+    end
+
+    context 'when cascade: true' do
+      pending 'updates the hierarchy of the record and all its desecedants'
+    end
+  end
+
+  private
+
+  describe '#toggle_relations' do
+    pending 'is called from after_save'
+    pending 'is only called if hidden changes'
+
+    context 'when record is being hidden' do
+      pending 'makes all desecedants hidden'
+    end
+
+    context 'when record is being made visible' do
+      pending 'makes all desecedants visible'
+      pending 'makes sure all predecessors visible'
     end
   end
 end
