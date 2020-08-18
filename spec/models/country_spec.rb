@@ -41,7 +41,7 @@ RSpec.describe Country, type: :model do
     end
   end
 
-  describe 'child_class' do
+  describe '#child_class' do
     it 'returns "District"' do
       expect(country.child_class).to eq 'District'
     end
@@ -50,6 +50,13 @@ RSpec.describe Country, type: :model do
   describe '#country' do
     it 'returns itself, because I need all Geography models to respond to record.country' do
       expect(country.country).to eq country
+    end
+  end
+
+  fdescribe '#hierarchy' do
+    it 'returns an empty array' do
+      expect(country.hierarchy.class).to eq Array
+      expect(country.hierarchy).to eq []
     end
   end
 
