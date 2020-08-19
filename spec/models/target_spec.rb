@@ -40,4 +40,33 @@ RSpec.describe Target, type: :model do
       expect(target.date).to eq target.contract.end_date
     end
   end
+
+  private
+
+  describe '#set_people_goal' do
+    it 'is fired on before_save' do
+      target.people_goal = 0
+      expect(target).to receive(:set_people_goal)
+
+      target.save
+    end
+
+    context 'when people_goal is unset' do
+      it 'sets the people_goal' do
+        target.people_goal = nil
+
+        target.save
+
+        expect(target.people_goal).to eq 1
+      end
+    end
+
+    context 'when people_goal is set' do
+      it 'doesn\'t fire' do
+        expect(target).not_to receive(:set_people_goal)
+
+        target.save
+      end
+    end
+  end
 end
