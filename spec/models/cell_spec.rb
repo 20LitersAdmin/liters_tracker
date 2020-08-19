@@ -55,22 +55,74 @@ RSpec.describe Cell, type: :model do
     end
   end
 
-  describe 'child_class' do
+  describe 'has scopes on:' do
+    before :each do
+      3.times do
+        FactoryBot.create(:cell, hidden: true)
+        FactoryBot.create(:cell, hidden: false)
+      end
+    end
+
+    context 'hidden' do
+      it 'returns only cells where hidden is set to true' do
+        expect(Cell.hidden.size).to eq 3
+      end
+    end
+
+    context 'visible' do
+      it 'returns only cells where hidden is set to false' do
+        expect(Cell.visible.size).to eq 3
+      end
+    end
+  end
+
+  describe '#cell' do
+    it 'returns itself, because I need all Geography models to respond to record.cell' do
+      expect(cell.cell).to eq cell
+    end
+  end
+
+  describe '#cells' do
+    it 'returns sibling cells of the same sector' do
+      cell.save
+      3.times do
+        FactoryBot.create(:cell, sector: cell.sector)
+      end
+
+      expect(cell.cells.size).to eq 4
+    end
+  end
+
+  describe '#child_class' do
     it 'returns "Village"' do
       expect(cell.child_class).to eq 'Village'
     end
   end
 
-  describe 'hierarchy' do
-    it 'returns an array of hashes with name and link' do
-      cell.save
-      hierarchy = cell.hierarchy
+  describe '#districts' do
+    it 'returns siblings of the cell\'s districts' do
+      3.times do
+        FactoryBot.create(:district, country: cell.district.country)
+        FactoryBot.create(:district)
+      end
 
-      expect(hierarchy.is_a?(Array)).to eq true
-      expect(hierarchy[0].is_a?(Hash)).to eq true
-      expect(hierarchy[0]['parent_name'].present?).to eq true
-      expect(hierarchy[0]['parent_type'].present?).to eq true
-      expect(hierarchy[0]['link'].present?).to eq true
+      expect(District.all.size).to eq 7
+      expect(cell.districts.size).to eq 4
+    end
+  end
+
+  describe '#facility' do
+    it 'returns nil' do
+      expect(cell.facility).to eq nil
+    end
+  end
+
+  describe 'self.import' do
+    it 'imports records from a CSV file' do
+      FactoryBot.create(:sector, gis_code: 1101)
+      filepath = Rails.root.join 'spec/fixtures/files/rw_cells.csv'
+
+      expect { Cell.import(filepath) }.to output(/3 records created./).to_stdout
     end
   end
 
@@ -186,15 +238,170 @@ RSpec.describe Cell, type: :model do
     end
   end
 
-  describe '#cell' do
-    it 'returns itself, because I need all Geography models to respond to record.cell' do
-      expect(cell.cell).to eq cell
+  describe '#sectors' do
+    it 'returns the siblings of the cell\'s parent sector' do
+      3.times do
+        FactoryBot.create(:sector, district: cell.sector.district)
+        FactoryBot.create(:sector)
+      end
+
+      expect(Sector.all.size).to eq 7
+      expect(cell.sectors.size).to eq 4
     end
   end
 
   describe '#village' do
     it 'returns nil' do
       expect(cell.village).to eq nil
+    end
+  end
+
+  describe '#update_hierarchy' do
+    before :all do
+      @sector = FactoryBot.create(:sector)
+    end
+
+    it 'is called from after_save' do
+      expect(cell).to receive(:update_hierarchy)
+
+      cell.save
+    end
+
+    it 'is called if sector_id changes' do
+      expect(cell).to receive(:update_hierarchy)
+
+      cell.update(sector: @sector)
+    end
+
+    it 'is not called if sector_id doesn\'t change' do
+      cell.save
+
+      expect(cell).not_to receive(:update_hierarchy)
+
+      cell.update(name: 'new name')
+    end
+
+    context 'when cascade: false' do
+      it 'updates the hierarchy of the record' do
+        cell.save
+        first_hierarchy = cell.reload.hierarchy
+
+        cell.sector = @sector
+        cell.update_hierarchy
+
+        second_hierarchy = cell.reload.hierarchy
+
+        expect(first_hierarchy).not_to eq second_hierarchy
+      end
+
+      it 'does not update the hierarchy of the record\'s desecedants' do
+        cell.save
+        vill1 = FactoryBot.create(:village, cell: cell)
+
+        first_hierarchy = vill1.hierarchy
+
+        cell.sector = @sector
+        cell.update_hierarchy
+
+        second_hierarchy = vill1.reload.hierarchy
+
+        expect(first_hierarchy).to eq second_hierarchy
+      end
+    end
+
+    context 'when cascade: true' do
+      it 'updates the hierarchy of all the cell\'s desecedants' do
+        cell.save
+        vill = FactoryBot.create(:village, cell: cell, name: 'vill1')
+        first_hierarchy = vill.hierarchy
+
+        cell.sector = @sector
+
+        cell.update_hierarchy(cascade: true)
+
+        second_hierarchy = vill.reload.hierarchy
+
+        expect(first_hierarchy).not_to eq second_hierarchy
+      end
+    end
+  end
+
+  private
+
+  describe '#toggle_relations' do
+    it 'is called from after_save' do
+      cell.save
+      cell.hidden = true
+
+      expect(cell).to receive(:toggle_relations)
+
+      cell.save
+    end
+
+    it 'is only called if hidden changes' do
+      cell.save
+
+      cell.name = 'New Name'
+
+      expect(cell).not_to receive(:toggle_relations)
+
+      cell.save
+    end
+
+    context 'when record is being hidden' do
+      it 'makes all desecedants hidden' do
+        cell.save
+        3.times do
+          FactoryBot.create(:village, hidden: false, cell: cell)
+        end
+
+        expect(cell.villages.visible.size).to eq 3
+
+        cell.hidden = true
+        cell.save
+
+        expect(cell.villages.visible.size).to eq 0
+        expect(cell.villages.hidden.size).to eq 3
+      end
+    end
+
+    context 'when record is being made visible' do
+      it 'makes all desecedants visible' do
+        cell.hidden = true
+        cell.save
+        3.times do
+          FactoryBot.create(:village, hidden: true, cell: cell)
+        end
+
+        expect(cell.villages.hidden.size).to eq 3
+
+        cell.hidden = false
+        cell.save
+
+        expect(cell.villages.visible.size).to eq 3
+        expect(cell.villages.hidden.size).to eq 0
+      end
+
+      it 'makes sure all predecessors visible' do
+        cell.hidden = true
+        cell.save
+
+        cell.sector.update_column(:hidden, true)
+        cell.district.update_column(:hidden, true)
+        cell.country.update_column(:hidden, true)
+
+        expect(cell.sector.hidden).to eq true
+        expect(cell.district.hidden).to eq true
+        expect(cell.country.hidden).to eq true
+
+        cell.hidden = false
+
+        cell.save
+
+        expect(cell.sector.hidden).to eq false
+        expect(cell.district.hidden).to eq false
+        expect(cell.country.hidden).to eq false
+      end
     end
   end
 end

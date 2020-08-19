@@ -47,28 +47,52 @@ RSpec.describe Sector, type: :model do
     end
   end
 
-  describe 'child_class' do
+  describe '#cell' do
+    it 'returns nil, because I need all Geography models to respond to record.cell' do
+      expect(sector.cell).to eq nil
+    end
+  end
+
+  describe '#child_class' do
     it 'returns "Cell"' do
       expect(sector.child_class).to eq 'Cell'
     end
   end
 
-  describe 'hierarchy' do
-    it 'returns an array of hashes with name and link' do
-      sector.save
-      hierarchy = sector.hierarchy
+  describe '#districts' do
+    before :all do
+      District.destroy_all
+    end
 
-      expect(hierarchy.is_a?(Array)).to eq true
-      expect(hierarchy[0].is_a?(Hash)).to eq true
-      expect(hierarchy[0]['parent_name'].present?).to eq true
-      expect(hierarchy[0]['parent_type'].present?).to eq true
-      expect(hierarchy[0]['link'].present?).to eq true
+    it 'returns siblings of the sector\'s districts' do
+      3.times do
+        FactoryBot.create(:district, country: sector.district.country)
+        FactoryBot.create(:district)
+      end
+
+      expect(District.all.size).to eq 7
+      expect(sector.districts.size).to eq 4
     end
   end
 
-  describe 'parent' do
+  describe 'self.import' do
+    it 'imports records from a CSV file' do
+      FactoryBot.create(:district, gis_code: 11)
+      filepath = Rails.root.join 'spec/fixtures/files/rw_sectors.csv'
+
+      expect { Sector.import(filepath) }.to output(/3 records created./).to_stdout
+    end
+  end
+
+  describe '#parent' do
     it 'returns the parent object' do
       expect(sector.parent).to eq sector.district
+    end
+  end
+
+  describe '#facility' do
+    it 'returns nil, because I need all Geography models to respond to record.facility' do
+      expect(sector.facility).to eq nil
     end
   end
 
@@ -187,6 +211,169 @@ RSpec.describe Sector, type: :model do
   describe '#sector' do
     it 'returns itself, because I need all Geography models to respond to record.sector' do
       expect(sector.sector).to eq sector
+    end
+  end
+
+  describe '#sectors' do
+    it 'returns siblings of the sector' do
+      sector.save
+      3.times do
+        FactoryBot.create(:sector, district: sector.district)
+        FactoryBot.create(:sector)
+      end
+
+      expect(Sector.all.size).to eq 7
+      expect(sector.sectors.size).to eq 4
+    end
+  end
+
+  describe '#village' do
+    it 'returns nil, because I need all Geography models to respond to record.village' do
+      expect(sector.village).to eq nil
+    end
+  end
+
+  describe '#update_hierarchy' do
+    before :all do
+      @district = FactoryBot.create(:district)
+    end
+
+    it 'is called from after_save' do
+      expect(sector).to receive(:update_hierarchy)
+
+      sector.save
+    end
+
+    it 'is called if district_id changes' do
+      expect(sector).to receive(:update_hierarchy)
+
+      sector.update(district: @district)
+    end
+
+    it 'is not called if district_id doesn\'t change' do
+      sector.save
+
+      expect(sector).not_to receive(:update_hierarchy)
+
+      sector.update(name: 'new name')
+    end
+
+    context 'when cascade: false' do
+      it 'updates the hierarchy of the record' do
+        sector.save
+        first_hierarchy = sector.reload.hierarchy
+
+        sector.district = @district
+        sector.update_hierarchy
+
+        second_hierarchy = sector.reload.hierarchy
+
+        expect(first_hierarchy).not_to eq second_hierarchy
+      end
+
+      it 'does not update the hierarchy of the record\'s desecedants' do
+        sector.save
+        cell = FactoryBot.create(:cell, sector: sector)
+
+        first_hierarchy = cell.hierarchy
+
+        sector.district = @district
+        sector.update_hierarchy
+
+        second_hierarchy = cell.reload.hierarchy
+
+        expect(first_hierarchy).to eq second_hierarchy
+      end
+    end
+
+    context 'when cascade: true' do
+      it 'updates the hierarchy of all the sector\'s desecedants' do
+        sector.save
+        cell = FactoryBot.create(:cell, sector: sector)
+
+        first_hierarchy = cell.hierarchy
+
+        sector.district = @district
+        sector.update_hierarchy(cascade: true)
+
+        second_hierarchy = cell.reload.hierarchy
+
+        expect(first_hierarchy).not_to eq second_hierarchy
+      end
+    end
+  end
+
+  describe '#toggle_relations' do
+    it 'is called from after_save' do
+      sector.save
+      sector.hidden = true
+
+      expect(sector).to receive(:toggle_relations)
+
+      sector.save
+    end
+
+    it 'is only called if hidden changes' do
+      sector.save
+
+      sector.name = 'New Name'
+
+      expect(sector).not_to receive(:toggle_relations)
+
+      sector.save
+    end
+  end
+
+  context 'when record is being hidden' do
+    it 'makes all desecedants hidden' do
+      sector.save
+      3.times do
+        FactoryBot.create(:cell, hidden: false, sector: sector)
+      end
+
+      expect(sector.cells.visible.size).to eq 3
+
+      sector.hidden = true
+      sector.save
+
+      expect(sector.cells.visible.size).to eq 0
+      expect(sector.cells.hidden.size).to eq 3
+    end
+  end
+
+  context 'when record is being made visible' do
+    it 'makes all desecedants visible' do
+      sector.hidden = true
+      sector.save
+      3.times do
+        FactoryBot.create(:cell, hidden: true, sector: sector)
+      end
+
+      expect(sector.cells.hidden.size).to eq 3
+
+      sector.hidden = false
+      sector.save
+
+      expect(sector.cells.visible.size).to eq 3
+      expect(sector.cells.hidden.size).to eq 0
+    end
+
+    it 'makes sure all predecessors visible' do
+      sector.hidden = true
+      sector.save
+
+      sector.district.update_column(:hidden, true)
+      sector.country.update_column(:hidden, true)
+
+      expect(sector.district.hidden).to eq true
+      expect(sector.country.hidden).to eq true
+
+      sector.hidden = false
+
+      sector.save
+
+      expect(sector.district.hidden).to eq false
+      expect(sector.country.hidden).to eq false
     end
   end
 end

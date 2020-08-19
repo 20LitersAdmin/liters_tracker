@@ -213,6 +213,43 @@ RSpec.describe Plan, type: :model do
     end
   end
 
+  describe '#complete?' do
+    context 'when there are no associated reports' do
+      it 'returns false' do
+        expect(plan.complete?).to eq false
+      end
+    end
+
+    context 'when there are associated reports' do
+      before :each do
+        3.times do
+          plan.save
+          FactoryBot.create(:report_village, distributed: 3, plan: plan)
+        end
+      end
+
+      context 'that are equal to or greater than the goal' do
+        it 'returns true' do
+          plan.update(goal: 6)
+
+          expect(plan.complete?).to eq true
+
+          plan.update(goal: 9)
+
+          expect(plan.complete?).to eq true
+        end
+      end
+
+      context 'that are less than the goal' do
+        it 'returns false' do
+          plan.update(goal: 69)
+
+          expect(plan.complete?).to eq false
+        end
+      end
+    end
+  end
+
   describe '#picture' do
     let(:plan_facility) { create :plan_facility }
     let(:plan_village) { create :plan_village }
@@ -250,56 +287,28 @@ RSpec.describe Plan, type: :model do
     end
   end
 
-  describe '#complete?' do
-    let(:plan1) { create :plan_village, goal: 5 }
-    let(:plan2) { create :plan_village, goal: 20 }
-    let(:plan3) { create :plan_village, goal: 10 }
-
-    let(:rep1) do
-      create :report_village, contract: plan1.contract, technology: plan1.technology,
-                              reportable_id: plan1.planable_id, reportable_type: plan1.planable_type, distributed: 3
+  describe '#links' do
+    before :each do
+      plan.save
     end
 
-    let(:rep2) do
-      create :report_village, contract: plan1.contract, technology: plan1.technology,
-                              reportable_id: plan1.planable_id, reportable_type: plan1.planable_type, distributed: 3
+    it 'returns an SafeBuffer' do
+      expect(plan.links.class).to eq ActiveSupport::SafeBuffer
     end
 
-    let(:rep3) do
-      create :report_village, contract: plan2.contract, technology: plan2.technology,
-                              reportable_id: plan2.planable_id, reportable_type: plan2.planable_type, distributed: 10
+    it 'includes an edit link' do
+      expect(plan.links.include?('Edit</a>')).to eq true
     end
 
-    it 'returns true if the sum of reports.distributed is greater than the goal' do
-      plan1
-      plan2
-      plan3
-
-      rep1
-      rep2
-      rep3
-
-      expect(plan1.complete?).to eq true
-    end
-
-    it 'returns false if the sum of reports.distributed is less than the goal' do
-      plan1
-      plan2
-      plan3
-
-      rep1
-      rep2
-      rep3
-
-      expect(plan2.complete?).to eq false
-      expect(plan3.complete?).to eq false
+    it 'includes a delete link' do
+      expect(plan.links.include?('Delete</a>')).to eq true
     end
   end
 
   context 'geography collection methods' do
     let(:contract) { create :contract }
 
-    context '#related_facilities' do
+    context 'self.related_facilities' do
       let(:related_facility1) { create :facility }
       let(:related_facility2) { create :facility }
       let(:related_facility3) { create :facility }
@@ -347,7 +356,7 @@ RSpec.describe Plan, type: :model do
       end
     end
 
-    context '#related_villages' do
+    context 'self.related_villages' do
       let(:related_village) { create :village }
       let(:related_facility1) { create :facility, village: related_village }
       let(:related_facility2) { create :facility, village: related_village }
@@ -409,7 +418,7 @@ RSpec.describe Plan, type: :model do
       end
     end
 
-    context '#related_cells' do
+    context 'self.related_cells' do
       let(:related_cell) { create :cell }
       let(:related_cell1) { create :cell }
       let(:related_cell2) { create :cell }
@@ -464,7 +473,7 @@ RSpec.describe Plan, type: :model do
       end
     end
 
-    context '#related_sectors' do
+    context 'self.related_sectors' do
       let(:related_sector) { create :sector }
       let(:related_sector1) { create :sector }
       let(:related_sector2) { create :sector }
@@ -523,7 +532,7 @@ RSpec.describe Plan, type: :model do
       end
     end
 
-    context '#related_districts' do
+    context 'self.related_districts' do
       let(:related_district) { create :district }
       let(:related_district1) { create :district }
       let(:related_district2) { create :district }
@@ -586,7 +595,7 @@ RSpec.describe Plan, type: :model do
       end
     end
 
-    context '#ary_of_village_ids_from_facilities' do
+    context 'self.ary_of_village_ids_from_facilities' do
       let(:related_facility1) { create :facility }
       let(:related_facility2) { create :facility }
       let(:related_facility3) { create :facility }
@@ -624,7 +633,7 @@ RSpec.describe Plan, type: :model do
       end
     end
 
-    context '#ary_of_cell_ids_from_villages' do
+    context 'self.ary_of_cell_ids_from_villages' do
       let(:related_village) { create :village }
       let(:related_facility1) { create :facility, village: related_village }
       let(:related_facility2) { create :facility, village: related_village }
@@ -675,7 +684,7 @@ RSpec.describe Plan, type: :model do
       end
     end
 
-    context '#ary_of_sector_ids_from_cells' do
+    context 'self.ary_of_sector_ids_from_cells' do
       let(:related_cell) { create :cell }
       let(:related_cell1) { create :cell }
       let(:related_cell2) { create :cell }
@@ -721,7 +730,7 @@ RSpec.describe Plan, type: :model do
       end
     end
 
-    context '#ary_of_district_ids_from_sectors' do
+    context 'self.ary_of_district_ids_from_sectors' do
       let(:related_sector) { create :sector }
       let(:related_sector1) { create :sector }
       let(:related_sector2) { create :sector }
@@ -774,6 +783,39 @@ RSpec.describe Plan, type: :model do
 
   private
 
+  describe '#add_error_to_geography_fields' do
+    it 'fires on before_validation' do
+      plan.planable = nil
+      expect(plan).to receive(:add_error_to_geography_fields)
+
+      plan.valid?
+    end
+
+    it 'fires if planable fields are blank' do
+      plan.planable = nil
+      expect(plan).to receive(:add_error_to_geography_fields)
+
+      plan.save
+    end
+
+    it 'doesn\'t fire if planable fields are not blank' do
+      expect(plan).not_to receive(:add_error_to_geography_fields)
+
+      plan.valid?
+    end
+
+    it 'adds errors to attr_accessor fields' do
+      plan.planable = nil
+      plan.valid?
+
+      expect(plan.errors.messages[:district]).to eq [': No geography selected']
+      expect(plan.errors.messages[:sector]).to eq [': No geography selected']
+      expect(plan.errors.messages[:cell]).to eq [': No geography selected']
+      expect(plan.errors.messages[:village]).to eq [': No geography selected']
+      expect(plan.errors.messages[:facility]).to eq [': No geography selected']
+    end
+  end
+
   describe '#find_reports' do
     before :each do
       plan.save
@@ -808,6 +850,70 @@ RSpec.describe Plan, type: :model do
 
       expect(Report.all.pluck(:plan_id).uniq).to include(nil, plan.id)
       expect(Report.where(plan_id: plan.id).size).to eq 3
+    end
+  end
+
+  describe '#unlink_reports' do
+    it 'fires on before_destroy' do
+      plan.save
+      expect(plan).to receive(:unlink_reports)
+
+      plan.destroy
+    end
+
+    it 'clears out the plan_id from associated reports' do
+      3.times do
+        FactoryBot.create(:report_village, plan: plan)
+      end
+
+      expect(plan.reports.size).to eq 3
+      expect(Report.all.pluck(:plan_id).uniq).to eq [plan.id]
+
+      plan.destroy
+
+      expect(Report.all.pluck(:plan_id).uniq).to eq [nil]
+    end
+  end
+
+  describe '#update_hierarchy' do
+    it 'fires on after_save' do
+      expect(plan).to receive(:update_hierarchy)
+
+      plan.save
+    end
+
+    it 'fires if planable has changed' do
+      plan.save
+      vill2 = FactoryBot.create(:village)
+
+      plan.planable = vill2
+
+      expect(plan).to receive(:update_hierarchy)
+
+      plan.save
+    end
+
+    it 'doesn\'t fire if planable hasn\'t changed' do
+      plan.save
+
+      plan.goal = 420
+
+      expect(plan).not_to receive(:update_hierarchy)
+
+      plan.save
+    end
+
+    it 'updates the hierarchy field' do
+      plan.save
+      first_hierarchy = plan.hierarchy
+      vill2 = FactoryBot.create(:village)
+
+      plan.planable = vill2
+      plan.save
+
+      second_hierarchy = plan.reload.hierarchy
+
+      expect(second_hierarchy).not_to eq first_hierarchy
     end
   end
 end

@@ -54,11 +54,6 @@ class Plan < ApplicationRecord
     "#{ActionController::Base.helpers.pluralize(goal, technology.name)} for #{people_goal} people by #{by_date.strftime('%m/%d/%Y')}"
   end
 
-  # this is a terrible idea
-  # def date
-  #   read_attribute(:date) || contract.end_date
-  # end
-
   def links
     "<a class='btn blue small' href='/contracts/#{contract_id}/plans/#{id}/edit'>Edit</a> <a data-confirm='Are you sure?' class='btn red small' rel='nofollow' data-method='delete' href='/contracts/#{contract_id}/reports/#{id}'>Delete</a>".html_safe
   end

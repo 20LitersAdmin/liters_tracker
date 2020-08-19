@@ -41,28 +41,66 @@ RSpec.describe Village, type: :model do
     end
   end
 
-  describe 'child_class' do
+  describe '#cells' do
+    it 'returns sibling cells of the same sector' do
+      village.save
+      3.times do
+        FactoryBot.create(:cell, sector: village.sector)
+      end
+
+      expect(village.cells.size).to eq 4
+    end
+  end
+
+  describe '#child_class' do
     it 'returns "Facility"' do
       expect(village.child_class).to eq 'Facility'
     end
   end
 
-  describe 'hierarchy' do
-    it 'returns an array of hashes with name and link' do
-      village.save
-      hierarchy = village.hierarchy
+  describe '#districts' do
+    before :all do
+      District.destroy_all
+    end
 
-      expect(hierarchy.is_a?(Array)).to eq true
-      expect(hierarchy[0].is_a?(Hash)).to eq true
-      expect(hierarchy[0]['parent_name'].present?).to eq true
-      expect(hierarchy[0]['parent_type'].present?).to eq true
-      expect(hierarchy[0]['link'].present?).to eq true
+    it 'returns siblings of the village\'s districts' do
+      village.save
+      3.times do
+        FactoryBot.create(:district, country: village.district.country)
+        FactoryBot.create(:district)
+      end
+
+      expect(District.all.size).to eq 7
+      expect(village.districts.size).to eq 4
     end
   end
 
-  describe 'parent' do
+  describe '#facility' do
+    it 'returns nil' do
+      expect(village.facility).to eq nil
+    end
+  end
+
+  describe 'self.import' do
+    it 'imports records from a CSV file' do
+      FactoryBot.create(:cell, gis_code: 110_101)
+      filepath = Rails.root.join 'spec/fixtures/files/rw_villages.csv'
+
+      expect { Village.import(filepath) }.to output(/3 records created./).to_stdout
+    end
+  end
+
+  describe '#parent' do
     it 'returns the parent object' do
       expect(village.parent).to eq village.cell
+    end
+  end
+
+  describe '#pop_hh' do
+    it 'displays a string with the population and household' do
+      village.update(population: 10, households: 3)
+
+      expect(village.pop_hh).to eq '10 / 3'
     end
   end
 
@@ -129,11 +167,20 @@ RSpec.describe Village, type: :model do
     end
   end
 
-  describe '#pop_hh' do
-    it 'displays a string with the population and household' do
-      village.update(population: 10, households: 3)
+  describe '#sectors' do
+    before :all do
+      Sector.destroy_all
+    end
 
-      expect(village.pop_hh).to eq '10 / 3'
+    it 'returns the siblings of the village\'s parent sector' do
+      village.save
+      3.times do
+        FactoryBot.create(:sector, district: village.sector.district)
+        FactoryBot.create(:sector)
+      end
+
+      expect(Sector.all.size).to eq 7
+      expect(village.sectors.size).to eq 4
     end
   end
 
@@ -141,6 +188,87 @@ RSpec.describe Village, type: :model do
     it 'returns itself because I need all geography records to respond to all possible geographies' do
       village.save
       expect(village.village).to eq village
+    end
+  end
+
+  describe '#villages' do
+    it 'returns the sibling records of the same cell' do
+      village.save
+      3.times do
+        FactoryBot.create(:village, cell: village.cell)
+      end
+
+      expect(village.villages.size).to eq 4
+    end
+  end
+
+  describe '#update_hierarchy' do
+    before :all do
+      @cell = FactoryBot.create(:cell)
+    end
+
+    it 'is called from after_save' do
+      expect(village).to receive(:update_hierarchy)
+
+      village.save
+    end
+
+    it 'is called if cell_id changes' do
+      expect(village).to receive(:update_hierarchy)
+
+      village.update(cell: @cell)
+    end
+
+    it 'is not called if cell_id doesn\'t change' do
+      village.save
+
+      expect(village).not_to receive(:update_hierarchy)
+
+      village.update(name: 'new name')
+    end
+
+    context 'when cascade: false' do
+      it 'updates the hierarchy of the record' do
+        village.save
+        first_hierarchy = village.reload.hierarchy
+
+        village.cell = @cell
+        village.update_hierarchy
+
+        second_hierarchy = village.reload.hierarchy
+
+        expect(first_hierarchy).not_to eq second_hierarchy
+      end
+
+      it 'does not update the hierarchy of the record\'s desecedants' do
+        village.save
+        fac = FactoryBot.create(:facility, village: village)
+
+        first_hierarchy = fac.hierarchy
+
+        village.cell = @cell
+        village.update_hierarchy
+
+        second_hierarchy = fac.reload.hierarchy
+
+        expect(first_hierarchy).to eq second_hierarchy
+      end
+    end
+
+    context 'when cascade: true' do
+      it 'updates the hierarchy of all the village\'s desecedants' do
+        village.save
+        fac = FactoryBot.create(:facility, village: village)
+        first_hierarchy = fac.hierarchy
+
+        village.cell = @cell
+
+        village.update_hierarchy(cascade: true)
+
+        second_hierarchy = fac.reload.hierarchy
+
+        expect(first_hierarchy).not_to eq second_hierarchy
+      end
     end
   end
 end

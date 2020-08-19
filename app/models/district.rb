@@ -19,12 +19,12 @@ class District < ApplicationRecord
   validates_uniqueness_of :gis_code, allow_nil: true
 
   after_save :update_hierarchy, if: -> { saved_change_to_country_id? }
+  after_save :toggle_relations, if: -> { saved_change_to_hidden? }
 
   def cell
     # Report and Plan want to be able to call any geography
     nil
   end
-  after_save :toggle_relations, if: -> { saved_change_to_hidden? }
 
   scope :hidden, -> { where(hidden: true) }
   scope :visible, -> { where(hidden: false) }
@@ -50,9 +50,12 @@ class District < ApplicationRecord
       CSV.foreach(filepath, headers: true) do |row|
         @counter += 1
 
-        record = District.find_or_create_by(name: row['name'], gis_code: row['gis_code'], country_id: 1)
+        record = District.find_or_create_by(name: row['name'], gis_code: row['gis_code'])
 
         next if record.persisted?
+
+        # use the first digit of the record's GIS code to get the parent's GIS code
+        record.country = Country.where(gis_code: record.gis_code.to_s[0].to_i).first
 
         record.hidden = true
 

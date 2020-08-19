@@ -19,15 +19,15 @@ class Sector < ApplicationRecord
   validates_uniqueness_of :gis_code, allow_blank: true
 
   after_save :update_hierarchy, if: -> { saved_change_to_district_id? }
+  after_save :toggle_relations, if: -> { saved_change_to_hidden? }
+
+  scope :hidden, -> { where(hidden: true) }
+  scope :visible, -> { where(hidden: false) }
 
   def cell
     # Report and Plan want to be able to call any geography
     nil
   end
-  after_save :toggle_relations, if: -> { saved_change_to_hidden? }
-
-  scope :hidden, -> { where(hidden: true) }
-  scope :visible, -> { where(hidden: false) }
 
   def child_class
     'Cell'

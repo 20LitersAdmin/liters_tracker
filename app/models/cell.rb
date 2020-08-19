@@ -20,6 +20,10 @@ class Cell < ApplicationRecord
   validates_uniqueness_of :gis_code, allow_blank: true
 
   after_save :update_hierarchy, if: -> { saved_change_to_sector_id? }
+  after_save :toggle_relations, if: -> { saved_change_to_hidden? }
+
+  scope :hidden, -> { where(hidden: true) }
+  scope :visible, -> { where(hidden: false) }
 
   def cell
     self
@@ -29,10 +33,6 @@ class Cell < ApplicationRecord
     # Report and Plan want to be able to call any geography
     parent&.cells
   end
-  after_save :toggle_relations, if: -> { saved_change_to_hidden? }
-
-  scope :hidden, -> { where(hidden: true) }
-  scope :visible, -> { where(hidden: false) }
 
   def child_class
     'Village'
@@ -116,8 +116,8 @@ class Cell < ApplicationRecord
 
     return unless cascade || saved_change_to_sector_id?
 
-    reload.villages.each do |v|
-      v.reload.update_hierarchy(cascade: true)
+    reload.villages.each do |vill|
+      vill.update_hierarchy(cascade: true)
     end
   end
 
