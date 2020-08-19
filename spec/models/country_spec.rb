@@ -53,7 +53,7 @@ RSpec.describe Country, type: :model do
     end
   end
 
-  fdescribe '#hierarchy' do
+  describe '#hierarchy' do
     it 'returns an empty array' do
       expect(country.hierarchy.class).to eq Array
       expect(country.hierarchy).to eq []

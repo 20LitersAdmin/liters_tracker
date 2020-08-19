@@ -117,7 +117,7 @@ RSpec.describe Contract, type: :model do
     end
   end
 
-  fdescribe '#set_name' do
+  describe '#set_name' do
     it 'is called from after_save' do
       expect(contract).to receive(:set_name)
 
