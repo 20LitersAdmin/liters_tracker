@@ -18,12 +18,36 @@ Sandardize: Show views
 - edit / back buttons should be `class: small` on show views
 - Forms (need check_box for hidden)
 
-0. New model tests in geographies (Report and Plan want to be able to call any geography)
-
 0. Sector#report forms have better geography error handling in views than Plans, Facilities forms. See `report_error.js.erb`
 
 2. What about un-met plans?
 - Help Rebero see work to be accomplished by Sector
+
+# System specs:
+- logout
+- managing users
+
+- viewing data
+-- data page
+-- data_filter page
+-- stats page
+-- monthly page
+-- monthly show page (:year/:month)
+
+- managing reports
+- managing stories
+-- creating a story
+-- adding a photo
+-- editing a photo
+-- removing a photo
+
+- managing facilities
+
+- managing technologies
+
+- managing contracts
+- managing plans
+- managing targets
 
 
 # OVERALL CUSTOM REPORTS VIEW:
