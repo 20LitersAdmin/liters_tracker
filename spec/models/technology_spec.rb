@@ -94,6 +94,16 @@ RSpec.describe Technology, type: :model do
       end
     end
 
+    context '#not_engagement' do
+      let(:engagement) { create :technology_engagement }
+      let(:not_engagement) { create :technology_family }
+
+      it 'returns only Technology where is_engagement is false' do
+        expect(Technology.not_engagement).to include not_engagement
+        expect(Technology.not_engagement).not_to include engagement
+      end
+    end
+
     context '#dashboard_worthy' do
       let(:dashboard_worthy) { create :technology_family, dashboard_worthy: true }
       let(:not_dashboard_worthy) { create :technology_family, dashboard_worthy: false }
