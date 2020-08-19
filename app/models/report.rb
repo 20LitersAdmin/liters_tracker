@@ -65,16 +65,16 @@ class Report < ApplicationRecord
     end
   end
 
+  def links
+    "<a class='btn yellow small' href='/reports/#{id}/edit'>Edit</a><br /><a data-confirm='Are you sure?' class='btn red small' rel='nofollow' data-method='delete' href='/reports/#{id}'>Delete</a>".html_safe
+  end
+
   def location
     "#{reportable.name} #{reportable.class}"
   end
 
   def sector_name
-    reportable.sector.name || ''
-  end
-
-  def links
-    "<a class='btn yellow small' href='/reports/#{id}/edit'>Edit</a><br /><a data-confirm='Are you sure?' class='btn red small' rel='nofollow' data-method='delete' href='/reports/#{id}'>Delete</a>".html_safe
+    reportable&.sector&.name || ''
   end
 
   def self.related_facilities

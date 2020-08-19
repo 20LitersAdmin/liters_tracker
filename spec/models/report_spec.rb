@@ -3,8 +3,12 @@
 require 'rails_helper'
 
 RSpec.describe Report, type: :model do
+  let(:report) { build :report_village }
+
   describe 'has validations on' do
     let(:no_date) { build :report_village, date: nil }
+    let(:no_year) { build :report_village, date: nil, year: nil }
+    let(:no_month) { build :report_village, date: nil, month: nil }
     let(:no_user) { build :report_village, user: nil }
     let(:no_contract) { build :report_village, contract: nil }
     let(:no_technology) { build :report_village, technology: nil }
@@ -13,6 +17,16 @@ RSpec.describe Report, type: :model do
     it 'date' do
       no_date.valid?
       expect(no_date.errors[:date]).to match_array("can't be blank")
+    end
+
+    it 'year' do
+      no_year.valid?
+      expect(no_year.errors[:year]).to match_array("can't be blank")
+    end
+
+    it 'month' do
+      no_month.valid?
+      expect(no_month.errors[:month]).to match_array("can't be blank")
     end
 
     it 'user' do
@@ -310,10 +324,65 @@ RSpec.describe Report, type: :model do
     end
   end
 
+  describe '#links' do
+    before :each do
+      report.save
+    end
+
+    it 'returns an SafeBuffer' do
+      expect(report.links.class).to eq ActiveSupport::SafeBuffer
+    end
+
+    it 'includes an edit link' do
+      expect(report.links.include?('Edit</a>')).to eq true
+    end
+
+    it 'includes a delete link' do
+      expect(report.links.include?('Delete</a>')).to eq true
+    end
+  end
+
+  describe '#location' do
+    it 'returns a string' do
+      expect(report.location.class).to eq String
+    end
+
+    it 'returns the polymorphic name and class' do
+      expect(report.location.include?(report.reportable.name)).to eq true
+      expect(report.location.include?(report.reportable.class.to_s)).to eq true
+    end
+  end
+
+  describe '#sector_name' do
+    context 'when the report geography is above a sector' do
+      let(:report_district) { build :report_district }
+      let(:report_country) { build :report_country }
+
+      it 'returns an empty string' do
+        expect(report_district.sector_name).to eq ''
+        expect(report_country.sector_name).to eq ''
+      end
+    end
+
+    context 'when the report geography is a sector or below' do
+      let(:report_sector) { build :report_sector }
+      let(:report_cell) { build :report_cell }
+      let(:report_village) { build :report_village }
+      let(:report_facility) { build :report_facility }
+
+      it 'returns the sector\'s name' do
+        expect(report_sector.sector_name).to eq report_sector.reportable.sector.name
+        expect(report_cell.sector_name).to eq report_cell.reportable.sector.name
+        expect(report_village.sector_name).to eq report_village.reportable.sector.name
+        expect(report_facility.sector_name).to eq report_facility.reportable.sector.name
+      end
+    end
+  end
+
   describe 'geography collection methods' do
     let(:contract) { create :contract }
 
-    describe '#related_facilities' do
+    describe 'self.related_facilities' do
       let(:related_facility1) { create :facility }
       let(:related_facility2) { create :facility }
       let(:related_facility3) { create :facility }
@@ -361,7 +430,7 @@ RSpec.describe Report, type: :model do
       end
     end
 
-    describe '#related_villages' do
+    describe 'self.related_villages' do
       let(:related_village) { create :village }
       let(:related_facility1) { create :facility, village: related_village }
       let(:related_facility2) { create :facility, village: related_village }
@@ -423,7 +492,7 @@ RSpec.describe Report, type: :model do
       end
     end
 
-    describe '#related_cells' do
+    describe 'self.related_cells' do
       let(:related_cell) { create :cell }
       let(:related_cell1) { create :cell }
       let(:related_cell2) { create :cell }
@@ -478,7 +547,7 @@ RSpec.describe Report, type: :model do
       end
     end
 
-    describe '#related_sectors' do
+    describe 'self.related_sectors' do
       let(:related_sector) { create :sector }
       let(:related_sector1) { create :sector }
       let(:related_sector2) { create :sector }
@@ -537,7 +606,7 @@ RSpec.describe Report, type: :model do
       end
     end
 
-    describe '#related_districts' do
+    describe 'self.related_districts' do
       let(:related_district) { create :district }
       let(:related_district1) { create :district }
       let(:related_district2) { create :district }
@@ -600,7 +669,7 @@ RSpec.describe Report, type: :model do
       end
     end
 
-    describe '#ary_of_village_ids_from_facilities' do
+    describe 'self.ary_of_village_ids_from_facilities' do
       let(:related_facility1) { create :facility }
       let(:related_facility2) { create :facility }
       let(:related_facility3) { create :facility }
@@ -614,7 +683,7 @@ RSpec.describe Report, type: :model do
       let(:unrelated_report2) { create :report_facility, reportable: related_facility1 }
       let(:unrelated_report3) { create :report_facility, reportable: unrelated_facility1 }
 
-      it 'returns the village_ids of the results of #related_facilities' do
+      it 'returns the village_ids of the results of self.related_facilities' do
         related_report1
         related_report2
         related_report3
@@ -638,7 +707,7 @@ RSpec.describe Report, type: :model do
       end
     end
 
-    describe '#ary_of_cell_ids_from_villages' do
+    describe 'self.ary_of_cell_ids_from_villages' do
       let(:related_village) { create :village }
       let(:related_facility1) { create :facility, village: related_village }
       let(:related_facility2) { create :facility, village: related_village }
@@ -659,7 +728,7 @@ RSpec.describe Report, type: :model do
       let(:unrelated_report2) { create :report_facility, reportable: related_facility1 }
       let(:unrelated_report3) { create :report_village, reportable: unrelated_village1 }
 
-      it 'returns the cell_ids of the results of #related_facilities' do
+      it 'returns the cell_ids of the results of self.related_facilities' do
         related_report1
         related_report2
         related_report3
@@ -690,7 +759,7 @@ RSpec.describe Report, type: :model do
       end
     end
 
-    describe '#ary_of_sector_ids_from_cells' do
+    describe 'self.ary_of_sector_ids_from_cells' do
       let(:related_cell) { create :cell }
       let(:related_cell1) { create :cell }
       let(:related_cell2) { create :cell }
@@ -708,7 +777,7 @@ RSpec.describe Report, type: :model do
       let(:unrelated_report2) { create :report_facility, reportable: related_facility }
       let(:unrelated_report3) { create :report_cell, reportable: unrelated_cell1 }
 
-      it 'returns the sector_ids of the results of #related_facilities' do
+      it 'returns the sector_ids of the results of self.related_facilities' do
         related_report1
         related_report2
         related_report3
@@ -736,7 +805,7 @@ RSpec.describe Report, type: :model do
       end
     end
 
-    describe '#ary_of_district_ids_from_sectors' do
+    describe 'self.ary_of_district_ids_from_sectors' do
       let(:related_sector) { create :sector }
       let(:related_sector1) { create :sector }
       let(:related_sector2) { create :sector }
@@ -756,7 +825,7 @@ RSpec.describe Report, type: :model do
       let(:unrelated_report2) { create :report_facility, reportable: related_facility }
       let(:unrelated_report3) { create :report_sector, reportable: unrelated_sector1 }
 
-      it 'returns the district_ids of the results of #related_sectors' do
+      it 'returns the district_ids of the results of self.related_sectors' do
         related_report1
         related_report2
         related_report3
@@ -786,6 +855,8 @@ RSpec.describe Report, type: :model do
       end
     end
   end
+
+  private
 
   describe '#flag_for_meaninglessness' do
     let(:report) { build :report_village, hours: 0, distributed: nil, checked: nil }
@@ -1017,6 +1088,36 @@ RSpec.describe Report, type: :model do
     end
   end
 
+  describe '#set_year_and_month_from_date' do
+    let(:report) { create :report_village, date: '2020-01-01' }
+
+    context 'when date is present and changed on last save' do
+      it 'fires from before_update' do
+        report.date = '2019-02-01'
+        expect(report).to receive(:set_year_and_month_from_date)
+        report.save
+      end
+
+      it 'updates the year and month' do
+        expect(report.year).to eq 2020
+        expect(report.month).to eq 1
+
+        report.update(date: '2019-02-01')
+
+        expect(report.year).to eq 2019
+        expect(report.month).to eq 2
+      end
+    end
+
+    context 'when date is present but not changed' do
+      it 'doesn\'t fire' do
+        expect(report).not_to receive(:set_year_and_month_from_date)
+
+        report.save
+      end
+    end
+  end
+
   describe '#set_contract_from_date' do
     let(:report) { build :report_village, date: Date.today, contract_id: nil }
     let(:contract) { create :contract, start_date: Date.today - 3.days, end_date: Date.today + 3.days }
@@ -1112,6 +1213,42 @@ RSpec.describe Report, type: :model do
       it 'does not set the plan_id' do
         expect { new_report.send(:set_plan) }.not_to change { new_report.plan_id }
         expect { existing_report.send(:set_plan) }.not_to change { existing_report.plan_id }
+      end
+    end
+  end
+
+  describe '#update_hierarchy' do
+    before :each do
+      report.save
+    end
+
+    context 'when reportable did not change' do
+      it 'doesn\'t fire' do
+        report.save
+        expect(report).not_to receive(:update_hierarchy)
+
+        report.save
+      end
+    end
+
+    context 'when reportable changed on last save' do
+      before :each do
+        @village = FactoryBot.create(:village)
+      end
+
+      it 'fires from after_save' do
+        expect(report).to receive(:update_hierarchy)
+        report.update(reportable: @village)
+      end
+
+      it 'updates the hierarchy' do
+        first_hierarchy = report.hierarchy
+
+        report.update(reportable: @village)
+
+        second_hierarchy = report.reload.hierarchy
+
+        expect(first_hierarchy).not_to eq second_hierarchy
       end
     end
   end

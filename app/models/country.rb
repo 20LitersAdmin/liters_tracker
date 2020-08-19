@@ -56,4 +56,9 @@ class Country < ApplicationRecord
          .or(Story.joins(:report).where("reports.reportable_type = 'Village' AND reports.reportable_id IN (?)", villages.pluck(:id)))
          .or(Story.joins(:report).where("reports.reportable_type = 'Facility' AND reports.reportable_id IN (?)", facilities.pluck(:id)))
   end
+
+  def sector
+    # Reports and plans want to call report.sector on any geography
+    nil
+  end
 end

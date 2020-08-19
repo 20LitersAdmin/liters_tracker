@@ -51,6 +51,16 @@ FactoryBot.define do
     association :reportable, factory: :district
   end
 
+  factory :report_country, class: Report do
+    date { '2019-01-10' }
+    association :technology, factory: :technology_family
+    association :user, factory: :user_reports
+    distributed { 1 }
+    checked { 1 }
+    people { 1 }
+    association :reportable, factory: :country
+  end
+
   factory :report_engagement, class: Report do
     date { '2019-01-10' }
     association :technology, factory: :technology_engagement

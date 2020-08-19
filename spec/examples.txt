@@ -171,83 +171,98 @@ example_id                                | status  | run_time        |
 ./spec/models/plan_spec.rb[1:13:2]        | passed  | 0.081 seconds   |
 ./spec/models/plan_spec.rb[1:13:3]        | passed  | 0.06083 seconds |
 ./spec/models/plan_spec.rb[1:13:4]        | passed  | 0.08717 seconds |
-./spec/models/report_spec.rb[1:1:1]       | passed  | 0.03734 seconds |
-./spec/models/report_spec.rb[1:1:2]       | passed  | 0.03034 seconds |
-./spec/models/report_spec.rb[1:1:3]       | passed  | 0.04316 seconds |
-./spec/models/report_spec.rb[1:1:4]       | passed  | 0.01396 seconds |
-./spec/models/report_spec.rb[1:2:1:1]     | passed  | 0.19908 seconds |
-./spec/models/report_spec.rb[1:2:2:1]     | passed  | 0.19229 seconds |
-./spec/models/report_spec.rb[1:2:3:1]     | passed  | 0.19407 seconds |
-./spec/models/report_spec.rb[1:2:4:1]     | passed  | 0.18229 seconds |
-./spec/models/report_spec.rb[1:2:5:1]     | passed  | 0.20296 seconds |
-./spec/models/report_spec.rb[1:3:1:1]     | passed  | 0.38206 seconds |
-./spec/models/report_spec.rb[1:3:2:1]     | passed  | 0.23735 seconds |
-./spec/models/report_spec.rb[1:3:3:1]     | passed  | 0.25626 seconds |
-./spec/models/report_spec.rb[1:3:4:1]     | passed  | 0.25877 seconds |
-./spec/models/report_spec.rb[1:4:1:1]     | passed  | 0.00238 seconds |
-./spec/models/report_spec.rb[1:4:2:1]     | passed  | 0.11567 seconds |
-./spec/models/report_spec.rb[1:4:3:1]     | passed  | 0.08454 seconds |
-./spec/models/report_spec.rb[1:5:1:1]     | passed  | 0.11866 seconds |
-./spec/models/report_spec.rb[1:5:2:1]     | passed  | 0.0986 seconds  |
-./spec/models/report_spec.rb[1:6:1:1]     | passed  | 0.04694 seconds |
-./spec/models/report_spec.rb[1:6:1:2]     | passed  | 0.09702 seconds |
-./spec/models/report_spec.rb[1:6:2:1]     | passed  | 0.05118 seconds |
-./spec/models/report_spec.rb[1:6:2:2]     | passed  | 0.09641 seconds |
-./spec/models/report_spec.rb[1:6:3:1]     | passed  | 0.08639 seconds |
-./spec/models/report_spec.rb[1:6:3:2]     | passed  | 0.08099 seconds |
-./spec/models/report_spec.rb[1:6:4:1]     | passed  | 0.1041 seconds  |
-./spec/models/report_spec.rb[1:6:4:2]     | passed  | 0.10336 seconds |
-./spec/models/report_spec.rb[1:6:5]       | passed  | 0.1895 seconds  |
-./spec/models/report_spec.rb[1:7:1:1]     | passed  | 0.31238 seconds |
-./spec/models/report_spec.rb[1:7:1:2]     | passed  | 0.2505 seconds  |
-./spec/models/report_spec.rb[1:7:2:1]     | passed  | 0.39763 seconds |
-./spec/models/report_spec.rb[1:7:2:2]     | passed  | 0.33047 seconds |
-./spec/models/report_spec.rb[1:7:3:1]     | passed  | 0.32058 seconds |
-./spec/models/report_spec.rb[1:7:3:2]     | passed  | 0.29904 seconds |
-./spec/models/report_spec.rb[1:7:4:1]     | passed  | 0.32957 seconds |
-./spec/models/report_spec.rb[1:7:4:2]     | passed  | 0.256 seconds   |
-./spec/models/report_spec.rb[1:7:5:1]     | passed  | 0.35965 seconds |
-./spec/models/report_spec.rb[1:7:5:2]     | passed  | 0.29804 seconds |
-./spec/models/report_spec.rb[1:7:6:1]     | passed  | 0.23139 seconds |
-./spec/models/report_spec.rb[1:7:6:2]     | passed  | 0.25559 seconds |
-./spec/models/report_spec.rb[1:7:7:1]     | passed  | 0.34259 seconds |
-./spec/models/report_spec.rb[1:7:7:2]     | passed  | 0.31122 seconds |
-./spec/models/report_spec.rb[1:7:8:1]     | passed  | 0.35522 seconds |
-./spec/models/report_spec.rb[1:7:8:2]     | passed  | 0.25912 seconds |
-./spec/models/report_spec.rb[1:7:9:1]     | passed  | 0.28404 seconds |
-./spec/models/report_spec.rb[1:7:9:2]     | passed  | 0.27146 seconds |
-./spec/models/report_spec.rb[1:8:1]       | passed  | 0.0495 seconds  |
-./spec/models/report_spec.rb[1:8:2]       | passed  | 0.0389 seconds  |
-./spec/models/report_spec.rb[1:8:3:1]     | passed  | 0.04886 seconds |
-./spec/models/report_spec.rb[1:8:4:1]     | passed  | 0.05068 seconds |
-./spec/models/report_spec.rb[1:9:1]       | passed  | 0.05249 seconds |
-./spec/models/report_spec.rb[1:9:2:1]     | passed  | 0.04909 seconds |
-./spec/models/report_spec.rb[1:9:3:1]     | passed  | 0.03767 seconds |
-./spec/models/report_spec.rb[1:9:4:1]     | passed  | 0.0512 seconds  |
-./spec/models/report_spec.rb[1:9:5:1]     | passed  | 0.05054 seconds |
-./spec/models/report_spec.rb[1:10:1]      | passed  | 0.03937 seconds |
-./spec/models/report_spec.rb[1:10:2]      | passed  | 0.03331 seconds |
-./spec/models/report_spec.rb[1:10:3:1]    | passed  | 0.03613 seconds |
-./spec/models/report_spec.rb[1:10:4:1]    | passed  | 0.04982 seconds |
-./spec/models/report_spec.rb[1:10:5:1]    | passed  | 0.00109 seconds |
-./spec/models/report_spec.rb[1:11:1]      | passed  | 0.03325 seconds |
-./spec/models/report_spec.rb[1:11:2]      | passed  | 0.03778 seconds |
-./spec/models/report_spec.rb[1:11:3:1]    | passed  | 0.03881 seconds |
-./spec/models/report_spec.rb[1:11:4:1]    | passed  | 0.03313 seconds |
-./spec/models/report_spec.rb[1:12:1:1]    | passed  | 0.04045 seconds |
-./spec/models/report_spec.rb[1:12:2:1]    | passed  | 0.04425 seconds |
-./spec/models/report_spec.rb[1:12:3:1]    | passed  | 0.05078 seconds |
-./spec/models/report_spec.rb[1:12:4:1]    | passed  | 0.04817 seconds |
-./spec/models/report_spec.rb[1:12:5]      | passed  | 0.03794 seconds |
-./spec/models/report_spec.rb[1:13:1:1]    | passed  | 0.04546 seconds |
-./spec/models/report_spec.rb[1:13:2:1]    | passed  | 0.05467 seconds |
-./spec/models/report_spec.rb[1:13:3:1]    | passed  | 0.05844 seconds |
-./spec/models/report_spec.rb[1:13:4:1]    | passed  | 0.04119 seconds |
-./spec/models/report_spec.rb[1:13:5]      | passed  | 0.05462 seconds |
-./spec/models/report_spec.rb[1:14:1:1]    | passed  | 0.04842 seconds |
-./spec/models/report_spec.rb[1:14:2:1]    | passed  | 0.05157 seconds |
-./spec/models/report_spec.rb[1:14:3:1]    | passed  | 0.10149 seconds |
-./spec/models/report_spec.rb[1:14:4:1]    | passed  | 0.07815 seconds |
+./spec/models/report_spec.rb[1:1:1]       | passed  | 0.05242 seconds |
+./spec/models/report_spec.rb[1:1:2]       | passed  | 0.04363 seconds |
+./spec/models/report_spec.rb[1:1:3]       | passed  | 0.05597 seconds |
+./spec/models/report_spec.rb[1:1:4]       | passed  | 0.0437 seconds  |
+./spec/models/report_spec.rb[1:1:5]       | passed  | 0.04228 seconds |
+./spec/models/report_spec.rb[1:1:6]       | passed  | 0.02998 seconds |
+./spec/models/report_spec.rb[1:2:1:1]     | passed  | 0.20686 seconds |
+./spec/models/report_spec.rb[1:2:2:1]     | passed  | 0.19947 seconds |
+./spec/models/report_spec.rb[1:2:3:1]     | passed  | 0.20596 seconds |
+./spec/models/report_spec.rb[1:2:4:1]     | passed  | 0.2547 seconds  |
+./spec/models/report_spec.rb[1:2:5:1]     | passed  | 0.19726 seconds |
+./spec/models/report_spec.rb[1:3:1:1]     | passed  | 0.41254 seconds |
+./spec/models/report_spec.rb[1:3:2:1]     | passed  | 0.28702 seconds |
+./spec/models/report_spec.rb[1:3:3:1]     | passed  | 0.27628 seconds |
+./spec/models/report_spec.rb[1:3:4:1]     | passed  | 0.28081 seconds |
+./spec/models/report_spec.rb[1:4:1:1]     | passed  | 0.00273 seconds |
+./spec/models/report_spec.rb[1:4:2:1]     | passed  | 0.1576 seconds  |
+./spec/models/report_spec.rb[1:4:3:1]     | passed  | 0.09684 seconds |
+./spec/models/report_spec.rb[1:5:1:1]     | passed  | 0.09805 seconds |
+./spec/models/report_spec.rb[1:5:2:1]     | passed  | 0.09618 seconds |
+./spec/models/report_spec.rb[1:6:1:1]     | passed  | 0.04239 seconds |
+./spec/models/report_spec.rb[1:6:1:2]     | passed  | 0.12848 seconds |
+./spec/models/report_spec.rb[1:6:2:1]     | passed  | 0.04285 seconds |
+./spec/models/report_spec.rb[1:6:2:2]     | passed  | 0.10201 seconds |
+./spec/models/report_spec.rb[1:6:3:1]     | passed  | 0.10791 seconds |
+./spec/models/report_spec.rb[1:6:3:2]     | passed  | 0.09272 seconds |
+./spec/models/report_spec.rb[1:6:4:1]     | passed  | 0.10111 seconds |
+./spec/models/report_spec.rb[1:6:4:2]     | passed  | 0.10156 seconds |
+./spec/models/report_spec.rb[1:6:5]       | passed  | 0.18366 seconds |
+./spec/models/report_spec.rb[1:7:1]       | passed  | 0.03793 seconds |
+./spec/models/report_spec.rb[1:7:2]       | passed  | 0.54854 seconds |
+./spec/models/report_spec.rb[1:7:3]       | unknown |                 |
+./spec/models/report_spec.rb[1:8:1]       | unknown |                 |
+./spec/models/report_spec.rb[1:8:2]       | unknown |                 |
+./spec/models/report_spec.rb[1:9:1:1]     | unknown |                 |
+./spec/models/report_spec.rb[1:9:2:1]     | unknown |                 |
+./spec/models/report_spec.rb[1:10:1:1]    | unknown |                 |
+./spec/models/report_spec.rb[1:10:1:2]    | unknown |                 |
+./spec/models/report_spec.rb[1:10:2:1]    | unknown |                 |
+./spec/models/report_spec.rb[1:10:2:2]    | unknown |                 |
+./spec/models/report_spec.rb[1:10:3:1]    | passed  | 0.04182 seconds |
+./spec/models/report_spec.rb[1:10:3:2]    | unknown |                 |
+./spec/models/report_spec.rb[1:10:4:1]    | passed  | 0.0329 seconds  |
+./spec/models/report_spec.rb[1:10:4:2]    | unknown |                 |
+./spec/models/report_spec.rb[1:10:5:1]    | unknown |                 |
+./spec/models/report_spec.rb[1:10:5:2]    | unknown |                 |
+./spec/models/report_spec.rb[1:10:6:1]    | unknown |                 |
+./spec/models/report_spec.rb[1:10:6:2]    | unknown |                 |
+./spec/models/report_spec.rb[1:10:7:1]    | unknown |                 |
+./spec/models/report_spec.rb[1:10:7:2]    | unknown |                 |
+./spec/models/report_spec.rb[1:10:8:1]    | unknown |                 |
+./spec/models/report_spec.rb[1:10:8:2]    | unknown |                 |
+./spec/models/report_spec.rb[1:10:9:1]    | unknown |                 |
+./spec/models/report_spec.rb[1:10:9:2]    | unknown |                 |
+./spec/models/report_spec.rb[1:11:1]      | passed  | 0.06894 seconds |
+./spec/models/report_spec.rb[1:11:2]      | unknown |                 |
+./spec/models/report_spec.rb[1:11:3:1]    | passed  | 0.05108 seconds |
+./spec/models/report_spec.rb[1:11:4:1]    | passed  | 0.08174 seconds |
+./spec/models/report_spec.rb[1:12:1]      | passed  | 0.05082 seconds |
+./spec/models/report_spec.rb[1:12:2:1]    | unknown |                 |
+./spec/models/report_spec.rb[1:12:3:1]    | passed  | 0.0343 seconds  |
+./spec/models/report_spec.rb[1:12:4:1]    | passed  | 0.07339 seconds |
+./spec/models/report_spec.rb[1:12:5:1]    | passed  | 0.00101 seconds |
+./spec/models/report_spec.rb[1:13:1]      | passed  | 0.03667 seconds |
+./spec/models/report_spec.rb[1:13:2]      | passed  | 0.0373 seconds  |
+./spec/models/report_spec.rb[1:13:3:1]    | passed  | 0.04518 seconds |
+./spec/models/report_spec.rb[1:13:4:1]    | passed  | 0.08353 seconds |
+./spec/models/report_spec.rb[1:13:5:1]    | unknown |                 |
+./spec/models/report_spec.rb[1:14:1]      | unknown |                 |
+./spec/models/report_spec.rb[1:14:2]      | unknown |                 |
+./spec/models/report_spec.rb[1:14:3:1]    | passed  | 0.03732 seconds |
+./spec/models/report_spec.rb[1:14:4:1]    | passed  | 0.04026 seconds |
+./spec/models/report_spec.rb[1:15:1:1]    | passed  | 0.04095 seconds |
+./spec/models/report_spec.rb[1:15:2:1]    | passed  | 0.04572 seconds |
+./spec/models/report_spec.rb[1:15:3:1]    | passed  | 0.06622 seconds |
+./spec/models/report_spec.rb[1:15:4:1]    | passed  | 0.03919 seconds |
+./spec/models/report_spec.rb[1:15:5]      | passed  | 0.05141 seconds |
+./spec/models/report_spec.rb[1:16:1:1]    | passed  | 0.63042 seconds |
+./spec/models/report_spec.rb[1:16:1:2]    | passed  | 0.08014 seconds |
+./spec/models/report_spec.rb[1:16:2:1]    | passed  | 0.06848 seconds |
+./spec/models/report_spec.rb[1:17:1:1]    | unknown |                 |
+./spec/models/report_spec.rb[1:17:2:1]    | unknown |                 |
+./spec/models/report_spec.rb[1:17:3:1]    | unknown |                 |
+./spec/models/report_spec.rb[1:17:4:1]    | unknown |                 |
+./spec/models/report_spec.rb[1:17:5]      | unknown |                 |
+./spec/models/report_spec.rb[1:18:1:1]    | unknown |                 |
+./spec/models/report_spec.rb[1:18:2:1]    | unknown |                 |
+./spec/models/report_spec.rb[1:18:3:1]    | unknown |                 |
+./spec/models/report_spec.rb[1:18:4:1]    | unknown |                 |
+./spec/models/report_spec.rb[1:19:1:1]    | passed  | 0.50524 seconds |
+./spec/models/report_spec.rb[1:19:2:1]    | passed  | 0.06775 seconds |
+./spec/models/report_spec.rb[1:19:2:2]    | passed  | 0.07471 seconds |
 ./spec/models/sector_spec.rb[1:1:1]       | passed  | 0.01155 seconds |
 ./spec/models/sector_spec.rb[1:1:2]       | passed  | 0.00673 seconds |
 ./spec/models/sector_spec.rb[1:1:3:1]     | passed  | 0.00883 seconds |

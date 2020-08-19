@@ -203,4 +203,10 @@ RSpec.describe Country, type: :model do
       expect(country.related_stories).to include story
     end
   end
+
+  describe '#sector' do
+    it 'returns nil, because I need all Geography models to respond to record.sector' do
+      expect(country.sector).to eq nil
+    end
+  end
 end
