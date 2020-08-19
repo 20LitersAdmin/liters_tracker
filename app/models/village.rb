@@ -26,13 +26,13 @@ class Village < ApplicationRecord
   # record was hidden, but is now visible
   after_save :toggle_relations, if: -> { saved_change_to_hidden? && !hidden? }
 
-  def child_class
-    'Facility'
-  end
-
   def cells
     # Report and Plan want to be able to call any geography
     cell&.parent&.cells
+  end
+
+  def child_class
+    'Facility'
   end
 
   def districts
@@ -101,7 +101,7 @@ class Village < ApplicationRecord
 
   def sectors
     # Report and Plan want to be able to call any geography
-    sectors&.parent&.sectors
+    sector&.parent&.sectors
   end
 
   def village
