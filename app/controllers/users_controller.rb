@@ -28,7 +28,9 @@ class UsersController < ApplicationController
     authorize @users = User.all.order(:lname)
   end
 
-  def show; end
+  def show
+    redirect_to edit_user_path(@user)
+  end
 
   def new
     authorize @user = User.new
@@ -64,6 +66,10 @@ class UsersController < ApplicationController
   end
 
   def destroy
+    @user.destroy
+
+    flash[:success] = 'User was successfully destroyed'
+    redirect_to users_path
   end
 
   private

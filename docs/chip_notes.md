@@ -24,8 +24,10 @@ Sandardize: Show views
 - Help Rebero see work to be accomplished by Sector
 
 # System specs:
-- logout
-- managing users
+** General model format**
+ - model_form_spec: new/create/edit/update
+ - model_index_spec: index
+ - model_show_spec: show
 
 - viewing data
 -- data page
@@ -43,11 +45,11 @@ Sandardize: Show views
 
 - managing facilities
 
-- managing technologies
-
 - managing contracts
 - managing plans
 - managing targets
+
+- user confirmation email
 
 
 # OVERALL CUSTOM REPORTS VIEW:

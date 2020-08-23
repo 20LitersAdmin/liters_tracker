@@ -11,8 +11,8 @@ end
 gem 'aws-sdk-s3'
 gem 'bootsnap', '>= 1.4', require: false
 gem 'bootstrap', '~> 4'
-gem 'bootstrap-will_paginate', '~> 1.0.0'
 gem 'bootstrap4-datetime-picker-rails'
+gem 'bootstrap-will_paginate', '~> 1.0.0'
 gem 'coffee-rails'
 gem 'devise', git: 'https://github.com/plataformatec/devise.git'
 gem 'font-awesome-rails'

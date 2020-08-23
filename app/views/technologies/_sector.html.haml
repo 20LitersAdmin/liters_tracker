@@ -4,14 +4,7 @@
 - return if @plan_sub.blank? && @report_sub.blank? && @skip_blanks
 %tr
   %td.text-left
-    - if @plan_sub.empty?
-      %span.float-left= link_to sector.name, sector_path(sector)
-      %span.float-right= link_to 'Add plan', '#', class: 'btn empty'
-    - elsif @report_sub.empty?
-      %span.float-left= link_to sector.name, sector_path(sector)
-      %span.float-right= link_to 'Add report', '#', class: 'btn empty'
-    -else
-      = link_to sector.name, sector_path(sector)
+    %span.float-left= link_to sector.name, sector_path(sector)
   - if @plan_sub.any? || @report_sub.any?
     %td.text-right= human_number @plan_sub.sum(:goal)
     %td.text-right= human_number @report_sub.sum(:distributed)
@@ -19,5 +12,4 @@
     %td.text-right= human_number @plan_sub.sum(:people_goal)
     %td.text-right= human_number @report_sub.map(&:impact).sum
   - else
-    %td{'colspan': '4'}= "No plans or reports related to #{@technology.short_name} for this sector and time period"
-    %td= link_to 'Add report', select_sectors_path, class: 'btn empty'
+    %td.text-center{'colspan': '5'}= "No plans or reports related to #{@technology.short_name} for this sector and time period"
