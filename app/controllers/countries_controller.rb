@@ -66,7 +66,7 @@ class CountriesController < ApplicationController
     @country = Country.new(country_params)
 
     if @country.save
-      redirect_to @return_path, success: 'Country created.'
+      redirect_to @return_path, notice: 'Country created.'
     else
       render :new
     end
@@ -75,7 +75,7 @@ class CountriesController < ApplicationController
   # PATCH/PUT /countries/1
   def update
     if @country.update(country_params)
-      redirect_to @return_path, success: 'Country updated.'
+      redirect_to @return_path, notice: 'Country updated.'
     else
       render :edit
     end
@@ -84,7 +84,7 @@ class CountriesController < ApplicationController
   # DELETE /countries/1
   def destroy
     @country.destroy
-    redirect_to @return_path, success: 'Country destroyed.'
+    redirect_to @return_path, notice: 'Country destroyed.'
   end
 
   def make_visible

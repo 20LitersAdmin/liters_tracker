@@ -62,7 +62,7 @@ class Plan < ApplicationRecord
     # return a collection of Facilities from a collection of Plans
     return Facility.none if self.only_facilities.empty?
 
-    ary = self.only_facilities.pluck(:planable_id)
+    ary = only_facilities.pluck(:planable_id)
     Facility.where(id: ary)
   end
 

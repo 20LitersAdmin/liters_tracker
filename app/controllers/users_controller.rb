@@ -41,7 +41,7 @@ class UsersController < ApplicationController
 
     if @user.save
       # Net::SMTPSyntaxError (501 Invalid command or cannot parse from address
-      flash[:success] = 'User was successfully created'
+      flash[:success] = 'User created'
       redirect_to users_path
     else
       render 'new'
@@ -58,7 +58,7 @@ class UsersController < ApplicationController
     params_to_use = user_params[:password].blank? ? user_params_no_pws : user_params
 
     if @user.update(params_to_use)
-      flash[:success] = current_user == @user ? 'Your profile was successfully updated' : 'User was successfully updated'
+      flash[:success] = current_user == @user ? 'Your profile was updated' : 'User updated'
       redirect_to users_path
     else
       render 'edit'
@@ -66,9 +66,9 @@ class UsersController < ApplicationController
   end
 
   def destroy
-    @user.destroy
+    authorize @user.destroy
 
-    flash[:success] = 'User was successfully destroyed'
+    flash[:success] = 'User destroyed'
     redirect_to users_path
   end
 

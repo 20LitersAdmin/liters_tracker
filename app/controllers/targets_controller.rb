@@ -28,7 +28,7 @@ class TargetsController < ApplicationController
 
     respond_to do |format|
       if @target.save
-        format.html { redirect_to @return_path, success: 'Target created.' }
+        format.html { redirect_to @return_path, notice: 'Target created.' }
         format.json { render :show, status: :created, location: @target }
       else
         @contract = Contract.find(params[:contract_id])
@@ -45,7 +45,7 @@ class TargetsController < ApplicationController
   def update
     respond_to do |format|
       if @target.update(target_params)
-        format.html { redirect_to @return_path, success: 'Target updated.' }
+        format.html { redirect_to @return_path, notice: 'Target updated.' }
         format.json { render :show, status: :ok, location: @target }
       else
         format.html { render :edit }

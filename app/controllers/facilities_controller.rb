@@ -75,7 +75,7 @@ class FacilitiesController < ApplicationController
 
     respond_to do |format|
       if @facility.save
-        format.html { redirect_to @return_path, success: 'Facility created.' }
+        format.html { redirect_to @return_path, notice: 'Facility created.' }
         format.js { render :facility_created }
       else
         # pre-populate select fields on error using current planable

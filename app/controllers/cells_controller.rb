@@ -70,7 +70,7 @@ class CellsController < ApplicationController
 
     respond_to do |format|
       if @cell.save
-        format.html { redirect_to @cell, notice: 'Cell was successfully created.' }
+        format.html { redirect_to @cell, notice: 'Cell created.' }
         format.json { render :show, status: :created, location: @cell }
       else
         format.html { render :new }
@@ -84,7 +84,7 @@ class CellsController < ApplicationController
   def update
     respond_to do |format|
       if @cell.update(cell_params)
-        format.html { redirect_to @cell, notice: 'Cell was successfully updated.' }
+        format.html { redirect_to @cell, notice: 'Cell updated.' }
         format.json { render :show, status: :ok, location: @cell }
       else
         format.html { render :edit }
@@ -98,7 +98,7 @@ class CellsController < ApplicationController
   def destroy
     @cell.destroy
     respond_to do |format|
-      format.html { redirect_to cells_url, notice: 'Cell was successfully destroyed.' }
+      format.html { redirect_to cells_url, notice: 'Cell destroyed.' }
       format.json { head :no_content }
     end
   end

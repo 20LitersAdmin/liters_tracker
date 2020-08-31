@@ -8,8 +8,8 @@
 .row
   .col-12
     %h3 1. Select plan date:
-  #date-chooser.col-12
-    .row.justify-content-center
+  .col-12
+    #date_chooser.row.justify-content-center
       .col-auto
         = select_month(@date, {}, class: 'form-control')
       .col-auto
@@ -17,8 +17,8 @@
 .row
   .col-12
     %h3 2. Select a technology by sector:
-  #sector-chooser.col-12
-    %table.table.table-striped
+  .col-12
+    %table#sector_chooser.table.table-striped
       %thead
         %tr
           %th Name
