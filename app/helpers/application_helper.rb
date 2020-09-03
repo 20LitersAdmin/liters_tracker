@@ -31,6 +31,12 @@ module ApplicationHelper
     date&.strftime('%b %-d, %Y')
   end
 
+  def human_month_year(date)
+    return '-' if date.nil?
+
+    date&.strftime('%B %Y')
+  end
+
   def human_datetime(datetime)
     datetime&.strftime('%-m/%-d @ %l:%M:%S %p %Z')
   end
