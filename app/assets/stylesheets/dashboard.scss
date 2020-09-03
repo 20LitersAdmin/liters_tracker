@@ -163,7 +163,7 @@
     width: 100%;
     min-height: 76px;
     bottom: 0;
-    padding: 10% 4%;
+    padding: 6% 2% 1%;
     color: white;
     font-weight: bolder;
     background-color: $transparent-grey;
@@ -172,6 +172,13 @@
       color: $grey;
       background-color: $transparent-yellow;
     }
+  }
+  .subtitle {
+    padding-top: 2%;
+    padding-bottom: 2%;
+    font-size: .45em;
+    font-style: italic;
+    margin-bottom: 0;
   }
 }
 

@@ -6,7 +6,7 @@
       .row
         .col.mb-5
           .meta
-            = @story.report.date.strftime('%B %d, %Y')
+            = human_month_year @story.date
           %h3= @story.title
           %i= @tagline
           .story-text= @story.text.html_safe

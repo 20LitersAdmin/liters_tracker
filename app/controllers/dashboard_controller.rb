@@ -26,7 +26,7 @@ class DashboardController < ApplicationController
     @months = Report.with_stories.where(year: @year).pluck(:month).uniq.sort
 
     # set default month
-    @month = @months.last
+    # @month = @months.last
 
     @stories = Story.joins(:report).where('reports.year = ?', @year)
 
