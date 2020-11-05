@@ -5,9 +5,7 @@ require 'rails_helper'
 RSpec.describe 'Dashboard page', type: :system do
   context 'as any user' do
     before :each do
-      3.times do
-        FactoryBot.create(:story)
-      end
+      3.times { FactoryBot.create(:story) }
       visit '/'
     end
 

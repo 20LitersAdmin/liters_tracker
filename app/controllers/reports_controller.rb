@@ -55,10 +55,7 @@ class ReportsController < ApplicationController
 
     respond_to do |format|
       if @report.update(report_params)
-        format.html do
-          flash[:success] = 'Report edited.'
-          redirect_to @return_path
-        end
+        format.html { redirect_to @return_path, notice: 'Report edited.' }
         format.json { render :show, status: :ok, location: @report }
       else
         format.html { render :edit }

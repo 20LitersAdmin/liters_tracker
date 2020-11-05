@@ -26,6 +26,6 @@
           %td.text-center= human_boolean user.admin?
           %td.text-center= human_boolean user.confirmed_at.present?
           - if current_user.admin?
-            %td= link_to 'Edit', edit_user_path(user), class: 'btn yellow'
-            %td= link_to 'Destroy', user, method: :delete, data: { confirm: 'Are you sure?' }, class: 'btn red'
+            %td= link_to 'Edit', edit_user_path(user), class: 'btn yellow', id: "edit_user_#{user.id}"
+            %td= link_to 'Destroy', user, method: :delete, data: { confirm: 'Are you sure?' }, class: 'btn red', id: "destroy_user_#{user.id}" unless user == current_user
 

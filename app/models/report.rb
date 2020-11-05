@@ -23,8 +23,8 @@ class Report < ApplicationRecord
   scope :only_facilities, -> { where(reportable_type: 'Facility') }
 
   scope :within_month,    ->(date) { where(date: date.beginning_of_month..date.end_of_month) }
-  scope :earliest_date,   -> { order(date: :asc).first.date }
-  scope :latest_date,     -> { order(date: :asc).last.date }
+  scope :earliest_date,   -> { order(date: :asc)&.first&.date }
+  scope :latest_date,     -> { order(date: :asc)&.last&.date }
   # even though this is simple, it matches Plan.between(), so it's nice to have.
   scope :between,         ->(from, to) { where(date: from..to).order(date: :desc) }
 

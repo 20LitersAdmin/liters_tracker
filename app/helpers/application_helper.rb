@@ -26,7 +26,7 @@ module ApplicationHelper
   end
 
   def human_date(date)
-    return '-' if date.nil?
+    return '-' unless date.present?
 
     date&.strftime('%b %-d, %Y')
   end
@@ -42,12 +42,14 @@ module ApplicationHelper
   end
 
   def human_number(number)
-    return '-' if number.nil? || number.zero?
+    return '-' unless number.present? && number.positive?
 
     number_with_delimiter(number, delimiter: ',')
   end
 
   def form_date(date)
+    return nil unless date.present?
+
     date&.strftime('%Y-%m-%d')
   end
 

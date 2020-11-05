@@ -12,9 +12,9 @@ FactoryBot.define do
     direct_cost_currency { 'USD' }
     indirect_cost { 200 }
     indirect_cost_currency { 'USD' }
-    us_cost_cents { 0 }
+    us_cost { 50 }
     us_cost_currency { 'USD' }
-    local_cost_cents { 0 }
+    local_cost { 150 }
     local_cost_currency { 'USD' }
   end
 

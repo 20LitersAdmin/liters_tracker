@@ -37,8 +37,7 @@ class StoriesController < ApplicationController
     @story.user = current_user
 
     if @story.save
-      flash[:success] = 'Story was successfully created.'
-
+      flash[:success] = 'Story created.'
       redirect_to image_story_path(@story)
     else
       @year = params[:year]
@@ -53,7 +52,7 @@ class StoriesController < ApplicationController
     @story.user = current_user
 
     if @story.update(story_params)
-      flash[:success] = 'Story was successfully edited.'
+      flash[:success] = 'Story edited.'
 
       redirect_to image_story_path(@story)
     else
@@ -61,6 +60,13 @@ class StoriesController < ApplicationController
       @month = params[:month]
       render :edit
     end
+  end
+
+  def destroy
+    authorize @story.destroy
+
+    flash[:success] = 'Story destroyed.'
+    redirect_to @return_path
   end
 
   def image

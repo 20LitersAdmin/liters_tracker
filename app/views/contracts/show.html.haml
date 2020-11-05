@@ -3,6 +3,8 @@
   .col-auto
     %h1= "Contract ##{@contract.name}"
   .col.text-right
+    - if current_user.contract_manager?
+      = link_to 'Edit', edit_contract_path(@contract), class: 'btn yellow'
     = link_to 'Back', @return_path, class: 'btn empty'
 
 .row.mt-3
@@ -37,7 +39,7 @@
   .col
     %p Targets represent the number of technologies to be distributed/implemented in total for the MOU's time period. They are not specific to a geography and their deadline is always the end of the MOU.
   .col-12
-    %table.table.table-striped.table-sm
+    %table#targets_table.table.table-striped.table-sm
       %thead.thead-dark
         %tr
           %th Technology
@@ -56,7 +58,7 @@
   .col
     %p Plans represent a detailed goal for which technology will be distributed/implemented in a specific area before a specific deadline.
   .col-12
-    %table.table.table-striped.table-sm#plans-dttb{ data: { source: dttb_index_contract_plans_path(@contract, format: :json) } }
+    %table#plans-dttb.table.table-striped.table-sm{ data: { source: dttb_index_contract_plans_path(@contract, format: :json) } }
       %thead.thead-dark
         %tr
           %th Technology

@@ -24,8 +24,13 @@ Sandardize: Show views
 - Help Rebero see work to be accomplished by Sector
 
 # System specs:
-- logout
-- managing users
+** General model format**
+ - CURRENTLY MISSING: destroy: always from edit page? Add to model_form_spec?
+ - model_form_spec: new/create/edit/update
+ - model_index_spec: index
+ - model_show_spec: show
+
+- managing targets
 
 - viewing data
 -- data page
@@ -35,19 +40,14 @@ Sandardize: Show views
 -- monthly show page (:year/:month)
 
 - managing reports
+
 - managing stories
--- creating a story
+-- form functions
 -- adding a photo
 -- editing a photo
 -- removing a photo
 
-- managing facilities
-
-- managing technologies
-
-- managing contracts
-- managing plans
-- managing targets
+- user confirmation email
 
 
 # OVERALL CUSTOM REPORTS VIEW:
