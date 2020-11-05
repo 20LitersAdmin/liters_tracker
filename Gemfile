@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 source 'https://rubygems.org'
-ruby '2.5.8'
+ruby '2.7.0'
 
 git_source(:github) do |repo_name|
   repo_name = "#{repo_name}/#{repo_name}" unless repo_name.include?('/')
@@ -11,8 +11,8 @@ end
 gem 'aws-sdk-s3'
 gem 'bootsnap', '>= 1.4', require: false
 gem 'bootstrap', '~> 4'
-gem 'bootstrap4-datetime-picker-rails'
 gem 'bootstrap-will_paginate', '~> 1.0.0'
+gem 'bootstrap4-datetime-picker-rails'
 gem 'coffee-rails'
 gem 'devise', git: 'https://github.com/plataformatec/devise.git'
 gem 'font-awesome-rails'
@@ -60,7 +60,7 @@ group :test do
   gem 'rspec-rails'
   gem 'rspec-retry'
   gem 'rspec_junit_formatter'
-  gem 'shoulda-matchers', git: 'https://github.com/thoughtbot/shoulda-matchers.git', branch: 'rails-5'
+  gem 'shoulda-matchers'
   gem 'webdrivers'
 end
 

@@ -25,6 +25,7 @@ module LitersTracker
     # Initialize configuration defaults for originally generated Rails version.
     config.load_defaults 5.2
     config.autoload_paths << "#{Rails.root}/lib"
+    config.i18n.fallbacks = true
 
     config.public_file_server.enabled = true
 
