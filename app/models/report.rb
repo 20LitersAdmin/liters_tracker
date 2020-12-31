@@ -49,6 +49,8 @@ class Report < ApplicationRecord
 
   after_save :update_hierarchy, if: -> { saved_change_to_reportable_id? || saved_change_to_reportable_type? }
 
+  after_create_commit :notify_admins
+
   def details
     if distributed&.positive?
       val = distributed
@@ -175,6 +177,12 @@ class Report < ApplicationRecord
                   else
                     people
                   end
+  end
+
+  def notify_admins
+    return unless Report.within_month(Date.today).count <= 1
+
+    User.where(admin: true).each { |admin| ReportMailer.first_report_of_month(self, admin).deliver_now }
   end
 
   def set_date_from_year_and_month

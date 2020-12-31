@@ -1255,6 +1255,8 @@ RSpec.describe Report, type: :model do
 
   describe 'email notification for first report of month' do
 
+    # before/after needed as email sent on after_commit hook. RSpec wraps examples (it) in transaction. after_commit would otherwise not be called.
+
     before :context do
       @admin   = create :user_admin
       contract = create :contract
@@ -1268,7 +1270,7 @@ RSpec.describe Report, type: :model do
       Contract.delete_all
     end
 
-    it 'sends email' do
+    it 'sends email after report created' do
       report_email = ActionMailer::Base.deliveries.find { |email| email.subject.include? 'First Report' }
 
       expect(report_email.to.first).to eql(@admin.email)
