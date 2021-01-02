@@ -70,11 +70,14 @@ class Report < ApplicationRecord
   end
 
   def location
-    "#{reportable.name} #{reportable.class}"
+    "#{reportable.name} #{reportable_type}"
   end
 
   def sector_name
-    reportable&.sector&.name || ''
+    sector = reportable.hierarchy&.find { |geo| geo['parent_type'] == 'Sector' }
+    return reportable&.sector&.name || '' unless sector.present?
+
+    sector['parent_name']
   end
 
   def self.related_facilities
