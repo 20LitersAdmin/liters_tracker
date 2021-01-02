@@ -8,7 +8,7 @@ class ReportsController < ApplicationController
   def show; end
 
   def dttb_index
-    authorize @reports = Report.includes(:technology).includes(:user).order(date: :desc)
+    authorize @reports = Report.includes(:reportable, :technology, :user).order(date: :desc)
 
     respond_to do |format|
       format.html
