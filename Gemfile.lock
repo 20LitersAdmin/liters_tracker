@@ -390,7 +390,7 @@ DEPENDENCIES
   factory_bot_rails
   font-awesome-rails
   haml
-  haml-rails (~> 1.0)
+  haml-rails
   jquery-datatables
   jquery-rails
   letter_opener_web
