@@ -1258,7 +1258,7 @@ RSpec.describe Report, type: :model do
     # before/after needed as email sent on after_commit hook. RSpec wraps examples (it) in transaction. after_commit would otherwise not be called.
 
     before :context do
-      @admin   = create :user_admin
+      @admin   = User.admins.any? ? User.admins.first : create(:user_admin)
       contract = create :contract
       @report  = create :report_village, contract: contract
     end
