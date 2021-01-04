@@ -74,4 +74,6 @@ Rails.application.routes.draw do
   get 'monthly', to: 'monthly#index'
   post 'monthly/redirector', to: 'monthly#redirector', as: 'monthly_redirector'
   get ':year/:month', to: 'monthly#show', as: 'monthly_w_date', constraints: { year: /[0-9]{4}/, month: /[0-9]{1,2}/ }
+
+  mount LetterOpenerWeb::Engine, at: '/letter_opener' if Rails.env.development?
 end

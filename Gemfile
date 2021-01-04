@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 source 'https://rubygems.org'
-ruby '2.7.0'
+ruby '2.7.2'
 
 git_source(:github) do |repo_name|
   repo_name = "#{repo_name}/#{repo_name}" unless repo_name.include?('/')
@@ -47,6 +47,7 @@ group :development, :test do
 end
 
 group :development do
+  gem 'letter_opener_web'
   gem 'pry-rails'
   gem 'rack-mini-profiler', require: false
   # Access an interactive console on exception pages or by calling 'console' anywhere in the code.
