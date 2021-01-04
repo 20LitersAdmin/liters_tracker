@@ -1274,7 +1274,8 @@ RSpec.describe Report, type: :model do
       report_email = ActionMailer::Base.deliveries.find { |email| email.subject.include? 'First Report' }
 
       expect(report_email.to.first).to eql(@admin.email)
-      expect(report_email.html_part.body.raw_source).to include(@report.id.to_s)
+      expect(report_email.html_part.body.raw_source).to include(@report.year.to_s)
+      expect(report_email.html_part.body.raw_source).to include(@report.month.to_s)
     end
   end
 end
