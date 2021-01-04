@@ -1,5 +1,0 @@
-Hello <%= @user.fname %>,
-
-The first report for <%= Date::MONTHNAMES[@report.month.to_i] %> of <%= @report.year.to_s %> has been entered.
-
-Review at <%= url_for :controller => "reports", :action => "edit", :id => @report %> 
