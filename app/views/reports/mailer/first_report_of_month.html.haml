@@ -1,0 +1,7 @@
+-# frozen_string_literal: true
+
+%p Hello #{@user.fname},
+
+%p The first report for #{Date::MONTHNAMES[@report.month.to_i]} #{@report.year} has been entered.
+
+%p #{link_to 'View reports', controller: 'monthly', action: 'show', year: @report.year, month: @report.month}

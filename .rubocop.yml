@@ -29,5 +29,6 @@ Style/HashTransformKeys:
 Style/HashTransformValues:
   Enabled: true
 AllCops:
+  NewCops: enable
   Exclude:
     - db/schema.rb

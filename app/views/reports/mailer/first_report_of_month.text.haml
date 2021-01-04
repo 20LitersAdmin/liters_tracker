@@ -1,0 +1,7 @@
+-# frozen_string_literal: true
+
+Hello #{@user.fname},
+
+The first report for #{Date::MONTHNAMES[@report.month.to_i]} #{@report.year} has been entered.
+
+View the report at: #{url_for controller: 'monthly', action: 'show', year: @report.year, month: @report.month}

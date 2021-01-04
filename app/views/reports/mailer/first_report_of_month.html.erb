@@ -1,5 +1,0 @@
-<div class="whole" style="position: relative; min-height: 1px; padding-left: 15px; padding-right: 15px; float: left; width: 100%;">
-  <p>Hello <%= @user.fname %>,</p>
-
-  <p>The first <%= link_to "report", :controller => "reports", :action => "edit", :id => @report %> for <%= Date::MONTHNAMES[@report.month.to_i] %> of <%= @report.year.to_s %> has been entered.</p>
-</div>

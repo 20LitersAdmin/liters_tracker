@@ -9,7 +9,7 @@ git_source(:github) do |repo_name|
 end
 
 gem 'aws-sdk-s3'
-gem 'bootsnap', '>= 1.4', require: false
+gem 'bootsnap', require: false
 gem 'bootstrap', '~> 4'
 gem 'bootstrap-will_paginate', '~> 1.0.0'
 gem 'bootstrap4-datetime-picker-rails'
@@ -26,10 +26,10 @@ gem 'money-rails'
 gem 'pg', '>= 0.18', '< 2.0'
 gem 'puma', '~> 4.3'
 gem 'pundit'
-gem 'rails', '>= 5.2'
+gem 'rails', '>= 6.1'
 gem 'simple_form'
 gem 'tinymce-rails', '~> 5.1'
-gem 'turbolinks', '~> 5'
+gem 'turbolinks', '~> 5.2'
 gem 'uglifier', '>= 1.3.0'
 # Windows does not include zoneinfo files, so bundle the tzinfo-data gem
 gem 'tzinfo-data', platforms: [:mingw, :mswin, :x64_mingw, :jruby]
