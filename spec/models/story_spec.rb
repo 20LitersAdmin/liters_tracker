@@ -123,7 +123,7 @@ RSpec.describe Story, type: :model do
     context 'when image_io is not an image' do
       it 'adds an error to story.image' do
         story.save
-        image_io = fixture_file_upload('spec/fixtures/files/not_an_image_file.txt', 'text/plain')
+        image_io = Rack::Test::UploadedFile.new("#{Rails.root}/spec/fixtures/files/not_an_image_file.txt", 'text/plain')
 
         story.process_image!(image_io)
 
@@ -134,7 +134,7 @@ RSpec.describe Story, type: :model do
     context 'when image_io is an image' do
       before :each do
         story.save
-        @image_io = fixture_file_upload('app/assets/images/SSF.png', 'image/png')
+        @image_io = Rack::Test::UploadedFile.new("#{Rails.root}/app/assets/images/SSF.png", 'image/png')
         story.process_image!(@image_io)
       end
 
@@ -255,7 +255,7 @@ RSpec.describe Story, type: :model do
   describe '#check_image_format' do
     it 'fires on validation' do
       story.save
-      image_io = fixture_file_upload('app/assets/images/SSF.png', 'image/png')
+      image_io = Rack::Test::UploadedFile.new("#{Rails.root}/app/assets/images/SSF.png", 'image/png')
       story.image.attach(io: File.open(image_io.tempfile.path), filename: 'test-check-image-format.png', content_type: image_io.content_type)
       expect(story).to receive(:check_image_format)
 
@@ -265,7 +265,7 @@ RSpec.describe Story, type: :model do
     context 'when the content_type starts with "image/"' do
       it 'returns true' do
         story.save
-        image_io = fixture_file_upload('app/assets/images/SSF.png', 'image/png')
+        image_io = Rack::Test::UploadedFile.new("#{Rails.root}/app/assets/images/SSF.png", 'image/png')
         story.image.attach(io: File.open(image_io.tempfile.path), filename: 'test-check-image-format.png', content_type: image_io.content_type)
 
         expect(story.send(:check_image_format)).to eq true
@@ -275,7 +275,7 @@ RSpec.describe Story, type: :model do
     context 'when the content_type doesn\'t start with "image/"' do
       before :each do
         story.save
-        image_io = fixture_file_upload('spec/fixtures/files/not_an_image_file.txt', 'text/plain')
+        image_io = Rack::Test::UploadedFile.new("#{Rails.root}/spec/fixtures/files/not_an_image_file.txt")
         story.image.attach(io: File.open(image_io.tempfile.path), filename: 'test-check-image-format.png', content_type: image_io.content_type)
       end
 

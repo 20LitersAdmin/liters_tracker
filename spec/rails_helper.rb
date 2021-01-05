@@ -13,7 +13,7 @@ require 'support/factory_bot'
 require 'support/cleanup_crew'
 require 'support/form_helper'
 require 'capybara/rspec'
-require 'rspec/retry'
+# require 'rspec/retry'
 require 'webdrivers'
 
 # Requires supporting ruby files with custom matchers and macros, etc, in
@@ -45,7 +45,7 @@ Capybara.server = :puma
 RSpec.configure do |config|
   config.include Devise::Test::IntegrationHelpers, type: :system
   # Remove this line if you're not using ActiveRecord or ActiveRecord fixtures
-  config.fixture_path = "#{::Rails.root}/spec/fixtures"
+  config.fixture_path = "#{::Rails.root}/spec/fixtures/"
   config.include FactoryBot::Syntax::Methods
   config.include CleanupCrew
   config.include FormHelper, type: :system
@@ -55,18 +55,19 @@ RSpec.configure do |config|
   # instead of true.
   config.use_transactional_fixtures = true
   config.infer_spec_type_from_file_location!
-  config.filter_rails_from_backtrace!
 
   # Rspec/retry settings
   # show retry status in spec process
-  config.verbose_retry = true
+  # config.verbose_retry = true
   # show exception that triggers a retry if verbose_retry is set to true
-  config.display_try_failure_messages = true
+  # config.display_try_failure_messages = true
 
   # Filter lines from Rails gems in backtraces.
-  config.filter_rails_from_backtrace!
+  # config.filter_rails_from_backtrace!
+
   # arbitrary gems may also be filtered via:
   # config.filter_gems_from_backtrace("gem name")
+
   config.before(:each) do
     clean_up!
   end
