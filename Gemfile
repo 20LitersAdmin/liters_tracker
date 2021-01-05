@@ -59,7 +59,7 @@ group :test do
   gem 'capybara-slow_finder_errors'
   gem 'database_cleaner'
   gem 'rspec-rails'
-  # gem 'rspec-retry'
+  gem 'rspec-retry'
   gem 'rspec_junit_formatter'
   gem 'shoulda-matchers'
   gem 'webdrivers'
