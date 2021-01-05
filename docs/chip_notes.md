@@ -4,6 +4,13 @@
 - Engagement Tech plans: Form says "Goal", should say "Hours"?, or add Plan#hours to db?
 
 # NEXT:
+0. Code smells: All geographies respond to all geographies
+- E.g. Cell:28-49
+- remove method from Country, District, Sector
+- deal with PlansController:46-47
+- deal with ReportsController:41
+-
+
 0. Facilities#index needs dttb ajax instead of paginate / like Reports#dttb_index
 
 0. Forms could have geography selects (with Global Linked Selects)
