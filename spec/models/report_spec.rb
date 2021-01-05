@@ -354,24 +354,24 @@ RSpec.describe Report, type: :model do
   end
 
   describe '#sector_name' do
-    context 'when the report geography is above a sector' do
-      let(:report_district) { build :report_district }
-      let(:report_country) { build :report_country }
+    context 'when the report geography is a sector or above' do
+      let(:report_district) { create :report_district }
+      let(:report_country) { create :report_country }
+      let(:report_sector) { create :report_sector }
 
-      it 'returns an empty string' do
-        expect(report_district.sector_name).to eq ''
-        expect(report_country.sector_name).to eq ''
+      it 'returns "N/A"' do
+        expect(report_district.sector_name).to eq 'N/A'
+        expect(report_country.sector_name).to eq 'N/A'
+        expect(report_sector.sector_name).to eq 'N/A'
       end
     end
 
-    context 'when the report geography is a sector or below' do
-      let(:report_sector) { build :report_sector }
-      let(:report_cell) { build :report_cell }
-      let(:report_village) { build :report_village }
-      let(:report_facility) { build :report_facility }
+    context 'when the report geography is below a sector' do
+      let(:report_cell) { create :report_cell }
+      let(:report_village) { create :report_village }
+      let(:report_facility) { create :report_facility }
 
       it 'returns the sector\'s name' do
-        expect(report_sector.sector_name).to eq report_sector.reportable.sector.name
         expect(report_cell.sector_name).to eq report_cell.reportable.sector.name
         expect(report_village.sector_name).to eq report_village.reportable.sector.name
         expect(report_facility.sector_name).to eq report_facility.reportable.sector.name
