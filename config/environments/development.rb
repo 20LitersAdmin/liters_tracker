@@ -35,16 +35,8 @@ Rails.application.configure do
   config.action_mailer.perform_caching = false
   config.action_mailer.default_url_options = { host: 'localhost', port: 3000 }
 
-  # See https://github.com/mailhog/MailHog for a useful local SMTP server
-  config.action_mailer.delivery_method = :smtp
-  config.action_mailer.smtp_settings = {
-    authentication: :plain,
-    address: 'localhost',
-    port: 1025,
-    domain: 'mg.20liters.org',
-    user_name: '',
-    password: ''
-  }
+  config.action_mailer.delivery_method = :letter_opener
+  config.action_mailer.perform_deliveries = true
 
   # Print deprecation notices to the Rails logger.
   config.active_support.deprecation = :log

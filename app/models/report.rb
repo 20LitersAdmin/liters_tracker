@@ -180,7 +180,7 @@ class Report < ApplicationRecord
   end
 
   def notify_admins
-    return unless Report.within_month(Date.today).count <= 1
+    return if Report.within_month(date).size > 1
 
     User.where(admin: true).each { |admin| ReportMailer.first_report_of_month(self, admin).deliver_now }
   end

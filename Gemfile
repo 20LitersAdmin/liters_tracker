@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 source 'https://rubygems.org'
-ruby '2.7.0'
+ruby '2.7.2'
 
 git_source(:github) do |repo_name|
   repo_name = "#{repo_name}/#{repo_name}" unless repo_name.include?('/')
@@ -9,7 +9,7 @@ git_source(:github) do |repo_name|
 end
 
 gem 'aws-sdk-s3'
-gem 'bootsnap', '>= 1.4', require: false
+gem 'bootsnap', require: false
 gem 'bootstrap', '~> 4'
 gem 'bootstrap-will_paginate', '~> 1.0.0'
 gem 'bootstrap4-datetime-picker-rails'
@@ -17,7 +17,7 @@ gem 'coffee-rails'
 gem 'devise', git: 'https://github.com/plataformatec/devise.git'
 gem 'font-awesome-rails'
 gem 'haml'
-gem 'haml-rails', '~> 1.0'
+gem 'haml-rails'
 gem 'jquery-datatables'
 gem 'jquery-rails'
 gem 'mini_magick'
@@ -26,10 +26,10 @@ gem 'money-rails'
 gem 'pg', '>= 0.18', '< 2.0'
 gem 'puma', '~> 4.3'
 gem 'pundit'
-gem 'rails', '>= 5.2'
+gem 'rails', '>= 6.1'
 gem 'simple_form'
 gem 'tinymce-rails', '~> 5.1'
-gem 'turbolinks', '~> 5'
+gem 'turbolinks', '~> 5.2'
 gem 'uglifier', '>= 1.3.0'
 # Windows does not include zoneinfo files, so bundle the tzinfo-data gem
 gem 'tzinfo-data', platforms: [:mingw, :mswin, :x64_mingw, :jruby]
@@ -47,6 +47,7 @@ group :development, :test do
 end
 
 group :development do
+  gem 'letter_opener_web'
   gem 'pry-rails'
   gem 'rack-mini-profiler', require: false
   # Access an interactive console on exception pages or by calling 'console' anywhere in the code.
