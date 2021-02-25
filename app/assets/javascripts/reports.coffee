@@ -2,10 +2,12 @@ $(document).on 'turbolinks:load', ->
   return unless controllerMatches(['reports']) &&
     actionMatches(['index'])
 
-    $('table#reports-dttb').dataTable
+    $('table#reports-datatable').dataTable
       processing: true
+      serverSide: true
       ajax:
-        url: $('table#reports-dttb').data('source')
+        url: $('table#reports-datatable').data('source')
+        type: 'POST'
       lengthMenu: [[50, 100, 500, -1], [50, 100, 500, "All"] ]
       columns: [
         {data: 'date' }
@@ -18,7 +20,7 @@ $(document).on 'turbolinks:load', ->
         {data: 'hrs' }
         {data: 'impact' }
         {data: 'author' }
-        {data: 'links' }
+        {data: 'actions' }
       ]
       pagingType: 'full_numbers'
       language: {

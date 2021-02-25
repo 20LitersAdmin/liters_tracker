@@ -1,11 +1,17 @@
 # frozen_string_literal: true
 
+require 'datatables/report_datatable'
+
 class ReportsController < ApplicationController
   before_action :set_report, only: %i[show edit update destroy]
 
   def index; end
 
   def show; end
+
+  def datatable
+    render json: Datatables::ReportDatatable.new(params)
+  end
 
   def dttb_index
     authorize @reports = Report.includes(:reportable, :technology, :user).order(date: :desc)
