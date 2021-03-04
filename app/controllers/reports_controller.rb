@@ -10,17 +10,17 @@ class ReportsController < ApplicationController
   def show; end
 
   def datatable
-    render json: Datatables::ReportDatatable.new(params)
+    render json: Datatables::ReportDatatable.new(datables_params)
   end
 
-  def dttb_index
-    authorize @reports = Report.includes(:reportable, :technology, :user).order(date: :desc)
+  # def dttb_index
+  #   authorize @reports = Report.includes(:reportable, :technology, :user).order(date: :desc)
 
-    respond_to do |format|
-      format.html
-      format.json { render 'index.json' }
-    end
-  end
+  #   respond_to do |format|
+  #     format.html
+  #     format.json { render 'index.json' }
+  #   end
+  # end
 
   def edit
     @technologies = Technology.report_worthy.pluck(:name, :id)
@@ -87,6 +87,10 @@ class ReportsController < ApplicationController
 
   def set_report
     authorize @report = Report.find(params[:id])
+  end
+
+  def datables_params
+    datatable_params = params.permit(:draw, :start, :length, :format, :columns => {}, :order => {}, :search => {})
   end
 
   def report_params

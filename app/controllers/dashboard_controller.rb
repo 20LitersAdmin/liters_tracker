@@ -10,6 +10,7 @@ class DashboardController < ApplicationController
 
       { stat: lifetime_stat, title: technology.plural_name }
     end
+    @progress_date = Report.order(date: :desc).first.date
     @global_impact = Report.distributions.sum(:impact)
 
     @future_plans = Plan.current.incomplete.any?

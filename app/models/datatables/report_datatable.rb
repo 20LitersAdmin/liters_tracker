@@ -7,7 +7,7 @@ module Datatables
       # Declare strings in this format: ModelName.column_name
       # or in aliased_join_table.column_name format
       @view_columns ||= {
-        date:     { source: "Report.date", name: 'Date', searchable: false, orderable: true },
+        date:     { source: "Report.date", name: 'Date', searchable: false orderable: true },
         location: { sources: { "Cell" => "name", "Facility" => "name", "Village" => "name" }, searchable: true, cond: :like, orderable: true },
         sector:   { searchable: false, orderable: false },
         tech:     { source: "Technology.short_name", searchable: true, cond: :like },
@@ -41,7 +41,6 @@ module Datatables
     end
 
     def get_raw_records
-      # Report.includes(:reportable, :technology, :user).order(date: :desc)
       Report.includes(:cell_ref, :facility_ref, :village_ref, :technology, :user)
             .references(:technology, :user)
     end

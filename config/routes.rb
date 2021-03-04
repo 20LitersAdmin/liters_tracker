@@ -1,11 +1,6 @@
 # frozen_string_literal: true
 
 Rails.application.routes.draw do
-  concern :with_datatable do
-    post 'datatable', on: :collection
-  end
-
-
   root to: 'dashboard#index'
 
   resources :dashboard, only: %i[index]
@@ -14,6 +9,10 @@ Rails.application.routes.draw do
   get 'dashboard/planner', to: 'dashboard#planner', as: 'dashboard_planner'
 
   get 'stats', to: 'dashboard#stats_json', as: 'stats'
+
+  concern :with_datatable do
+    post 'datatable', on: :collection
+  end
 
   resources :reports, except: %i[new], concerns: [:with_datatable] do
     get 'dttb_index', on: :collection
