@@ -5,8 +5,6 @@ module AjaxDatatablesRails
       def initialize(datatable)
         @datatable = datatable
         @options   = datatable.params
-        puts "options: \n"
-        @options.each { |k,v| puts"#{k}:\t #{v}\n" }
       end
 
       def polymorphic?(column_options)
@@ -41,12 +39,10 @@ module AjaxDatatablesRails
       end
 
       def sources
-        puts "@view_column: #{@view_column}"
         @view_column[:sources]
       end
 
       def tables
-        puts "tables: #{models}"
         @tables ||= models.collect { |model| model.respond_to?(:arel_table) ? model.arel_table : model }
       end
 
