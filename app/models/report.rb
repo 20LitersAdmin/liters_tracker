@@ -155,20 +155,20 @@ class Report < ApplicationRecord
   end
 
   def cell
-    return unless reportable_type == "cell"
-    
+    return unless reportable_type == "Cell"
+
     reportable
   end
 
   def facility
     return unless reportable_type == "Facility"
-    
+
     reportable
   end
 
   def village
     return unless reportable_type == "Village"
-    
+
     reportable
   end
 
