@@ -4,6 +4,7 @@ require 'datatables/report_datatable'
 
 class ReportsController < ApplicationController
   before_action :set_report, only: %i[show edit update destroy]
+  before_action :datatable_params, only: [:datatable]
 
   def index; end
 
@@ -77,10 +78,22 @@ class ReportsController < ApplicationController
     end
   end
 
+  def params
+    @_dt_params || super
+  end
+
   private
 
   def set_report
     authorize @report = Report.find(params[:id])
+  end
+
+  def datatable_params
+    @_dt_params = request.parameters
+    def @_dt_params.permit(*args)
+      self
+    end
+    @_dt_params
   end
 
   def report_params
