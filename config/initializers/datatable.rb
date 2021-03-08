@@ -20,6 +20,18 @@ module AjaxDatatablesRails
            polymorphic?(column_options) ? PolymorphicColumn.new(@datatable, index, column_options) : Column.new(@datatable, index, column_options)
         end
       end
+
+      def get_param(param)
+        return {} if options[param].nil?
+
+        if options[param].is_a? Array
+          hash = {}
+          options[param].each_with_index { |value, index| hash[index] = value }
+          hash
+        else
+          options[param].with_indifferent_access
+        end
+      end
     end
 
     class PolymorphicColumn < AjaxDatatablesRails::Datatable::Column
