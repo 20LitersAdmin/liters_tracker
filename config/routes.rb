@@ -10,7 +10,11 @@ Rails.application.routes.draw do
 
   get 'stats', to: 'dashboard#stats_json', as: 'stats'
 
-  resources :reports, except: %i[new] do
+  concern :with_datatable do
+    post 'datatable', on: :collection
+  end
+
+  resources :reports, except: %i[new], concerns: [:with_datatable] do
     get 'dttb_index', on: :collection
   end
 

@@ -2,7 +2,7 @@
 .container
   %h1.left All Reports
 
-  %table.table.table-striped#reports-dttb{data: {source: dttb_index_reports_path(format: :json) } }
+  %table.table.table-striped#reports-datatable{data: {source: datatable_reports_path(format: :json) } }
     %thead.thead-dark
       %tr
         %th Date
@@ -15,5 +15,5 @@
         %th Hrs
         %th Impact
         %th Author
-        %th
+        %th Actions
     %tbody
