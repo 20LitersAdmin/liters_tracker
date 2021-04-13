@@ -8,9 +8,12 @@ class Report < ApplicationRecord
   belongs_to :contract,   inverse_of: :reports, optional: true
   belongs_to :reportable, polymorphic: true
 
-  belongs_to :cell_ref,     -> { where(reports: { reportable_type: 'Cell' }) },     class_name: 'Cell',     foreign_key: 'reportable_id'
-  belongs_to :facility_ref, -> { where(reports: { reportable_type: 'Facility' }) }, class_name: 'Facility', foreign_key: 'reportable_id'
-  belongs_to :village_ref,  -> { where(reports: { reportable_type: 'Village' }) },  class_name: 'Village',  foreign_key: 'reportable_id'
+  #### ED: These work for /report_datatable.rb BUT they prevent record creation with the following error:
+  # ActiveRecord::StatementInvalid (PG::UndefinedTable: ERROR:  missing FROM-clause entry for table "reports"
+  #   LINE 1: ...cells".* FROM "cells" WHERE "cells"."id" = $1 AND "reports"....
+  # belongs_to :cell_ref,     -> { where(reports: { reportable_type: 'Cell' }) },     class_name: 'Cell',     foreign_key: 'reportable_id'
+  # belongs_to :facility_ref, -> { where(reports: { reportable_type: 'Facility' }) }, class_name: 'Facility', foreign_key: 'reportable_id'
+  # belongs_to :village_ref,  -> { where(reports: { reportable_type: 'Village' }) },  class_name: 'Village',  foreign_key: 'reportable_id'
 
   has_one    :story, inverse_of: :report, dependent: :destroy
 
