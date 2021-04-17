@@ -41,7 +41,14 @@ module Datatables
     end
 
     def get_raw_records
-      Report.includes(:cell_ref, :facility_ref, :village_ref, :technology, :user)
+      join_clause = %q(
+        LEFT OUTER JOIN "cells"      ON "cells"."id"      = "reports"."reportable_id" AND "reports"."reportable_type" = 'Cell' 
+        LEFT OUTER JOIN "facilities" ON "facilities"."id" = "reports"."reportable_id" AND "reports"."reportable_type" = 'Facility' 
+        LEFT OUTER JOIN "villages"   ON "villages"."id"   = "reports"."reportable_id" AND "reports"."reportable_type" = 'Village'
+      )
+
+      Report.joins(join_clause)
+            .includes(:technology, :user)
             .references(:technology, :user)
     end
   end
