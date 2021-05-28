@@ -8,10 +8,6 @@ class Report < ApplicationRecord
   belongs_to :contract,   inverse_of: :reports, optional: true
   belongs_to :reportable, polymorphic: true
 
-  # belongs_to :cell_ref,     -> { where(reports: { reportable_type: 'Cell' }) },     class_name: 'Cell',     foreign_key: 'reportable_id'
-  # belongs_to :facility_ref, -> { where(reports: { reportable_type: 'Facility' }) }, class_name: 'Facility', foreign_key: 'reportable_id'
-  # belongs_to :village_ref,  -> { where(reports: { reportable_type: 'Village' }) },  class_name: 'Village',  foreign_key: 'reportable_id'
-
   has_one    :story, inverse_of: :report, dependent: :destroy
 
   belongs_to :plan, inverse_of: :reports, required: false
