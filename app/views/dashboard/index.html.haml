@@ -1,18 +1,18 @@
 -# frozen_string_literal: true
-.container.mt-5#lifetime_stats
+#lifetime_stats.container.mt-5
   .row.justify-content-center
-    %h2 As of #{human_month_year(@progress_date)}:
+    %h2= "As of #{human_month_year(@progress_date)}:" if @progress_date
   .row.justify-content-center
     - if @lifetime_stats.any?
       - @lifetime_stats.each do |stat_block|
         - next if stat_block.blank?
-        = render partial: "shared/basic_stat_block", locals: { stat: stat_block[:stat], title: stat_block[:title], highlight: false }
-    = render partial: "shared/basic_stat_block", locals: { stat: @global_impact, title: 'People served', highlight: true  }
 
-.mt-5#date_navs
+        = render partial: 'shared/basic_stat_block', locals: { stat: stat_block[:stat], title: stat_block[:title], highlight: false }
+    = render partial: 'shared/basic_stat_block', locals: { stat: @global_impact, title: 'People served', highlight: true }
+
+#date_navs.mt-5
   %nav#year_nav.nav.nav-fill.liters-gray-bg.liters-text-white
-    -if @future_plans
-      = link_to 'FUTURE', dashboard_planner_path, remote: true, class: "nav-item nav-link", id: 'future_link'
+    = link_to 'FUTURE', dashboard_planner_path, remote: true, class: 'nav-item nav-link', id: 'future_link' if @future_plans
     = render partial: 'year', collection: @years
 
   %nav#month_nav.nav.justify-content-center

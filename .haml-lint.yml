@@ -3,6 +3,8 @@ linters:
     max: 900
   IdNames:
     style: 'snake_case'
+  ClassesBeforeIds:
+    EnforcedStyle: 'id'
 
   RuboCop:
     ignored_cops:
