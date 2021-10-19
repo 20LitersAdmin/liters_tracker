@@ -13,8 +13,6 @@ class DashboardController < ApplicationController
     @progress_date = Report.order(date: :desc).first&.date
     @global_impact = Report.distributions.sum(:impact)
 
-    @future_plans = Plan.current.incomplete.any?
-
     @dates = Report.with_stories.pluck(:year, :month).uniq.sort.reverse
 
     # collect years for #year_nav
@@ -29,7 +27,7 @@ class DashboardController < ApplicationController
     # set default month
     # @month = @months.last
 
-    @stories = Story.joins(:report).where('reports.year = ?', @year)
+    @stories = Story.joins(:report).where('reports.year = ?', @year).order('reports.date DESC')
 
     @title = 'See Our Progress'
     @subtitle = 'Our success stories are not rare. We\'re reaching communities, families, and individuals every day.<br />Every day we move more people towards water security and unleash the power that clean water brings.'.html_safe
@@ -41,13 +39,11 @@ class DashboardController < ApplicationController
     @years = Report.with_stories.pluck(:year).uniq.sort.reverse
     @months = Report.with_stories.where(year: @year).pluck(:month).uniq.sort
 
-    @future_plans = Plan.current.incomplete.any?
-
     @stories = if params[:month].present?
                  @month = params[:month].to_i
-                 Story.joins(:report).where('reports.year = ? AND reports.month = ?', @year, @month)
+                 Story.joins(:report).where('reports.year = ? AND reports.month = ?', @year, @month).order('reports.date DESC')
                else
-                 Story.joins(:report).where('reports.year = ?', @year)
+                 Story.joins(:report).where('reports.year = ?', @year).order('reports.date DESC')
                end
 
     respond_to do |format|
