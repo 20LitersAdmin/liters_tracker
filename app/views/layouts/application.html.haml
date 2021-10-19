@@ -2,23 +2,36 @@
 !!!
 %html
   %head
-    %meta{content: 'text/html; charset=UTF-8', 'http-equiv' => 'Content-Type'}
+    %meta{ content: 'text/html; charset=UTF-8', 'http-equiv' => 'Content-Type' }
     %title Liters Tracker [20 Liters]
-    %meta{name: 'WTF', content: 'Seriously, WTF'}
+    / Google Tag Manager
+    :javascript
+      (function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+      new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+      j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+      'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+      })(window,document,'script','dataLayer','GTM-5HMCMHD');
+    / end Google Tag Manager
+    / Global site tag (gtag.js) - Google Analytics
+    %script{ async: true, src: 'https://www.googletagmanager.com/gtag/js?id=G-QG8X17G0WC' }
+    :javascript
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+
+      gtag('config', 'G-QG8X17G0WC');
+    / end Global site tag - Google Analytics
+
     = csrf_meta_tags
     = csp_meta_tag
     = stylesheet_link_tag    'application', media: 'all', 'data-turbolinks-track': 'reload'
     = javascript_include_tag 'application', 'data-turbolinks-track': 'reload'
     = render 'shared/icons'
-  %body{'data-controller': controller.controller_name, 'data-action': controller.action_name }
+  %body{ 'data-controller': controller.controller_name, 'data-action': controller.action_name }
     %header
       = render 'shared/navbar'
-    .fa-5x#loading_screen
-      %i.fa.fa-spinner.fa-pulse#loading_spinner
+    #loading_screen.fa-5x
+      %i#loading_spinner.fa.fa-spinner.fa-pulse
     %main.container
       = flash_messages
       = yield
-      / - if Constants::Geography::CONTROLLERS.include?(controller_name)
-      /   .row
-      /     .col.text-right
-      /       = link_to 'Back to geography', geography_path, class: 'btn btn-sm blue'
