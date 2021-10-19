@@ -2,6 +2,3 @@ $("#story_column").html("<%= escape_javascript(render partial: 'story', collecti
 $("#year_nav").html("<%= escape_javascript(render partial: 'year', collection: @years ) %>");
 $("#month_nav").html("<%= escape_javascript(render partial: 'month', collection: @months ) %>");
 $('#future_link').removeClass('highlight');
-<% if @future_plans %>
-  $("#year_nav").prepend('<a class="nav-item nav-link" id="future_link" data-remote="true" href="/dashboard/planner">FUTURE</a>');
-<% end %>
