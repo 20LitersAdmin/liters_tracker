@@ -14,13 +14,16 @@
       'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
       })(window,document,'script','dataLayer','GTM-5HMCMHD');
     / end Google Tag Manager
-
     = csrf_meta_tags
     = csp_meta_tag
     = stylesheet_link_tag    'application', media: 'all', 'data-turbolinks-track': 'reload'
     = javascript_include_tag 'application', 'data-turbolinks-track': 'reload'
     = render 'shared/icons'
   %body{ 'data-controller': controller.controller_name, 'data-action': controller.action_name }
+    / Google Tag Manager (noscript)
+    %noscript
+      %iframe{ src: 'https://www.googletagmanager.com/ns.html?id=GTM-5HMCMHD', height: 0, width: 0, style: 'display:none;visibility:hidden;' }
+    / end Google Tag Manager (noscript)
     %header
       = render 'shared/navbar'
     #loading_screen.fa-5x
