@@ -12,15 +12,6 @@
       'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
       })(window,document,'script','dataLayer','GTM-5HMCMHD');
     / end Google Tag Manager
-    / Global site tag (gtag.js) - Google Analytics
-    %script{ async: true, src: 'https://www.googletagmanager.com/gtag/js?id=G-QG8X17G0WC' }
-    :javascript
-      window.dataLayer = window.dataLayer || [];
-      function gtag(){dataLayer.push(arguments);}
-      gtag('js', new Date());
-
-      gtag('config', 'G-QG8X17G0WC');
-    / end Global site tag - Google Analytics
     = csrf_meta_tags
     = csp_meta_tag
     = stylesheet_link_tag    'application', media: 'all', 'data-turbolinks-track': 'reload'
@@ -28,6 +19,10 @@
     = javascript_include_tag 'https://20liters.kindful.com/embeds/743a7d01-5726-491f-aaf2-fbbc15da826a/init.js', 'data-embed-id': '743a7d01-5726-491f-aaf2-fbbc15da826a', 'data-lookup-type': 'jquery-selector', 'data-lookup-value': '#kindful_plugin', 'data-styles-off': true
     = render 'shared/icons'
   %body{'data-controller': 'dashboard' }
+    / Google Tag Manager (noscript)
+    %noscript
+      %iframe{ src: 'https://www.googletagmanager.com/ns.html?id=GTM-5HMCMHD', height: 0, width: 0, style: 'display:none;visibility:hidden;' }
+    / end Google Tag Manager (noscript)
     =render 'dashboard/header', locals: { title: @title, subtitle: @subtitle }
     %main
       = yield
