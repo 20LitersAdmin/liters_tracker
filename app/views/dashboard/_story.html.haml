@@ -1,8 +1,9 @@
 -# frozen_string_literal: true
-- use_default_image = "this.onerror=null;this.src='" + asset_path('story_no_image.png') + "'"
-%a.story.card{href: url_for(story)}
+- use_default_image = "this.onError=null;this.src='#{asset_path('story_no_image.png')}'"
+
+%a.story.card{ href: url_for(story) }
   .card-caption
-    %h4.title{ class: ('prominent' if story.prominent?) }
+    %h4.title{ class: ('prominent' if story.prominent?), title: story.title }
       = story.title
-      %p.subtitle.text-right= human_month_year story.date
-    = image_tag story.picture, class: 'card-img-top img-fluid', onError: use_default_image
+      %p.subtitle.text-right{ title: story.title }= human_month_year story.date
+    = image_tag story.picture, class: 'card-img-top img-fluid', onError: use_default_image, title: story.title
