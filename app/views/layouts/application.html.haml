@@ -19,7 +19,7 @@
     = stylesheet_link_tag    'application', media: 'all', 'data-turbolinks-track': 'reload'
     = javascript_include_tag 'application', 'data-turbolinks-track': 'reload'
     = render 'shared/icons'
-  %body.liters-tracker{ 'data-controller': controller.controller_name, 'data-action': controller.action_name }
+  %body.liters-tracker{ 'data-controller': controller.controller_name, 'data-action': controller.action_name, 'data-site': '20liters-track' }
     / Google Tag Manager (noscript)
     %noscript
       %iframe{ src: 'https://www.googletagmanager.com/ns.html?id=GTM-5HMCMHD', height: 0, width: 0, style: 'display:none;visibility:hidden;' }
