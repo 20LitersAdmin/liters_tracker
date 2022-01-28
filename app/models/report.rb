@@ -170,12 +170,6 @@ class Report < ApplicationRecord
 
   private
 
-  def flag_for_meaninglessness
-    # if technology.is_engagement? :hours is required
-    # else :distributed or :checked must have a value
-    technology.is_engagement? ? errors.add(:hours, 'must be provided.') : errors.add(:distributed, 'or checked must be provided.')
-  end
-
   def calculate_impact
     return unless distributed&.nonzero? || hours&.nonzero?
 
@@ -198,6 +192,12 @@ class Report < ApplicationRecord
                   else
                     people
                   end
+  end
+
+  def flag_for_meaninglessness
+    # if technology.is_engagement? :hours is required
+    # else :distributed or :checked must have a value
+    technology.is_engagement? ? errors.add(:hours, 'must be provided.') : errors.add(:distributed, 'or checked must be provided.')
   end
 
   def notify_admins

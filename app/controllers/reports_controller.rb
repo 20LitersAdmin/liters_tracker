@@ -26,9 +26,11 @@ class ReportsController < ApplicationController
   def create
     # Sectors#report forms submit to this action as AJAX
     # check for duplicates first
-    authorize @report = Report.where(dup_matching_params).first_or_initialize
+    set_params(reportable_params)
 
-    @report.assign_attributes(report_params)
+    authorize @report = Report.where(@dup_matching_params).first_or_initialize
+
+    @report.assign_attributes(@remaining_params)
     @report.user = current_user
 
     @persistence = @report.new_record? ? 'Report created.' : 'A matching report was found and updated.'
@@ -96,6 +98,39 @@ class ReportsController < ApplicationController
     @_dt_params
   end
 
+  def set_params(params)
+    # TODO: could use improvement
+    # types = Constants::Geography::HIERARCHY.reverse.map(&:downcase)
+    case
+    when params[:facility]
+      reportable_type = 'Facility'
+      reportable_id = params[:facility].to_i
+    when params[:village]
+      reportable_type = 'Village'
+      reportable_id = params[:village].to_i
+    when params[:cell]
+      reportable_type = 'Cell'
+      reportable_id = params[:cell].to_i
+    when params[:sector]
+      reportable_type = 'Sector'
+      reportable_id = params[:sector].to_i
+    end
+
+    @dup_matching_params = ActionController::Parameters.new({
+      date:            report_params[:date],
+      technology_id:   report_params[:technology_id],
+      reportable_type: reportable_type,
+      reportable_id:   reportable_id
+    }).permit!
+
+    @remaining_params = ActionController::Parameters.new({
+      distributed: report_params[:distributed],
+      checked:     report_params[:checked],
+      people:      report_params[:people],
+      hours:       report_params[:hours]
+    }).permit!
+  end
+
   def report_params
     # user_id is set in ReportsController#create and ReportsController#update
     # contract_id is set in Report#set_contract_from_date
@@ -103,18 +138,18 @@ class ReportsController < ApplicationController
     # year and month are set in Report#set_year_and_month_from_date
     params.require(:report).permit(:date,
                                    :technology_id,
-                                   :reportable_id,
-                                   :reportable_type,
                                    :distributed,
                                    :checked,
                                    :people,
                                    :hours)
   end
 
-  def dup_matching_params
-    params.require(:report).permit(:date,
-                                   :technology_id,
-                                   :reportable_id,
-                                   :reportable_type)
+  def reportable_params
+    # these params are used to determine reportable_id and reportable_type via ApplicationHelper#set_polymorphic_from_params
+    params.require(:report).permit(:district,
+                                   :sector,
+                                   :cell,
+                                   :village,
+                                   :facility)
   end
 end

@@ -6,14 +6,10 @@ $('.is-invalid').removeClass('is-invalid');
 // clear out the visible form fields on _village_form and _facility_form
 $('form#new_report').find('select#report_cell').val('')
 $('form#new_report').find('select#report_village').val('')
-$('form#new_report').find('select#report_reportable_id').val('')
+$('form#new_report').find('select#report_facility').val('')
 $('form#new_report').find('input#report_distributed').val('')
 $('form#new_report').find('input#report_checked').val('')
 $('form#new_report').find('input#report_people').val('')
-
-// clear out the reportable hidden fields on _village_form ONLY
-$('form#new_report').find('input#report_reportable_id.village-form').val('')
-$('form#new_report').find('input#report_reportable_type.village-form').val('')
 
 // clear out the datetimepicker
 $('form#new_report').find('input#report_date.datetimepicker-input').val('')
