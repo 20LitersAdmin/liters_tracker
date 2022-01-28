@@ -203,7 +203,7 @@ class Report < ApplicationRecord
   def notify_admins
     return if Report.within_month(date).size > 1
 
-    User.where(admin: true).each { |admin| ReportMailer.first_report_of_month(self, admin).deliver_now }
+    User.admins.each { |admin| ReportMailer.first_report_of_month(self, admin).deliver_now }
   end
 
   def set_date_from_year_and_month
