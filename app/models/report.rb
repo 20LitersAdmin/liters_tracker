@@ -39,7 +39,7 @@ class Report < ApplicationRecord
 
   before_validation :set_year_and_month_from_date,  if: -> { (year.blank? || month.blank?) && date.present? }
   before_validation :set_date_from_year_and_month,  if: -> { date.blank? && year.present? && month.present? }
-  before_validation :flag_for_meaninglessness,      if: -> { hours.zero? && (distributed.nil? || distributed.zero?) && (checked.nil? || checked.zero?) }
+  before_validation :flag_for_meaninglessness,      if: -> { (hours.nil? || hours.zero?) && (distributed.nil? || distributed.zero?) && (checked.nil? || checked.zero?) }
 
   before_save :calculate_impact
   before_save :set_contract_from_date, if: -> { contract_id.blank? && date.present? }

@@ -1,7 +1,7 @@
 -# frozen_string_literal: true
 
 = simple_form_for report, remote: true, defaults: { input_html: { class: 'village-form' } } do |f|
-  = f.input :technology_id
+  = f.input :technology_id, as: :hidden
   = f.input :date, as: :hidden, input_html: { value: @date }
   .row
     .col-6.col-md-2.field
