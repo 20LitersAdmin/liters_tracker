@@ -1276,8 +1276,6 @@ RSpec.describe Report, type: :model do
     it 'sends email after report created' do
       report_email = ActionMailer::Base.deliveries.find { |email| email.subject.include? 'First Report' }
 
-      byebug if report_email.nil?
-
       expect(report_email.to.first).to eql(@admin.email)
     end
   end

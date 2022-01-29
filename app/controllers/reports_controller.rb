@@ -35,8 +35,6 @@ class ReportsController < ApplicationController
 
     @persistence = @report.new_record? ? 'Report created.' : 'A matching report was found and updated.'
 
-    byebug
-
     respond_to do |format|
       if @report.save
         format.html { redirect_to @return_path, notice: @persistence }
