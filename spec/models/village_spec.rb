@@ -128,6 +128,10 @@ RSpec.describe Village, type: :model do
   end
 
   describe '#related_reports' do
+    before :each do
+      village.save
+    end
+
     it 'returns reports related to this village' do
       related_report = FactoryBot.create(:report_village, reportable: village)
       unrelated_report = FactoryBot.create(:report_village)
@@ -147,6 +151,10 @@ RSpec.describe Village, type: :model do
   end
 
   describe '#related_stories' do
+    before :each do
+      village.save
+    end
+
     it 'returns stories related to this village' do
       related_report = FactoryBot.create(:report_village, reportable: village)
       related_story = FactoryBot.create(:story, report: related_report)
@@ -203,8 +211,8 @@ RSpec.describe Village, type: :model do
   end
 
   describe '#update_hierarchy' do
-    before :all do
-      @cell = FactoryBot.create(:cell)
+    before :each do
+      @cell = create(:cell)
     end
 
     it 'is called from after_save' do
@@ -258,7 +266,7 @@ RSpec.describe Village, type: :model do
     context 'when cascade: true' do
       it 'updates the hierarchy of all the village\'s desecedants' do
         village.save
-        fac = FactoryBot.create(:facility, village: village)
+        fac = create(:facility, village: village)
         first_hierarchy = fac.hierarchy
 
         village.cell = @cell

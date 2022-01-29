@@ -6,7 +6,8 @@ module CleanupCrew
     # I believe it's safe because the require call only exists in RSpec's rails_helper
     abort('The Rails environment isn\'t Test!!!') unless Rails.env.test?
 
-    puts 'CleanupCrew has arrived.'
+    # Shhh. Clean while the tests are running.
+    # puts 'CleanupCrew has arrived.'
 
     Facility.destroy_all
     Village.destroy_all
@@ -25,13 +26,13 @@ module CleanupCrew
 
     User.destroy_all
 
-    puts 'Mess is gone, boss.'
+    # puts 'Mess is gone, boss.'
 
     ActiveRecord::Base.connection.tables.each do |t|
       ActiveRecord::Base.connection.reset_pk_sequence!(t)
     end
 
-    puts 'Lights are off, doors are locked. Good night.'
+    # puts 'Lights are off, doors are locked. Good night.'
   end
 
   module_function :clean_up!

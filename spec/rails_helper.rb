@@ -40,7 +40,7 @@ rescue ActiveRecord::PendingMigrationError => e
   exit 1
 end
 
-Capybara.server = :puma
+Capybara.server = :puma, { Silent: true }
 
 RSpec.configure do |config|
   config.include Devise::Test::IntegrationHelpers, type: :system
@@ -67,7 +67,7 @@ RSpec.configure do |config|
   # arbitrary gems may also be filtered via:
   # config.filter_gems_from_backtrace("gem name")
 
-  config.after(:suite) do
+  config.after :each do
     CleanupCrew.clean_up!
   end
 
