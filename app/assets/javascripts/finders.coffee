@@ -178,13 +178,6 @@ class LinkedSelect
     target.append('<option></option>')
     $(target).append('<option disabled="disabled" value="0">Please select a ' + refParent[targetGeo] + '</option>')
 
-    typeLowercase = geographyName(source.attr('id'))
-    type = typeLowercase[0].toUpperCase() + typeLowercase.substring(1)
-    id = source.val()
-    polyName = '#' + modelName(source.attr('id')) + '_' + modelName(source.attr('id'))
-    $(polyName + 'able_type').val(type)
-    $(polyName + 'able_id').val(id)
-
 root              = exports ? this
 root.LinkedSelect = LinkedSelect
 
