@@ -1,8 +1,15 @@
 # BUGS:
-- sectors/reports: complex JS to manage reportable_id and reportable_type; now use the controller to determine reportable
+- sectors/reports: ditch complex JS to manage reportable_id and reportable_type; now use the controller to determine reportable
   - needs to work for _village_form and _facility_form
-  - also affects plan creation
-- finders.coffee has a bunch of useless JS now
+  - also affects plan creation (contracts_plan.coffee)
+- finders.coffee has a bunch of useless JS now:
+  - removed: @assessPolymorphics
+  - @forcePolymorphics & child methods
+  - @clearPolymorphics & child methods
+
+* 7 tests are failing
+  - models/report_spec.rb:950
+  - models/facility.rb:91
 
 # PLANS:
 - Community Tech plans MUST be associated with a Facility, but shouldn't have to be?

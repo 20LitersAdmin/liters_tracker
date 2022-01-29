@@ -149,7 +149,7 @@ RSpec.describe Story, type: :model do
       end
 
       it 'resizes the image to 355 px wide' do
-        expect(ActiveStorage::Analyzer::ImageAnalyzer.new(story.image).metadata[:width]).to eq 355
+        expect(ActiveStorage::Analyzer::ImageAnalyzer::ImageMagick.new(story.image.blob).metadata[:width]).to eq 355
       end
 
       it 'renames the image to {report_id}_{report.date.year}-{report.date.month}' do

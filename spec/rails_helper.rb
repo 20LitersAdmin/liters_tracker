@@ -44,7 +44,6 @@ Capybara.server = :puma
 
 RSpec.configure do |config|
   config.include Devise::Test::IntegrationHelpers, type: :system
-  # Remove this line if you're not using ActiveRecord or ActiveRecord fixtures
   config.fixture_path = "#{::Rails.root}/spec/fixtures/"
   config.include FactoryBot::Syntax::Methods
   config.include CleanupCrew
@@ -53,7 +52,7 @@ RSpec.configure do |config|
   # If you're not using ActiveRecord, or you'd prefer not to run each of your
   # examples within a transaction, remove the following line or assign false
   # instead of true.
-  config.use_transactional_fixtures = true
+  config.use_transactional_fixtures = false
   config.infer_spec_type_from_file_location!
 
   # Rspec/retry settings
@@ -68,24 +67,28 @@ RSpec.configure do |config|
   # arbitrary gems may also be filtered via:
   # config.filter_gems_from_backtrace("gem name")
 
-  config.before(:each) do
-    clean_up!
+  config.after(:suite) do
+    CleanupCrew.clean_up!
   end
 
-  config.before(:each, type: :system) do
+  config.before :each, type: :clean_reports do
+    Report.destroy_all
+  end
+
+  config.before :each, type: :system do
     driven_by :rack_test
   end
 
-  config.before(:each, type: :system, js: true) do
+  config.before :each, type: :system, js: true do
     driven_by :selenium_chrome_headless
     Capybara.page.driver.browser.manage.window.resize_to(1920, 2024)
   end
 
   config.around :each, :js do |ex|
-    ex.run_with_retry retry: 3
+    ex.run_with_retry retry: 2
   end
 
-  config.after(:all) do
+  config.after :all do
     if Rails.env.test? || Rails.env.cucumber?
       FileUtils.rm_rf("#{Rails.root}/storage_test")
       FileUtils.rm_rf(Rails.root.join('tmp', 'storage'))

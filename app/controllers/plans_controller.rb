@@ -9,7 +9,7 @@ class PlansController < ApplicationController
 
     respond_to do |format|
       format.html
-      format.json { render 'index.json' }
+      format.json { render 'index' }
     end
   end
 

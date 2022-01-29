@@ -1,6 +1,7 @@
 -# frozen_string_literal: true
-- distributed_label = @technology.name.include?("Train") ? '# Trained' : 'Installed'
-= simple_form_for [@contract, plan], remote: true, defaults: { input_html: { class: 'facility-form' }} do |f|
+
+= simple_form_for [@contract, plan], remote: true, defaults: { input_html: { class: 'facility-form' } } do |f|
+  -# TODO: remove planable_type and planable_id
   = f.input :planable_type, as: :hidden, input_html: { value: 'Facility' }
   = f.input :planable_id, as: :hidden
   = f.input :technology_id, as: :hidden

@@ -19,9 +19,6 @@ Place these calls in the apropriate files.
 LinkedSelect.updateChildSelectors($(this)):
 - Finds the next child geography select field and populates it
 
-LinkedSelect.assessPolymorphics($(this)):
-- Decides what to put in the polymorphic fields
-
 LinkedSelect.clearPolymorphics($(this), scope):
 - Force-clears one or both of the polymorphic fields
 - scope is one of these: ['id', 'type', 'both']
@@ -54,16 +51,6 @@ class LinkedSelect
     if trigger.val() > 0
       target = findTarget(trigger)
       ajaxGeography(trigger, target)
-
-  @assessPolymorphics = (trigger)->
-    # console.log 'LinkedSelect.assessPolymorphics'
-    # Only the Report and Plan models have polymorphic fields
-    return unless ['report', 'plan'].includes(modelName(trigger.attr('id')))
-
-    if ['', '0'].includes(trigger.val())
-      findLowestSelectedOption(trigger)
-    else
-      setPolymorphics(trigger)
 
   @clearPolymorphics = (source, scope)->
     # console.log 'LinkedSelect.clearPolymorphics'
@@ -146,11 +133,6 @@ class LinkedSelect
     # console.log 'LinkedSelect#appendOptionLoop'
     target.append('<option value="' + record.id + '">' + record.name + '</option>')
 
-  findLowestSelectedOption = (trigger)->
-    # console.log 'LinkedSelect#findLowestSelectedOption'
-    targetModel = modelName(trigger.attr('id'))
-    setPolymorphics(findTargetIndirect(targetModel, targetGeo)) for targetGeo in refChildren['all']
-
   findTarget = (trigger)->
     # console.log 'LinkedSelect#findTarget'
     targetId = '#' + modelName(trigger.attr('id')) + '_' + refChild[geographyName(trigger.attr('id'))].toLowerCase()
@@ -195,15 +177,6 @@ class LinkedSelect
     target.html('')
     target.append('<option></option>')
     $(target).append('<option disabled="disabled" value="0">Please select a ' + refParent[targetGeo] + '</option>')
-
-  setPolymorphics = (source)->
-    # console.log 'LinkedSelect#setPolymorphics'
-    # skip for missing sources
-    return unless source.length > 0
-
-    # Dont' set the polymorphic fields if the source field is being set to nil
-    # and the source field is not a District (the highest geography)
-    return if ['', '0'].includes(source.val()) && !source.attr('id').includes('district')
 
     typeLowercase = geographyName(source.attr('id'))
     type = typeLowercase[0].toUpperCase() + typeLowercase.substring(1)
