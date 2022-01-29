@@ -13,8 +13,8 @@ window.scrollTo(0, 0);
 
 // inline error field highlighting
 var errors = {};
-<% @report.errors.collect do |field, msg| %>
-errors["<%= field %>"] = "<%= msg.html_safe %>";
+<% @report.errors.each do |error| %>
+errors["<%= error.attribute %>"] = "<%= error.message.html_safe %>";
 <% end %>
 for (var i = 0; i < Object.keys(errors).length; i++) {
   var errorField, message, input;

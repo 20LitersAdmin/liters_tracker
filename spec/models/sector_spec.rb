@@ -234,8 +234,8 @@ RSpec.describe Sector, type: :model do
   end
 
   describe '#update_hierarchy' do
-    before :all do
-      @district = FactoryBot.create(:district)
+    before :each do
+      @district = create(:district)
     end
 
     it 'is called from after_save' do
@@ -289,7 +289,7 @@ RSpec.describe Sector, type: :model do
     context 'when cascade: true' do
       it 'updates the hierarchy of all the sector\'s desecedants' do
         sector.save
-        cell = FactoryBot.create(:cell, sector: sector)
+        cell = create(:cell, sector: sector)
 
         first_hierarchy = cell.hierarchy
 

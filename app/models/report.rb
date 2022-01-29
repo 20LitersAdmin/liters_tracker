@@ -39,7 +39,7 @@ class Report < ApplicationRecord
 
   before_validation :set_year_and_month_from_date,  if: -> { (year.blank? || month.blank?) && date.present? }
   before_validation :set_date_from_year_and_month,  if: -> { date.blank? && year.present? && month.present? }
-  before_validation :flag_for_meaninglessness,      if: -> { hours.zero? && (distributed.nil? || distributed.zero?) && (checked.nil? || checked.zero?) }
+  before_validation :flag_for_meaninglessness,      if: -> { (hours.nil? || hours.zero?) && (distributed.nil? || distributed.zero?) && (checked.nil? || checked.zero?) }
 
   before_save :calculate_impact
   before_save :set_contract_from_date, if: -> { contract_id.blank? && date.present? }
@@ -170,12 +170,6 @@ class Report < ApplicationRecord
 
   private
 
-  def flag_for_meaninglessness
-    # if technology.is_engagement? :hours is required
-    # else :distributed or :checked must have a value
-    technology.is_engagement? ? errors.add(:hours, 'must be provided.') : errors.add(:distributed, 'or checked must be provided.')
-  end
-
   def calculate_impact
     return unless distributed&.nonzero? || hours&.nonzero?
 
@@ -200,10 +194,16 @@ class Report < ApplicationRecord
                   end
   end
 
+  def flag_for_meaninglessness
+    # if technology.is_engagement? :hours is required
+    # else :distributed or :checked must have a value
+    technology.is_engagement? ? errors.add(:hours, 'must be provided.') : errors.add(:distributed, 'or checked must be provided.')
+  end
+
   def notify_admins
     return if Report.within_month(date).size > 1
 
-    User.where(admin: true).each { |admin| ReportMailer.first_report_of_month(self, admin).deliver_now }
+    User.admins.each { |admin| ReportMailer.first_report_of_month(self, admin).deliver_now }
   end
 
   def set_date_from_year_and_month

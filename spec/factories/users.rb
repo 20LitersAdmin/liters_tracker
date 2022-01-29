@@ -6,7 +6,7 @@ FactoryBot.define do
     sequence(:lname) { |n| "McUser#{n}" }
     password { 'password' }
     password_confirmation { 'password' }
-    sequence(:email) { |n| "viewer#{n}@email.com" }
+    sequence(:email) { |n| "viewer#{n + Time.now.usec}@email.com" }
   end
 
   factory :user_admin, class: User do
@@ -15,7 +15,7 @@ FactoryBot.define do
     admin { true }
     password { 'password' }
     password_confirmation { 'password' }
-    sequence(:email) { |n| "admin#{n}@email.com" }
+    sequence(:email) { |n| "admin#{n + Time.now.usec}@email.com" }
   end
 
   factory :user_reports, class: User do
@@ -23,7 +23,7 @@ FactoryBot.define do
     sequence(:lname) { |n| "McUser#{n}" }
     password { 'password' }
     password_confirmation { 'password' }
-    sequence(:email) { |n| "reporter#{n}@email.com" }
+    sequence(:email) { |n| "reporter#{n + Time.now.usec}@email.com" }
     can_manage_reports { true }
   end
 
@@ -32,7 +32,7 @@ FactoryBot.define do
     sequence(:lname) { |n| "McUser#{n}" }
     password { 'password' }
     password_confirmation { 'password' }
-    sequence(:email) { |n| "geographer#{n}@email.com" }
+    sequence(:email) { |n| "geographer#{n + Time.now.usec}@email.com" }
     can_manage_geography { true }
   end
 
@@ -41,7 +41,7 @@ FactoryBot.define do
     sequence(:lname) { |n| "McUser#{n}" }
     password { 'password' }
     password_confirmation { 'password' }
-    sequence(:email) { |n| "contractor#{n}@email.com" }
+    sequence(:email) { |n| "contractor#{n + Time.now.usec}@email.com" }
     can_manage_contracts { true }
   end
 
@@ -50,7 +50,7 @@ FactoryBot.define do
     sequence(:lname) { |n| "McUser#{n}" }
     password { 'password' }
     password_confirmation { 'password' }
-    sequence(:email) { |n| "technologist#{n}@email.com" }
+    sequence(:email) { |n| "technologist#{n + Time.now.usec}@email.com" }
     can_manage_technologies { true }
   end
 end

@@ -1,5 +1,3 @@
-# LinkedSelect is Global Linked Select field, comes from finders.coffee
-
 $(document).on 'turbolinks:load', ->
   return unless controllerMatches(['sectors']) &&
     actionMatches(['report'])
@@ -43,27 +41,8 @@ $(document).on 'turbolinks:load', ->
       .remove()
       .draw()
 
-  # _facility_form
   $('#report_cell').on 'change', ->
     LinkedSelect.updateChildSelectors($(this))
 
-    if ['', '0'].includes($(this).val())
-      LinkedSelect.clearPolymorphics($(this), 'id')
-
   $('#report_village.facility-form').on 'change', ->
     LinkedSelect.updateChildSelectors($(this))
-
-    if ['', '0'].includes($(this).val())
-      LinkedSelect.clearPolymorphics($(this), 'id')
-
-  $('#report_village.village-form').on 'change', ->
-    if ['', '0'].includes($(this).val())
-      LinkedSelect.clearPolymorphics($(this), 'id')
-    else
-      LinkedSelect.forcePolymorphics($(this), 'id')
-
-  $('#report_facility').on 'change', ->
-    if ['', '0'].includes($(this).val())
-      LinkedSelect.clearPolymorphics($(this), 'id')
-    else
-      LinkedSelect.forcePolymorphics($(this), 'id')

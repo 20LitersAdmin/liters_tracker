@@ -119,7 +119,7 @@ RSpec.describe Cell, type: :model do
 
   describe 'self.import' do
     it 'imports records from a CSV file' do
-      FactoryBot.create(:sector, gis_code: 1101)
+      create(:sector, gis_code: 1101)
       filepath = Rails.root.join 'spec/fixtures/files/rw_cells.csv'
 
       expect { Cell.import(filepath) }.to output(/3 records created./).to_stdout
@@ -257,8 +257,8 @@ RSpec.describe Cell, type: :model do
   end
 
   describe '#update_hierarchy' do
-    before :all do
-      @sector = FactoryBot.create(:sector)
+    before :each do
+      @sector = create(:sector)
     end
 
     it 'is called from after_save' do

@@ -231,8 +231,8 @@ RSpec.describe District, type: :model do
   end
 
   describe '#update_hierarchy' do
-    before :all do
-      @country = FactoryBot.create(:country)
+    before :each do
+      @country = create(:country)
     end
 
     it 'is called from after_save' do
@@ -271,7 +271,7 @@ RSpec.describe District, type: :model do
 
       it 'does not update the hierarchy of the record\'s descendants' do
         district.save
-        sect1 = FactoryBot.create(:sector, district: district)
+        sect1 = create(:sector, district: district)
 
         first_hierarchy = sect1.hierarchy
 
@@ -287,7 +287,7 @@ RSpec.describe District, type: :model do
     context 'when cascade: true' do
       it 'updates the hierarchy of the cell\'s descendants' do
         district.save
-        sect = FactoryBot.create(:sector, district: district)
+        sect = create(:sector, district: district)
         first_hierarchy = sect.hierarchy
 
         district.country = @country

@@ -2,12 +2,38 @@
 
 module CleanupCrew
   def clean_up!
-    model_list = Dir['app/models/*.rb'].map { |f| File.basename(f, '.*').camelize.constantize } - [ApplicationRecord, Monthly]
+    # This cannot be allowed to run in production
+    # I believe it's safe because the require call only exists in RSpec's rails_helper
+    abort('The Rails environment isn\'t Test!!!') unless Rails.env.test?
 
-    model_list.each(&:destroy_all)
+    # Shhh. Clean while the tests are running.
+    # puts 'CleanupCrew has arrived.'
 
-    # ActiveRecord::Base.connection.tables.each do |t|
-    #   ActiveRecord::Base.connection.reset_pk_sequence!(t)
-    # end
+    Facility.destroy_all
+    Village.destroy_all
+    Cell.destroy_all
+    Sector.destroy_all
+    District.destroy_all
+    Country.destroy_all
+
+    Story.destroy_all
+    Report.destroy_all
+    Plan.destroy_all
+    Target.destroy_all
+    Contract.destroy_all
+
+    Technology.destroy_all
+
+    User.destroy_all
+
+    # puts 'Mess is gone, boss.'
+
+    ActiveRecord::Base.connection.tables.each do |t|
+      ActiveRecord::Base.connection.reset_pk_sequence!(t)
+    end
+
+    # puts 'Lights are off, doors are locked. Good night.'
   end
+
+  module_function :clean_up!
 end

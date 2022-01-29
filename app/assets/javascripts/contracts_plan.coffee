@@ -51,6 +51,7 @@ $(document).on 'turbolinks:load', ->
       .draw()
 
 
+  # TODO, all clearPolymorphics should be removed
   # _facility_form
   $('#plan_cell').on 'change', ->
     LinkedSelect.updateChildSelectors($(this))

@@ -68,7 +68,7 @@ Rails.application.routes.draw do
     get  'destroy_image', on: :member
   end
 
-  devise_for :users
+  devise_for :users, controllers: { sessions: 'sessions' }
 
   resources :users
   get 'data', to: 'users#data', as: 'data'

@@ -1,7 +1,6 @@
 -# frozen_string_literal: true
-= simple_form_for report, remote: true, defaults: { input_html: { class: 'village-form' }} do |f|
-  = f.input :reportable_type, as: :hidden, input_html: { value: 'Village' }
-  = f.input :reportable_id, as: :hidden
+
+= simple_form_for report, remote: true, defaults: { input_html: { class: 'village-form' } } do |f|
   = f.input :technology_id, as: :hidden
   = f.input :date, as: :hidden, input_html: { value: @date }
   .row

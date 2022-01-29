@@ -103,8 +103,8 @@ RSpec.describe Report, type: :model do
     end
   end
 
-  describe 'has scopes for dates' do
-    let(:earliest) { create :report_village, date: Date.today - 3.years }
+  describe 'has scopes for dates', type: :clean_reports do
+    let(:earliest) { create :report_village, date: '2019-01-01' }
     let(:early) { create :report_village, date: Date.today - 2.years }
     let(:kinda_early) { create :report_village, date: Date.today - 1.year }
     let(:kinda_late) { create :report_village, date: Date.today - 9.months }
@@ -947,7 +947,7 @@ RSpec.describe Report, type: :model do
         report.technology.update(default_impact: 35)
         report.people = nil
 
-        expect { report.send(:calculate_impact) }.to change { report.impact }.from(0).to(35)
+        expect { report.send(:calculate_impact) }.to change { report.impact }.from(1).to(35)
 
         report.impact = 0
         report.people = 0
@@ -1258,24 +1258,27 @@ RSpec.describe Report, type: :model do
     # before/after needed as email sent on after_commit hook. RSpec wraps examples (it) in transaction. after_commit would otherwise not be called.
 
     before :context do
+      Report.destroy_all
       @admin   = User.admins.any? ? User.admins.first : create(:user_admin)
       contract = create :contract
       @report  = create :report_village, contract: contract
     end
 
     after :context do
-      Report.delete_all
-      Technology.delete_all
-      User.delete_all
-      Contract.delete_all
+      Report.destroy_all
+      Plan.destroy_all
+      Target.destroy_all
+      Contract.destroy_all
+      Technology.destroy_all
+      User.destroy_all
     end
 
     it 'sends email after report created' do
       report_email = ActionMailer::Base.deliveries.find { |email| email.subject.include? 'First Report' }
 
+      byebug if report_email.nil?
+
       expect(report_email.to.first).to eql(@admin.email)
-      expect(report_email.html_part.body.raw_source).to include(@report.year.to_s)
-      expect(report_email.html_part.body.raw_source).to include(@report.month.to_s)
     end
   end
 end

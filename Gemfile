@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 source 'https://rubygems.org'
-ruby '2.7.2'
+ruby '3.1.0'
 
 git_source(:github) do |repo_name|
   repo_name = "#{repo_name}/#{repo_name}" unless repo_name.include?('/')
@@ -15,7 +15,7 @@ gem 'bootstrap', '~> 4'
 gem 'bootstrap-will_paginate', '~> 1.0.0'
 gem 'bootstrap4-datetime-picker-rails'
 gem 'coffee-rails'
-gem 'devise', git: 'https://github.com/plataformatec/devise.git'
+gem 'devise'
 gem 'font-awesome-rails'
 gem 'haml'
 gem 'haml-rails'
@@ -27,7 +27,7 @@ gem 'money-rails'
 gem 'pg', '>= 0.18', '< 2.0'
 gem 'puma', '~> 4.3'
 gem 'pundit'
-gem 'rails', '>= 6.1'
+gem 'rails', '>= 7'
 gem 'simple_form'
 gem 'tinymce-rails', '~> 5.1'
 gem 'turbolinks', '~> 5.2'

@@ -1,3 +1,12 @@
+# BUGS:
+- sectors/reports: ditch complex JS to manage reportable_id and reportable_type; now use the controller to determine reportable
+  - needs to work for _village_form and _facility_form
+  - also affects plan creation (contracts_plan.coffee)
+- finders.coffee has a bunch of useless JS now:
+  - removed: @assessPolymorphics
+  - @forcePolymorphics & child methods
+  - @clearPolymorphics & child methods
+
 # PLANS:
 - Community Tech plans MUST be associated with a Facility, but shouldn't have to be?
 - Family Tech plans MUST be associated with a Village (but maybe could be generalized to a cell?)
