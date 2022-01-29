@@ -7,10 +7,6 @@
   - @forcePolymorphics & child methods
   - @clearPolymorphics & child methods
 
-* 7 tests are failing
-  - models/report_spec.rb:950
-  - models/facility.rb:91
-
 # PLANS:
 - Community Tech plans MUST be associated with a Facility, but shouldn't have to be?
 - Family Tech plans MUST be associated with a Village (but maybe could be generalized to a cell?)
