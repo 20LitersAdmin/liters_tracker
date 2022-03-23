@@ -40,6 +40,10 @@ class DistrictPolicy
     new?
   end
 
+  def descendants?
+    new?
+  end
+
   def hidden?
     new?
   end

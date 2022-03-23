@@ -42,7 +42,8 @@ $(document).on 'turbolinks:load', ->
       .draw()
 
   $('#report_cell').on 'change', ->
-    LinkedSelect.updateChildSelectors($(this))
+    LinkedSelect.updateChildrenSelectors($(this))
 
   $('#report_village.facility-form').on 'change', ->
     LinkedSelect.updateChildSelectors($(this))
+    LinkedSelect.updateChildrenSelectors($('#report_cell')) if $(this).val() == ''

@@ -1,4 +1,9 @@
 # BUGS:
+- facilites#index doesn't show cell in Datatable
+
+- sectors/report:
+  - BUG: when a "distribution" report && a "checked" report exist for the same village in the same month, the system over writes the first submission with the second.
+
 - sectors/reports: ditch complex JS to manage reportable_id and reportable_type; now use the controller to determine reportable
   - needs to work for _village_form and _facility_form
   - also affects plan creation (contracts_plan.coffee)

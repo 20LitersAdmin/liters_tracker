@@ -33,6 +33,15 @@ class District < ApplicationRecord
     'Sector'
   end
 
+  def descendants
+    {
+      'sector': sectors.select(:id, :name).order(:name),
+      'cell': cells.select(:id, :name).order(:name),
+      'village': villages.select(:id, :name).order(:name),
+      'facility': facilities.select(:id, :name).order(:name)
+    }.to_json
+  end
+
   def district
     self
   end

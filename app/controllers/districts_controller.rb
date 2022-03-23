@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 class DistrictsController < ApplicationController
-  before_action :set_district, only: %i[show edit update destroy children make_visible]
+  before_action :set_district, only: %i[show edit update destroy children descendants make_visible]
 
   # GET /districts
   def index
@@ -102,6 +102,10 @@ class DistrictsController < ApplicationController
   ## sectors#report ajax
   def children
     render json: @district.sectors.select(:id, :name).order(:name)
+  end
+
+  def descendants
+    render json: @district.descendants
   end
 
   def make_visible
