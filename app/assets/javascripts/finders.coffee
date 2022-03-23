@@ -1,7 +1,7 @@
 ### Global linked select fields for geography lookups
 ## Setup: Ensure that:
 1. The parent form is ID'd in the following format: '#{action}_{model}'. e.g.:
-  '#new_plan', '#edit_facility'
+  '#new_plan', '#edit_facility', '#new_report'
 
 2. Select fields are ID'd in the following format: '#{model}_{geography}'. e.g.:
   '#plan_village', '#village_sector'
@@ -52,6 +52,14 @@ class LinkedSelect
       target = findTarget(trigger)
       ajaxGeography(trigger, target)
 
+  @updateChildrenSelectors = (trigger)->
+    # update all down-stream selects. Allows for e.g. cell-select field to update village- and facility- selects
+    # resetChildrenOptions already resets all descendents
+    resetChildrenOptions(trigger)
+    if trigger.val() > 0
+      targets = findTargets(trigger)
+      ajaxGeographies(trigger, targets)
+
   @clearPolymorphics = (source, scope)->
     # console.log 'LinkedSelect.clearPolymorphics'
     # scope can be 'id', 'type', or 'both'
@@ -98,7 +106,7 @@ class LinkedSelect
     sector: 'District',
     cell: 'Sector',
     village: 'Cell',
-    facility: 'Village'
+    facility: 'Cell or Village'
   }
 
   refChild = {
@@ -117,7 +125,7 @@ class LinkedSelect
   }
 
   ajaxGeography = (trigger, target)->
-    # console.log 'LinkedSelect#ajaxGeograph'
+    # console.log 'LinkedSelect#ajaxGeography'
     # response is an array: [{id: 'id', name: 'name'},{id: 'id', name: 'name'}]
     # We can use `+ 's'` because all geographies with children pluralize by adding an 's'
     parentType = geographyName(trigger.attr('id')) + 's'
@@ -129,6 +137,25 @@ class LinkedSelect
     ).done (response) ->
       prepareOptions(target, response)
 
+  ajaxGeographies = (trigger, targets)->
+    # console.log 'LinkedSelect#ajaxGeographies'
+    # all geographies except `villages` and `facilities` have a route for `/descendents` that returns a JSON hash: { 'geography1': [{id: 'id', name: 'name'},{id: 'id', name: 'name'}], 'geography2': [{}, {}]
+
+    # trigger: #report_cell
+    # targets: ['#report_village', '#report_facility']
+    # targetsAndGeos: [[ '#report_village', 'village'], [ '#report_facility', 'facility']]
+    targetsAndGeos = ([target, geographyName(target)] for target in targets)
+    parentType = geographyName(trigger.attr('id')) + 's'
+    parentId = trigger.val()
+    uri = '/' + parentType + '/' + parentId + '/descendants'
+    $.ajax(
+      url: uri
+    ).done (response) ->
+      # TODO: HERE. response should be something like:
+      # {"village":[{"id":50,"name":"Biryogo"},{"id":1321,"name":"Bwiza"},{"id":51,"name":"Cyimo"},{"id":52,"name":"Kabeza"},{"id":1322,"name":"Kiyovu"},{"id":1323,"name":"Masaka"},{"id":1324,"name":"Murambi"},{"id":1325,"name":"Nyakagunga"},{"id":1326,"name":"Urugwiro"}],"facility":[{"id":8,"name":"Masaka -Faith Center"},{"id":7,"name":"Masaka Primary School"},{"id":16,"name":"Masaka – Anglican"}]}
+
+      prepareOptions($(targetAndGeo[0]), response[targetAndGeo[1]]) for targetAndGeo in targetsAndGeos
+
   appendOptionLoop = (record, target)->
     # console.log 'LinkedSelect#appendOptionLoop'
     target.append('<option value="' + record.id + '">' + record.name + '</option>')
@@ -137,6 +164,14 @@ class LinkedSelect
     # console.log 'LinkedSelect#findTarget'
     targetId = '#' + modelName(trigger.attr('id')) + '_' + refChild[geographyName(trigger.attr('id'))].toLowerCase()
     target = $(targetId)
+
+  findTargets = (trigger)->
+    # finds all descendents, returns an array of DOM object IDs
+    # console.log 'LinkedSelect#findTarget'
+    descendents = refChildren[geographyName(trigger.attr('id'))]
+
+    targetId = '#' + modelName(trigger.attr('id')) + '_'
+    targets = (targetId + target for target in descendents)
 
   findTargetIndirect = (modelName, geoName)->
     # console.log 'LinkedSelect#findTargetIndirect'

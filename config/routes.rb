@@ -37,6 +37,7 @@ Rails.application.routes.draw do
   resources :districts do
     get 'hidden', on: :collection
     get 'children', on: :member
+    get 'descendants', on: :member
     get 'make_visible', on: :member
   end
   resources :sectors do
@@ -44,11 +45,13 @@ Rails.application.routes.draw do
     get 'select', on: :collection # sector selection for reports
     get 'report', on: :member
     get 'children', on: :member
+    get 'descendants', on: :member
     get 'make_visible', on: :member
   end
   resources :cells do
     get 'hidden', on: :collection
     get 'children', on: :member
+    get 'descendants', on: :member
     get 'make_visible', on: :member
   end
   resources :villages do

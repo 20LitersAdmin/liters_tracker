@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 class CellsController < ApplicationController
-  before_action :set_cell, only: %w[show edit update destroy children make_visible]
+  before_action :set_cell, only: %w[show edit update destroy children descendants make_visible]
 
   # GET /cells
   # GET /cells.json
@@ -108,6 +108,10 @@ class CellsController < ApplicationController
   ## plans#_form ajax
   def children
     render json: @cell.villages.select(:id, :name).order(:name)
+  end
+
+  def descendants
+    render json: @cell.descendants
   end
 
   def make_visible

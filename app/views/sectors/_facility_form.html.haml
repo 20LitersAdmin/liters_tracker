@@ -4,7 +4,7 @@
   = f.input :technology_id, as: :hidden, input_html: { value: @technology.id }
   .row
     .col-4.field
-      = f.input :cell, collection: @cells, hint: 'Select to limit villages.'
+      = f.input :cell, collection: @cells, hint: 'Select to limit villages and facilities.'
     .col-4.field
       = f.input :village, collection: @villages, disabled: 0, hint: 'Select to limit facilities.'
     .col-4.field

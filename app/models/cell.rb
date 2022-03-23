@@ -38,6 +38,13 @@ class Cell < ApplicationRecord
     'Village'
   end
 
+  def descendants
+    {
+      'village': villages.select(:id, :name).order(:name),
+      'facility': facilities.select(:id, :name).order(:name)
+    }.to_json
+  end
+
   def districts
     # Report and Plan want to be able to call any geography
     district&.parent&.districts

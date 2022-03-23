@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 class SectorsController < ApplicationController
-  before_action :set_sector, only: %w[show edit update destroy report plan children make_visible]
+  before_action :set_sector, only: %w[show edit update destroy report plan children descendants make_visible]
 
   # GET /sectors
   def index
@@ -47,7 +47,7 @@ class SectorsController < ApplicationController
     @report = Report.new(technology: @technology)
     @report.date = @date if @technology.scale == 'Family'
 
-    @cells = @sector.cells.order(:name).pluck(:name, :id)
+    @cells = @sector.cells.select(:name, :id).order(:name)
     @cell = Cell.new
     @villages = [['Please select a Cell', '0']]
     @village = Village.new
@@ -55,7 +55,8 @@ class SectorsController < ApplicationController
     return unless @technology.scale == 'Community'
 
     @facility = Facility.new
-    @facilities = [['Please select a Village', '0']]
+    # @facilities = [['Please select a Cell or Village', '0']]
+    @facilities = @sector.facilities.select(:name, :id).order(:name)
   end
 
   # GET /sectors/1
@@ -140,6 +141,10 @@ class SectorsController < ApplicationController
   ## sectors#report ajax
   def children
     render json: @sector.cells.select(:id, :name).order(:name)
+  end
+
+  def descendants
+    render json: @sector.descendants
   end
 
   def make_visible
