@@ -46,7 +46,7 @@ module Constants
     # see ApplicationController#bad_param?()
     BAD_ACTIONS = %w[create
                      children
-                     destroy dttb_index
+                     descendants destroy dttb_index
                      edit
                      handler
                      image destroy_image upload_image
