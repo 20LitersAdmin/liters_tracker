@@ -55,7 +55,7 @@ class Report < ApplicationRecord
   def details
     if distributed&.positive?
       val = distributed
-      lang = technology.scale == 'Family' ? 'distributed' | 'installed'
+      lang = technology.scale == 'Family' ? 'distributed' : 'installed'
     else
       val = checked
       lang = 'checked'
