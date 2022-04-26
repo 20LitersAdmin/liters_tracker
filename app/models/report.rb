@@ -55,7 +55,7 @@ class Report < ApplicationRecord
   def details
     if distributed&.positive?
       val = distributed
-      lang = 'distributed'
+      lang = technology.scale == 'Family' ? 'distributed' | 'installed'
     else
       val = checked
       lang = 'checked'
@@ -64,7 +64,7 @@ class Report < ApplicationRecord
     if technology.scale == 'Family'
       "#{ActionController::Base.helpers.pluralize(val, technology.name)} #{lang} during #{date.strftime('%B, %Y')}"
     else
-      "#{ActionController::Base.helpers.pluralize(val, technology.name)} installed on #{date.strftime('%B, %d, %Y')}"
+      "#{ActionController::Base.helpers.pluralize(val, technology.name)} #{lang} on #{date.strftime('%B, %d, %Y')}"
     end
   end
 
