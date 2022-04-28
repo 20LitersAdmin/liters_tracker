@@ -10,8 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2022_01_28_215719) do
-
+ActiveRecord::Schema[7.0].define(version: 2022_01_28_215719) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -20,7 +19,7 @@ ActiveRecord::Schema.define(version: 2022_01_28_215719) do
     t.string "record_type", null: false
     t.bigint "record_id", null: false
     t.bigint "blob_id", null: false
-    t.datetime "created_at", null: false
+    t.datetime "created_at", precision: nil, null: false
     t.index ["blob_id"], name: "index_active_storage_attachments_on_blob_id"
     t.index ["record_type", "record_id", "name", "blob_id"], name: "index_active_storage_attachments_uniqueness", unique: true
   end
@@ -32,13 +31,13 @@ ActiveRecord::Schema.define(version: 2022_01_28_215719) do
     t.text "metadata"
     t.bigint "byte_size", null: false
     t.string "checksum"
-    t.datetime "created_at", null: false
+    t.datetime "created_at", precision: nil, null: false
     t.string "service_name", null: false
     t.index ["key"], name: "index_active_storage_blobs_on_key", unique: true
   end
 
   create_table "active_storage_variant_records", force: :cascade do |t|
-    t.bigint "blob_id", null: false
+    t.integer "blob_id", null: false
     t.string "variation_digest", null: false
     t.index ["blob_id", "variation_digest"], name: "index_active_storage_variant_records_uniqueness", unique: true
   end
@@ -51,8 +50,8 @@ ActiveRecord::Schema.define(version: 2022_01_28_215719) do
     t.float "longitude"
     t.integer "population"
     t.integer "households"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
+    t.datetime "created_at", precision: nil, null: false
+    t.datetime "updated_at", precision: nil, null: false
     t.boolean "hidden", default: false, null: false
     t.jsonb "hierarchy"
     t.index ["gis_code"], name: "index_cells_on_gis_code", unique: true
@@ -66,8 +65,8 @@ ActiveRecord::Schema.define(version: 2022_01_28_215719) do
     t.money "budget", scale: 2
     t.integer "household_goal"
     t.integer "people_goal"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
+    t.datetime "created_at", precision: nil, null: false
+    t.datetime "updated_at", precision: nil, null: false
     t.string "name"
     t.index ["end_date", "start_date"], name: "between_end_start_dates"
     t.index ["end_date"], name: "index_contracts_on_end_date"
@@ -80,8 +79,8 @@ ActiveRecord::Schema.define(version: 2022_01_28_215719) do
     t.float "longitude"
     t.integer "population"
     t.integer "households"
-    t.datetime "created_at", precision: 6, null: false
-    t.datetime "updated_at", precision: 6, null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
     t.boolean "hidden", default: false, null: false
     t.index ["gis_code"], name: "index_countries_on_gis_code"
     t.index ["hidden"], name: "index_countries_on_hidden"
@@ -94,9 +93,9 @@ ActiveRecord::Schema.define(version: 2022_01_28_215719) do
     t.float "longitude"
     t.integer "population"
     t.integer "households"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-    t.bigint "country_id"
+    t.datetime "created_at", precision: nil, null: false
+    t.datetime "updated_at", precision: nil, null: false
+    t.integer "country_id"
     t.boolean "hidden", default: false, null: false
     t.jsonb "hierarchy"
     t.index ["country_id"], name: "index_districts_on_country_id"
@@ -113,8 +112,8 @@ ActiveRecord::Schema.define(version: 2022_01_28_215719) do
     t.integer "households"
     t.string "category", null: false
     t.bigint "village_id", null: false
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
+    t.datetime "created_at", precision: nil, null: false
+    t.datetime "updated_at", precision: nil, null: false
     t.jsonb "hierarchy"
     t.index ["village_id"], name: "index_facilities_on_village_id"
   end
@@ -124,8 +123,8 @@ ActiveRecord::Schema.define(version: 2022_01_28_215719) do
     t.bigint "technology_id", null: false
     t.integer "goal", null: false
     t.integer "people_goal"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
+    t.datetime "created_at", precision: nil, null: false
+    t.datetime "updated_at", precision: nil, null: false
     t.integer "planable_id"
     t.string "planable_type"
     t.date "date"
@@ -145,8 +144,8 @@ ActiveRecord::Schema.define(version: 2022_01_28_215719) do
     t.bigint "contract_id"
     t.integer "distributed"
     t.integer "checked"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
+    t.datetime "created_at", precision: nil, null: false
+    t.datetime "updated_at", precision: nil, null: false
     t.integer "people"
     t.integer "reportable_id"
     t.string "reportable_type"
@@ -173,8 +172,8 @@ ActiveRecord::Schema.define(version: 2022_01_28_215719) do
     t.float "longitude"
     t.integer "population"
     t.integer "households"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
+    t.datetime "created_at", precision: nil, null: false
+    t.datetime "updated_at", precision: nil, null: false
     t.boolean "hidden", default: false, null: false
     t.jsonb "hierarchy"
     t.index ["district_id"], name: "index_sectors_on_district_id"
@@ -186,8 +185,8 @@ ActiveRecord::Schema.define(version: 2022_01_28_215719) do
     t.string "title"
     t.text "text"
     t.bigint "report_id", null: false
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
+    t.datetime "created_at", precision: nil, null: false
+    t.datetime "updated_at", precision: nil, null: false
     t.boolean "prominent", default: false
     t.bigint "user_id", null: false
     t.index ["report_id"], name: "index_stories_on_report_id"
@@ -199,8 +198,8 @@ ActiveRecord::Schema.define(version: 2022_01_28_215719) do
     t.bigint "technology_id", null: false
     t.integer "goal", null: false
     t.integer "people_goal"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
+    t.datetime "created_at", precision: nil, null: false
+    t.datetime "updated_at", precision: nil, null: false
     t.index ["contract_id"], name: "index_targets_on_contract_id"
     t.index ["technology_id"], name: "index_targets_on_technology_id"
   end
@@ -220,8 +219,8 @@ ActiveRecord::Schema.define(version: 2022_01_28_215719) do
     t.string "us_cost_currency", default: "USD", null: false
     t.integer "local_cost_cents", default: 0, null: false
     t.string "local_cost_currency", default: "USD", null: false
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
+    t.datetime "created_at", precision: nil, null: false
+    t.datetime "updated_at", precision: nil, null: false
     t.string "image_name"
     t.text "description"
     t.boolean "is_engagement", default: false
@@ -242,21 +241,21 @@ ActiveRecord::Schema.define(version: 2022_01_28_215719) do
     t.string "email", default: "", null: false
     t.string "encrypted_password", default: "", null: false
     t.string "reset_password_token"
-    t.datetime "reset_password_sent_at"
-    t.datetime "remember_created_at"
+    t.datetime "reset_password_sent_at", precision: nil
+    t.datetime "remember_created_at", precision: nil
     t.integer "sign_in_count", default: 0, null: false
-    t.datetime "current_sign_in_at"
-    t.datetime "last_sign_in_at"
+    t.datetime "current_sign_in_at", precision: nil
+    t.datetime "last_sign_in_at", precision: nil
     t.inet "current_sign_in_ip"
     t.inet "last_sign_in_ip"
     t.string "confirmation_token"
-    t.datetime "confirmed_at"
-    t.datetime "confirmation_sent_at"
+    t.datetime "confirmed_at", precision: nil
+    t.datetime "confirmation_sent_at", precision: nil
     t.integer "failed_attempts", default: 0, null: false
     t.string "unlock_token"
-    t.datetime "locked_at"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
+    t.datetime "locked_at", precision: nil
+    t.datetime "created_at", precision: nil, null: false
+    t.datetime "updated_at", precision: nil, null: false
     t.index ["confirmation_token"], name: "index_users_on_confirmation_token", unique: true
     t.index ["email"], name: "index_users_on_email", unique: true
     t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true
@@ -271,8 +270,8 @@ ActiveRecord::Schema.define(version: 2022_01_28_215719) do
     t.float "longitude"
     t.integer "population"
     t.integer "households"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
+    t.datetime "created_at", precision: nil, null: false
+    t.datetime "updated_at", precision: nil, null: false
     t.boolean "hidden", default: false, null: false
     t.jsonb "hierarchy"
     t.index ["cell_id"], name: "index_villages_on_cell_id"
