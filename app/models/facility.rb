@@ -42,6 +42,10 @@ class Facility < ApplicationRecord
     parent&.facilities
   end
 
+  def has_reports_or_plans?
+    reports.any? || plans.any?
+  end
+
   def impact
     population.to_i + (households.to_i * Constants::Population::HOUSEHOLD_SIZE)
   end
