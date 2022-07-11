@@ -1,4 +1,10 @@
 # BUGS:
+
+- facility picture
+
+- be able to export templates as excel, CSV:
+  - reports (including geographies as a drop-down)
+
 - facilites#index doesn't show cell in Datatable
 
 - sectors/report:

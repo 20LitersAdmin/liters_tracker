@@ -80,8 +80,10 @@ class UsersController < ApplicationController
 
   def user_params
     params.require(:user).permit(:fname, :lname, :admin, :email,
-                                 :confirmed_at, :locked_at,
-                                 :password, :password_confirmation)
+                                 :confirmed_at, :locked_at, :unlock_token,
+                                 :password, :password_confirmation,
+                                 :can_manage_reports, :can_manage_contracts,
+                                 :can_manage_geography, :can_manage_technologies)
   end
 
   def user_params_no_pws
