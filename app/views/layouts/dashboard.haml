@@ -1,4 +1,6 @@
 -# frozen_string_literal: true
+-# NOTE: shared template for root and stories#show views (public pages)
+-# NOTE: see application.haml for non-public view template
 !!!
 %html
   %head
@@ -18,6 +20,8 @@
     = javascript_include_tag 'application', 'data-turbolinks-track': 'reload'
     = javascript_include_tag 'https://20liters.kindful.com/embeds/743a7d01-5726-491f-aaf2-fbbc15da826a/init.js', 'data-embed-id': '743a7d01-5726-491f-aaf2-fbbc15da826a', 'data-lookup-type': 'jquery-selector', 'data-lookup-value': '#kindful_plugin', 'data-styles-off': true
     = render 'shared/icons'
+    -# bloomerang can track website visits by constituents
+    %script{ src: 'https://api.bloomerang.co/v1/WebsiteVisit?ApiKey=pub_95ca45e0-35fa-11ed-9883-0276bb62884d', type: 'text/javascript' }
   %body.liters-tracker{ 'data-controller': 'dashboard', 'data-action': 'index', 'data-site': '20liters-track' }
     / Google Tag Manager (noscript)
     %noscript

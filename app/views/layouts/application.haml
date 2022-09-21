@@ -1,0 +1,21 @@
+-# frozen_string_literal: true
+-# NOTE: shared template for all non-public views
+-# NOTE: see dashboard.haml for root Dashboard#index
+!!!
+%html
+  %head
+    %meta{ content: 'text/html; charset=UTF-8', 'http-equiv' => 'Content-Type' }
+    %title Track [20 Liters]
+    = csrf_meta_tags
+    = csp_meta_tag
+    = stylesheet_link_tag    'application', media: 'all', 'data-turbolinks-track': 'reload'
+    = javascript_include_tag 'application', 'data-turbolinks-track': 'reload'
+    = render 'shared/icons'
+  %body.liters-tracker{ 'data-controller': controller.controller_name, 'data-action': controller.action_name, 'data-site': '20liters-track' }
+    %header
+      = render 'shared/navbar'
+    #loading_screen.fa-5x
+      %i#loading_spinner.fa.fa-spinner.fa-pulse
+    %main.container
+      = flash_messages
+      = yield
