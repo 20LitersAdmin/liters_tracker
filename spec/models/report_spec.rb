@@ -297,12 +297,12 @@ RSpec.describe Report, type: :model do
     end
 
     context "when technology.scale != 'Family'" do
-      it "includes the word 'installed'" do
+      it "includes the word 'installed' or 'checked'" do
         rep_dist_comm
         rep_check_comm
 
         expect(rep_dist_comm.details).to include 'installed'
-        expect(rep_check_comm.details).to include 'installed'
+        expect(rep_check_comm.details).to include 'checked'
       end
 
       it 'provides a month, day, year date' do

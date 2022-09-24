@@ -37,10 +37,10 @@ class CellsController < ApplicationController
     @to =   params[:to].present? ? Date.parse(params[:to]) : @latest
 
     @skip_blanks = params[:skip_blanks].present?
-    @skip_blanks_rfp = request.fullpath.include?('?') ? request.fullpath + '&skip_blanks=true' : request.fullpath + '?skip_blanks=true'
+    @skip_blanks_rfp = request.fullpath.include?('?') ? "#{request.fullpath}&skip_blanks=true" : "#{request.fullpath}?skip_blanks=true"
 
     @by_tech = params[:by_tech].present?
-    @by_tech_rfp = request.fullpath.include?('?') ? request.fullpath + '&by_tech=true' : request.fullpath + '?by_tech=true'
+    @by_tech_rfp = request.fullpath.include?('?') ? "#{request.fullpath}&by_tech=true" : "#{request.fullpath}?by_tech=true"
 
     @searchbar_hidden_fields = @by_tech ? [{ name: 'by_tech', value: 'true' }] : []
     @searchbar_hidden_fields << { name: 'skip_blanks', value: 'true' } if @skip_blanks
@@ -60,8 +60,7 @@ class CellsController < ApplicationController
   end
 
   # GET /cells/1/edit
-  def edit
-  end
+  def edit; end
 
   # POST /cells
   # POST /cells.json
