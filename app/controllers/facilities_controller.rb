@@ -76,7 +76,7 @@ class FacilitiesController < ApplicationController
     respond_to do |format|
       if @facility.save
         format.html { redirect_to @return_path, notice: 'Facility created.' }
-        format.js { render :facility_created }
+        format.js { render :facility_created, layout: false }
       else
         # pre-populate select fields on error using current planable
         @district = @facility.district
@@ -91,7 +91,7 @@ class FacilitiesController < ApplicationController
         @villages = @facility.villages&.pluck(:name, :id)
 
         format.html { render :new }
-        format.js { render :facility_error }
+        format.js { render :facility_error, layout: false }
       end
     end
   end

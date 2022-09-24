@@ -43,12 +43,12 @@ class ReportsController < ApplicationController
           @technology = @report.technology
           @reports = @report.reportable.sector.related_reports.where(technology: @technology).between(@report.date.beginning_of_month, @report.date.end_of_month)
           @partial = "sectors/#{@technology.type}_reports"
-          render :report_created
+          render :report_created, layout: false
         end
       else
         format.html { render :new }
         format.json { render json: @report.errors, status: :unprocessable_entity }
-        format.js { render :report_error }
+        format.js { render :report_error, layout: false }
       end
     end
   end
@@ -63,7 +63,7 @@ class ReportsController < ApplicationController
       else
         format.html { render :edit }
         format.json { render json: @report.errors, status: :unprocessable_entity }
-        format.js { render :report_error }
+        format.js { render :report_error, layout: false }
       end
     end
   end
@@ -76,7 +76,7 @@ class ReportsController < ApplicationController
     respond_to do |format|
       format.html { redirect_to @return_path, notice: 'Report deleted.' }
       format.json { head :no_content }
-      format.js { render :report_destroyed }
+      format.js { render :report_destroyed, layout: false }
     end
   end
 

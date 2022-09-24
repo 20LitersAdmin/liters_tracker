@@ -9,14 +9,13 @@ class PlansController < ApplicationController
 
     respond_to do |format|
       format.html
-      format.json { render 'index' }
+      format.json { render 'index', layout: false }
     end
   end
 
   # GET /plans/1
   # GET /plans/1.json
-  def show
-  end
+  def show; end
 
   # GET /plans/1/edit
   def edit
@@ -32,7 +31,7 @@ class PlansController < ApplicationController
     authorize @plan = Plan.where(dup_matching_params).first_or_initialize
 
     @plan.assign_attributes(plan_params)
-    @plan.contract_id = params[:contract_id].to_i
+    @plan.contract_id = @contract.id
 
     @persistence = @plan.new_record? ? 'Plan created.' : 'A matching plan was found and updated.'
 
@@ -46,12 +45,12 @@ class PlansController < ApplicationController
           @sector = @plan.planable.sector
           @plans = @sector.related_plans.where(technology: @technology).nearest_to_date(@plan.date)
 
-          render :plan_created
+          render :plan_created, layout: false
         end
       else
         format.html { render :new }
         format.json { render json: @plan.errors, status: :unprocessable_entity }
-        format.js { render :plan_error }
+        format.js { render :plan_error, layout: false }
       end
     end
   end
@@ -78,7 +77,7 @@ class PlansController < ApplicationController
     respond_to do |format|
       format.html { redirect_to @return_path, notice: 'Plan deleted.' }
       format.json { head :no_content }
-      format.js { render :plan_destroyed }
+      format.js { render :plan_destroyed, layout: false }
     end
   end
 
@@ -93,8 +92,7 @@ class PlansController < ApplicationController
   end
 
   def plan_params
-    params.require(:plan).permit(:contract_id,
-                                 :technology_id,
+    params.require(:plan).permit(:technology_id,
                                  :goal,
                                  :people_goal,
                                  :planable_type,
