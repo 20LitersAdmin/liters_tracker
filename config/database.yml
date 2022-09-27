@@ -16,5 +16,6 @@ test:
 production:
   <<: *default
   database: liters_tracker_prod
+  url: <%= ENV['DATABASE_URL'] %>
   # username: liters_tracker
   # password: <%= ENV['LITERS_TRACKER_DATABASE_PASSWORD'] %>
