@@ -1,5 +1,3 @@
-# frozen_string_literal: true
-
 # This file is auto-generated from the current state of the database. Instead
 # of editing this file, please use the migrations feature of Active Record to
 # incrementally modify your database, and then regenerate this schema definition.
@@ -39,7 +37,7 @@ ActiveRecord::Schema[7.0].define(version: 2022_01_28_215719) do
   end
 
   create_table "active_storage_variant_records", force: :cascade do |t|
-    t.integer "blob_id", null: false
+    t.bigint "blob_id", null: false
     t.string "variation_digest", null: false
     t.index ["blob_id", "variation_digest"], name: "index_active_storage_variant_records_uniqueness", unique: true
   end
@@ -97,7 +95,7 @@ ActiveRecord::Schema[7.0].define(version: 2022_01_28_215719) do
     t.integer "households"
     t.datetime "created_at", precision: nil, null: false
     t.datetime "updated_at", precision: nil, null: false
-    t.integer "country_id"
+    t.bigint "country_id"
     t.boolean "hidden", default: false, null: false
     t.jsonb "hierarchy"
     t.index ["country_id"], name: "index_districts_on_country_id"

@@ -11,7 +11,8 @@ class DashboardController < ApplicationController
       { stat: lifetime_stat, title: technology.plural_name }
     end
     @progress_date = Report.order(date: :desc).first&.date
-    @global_impact = Report.distributions.sum(:impact)
+    # @global_impact = Report.distributions.sum(:impact)
+    @global_impact = Technology.dashboard_worthy.map(&:lifetime_impact).sum
 
     @dates = Report.with_stories.pluck(:year, :month).uniq.sort.reverse
 
@@ -65,10 +66,10 @@ class DashboardController < ApplicationController
       lifetime_stat = technology.lifetime_distributed
       next if lifetime_stat.zero?
 
-      lifetime_stats << { stat: lifetime_stat, title: technology.plural_name }
+      lifetime_stats << { stat: lifetime_stat.to_i, title: technology.plural_name }
     end
 
-    lifetime_stats << { stat: Report.distributions.sum(:impact), title: 'People served' }
+    lifetime_stats << { stat: Technology.dashboard_worthy.map(&:lifetime_impact).sum, title: 'People served' }
     lifetime_stats << { as_of_date: Report.order(date: :desc).first.date }
 
     render json: lifetime_stats

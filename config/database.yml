@@ -8,6 +8,8 @@ default: &default
 development:
   <<: *default
   database: liters_tracker_dev
+  port: 5432
+  user: ckragt
 
 test:
   <<: *default

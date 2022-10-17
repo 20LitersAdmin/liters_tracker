@@ -125,19 +125,33 @@ RSpec.describe Technology, type: :model do
   end
 
   describe '#lifetime_impact' do
-    let!(:technology) { create :technology }
+    let!(:tech_fam)   { create :technology_family, default_impact: 5 }
+    let!(:tech_com)   { create :technology_community, default_impact: 5 }
     let(:contract)    { create :contract }
-    let!(:report)     { create :report_facility, user: user, contract: contract, technology: technology, people: 10 }
+    let!(:report_fam) { create :report_facility, user:, contract:, technology: tech_fam, people: 10 }
+    let!(:report_com) { create :report_facility, user:, contract:, technology: tech_com, people: 10 }
 
-    it 'returns the sum of related reports\' impact values' do
-      expect(technology.reload.lifetime_impact).to eq(10)
+    context 'when technology.scale == "Family"' do
+      it 'returns distributed * default_impact' do
+        expect(tech_fam.reload.lifetime_impact).to eq 5
+      end
+    end
+
+    context 'when Technology.scale != "Family"' do
+      it 'returns the sum of related reports\' impact values' do
+        expect(tech_com.reload.lifetime_impact).to eq(10)
+      end
     end
 
     context 'when no reports exist' do
-      before { technology.reports.last.destroy }
+      before do
+        tech_fam.reports.last.destroy
+        tech_com.reports.last.destroy
+      end
 
       it 'equals 0' do
-        expect(technology.reload.lifetime_impact).to eq(0)
+        expect(tech_fam.reload.lifetime_impact).to eq(0)
+        expect(tech_com.reload.lifetime_impact).to eq(0)
       end
     end
   end
@@ -145,7 +159,7 @@ RSpec.describe Technology, type: :model do
   describe '#liftime_distributed' do
     let!(:technology) { create :technology }
     let(:contract)    { create :contract }
-    let!(:report)     { create :report_facility, user: user, contract: contract, technology: technology, people: 10 }
+    let!(:report)     { create :report_facility, user:, contract:, technology:, people: 10 }
 
     it 'returns the sum of related reports\' distributed values' do
       expect(technology.reload.lifetime_distributed).to eq(1)
