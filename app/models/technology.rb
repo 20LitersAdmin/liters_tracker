@@ -22,7 +22,14 @@ class Technology < ApplicationRecord
   end
 
   def lifetime_impact
-    reports.distributions.sum(:impact)
+    # For SAM3 and Slowsand, use default_impact
+    # instead of listed impacts
+    # field reports often say e.g. 13 people are using 1 filter
+    if scale == 'Family'
+      reports.distributions.sum(:distributed) * default_impact
+    else
+      reports.distributions.sum(:impact)
+    end
   end
 
   def lifetime_distributed

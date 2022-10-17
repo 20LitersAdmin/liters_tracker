@@ -41,8 +41,10 @@ module ApplicationHelper
     datetime&.strftime('%-m/%-d @ %l:%M:%S %p %Z')
   end
 
-  def human_number(number)
+  def human_number(number, force_int: false)
     return '-' unless number.present? && number.positive?
+
+    number = number.to_i if force_int
 
     number_with_delimiter(number, delimiter: ',')
   end

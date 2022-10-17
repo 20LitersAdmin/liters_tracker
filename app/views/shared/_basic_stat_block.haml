@@ -5,6 +5,6 @@
   .card.text-center.match-height
     .card-body{class: "#{bg} #{text}"}
       %h1.card-title
-        = human_number(stat)
+        = human_number(stat, force_int: true)
       %h6.card-subtitle
         = title

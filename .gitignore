@@ -25,5 +25,9 @@
 /public/assets
 .byebug_history
 
+# rails db:parity generates a pg dumpfile
+# which should be deleted on complete, but just in case.
+latest_dump
+
 # Ignore master key for decrypting credentials and more.
 /config/master.key
