@@ -27,7 +27,9 @@ Rails.application.routes.draw do
     get 'plan', on: :member
   end
 
-  resources :technologies
+  resources :technologies do
+    get 'reports', on: :member
+  end
 
   resources :countries do
     get 'hidden', on: :collection

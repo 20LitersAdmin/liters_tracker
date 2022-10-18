@@ -1,3 +1,4 @@
+
 # frozen_string_literal: true
 
 # This file should contain all the record creation needed to seed the database with its default values.
@@ -19,11 +20,11 @@ ActiveRecord::Base.connection.reset_pk_sequence!('stories')
 
 Technology.create(
   [
-    { id: 1, name: 'Household Filter', short_name: 'SAM3', default_impact: 5, scale: 'Family', direct_cost: 35_28, indirect_cost: 100_00 },
-    { id: 2, name: 'Modified Household Filter', short_name: 'SAM3-M', default_impact: 5, scale: 'Family', direct_cost: 32_22, indirect_cost: 100_00, report_worthy: false },
-    { id: 3, name: 'Community Filter', short_name: 'SAM2', default_impact: 400, scale: 'Community', agreement_required: true, direct_cost: 1_382_44, indirect_cost: 2_000_00 },
-    { id: 4, name: 'Modified Community Filter', short_name: 'SAM2-M', default_impact: 400, scale: 'Community', agreement_required: true, direct_cost: 1_839_82, indirect_cost: 2_600_00, report_worthy: false },
-    { id: 5, name: 'Rainwater Harvesting System', short_name: 'RWHS', default_impact: 500, scale: 'Community', agreement_required: true, direct_cost: 1_565_38, indirect_cost: 3_200_00 },
+    { id: 1, name: 'Household Filter', short_name: 'SAM3', default_impact: 5, scale: 'Family', direct_cost: 35.28, indirect_cost: 100.00 },
+    { id: 2, name: 'Modified Household Filter', short_name: 'SAM3-M', default_impact: 5, scale: 'Family', direct_cost: 32.22, indirect_cost: 100.00, report_worthy: false },
+    { id: 3, name: 'Community Filter', short_name: 'SAM2', default_impact: 400, scale: 'Community', agreement_required: true, direct_cost: 1_382.44, indirect_cost: 2_000.00 },
+    { id: 4, name: 'Modified Community Filter', short_name: 'SAM2-M', default_impact: 400, scale: 'Community', agreement_required: true, direct_cost: 1_839.82, indirect_cost: 2_600.00, report_worthy: false },
+    { id: 5, name: 'Rainwater Harvesting System', short_name: 'RWHS', default_impact: 500, scale: 'Community', agreement_required: true, direct_cost: 1_565.38, indirect_cost: 3_200.00 },
     { id: 6, name: 'Slowsand Filter', short_name: 'SS', default_impact: 10, scale: 'Family' }
   ]
 )

@@ -17,7 +17,7 @@ class UsersController < ApplicationController
 
       { stat: technology.lifetime_distributed, title: "#{technology.name}s" }
     end
-    @global_impact = Report.distributions.sum(:impact)
+    @global_impact = Technology.dashboard_worthy.map(&:lifetime_impact).sum
   end
 
   def geography

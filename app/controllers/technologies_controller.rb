@@ -1,19 +1,14 @@
 # frozen_string_literal: true
 
 class TechnologiesController < ApplicationController
-  before_action :set_technology, only: %i[show edit update destroy]
+  before_action :set_technology, only: %i[show reports edit update destroy]
   before_action :set_scale, only: %i[new edit]
+  before_action :set_form_params, only: %i[index show reports]
 
   # GET /technologies
   def index
     authorize @technologies = Technology.report_worthy
     @tech_ids = @technologies.pluck(:id)
-
-    @earliest = form_date Report.earliest_date
-    @latest =   form_date Report.latest_date
-
-    @from = params[:from].present? ? Date.parse(params[:from]) : @earliest
-    @to =   params[:to].present? ? Date.parse(params[:to]) : @latest
 
     @targets = Target.where(technology_id: @tech_ids).between(@from, @to).order(contract_id: :asc)
     @reports = Report.where(technology_id: @tech_ids).between(@from, @to).order(date: :asc)
@@ -22,12 +17,6 @@ class TechnologiesController < ApplicationController
 
   # GET /technologies/1
   def show
-    @earliest = form_date Report.earliest_date
-    @latest =   form_date Report.latest_date
-
-    @from = params[:from].present? ? Date.parse(params[:from]) : @earliest
-    @to =   params[:to].present? ? Date.parse(params[:to]) : @latest
-
     @reports = Report.where(technology: @technology).between(@from, @to)
 
     @skip_blanks = params[:skip_blanks].present?
@@ -40,6 +29,38 @@ class TechnologiesController < ApplicationController
     @searchbar_hidden_fields << { name: 'skip_blanks', value: 'true' } if @skip_blanks
     @contract_search_param_add = @by_mou ? '&by_mou=true' : ''
     @contract_search_param_add += @skip_blanks ? '&skip_blanks=true' : ''
+
+    if @by_mou
+      @mous = Contract.between(@from, @to).order(start_date: :asc)
+      @targets = Target.where(contract: @mous).where(technology: @technology)
+      @target_date = @targets.last&.date
+    else
+      @sectors = Sector.visible
+      @plans = Plan.where(technology: @technology).between(@from, @to)
+      @plan_date = human_date @plans.last&.date
+    end
+  end
+
+  # GET /technologies/1/reports
+  def reports
+    @path_without_type_filters = request.fullpath.gsub('&d=true', '').gsub('?d=true', '').gsub('&c=true', '').gsub('?c=true', '')
+
+    @only_distributed_rfp = @path_without_type_filters.include?('?') ? "#{@path_without_type_filters}&d=true" : "#{@path_without_type_filters}?d=true"
+
+    @only_checked_rfp = @path_without_type_filters.include?('?') ? "#{@path_without_type_filters}&c=true" : "#{@path_without_type_filters}?c=true"
+
+    @only_distributed = params[:d]
+    @only_checked = params[:c]
+
+    if @only_distributed
+      @reports = @technology.reports.distributions.between(@from, @to)
+      @contract_search_param_add = '&d=true'
+    elsif @only_checked
+      @reports = @technology.reports.checks.between(@from, @to)
+      @contract_search_param_add = '&c=true'
+    else
+      @reports = @technology.reports.between(@from, @to)
+    end
 
     if @by_mou
       @mous = Contract.between(@from, @to).order(start_date: :asc)
@@ -107,6 +128,14 @@ class TechnologiesController < ApplicationController
 
   def set_technology
     authorize @technology = Technology.find(params[:id])
+  end
+
+  def set_form_params
+    @earliest = form_date Report.earliest_date
+    @latest =   form_date Report.latest_date
+
+    @from = params[:from].present? ? Date.parse(params[:from]) : @earliest
+    @to =   params[:to].present? ? Date.parse(params[:to]) : @latest
   end
 
   def technology_params

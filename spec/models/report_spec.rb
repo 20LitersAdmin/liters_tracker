@@ -904,11 +904,11 @@ RSpec.describe Report, type: :model do
     end
   end
 
-  describe '#calculate_impact' do
+  describe '#calculate_impact_and_ratio' do
     let(:report) { build :report_village }
 
     it 'fires on the before_save action' do
-      expect(report).to receive(:calculate_impact).exactly(1).times
+      expect(report).to receive(:calculate_impact_and_ratio).exactly(1).times
 
       report.save
     end
@@ -917,11 +917,11 @@ RSpec.describe Report, type: :model do
       it 'returns and does nothing' do
         report.distributed = nil
 
-        expect { report.send(:calculate_impact) }.not_to change { report.impact }
+        expect { report.send(:calculate_impact_and_ratio) }.not_to change { report.impact }
 
         report.distributed = 0
 
-        expect { report.send(:calculate_impact) }.not_to change { report.impact }
+        expect { report.send(:calculate_impact_and_ratio) }.not_to change { report.impact }
       end
     end
 
@@ -929,7 +929,7 @@ RSpec.describe Report, type: :model do
       it 'sets impact to match people' do
         report.people = 25
 
-        expect { report.send(:calculate_impact) }.to change { report.impact }.from(0).to(25)
+        expect { report.send(:calculate_impact_and_ratio) }.to change { report.impact }.from(0).to(25)
       end
     end
 
@@ -938,7 +938,7 @@ RSpec.describe Report, type: :model do
         facility = FactoryBot.create(:facility, population: 45)
         report2 = FactoryBot.build(:report_facility, reportable_id: facility.id, reportable_type: 'Facility')
 
-        expect { report2.send(:calculate_impact) }.to change { report2.impact }.from(0).to(45)
+        expect { report2.send(:calculate_impact_and_ratio) }.to change { report2.impact }.from(0).to(45)
       end
     end
 
@@ -947,12 +947,12 @@ RSpec.describe Report, type: :model do
         report.technology.update(default_impact: 35)
         report.people = nil
 
-        expect { report.send(:calculate_impact) }.to change { report.impact }.from(1).to(35)
+        expect { report.send(:calculate_impact_and_ratio) }.to change { report.impact }.from(1).to(35)
 
         report.impact = 0
         report.people = 0
 
-        expect { report.send(:calculate_impact) }.to change { report.impact }.from(0).to(35)
+        expect { report.send(:calculate_impact_and_ratio) }.to change { report.impact }.from(0).to(35)
       end
     end
   end
@@ -961,10 +961,10 @@ RSpec.describe Report, type: :model do
     let(:report) { build :report_village }
     let(:report_fac) { build :report_facility }
 
-    it 'fires on #calculate_impact' do
+    it 'fires on #calculate_impact_and_ratio' do
       expect(report).to receive(:calculate_distributed_impact).exactly(1).times
 
-      report.send(:calculate_impact)
+      report.send(:calculate_impact_and_ratio)
     end
 
     it 'sets the value of impact' do
@@ -1004,10 +1004,10 @@ RSpec.describe Report, type: :model do
   describe '#calculate_hours_impact' do
     let(:report) { build :report_engagement }
 
-    it 'fires on #calculate_impact' do
+    it 'fires on #calculate_impact_and_ratio' do
       expect(report).to receive(:calculate_hours_impact).exactly(1).times
 
-      report.send(:calculate_impact)
+      report.send(:calculate_impact_and_ratio)
     end
 
     it 'sets the value of impact' do

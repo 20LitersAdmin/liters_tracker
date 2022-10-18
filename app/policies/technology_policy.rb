@@ -16,6 +16,10 @@ class TechnologyPolicy
     @user
   end
 
+  def reports?
+    @user
+  end
+
   def new?
     @user&.technology_manager?
   end
