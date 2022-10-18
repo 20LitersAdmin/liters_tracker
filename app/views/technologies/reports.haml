@@ -9,7 +9,7 @@
       = link_to 'Only Distributed', @only_distributed_rfp, class: 'btn btn-outline-dark'
       = link_to 'Only Checked', @only_checked_rfp, class: 'btn btn-outline-dark'
   .col-sm-2.text-right
-    = link_to 'Back', @return_path, class: 'btn blue'
+    = link_to 'Back', technology_path(@technology), class: 'btn blue'
 
 = render partial: 'shared/search', locals: { from: @from, to: @to, earliest: @earliest, latest: @latest }
 

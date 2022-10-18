@@ -2,12 +2,12 @@
   %td{data: { sort: report.date.iso8601 } }= link_to human_date(report.date), edit_report_path(report)
   - unless @technology.is_engagement?
     - unless @only_checked
-      %td= human_number report.distributed
+      %td.text-right= human_number report.distributed
     - unless @only_distributed
-      %td= human_number report.checked
-  %td= human_number report.people
-  %td= human_number report.impact
-  %td= human_number report.ratio
+      %td.text-right= human_number report.checked
+  %td.text-right= human_number report.people
+  %td.text-right= human_number report.impact
+  %td.text-right= human_number report.ratio
   %td= report.sector_name
   %td= report.cell_name
   - unless @technology.scale = 'Family' || @technology.is_engagement?
