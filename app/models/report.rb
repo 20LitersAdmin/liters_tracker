@@ -15,7 +15,7 @@ class Report < ApplicationRecord
   validates_presence_of :date, :year, :month
 
   # form fields for simple_form
-  attr_accessor :sector, :cell, :village, :facility
+  attr_writer :sector, :cell, :village, :facility
 
   scope :only_districts,  -> { where(reportable_type: 'District') }
   scope :only_sectors,    -> { where(reportable_type: 'Sector') }
@@ -37,11 +37,14 @@ class Report < ApplicationRecord
   scope :distributions,   -> { where.not(distributed: nil) }
   scope :checks,          -> { where.not(checked: nil) }
 
+  # TEMP SCOPE
+  scope :high_ratio, -> { where('ratio > ?', technology.default_impact) }
+
   before_validation :set_year_and_month_from_date,  if: -> { (year.blank? || month.blank?) && date.present? }
   before_validation :set_date_from_year_and_month,  if: -> { date.blank? && year.present? && month.present? }
   before_validation :flag_for_meaninglessness,      if: -> { (hours.nil? || hours.zero?) && (distributed.nil? || distributed.zero?) && (checked.nil? || checked.zero?) }
 
-  before_save :calculate_impact
+  before_save :calculate_impact_and_ratio
   before_save :set_contract_from_date, if: -> { contract_id.blank? && date.present? }
   before_save :set_plan,               if: -> { contract_id.present? && plan_id.blank? }
 
@@ -75,6 +78,7 @@ class Report < ApplicationRecord
   def location
     "#{reportable.name} #{reportable_type}"
   end
+
 
   def sector_name
     sector_hsh = hierarchy&.find { |geo| geo['parent_type'] == 'Sector' }
@@ -151,26 +155,38 @@ class Report < ApplicationRecord
   end
 
   def cell
-    return unless reportable_type == "Cell"
+    return unless reportable_type == 'Cell'
 
     reportable
   end
 
+  def cell_name
+    sector_hsh = hierarchy&.find { |geo| geo['parent_type'] == 'Cell' }
+
+    sector_hsh.present? ? sector_hsh['parent_name'] : 'N/A'
+  end
+
   def facility
-    return unless reportable_type == "Facility"
+    return unless reportable_type == 'Facility'
 
     reportable
   end
 
   def village
-    return unless reportable_type == "Village"
+    return unless reportable_type == 'Village'
 
     reportable
   end
 
+  def village_name
+    sector_hsh = hierarchy&.find { |geo| geo['parent_type'] == 'Village' }
+
+    sector_hsh.present? ? sector_hsh['parent_name'] : 'N/A'
+  end
+
   private
 
-  def calculate_impact
+  def calculate_impact_and_ratio
     return unless distributed&.nonzero? || hours&.nonzero?
 
     technology.is_engagement? ? calculate_hours_impact : calculate_distributed_impact
@@ -184,6 +200,8 @@ class Report < ApplicationRecord
                   else
                     technology.default_impact * distributed.to_i
                   end
+
+    self.ratio = impact / distributed
   end
 
   def calculate_hours_impact
@@ -192,6 +210,8 @@ class Report < ApplicationRecord
                   else
                     people
                   end
+
+    self.ratio = impact / people
   end
 
   def flag_for_meaninglessness
@@ -220,8 +240,8 @@ class Report < ApplicationRecord
   end
 
   def set_plan
-    id = Plan.where(contract_id: contract_id,
-                    technology_id: technology_id,
+    id = Plan.where(contract_id:,
+                    technology_id:,
                     planable_id: reportable_id,
                     planable_type: reportable_type).limit(1).pluck(:id)[0].to_i
 

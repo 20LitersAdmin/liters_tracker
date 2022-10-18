@@ -1,0 +1,39 @@
+-# frozen_string_literal: true
+.row.mb-3
+  .col-sm-4
+    %h4= "Data: #{@technology.name}"
+  .col-sm-4
+    - if @only_distributed || @only_checked
+      = link_to 'View all', @path_without_type_filters , class: 'btn btn-outline-dark'
+    - else
+      = link_to 'Only Distributed', @only_distributed_rfp, class: 'btn btn-outline-dark'
+      = link_to 'Only Checked', @only_checked_rfp, class: 'btn btn-outline-dark'
+  .col-sm-2.text-right
+    = link_to 'Back', @return_path, class: 'btn blue'
+
+= render partial: 'shared/search', locals: { from: @from, to: @to, earliest: @earliest, latest: @latest }
+
+.row.mt-3#reports_section
+  .col
+    %table.table.table-striped#dttb_reports
+      %thead
+        %tr
+          %th Date
+          - unless @technology.is_engagement?
+            - unless @only_checked
+              %th Distributed
+            - unless @only_distributed
+              %th Checked
+          %th People
+          %th Impact
+          %th Ratio
+          %th Sector
+          %th Cell
+          %th Village
+          - unless @technology.scale = 'Family' || @technology.is_engagement?
+            %th Facility
+          %th Contract
+      %tbody
+        = render @reports
+
+

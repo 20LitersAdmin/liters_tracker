@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2022_01_28_215719) do
+ActiveRecord::Schema[7.0].define(version: 2022_10_18_145927) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -155,6 +155,7 @@ ActiveRecord::Schema[7.0].define(version: 2022_01_28_215719) do
     t.integer "month"
     t.decimal "hours", precision: 5, scale: 2, default: "0.0"
     t.jsonb "hierarchy"
+    t.integer "ratio", default: 0, null: false
     t.index ["contract_id", "technology_id", "reportable_id", "reportable_type"], name: "idx_belongs_to_plan"
     t.index ["contract_id"], name: "index_reports_on_contract_id"
     t.index ["date"], name: "index_reports_on_date"

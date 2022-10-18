@@ -30,7 +30,15 @@ $.extend( $.fn.dataTable.defaults, {
   responsive: true,
   pagingType: 'full',
   lengthMenu: [ [10, 25, 50, 100, -1], [ 10, 25, 50, 100, 'All'] ],
-  pageLength: -1
+  pageLength: -1,
+  language: {
+    paginate: {
+      first: "&#8676",
+      previous: "&#8592",
+      next: "&#8594",
+      last: "&#8677"
+    }
+  }
   //dom:
   //  "<'row'<'col-sm-4 text-left'f><'right-action col-sm-8 text-right'<'buttons'B> <'select-info'> >>" +
   //  "<'row'<'dttb col-12 px-0'tr>>" +
@@ -51,44 +59,33 @@ $(document).on('preInit.dt', function(e, settings) {
 
 // init on turbolinks load
 // Global dataTables can be initialized using #dttb-{name}
-// For custom dataTables, use #{name}-dttb
+// For custom dataTables, use #dttb_#{name}
 $(document).on('turbolinks:load', function() {
   if (!$.fn.DataTable.isDataTable("table[id^=dttb]")) {
-    $("table[id^=dttb-]").DataTable( {
-      language: {
-        paginate: {
-          first: "&#8676",
-          previous: "&#8592",
-          next: "&#8594",
-          last: "&#8677"
-        }
-      }
+    // global standard
+    $("table[id^=dttb-]").DataTable({
+      order: [0, 'asc']
     });
-    $("table[id^=dttb_hidden-]").DataTable( {
+    $("table[id^=dttb_hidden-]").DataTable({
       lengthMenu: [[25, 50, 100, -1], [25, 50, 100, "All"] ],
-      order: [0, 'asc'],
       columnDefs: [ {
         "searchable": false,
         "orderable": false,
         "targets": [-1]
-      } ],
-      language: {
-        paginate: {
-          first: "&#8676",
-          previous: "&#8592",
-          next: "&#8594",
-          last: "&#8677"
-        }
-      }
+      } ]
     });
-    $("table[id^=dttb_btn0-]").DataTable( {
+    $("table[id^=dttb_btn0-]").DataTable({
       order: [1, 'asc'],
       columnDefs: [ {
         "searchable": false,
         "orderable": false,
         "targets": [0]
       } ]
-    } );
+    });
+    // technology/#/reports
+    $("table#dttb_reports").DataTable( {
+      order: [0, 'desc']
+    });
   }
 });
 
@@ -101,3 +98,5 @@ $(document).on('turbolinks:before-cache', function() {
     return dataTable = null;
   }
 });
+
+
