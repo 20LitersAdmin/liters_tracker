@@ -3,6 +3,18 @@
 require 'net/http'
 require 'uri'
 
+## =====> Hello, Interviewers!
+# ThoughtBot offered these nice little shell commands
+# https://github.com/thoughtbot/parity
+# that made it easy, among other things, to pull down prod data to
+# development from Heroku.
+# But after SalesForce did a capitalism on Heroku it was time to look
+# elsewhere for hosting.
+#
+# I settled on Railway and saved 20 Liters some change in the process.
+#
+# Missing Parity's shell commands, I decided to try my hand at
+# replicating the feature I used the most: dumping prod into dev.
 namespace :db do
   desc 'Downloads the Production database from Railway and loads the data into production'
   task parity: :environment do

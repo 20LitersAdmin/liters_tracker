@@ -6,7 +6,22 @@ class ApplicationController < ActionController::Base
   include ErrorHandler
   protect_from_forgery with: :exception
 
-  # https://github.com/plataformatec/devise/wiki/How-To:-Redirect-back-to-current-page-after-sign-in,-sign-out,-sign-up,-update
+  ## =====> Hello, Interviewers!
+  # See https://medium.com/@chiperific/can-a-ruby-train-go-backwards-without-falling-off-the-rails-7572d2125439
+  #
+  # It bugs me that Rails' `redirect_back` is so weak.
+  # A common problem with request.referrer is that it navigates
+  # to non-GET routes (create, update, destroy etc.), AND, more
+  # eggregiously, if the user manages to visit the same page twice
+  # consecutively (say, from a navbar link), `redirect_back` will
+  # simply reload the page.
+  #
+  # Browsers handle this much better via historical route storage and
+  # pathing evaluation. This is my attempt at improving the Rails
+  # helper.
+  # By storing the last two urls in the session and doing some
+  # logical processing of 'back' should mean, I can set a variable
+  # to use with `redirect_to` instead of using `redirect_back`
   before_action :store_user_location!, if: :storable_user_location?
 
   after_action :save_old_params

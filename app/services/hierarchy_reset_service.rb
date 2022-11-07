@@ -1,5 +1,16 @@
 # frozen_string_literal: true
 
+## =====> Hello, Interviewers!
+#
+# JSONb columns in postgres give me tree-like record hierarchy
+# that keeps me from having to daisy-chain relationships
+# Most of the models in this app are either part of a geographical
+# hierarchy or related somehow to one point of geography, often in
+# a polymorphic way.
+#
+# Storing some portion of the geographical hierarchy in each record
+# Makes actions like generating breadcrumb links one database call
+# Instead of many.
 class HierarchyResetService
   def self.update_geographies!
     puts 'Resetting all geography hierarchies...'

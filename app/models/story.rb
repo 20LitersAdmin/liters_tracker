@@ -41,6 +41,14 @@ class Story < ApplicationRecord
     image.attached? ? Rails.application.routes.url_helpers.rails_blob_path(image, only_path: true) : ActionController::Base.helpers.asset_path('story_no_image.png')
   end
 
+  ## =====> Hello, Interviewers!
+  # Fatter model, skinnier controller
+  #
+  # ActiveStorage and minimagic processing of attached images
+  # on upload. Saved to an S3 bucket.
+  #
+  # #rotate_image! below allows a user to fix an image that was
+  # imported at the wrong angle.
   def process_image!(image_io)
     unless image_io.content_type.start_with? 'image/'
       errors.add(:image, 'needs to be an image')
@@ -64,8 +72,15 @@ class Story < ApplicationRecord
     image.attached?
   end
 
-  # returns a set number of related stories. This is used on Storise#show view.
-  # stories are related to each other by technology, sector and date
+  ## =====> Hello, Interviewers!
+  # In the Stories#show view, I wanted to have a "related stories"
+  # section that would operate like YouTube and encourage users
+  # to click through to another story.
+  #
+  # Stories are related to each other by technology, sector and date
+  #
+  # I save the ID of the previously viewed story in the session to
+  # prevent the last seen story from re-appearing immediately
   def related(limit: nil, except: [])
     ilimit = limit.to_i
 
