@@ -69,7 +69,7 @@ class DashboardController < ApplicationController
       lifetime_stats << { stat: lifetime_stat.to_i, title: technology.plural_name }
     end
 
-    lifetime_stats << { stat: Technology.map(&:lifetime_impact).sum, title: 'People served' }
+    lifetime_stats << { stat: Technology.all.map(&:lifetime_impact).sum, title: 'People served' }
     lifetime_stats << { as_of_date: Report.order(date: :desc).first.date }
 
     render json: lifetime_stats
