@@ -12,7 +12,7 @@ class DashboardController < ApplicationController
     end
     @progress_date = Report.order(date: :desc).first&.date
     # @global_impact = Report.distributions.sum(:impact)
-    @global_impact = Technology.dashboard_worthy.map(&:lifetime_impact).sum
+    @global_impact = Technology.all.map(&:lifetime_impact).sum
 
     @dates = Report.with_stories.pluck(:year, :month).uniq.sort.reverse
 
